@@ -1,0 +1,60 @@
+// import dark theme
+@use "element-plus/theme-chalk/src/dark/css-vars.scss" as *;
+
+:root {
+  --el-border-radius-base: 8px;
+  --el-menu-item-height: 48px !important;
+}
+
+body {
+  font-family: Inter, system-ui, Avenir, "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB",
+    "Microsoft YaHei", "微软雅黑", Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  margin: 0;
+}
+
+// app global css in SCSS
+
+.bg-primary-gradient {
+  background: radial-gradient(circle at top right, #ffffff, var(--el-color-primary));
+}
+
+.bg-negative-gradient {
+  background: radial-gradient(circle at center bottom, #e05969, var(--el-color-error));
+}
+
+.bg-positive-gradient {
+  background: radial-gradient(circle at center right, #26A69A, var(--el-color-success));
+}
+
+.bg-warning-gradient {
+  background: radial-gradient(circle at bottom left, #cf9900, var(--el-color-warning));
+}
+
+.el-header {
+  --el-header-height: 50px !important;
+}
+
+.el-footer {
+  --el-footer-height: 50px !important;
+}
+
+.el-dialog {
+  --el-dialog-border-radius: var(--el-border-radius-base) !important;
+}
+
+.el-divider--horizontal {
+  margin: 12px 0 !important;
+}
+
+.el-icon {
+  height: 1.2em !important;
+  width: 1.2em !important;
+}
+
+.search {
+  .el-card__body {
+    padding-bottom: 0;
+  }
+}
