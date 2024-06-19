@@ -4,7 +4,10 @@ import { departmentsHandlers } from './departments'
 import { privilegesHandlers } from './privileges'
 import { rolesHandlers } from './roles'
 import { usersHandlers } from './users'
-import { logsHandlers } from './logs'
+import { actionLogsHandlers } from './action-logs'
+import { accessLogsHandlers } from './access-logs'
+import { auditLogsHandlers } from './audit-logs'
+import { schedulerLogsHandlers } from './scheduler-logs'
 
 export const handlers = [
   ...commonHandlers,
@@ -13,5 +16,8 @@ export const handlers = [
   ...privilegesHandlers,
   ...rolesHandlers,
   ...usersHandlers,
-  ...logsHandlers
+  ...actionLogsHandlers,
+  ...accessLogsHandlers,
+  ...auditLogsHandlers,
+  ...schedulerLogsHandlers,
 ]

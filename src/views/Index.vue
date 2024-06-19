@@ -5,5 +5,7 @@ const value = ref(new Date())
 </script>
 
 <template>
-  <ElCalendar v-model="value" />
+  <ElCard shadow="never">
+    <ElCalendar v-model="value" />
+  </ElCard>
 </template>

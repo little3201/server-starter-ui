@@ -74,47 +74,58 @@ const datas: PrivilegeTreeNode[] = [
   },
   {
     id: 7,
-    path: '/log',
+    path: '/logs',
     component: '#',
-    redirect: '/log/action',
+    redirect: '/logs/action',
     name: 'Log',
     order: 2,
     enabled: true,
     meta: {
-      icon: 'i-ph:gear'
+      icon: 'i-ph:files'
     },
     children: [
       {
         id: 8,
         path: 'action',
         component: 'views/log/action/Index',
-        name: 'Action',
+        name: 'ActionLog',
         order: 1,
         enabled: true,
         meta: {
-          icon: 'i-ph:users'
+          icon: 'i-ph:file-text'
         }
       },
       {
         id: 9,
-        path: 'visit',
-        component: 'views/log/visit/Index',
-        name: 'Visit',
+        path: 'access',
+        component: 'views/log/access/Index',
+        name: 'AccessLog',
         order: 2,
         enabled: true,
         meta: {
-          icon: 'i-ph:user'
+          icon: 'i-ph:file-magnifying-glass'
         }
       },
       {
         id: 10,
         path: 'audit',
         component: 'views/log/audit/Index',
-        name: 'Audit',
+        name: 'AuditLog',
         order: 3,
         enabled: true,
         meta: {
-          icon: 'i-ph:list-dashes'
+          icon: 'i-ph:file-lock'
+        }
+      },
+      {
+        id: 11,
+        path: 'scheduler',
+        component: 'views/log/scheduler/Index',
+        name: 'SchedulerLog',
+        order: 4,
+        enabled: true,
+        meta: {
+          icon: 'i-ph:file-cloud'
         }
       }
     ]
@@ -123,7 +134,6 @@ const datas: PrivilegeTreeNode[] = [
 const dataArray: Privilege[] = [
   {
     id: 1,
-    category: 'D',
     path: '/system',
     component: '#',
     redirect: '/system/user',
@@ -136,7 +146,6 @@ const dataArray: Privilege[] = [
   },
   {
     id: 2,
-    category: 'M',
     path: 'department',
     component: 'views/system/department/Index',
     name: 'Department',
@@ -148,7 +157,6 @@ const dataArray: Privilege[] = [
   },
   {
     id: 3,
-    category: 'M',
     path: 'user',
     component: 'views/system/user/Index',
     name: 'User',
@@ -160,7 +168,6 @@ const dataArray: Privilege[] = [
   },
   {
     id: 4,
-    category: 'M',
     path: 'privilege',
     component: 'views/system/privilege/Index',
     name: 'Privilege',
@@ -172,7 +179,6 @@ const dataArray: Privilege[] = [
   },
   {
     id: 5,
-    category: 'M',
     path: 'role',
     component: 'views/system/role/Index',
     name: 'Role',
@@ -184,7 +190,6 @@ const dataArray: Privilege[] = [
   },
   {
     id: 6,
-    category: 'M',
     path: 'dictionary',
     component: 'views/system/dictionary/Index',
     name: 'Dictionary',
@@ -196,51 +201,58 @@ const dataArray: Privilege[] = [
   },
   {
     id: 7,
-    category: 'D',
-    path: '/log',
+    path: '/logs',
     component: '#',
     redirect: '/log/action',
     name: 'Log',
     order: 2,
     enabled: true,
     meta: {
-      icon: 'i-ph:gear'
+      icon: 'i-ph:files'
     },
   },
   {
     id: 8,
-    category: 'M',
     path: 'action',
-    component: 'views/log/action/Index',
-    name: 'Action',
+    component: 'views/logs/action/Index',
+    name: 'ActionLog',
     order: 1,
     enabled: true,
     meta: {
-      icon: 'i-ph:users'
+      icon: 'i-ph:file-text'
     }
   },
   {
     id: 9,
-    category: 'M',
-    path: 'visit',
-    component: 'views/log/visit/Index',
-    name: 'Visit',
+    path: 'access',
+    component: 'views/logs/access/Index',
+    name: 'AccessLog',
     order: 2,
     enabled: true,
     meta: {
-      icon: 'i-ph:user'
+      icon: 'i-ph:file-magnifying-glass'
     }
   },
   {
     id: 10,
-    category: 'M',
     path: 'audit',
-    component: 'views/log/audit/Index',
-    name: 'Audit',
+    component: 'views/logs/audit/Index',
+    name: 'AuditLog',
     order: 3,
     enabled: true,
     meta: {
-      icon: 'i-ph:list-dashes'
+      icon: 'i-ph:file-lock'
+    }
+  },
+  {
+    id: 11,
+    path: 'scheduler',
+    component: 'views/logs/scheduler/Index',
+    name: 'SchedulerLog',
+    order: 4,
+    enabled: true,
+    meta: {
+      icon: 'i-ph:file-cloud'
     }
   }
 ]
@@ -249,7 +261,11 @@ export const privilegesHandlers = [
   http.get('/api/privileges/:id', ({ params }) => {
     const { id } = params
     if (id) {
-      return HttpResponse.json(dataArray.filter(item => item.id === Number(id))[0])
+      let res = dataArray.filter(item => item.id === Number(id))[0]
+      if (res) {
+        return HttpResponse.json(res)
+      }
+      return HttpResponse.json(datas)
     } else {
       return HttpResponse.json(null)
     }

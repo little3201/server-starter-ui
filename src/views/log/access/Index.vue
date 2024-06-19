@@ -1,9 +1,7 @@
 <script setup lang="ts">
 import { ref, onMounted, reactive } from 'vue'
-import { dayjs } from 'element-plus'
-import { retrieveAuditLogs } from '~/api/audit-logs'
-import type { AuditLog } from '~/api/models.type'
-
+import { retrieveAccessLogs } from '~/api/access-logs'
+import type { AccessLog } from '~/api/models.type'
 
 const pagination = reactive({
   page: 1,
@@ -12,7 +10,7 @@ const pagination = reactive({
 })
 
 const loading = ref<boolean>(false)
-const datas = ref<Array<AuditLog>>([])
+const datas = ref<Array<AccessLog>>([])
 const searchFormRef = ref()
 
 const searchForm = ref({
@@ -20,7 +18,6 @@ const searchForm = ref({
 })
 
 const dialogVisible = ref<boolean>(false)
-
 /**
  * 分页变化
  * @param value 当前页码
@@ -36,7 +33,7 @@ function pageChange(currentPage: number, pageSize: number) {
  */
 function load() {
   loading.value = true
-  retrieveAuditLogs(pagination.page, pagination.size).then(res => {
+  retrieveAccessLogs(pagination.page, pagination.size).then(res => {
     datas.value = res.data.content
     pagination.total = res.data.totalElements
   }).finally(() => loading.value = false)
@@ -52,6 +49,14 @@ onMounted(() => {
  */
 function detailHandler(id: number) {
   dialogVisible.value = true
+}
+
+/**
+ * 删除
+ * @param id 主键
+ */
+function removeHandler(id: number) {
+  datas.value = datas.value.filter(item => item.id !== id)
 }
 </script>
 
@@ -76,6 +81,9 @@ function detailHandler(id: number) {
     <ElCard shadow="never">
       <ElRow :gutter="20" justify="space-between" class="mb-4">
         <ElCol :span="16" class="text-left">
+          <ElButton type="danger">
+            <div class="i-ph:trash"></div>{{ $t('clear') }}
+          </ElButton>
           <ElButton type="success">
             <div class="i-ph:cloud-arrow-down"></div>{{ $t('export') }}
           </ElButton>
@@ -100,12 +108,14 @@ function detailHandler(id: number) {
         </ElCol>
       </ElRow>
 
-      <ElTable :data="datas" lazy :load="load" row-key="id" stripe table-layout="auto" height="calc(100vh - 350px)">
+      <ElTable v-loading="loading" :data="datas" lazy :load="load" row-key="id" stripe table-layout="auto"
+        height="calc(100vh - 350px)">
+        <ElTableColumn type="selection" width="55" />
         <ElTableColumn type="index" :label="$t('no')" width="55" />
-        <ElTableColumn prop="action" :label="$t('action')" />
-        <ElTableColumn prop="resource" :label="$t('resource')" />
-        <ElTableColumn show-overflow-tooltip prop="oldValue" :label="$t('oldValue')" />
-        <ElTableColumn show-overflow-tooltip prop="newValue" :label="$t('newValue')" />
+        <ElTableColumn prop="api" :label="$t('api')" />
+        <ElTableColumn prop="method" :label="$t('method')" />
+        <ElTableColumn show-overflow-tooltip prop="params" :label="$t('params')" />
+        <ElTableColumn prop="operator" :label="$t('operator')" />
         <ElTableColumn prop="ip" :label="$t('ip')" />
         <ElTableColumn prop="location" :label="$t('location')" />
         <ElTableColumn prop="status" :label="$t('status')">
@@ -114,15 +124,16 @@ function detailHandler(id: number) {
             <ElTag v-else type="danger" effect="light" round>{{ $t('failure') }}</ElTag>
           </template>
         </ElTableColumn>
-        <ElTableColumn prop="actionTime" :label="$t('actionTime')" >
-          <template #default="scope">
-              {{ dayjs(scope.row.actionTime).format('YY-M-D HH:mm:ss') }}
-          </template>
-        </ElTableColumn>
-        <ElTableColumn :label="$t('action')">
+        <ElTableColumn prop="responseTime" :label="$t('responseTime')" />
+        <ElTableColumn prop="responseCode" :label="$t('responseCode')" />
+        <ElTableColumn show-overflow-tooltip prop="responseMessage" :label="$t('responseMessage')" />
+        <ElTableColumn :label="$t('action')" width="160">
           <template #default="scope">
             <ElButton size="small" type="success" @click="detailHandler(scope.row.id)">
               <div class="i-ph:file-text"></div>{{ $t('detail') }}
+            </ElButton>
+            <ElButton size="small" type="danger" @click="removeHandler(scope.row.id)">
+              <div class="i-ph:trash"></div>{{ $t('remove') }}
             </ElButton>
           </template>
         </ElTableColumn>
@@ -131,6 +142,7 @@ function detailHandler(id: number) {
         :total="pagination.total" />
     </ElCard>
   </ElSpace>
+
 
   <Dialog v-model="dialogVisible" :title="$t('detail')" :width="'36%'">
 

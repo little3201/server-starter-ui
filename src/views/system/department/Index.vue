@@ -8,7 +8,7 @@ import type { Department } from '~/api/models.type'
 
 const loading = ref<boolean>(false)
 const datas = ref<Array<Department>>([])
-const pagination = ref({
+const pagination = reactive({
   page: 1,
   size: 10,
   total: 0
@@ -36,11 +36,12 @@ const rules = reactive<FormRules<typeof form>>({
 
 /**
  * 分页变化
- * @param value 当前页码
+ * @param currentPage 当前页码
+ * @param pageSize 分页大小
  */
 function pageChange(currentPage: number, pageSize: number) {
-  pagination.value.page = currentPage
-  pagination.value.size = pageSize
+  pagination.page = currentPage
+  pagination.size = pageSize
   load()
 }
 
@@ -54,9 +55,9 @@ function load(row?: Department, treeNode?: unknown, resolve?: (data: Department[
       resolve(res.data)
     }).finally(() => loading.value = false)
   } else {
-    retrieveDepartments(1, 10).then(res => {
+    retrieveDepartments(pagination.page, pagination.size).then(res => {
       datas.value = res.data.content
-      pagination.value.total = res.data.totalElements
+      pagination.total = res.data.totalElements
     }).finally(() => loading.value = false)
   }
 }
@@ -111,6 +112,14 @@ function onSubmit() {
     }
   })
 }
+
+/**
+ * 删除
+ * @param id 主键
+ */
+ function removeHandler(id: number) {
+  datas.value = datas.value.filter(item => item.id !== id)
+}
 </script>
 
 <template>
@@ -119,7 +128,7 @@ function onSubmit() {
       <ElCard shadow="never" class="search">
         <ElForm ref="searchFormRef" inline :model="searchForm">
           <ElFormItem :label="$t('name')" prop="name">
-            <ElInput v-model="searchForm.name" :placeholder="$t('placeholder_input') + $t('name')" />
+            <ElInput v-model="searchForm.name" :placeholder="$t('placeholderInput') + $t('name')" />
           </ElFormItem>
           <ElFormItem>
             <ElButton type="primary" @click="load">
@@ -177,13 +186,13 @@ function onSubmit() {
                 style="--el-switch-on-color: var(--el-color-success);" />
             </template>
           </ElTableColumn>
-          <ElTableColumn :show-overflow-tooltip="true" prop="description" :label="$t('description')" />
-          <ElTableColumn :label="$t('actions')">
+          <ElTableColumn show-overflow-tooltip prop="description" :label="$t('description')" />
+          <ElTableColumn :label="$t('action')">
             <template #default="scope">
               <ElButton size="small" type="primary" @click="saveOrUpdate(scope.row.id)">
                 <div class="i-ph:pencil-simple-line"></div>{{ $t('edit') }}
               </ElButton>
-              <ElButton size="small" type="danger">
+              <ElButton size="small" type="danger" @click="removeHandler(scope.row.id)">
                 <div class="i-ph:trash"></div>{{ $t('remove') }}
               </ElButton>
             </template>
@@ -194,16 +203,23 @@ function onSubmit() {
       </ElCard>
     </ElSpace>
 
-    <Dialog v-model="dialogVisible" :title="$t('department')" :width="'30%'">
+    <Dialog v-model="dialogVisible" :title="$t('department')" :width="'25%'">
       <ElForm ref="formRef" :model="form" :rules="rules" label-position="top">
-        <ElSpace size="large" wrap fill class="w-full">
-          <ElFormItem :label="$t('name')" prop="name">
-            <ElInput v-model="form.name" :placeholder="$t('placeholder_input') + $t('name')" />
+        <ElRow :gutter="20" class="w-full !mx-0">
+          <ElCol>
+            <ElFormItem :label="$t('name')" prop="name">
+            <ElInput v-model="form.name" :placeholder="$t('placeholderInput') + $t('name')" />
           </ElFormItem>
-          <ElFormItem :label="$t('description')" prop="description">
-            <ElInput v-model="form.description" type="textarea" :placeholder="$t('placeholder_input') + $t('name')" />
-          </ElFormItem>
-        </ElSpace>
+          </ElCol>
+        </ElRow>
+        <ElRow :gutter="20" class="w-full !mx-0">
+          <ElCol>
+            <ElFormItem :label="$t('description')" prop="description">
+              <ElInput v-model="form.description" type="textarea"
+                :placeholder="$t('placeholderInput') + $t('description')" />
+            </ElFormItem>
+          </ElCol>
+        </ElRow>
       </ElForm>
       <template #footer>
         <ElButton type="primary" :loading="saveLoading" @click="onSubmit">

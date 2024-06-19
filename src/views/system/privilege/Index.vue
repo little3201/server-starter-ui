@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, reactive, onMounted } from 'vue'
+import { ref, reactive, onMounted, computed } from 'vue'
 import type { FormInstance, FormRules } from 'element-plus'
 import Dialog from 'components/Dialog.vue'
 import { retrievePrivileges, retrievePrivilegeSubset, fetchPrivilege } from '~/api/privileges'
@@ -7,7 +7,7 @@ import type { Privilege, PrivilegeTreeNode } from '~/api/models.type'
 
 const loading = ref<boolean>(false)
 const datas = ref<Array<PrivilegeTreeNode>>([])
-const pagination = ref({
+const pagination = reactive({
   page: 1,
   size: 10,
   total: 0
@@ -20,11 +20,14 @@ const searchForm = ref({
   name: null
 })
 
+const iconName = ref('')
+const icons = ref(['gear', 'user', 'users', 'book', 'plus', 'trash', 'key', 'gear', 'user', 'users', 'book', 'plus', 'trash', 'key', 'gear', 'user', 'users', 'book', 'plus', 'trash', 'key', 'gear', 'user', 'users', 'book', 'plus', 'trash', 'key'])
+const filterIcons = computed(() => icons.value.filter(item => item.includes(iconName.value)))
+
 const formRef = ref<FormInstance>()
 
 const oldComponent = ref<string>('#')
 const form = ref<Privilege>({
-  category: 'M',
   name: '',
   path: '',
   order: 1,
@@ -48,11 +51,12 @@ const rules = reactive<FormRules<typeof form>>({
 
 /**
  * 分页变化
- * @param value 当前页码
+ * @param currentPage 当前页码
+ * @param pageSize 分页大小
  */
 function pageChange(currentPage: number, pageSize: number) {
-  pagination.value.page = currentPage
-  pagination.value.size = pageSize
+  pagination.page = currentPage
+  pagination.size = pageSize
   load()
 }
 
@@ -66,9 +70,9 @@ function load(row?: Privilege, treeNode?: unknown, resolve?: (data: Privilege[])
       resolve(res.data)
     }).finally(() => loading.value = false)
   } else {
-    retrievePrivileges(pagination.value.page, pagination.value.size, searchForm.value).then(res => {
+    retrievePrivileges(pagination.page, pagination.size, searchForm.value).then(res => {
       datas.value = res.data.content
-      pagination.value.total = res.data.totalElements
+      pagination.total = res.data.totalElements
     }).finally(() => loading.value = false)
   }
 }
@@ -81,18 +85,6 @@ function reset() {
     name: null
   }
   load()
-}
-
-/**
- * radio change
- * @param value radio值
- */
-function radioChange(value: string | number | boolean | undefined) {
-  if (value === 'D') {
-    form.value.component = '#'
-  } else {
-    form.value.component = oldComponent.value || ''
-  }
 }
 
 onMounted(() => {
@@ -136,6 +128,7 @@ function onSubmit() {
     }
   })
 }
+
 </script>
 
 <template>
@@ -144,7 +137,7 @@ function onSubmit() {
       <ElCard shadow="never" class="search">
         <ElForm ref="searchFormRef" inline :model="searchForm">
           <ElFormItem :label="$t('name')" prop="name">
-            <ElInput v-model="searchForm.name" :placeholder="$t('placeholder_input') + $t('name')" />
+            <ElInput v-model="searchForm.name" :placeholder="$t('placeholderInput') + $t('name')" />
           </ElFormItem>
           <ElFormItem>
             <ElButton type="primary" @click="load">
@@ -167,7 +160,6 @@ function onSubmit() {
               <div class="i-ph:cloud-arrow-down"></div>{{ $t('export') }}
             </ElButton>
           </ElCol>
-
           <ElCol :span="8" class="text-right">
             <ElTooltip class="box-item" effect="dark" :content="$t('refresh')" placement="top">
               <ElButton type="primary" circle @click="load">
@@ -191,7 +183,7 @@ function onSubmit() {
           <ElTableColumn type="selection" width="55" />
           <ElTableColumn prop="name" :label="$t('name')">
             <template #default="scope">
-              {{ $t(scope.row.name.toLocaleLowerCase()) }}
+              {{ $t(scope.row.name.replace(scope.row.name[0], scope.row.name[0].toLowerCase())) }}
             </template>
           </ElTableColumn>
           <ElTableColumn prop="meta.icon" :label="$t('icon')">
@@ -208,12 +200,9 @@ function onSubmit() {
                 style="--el-switch-on-color: var(--el-color-success);" />
             </template>
           </ElTableColumn>
-          <ElTableColumn :show-overflow-tooltip="true" prop="description" :label="$t('description')" />
-          <ElTableColumn :label="$t('actions')">
+          <ElTableColumn show-overflow-tooltip prop="description" :label="$t('description')" />
+          <ElTableColumn :label="$t('action')">
             <template #default="scope">
-              <ElButton size="small" type="success" @click="saveOrUpdate(scope.row.id)">
-                <div class="i-ph:plus"></div>{{ $t('add_sub') }}
-              </ElButton>
               <ElButton size="small" type="primary" @click="saveOrUpdate(scope.row.id)">
                 <div class="i-ph:pencil-simple-line"></div>{{ $t('edit') }}
               </ElButton>
@@ -227,33 +216,62 @@ function onSubmit() {
 
     <Dialog v-model="dialogVisible" :title="$t('privilege')" :width="'40%'">
       <ElForm ref="formRef" :model="form" :rules="rules" label-position="top">
-        <ElSpace size="large" fill :fill-ratio="45" class="w-full">
-          <ElFormItem :label="$t('category')" prop="category">
-            <ElRadioGroup v-model="form.category" @change="radioChange">
-              <ElRadioButton label="目录" value="D" />
-              <ElRadioButton label="菜单" value="M" />
-            </ElRadioGroup>
-          </ElFormItem>
-          <ElFormItem :label="$t('order')" prop="order">
-            <ElInputNumber v-model="form.order" :placeholder="$t('placeholder_input') + $t('order')" />
-          </ElFormItem>
-          <ElFormItem :label="$t('name')" prop="name">
-            <ElInput v-model="form.name" :placeholder="$t('placeholder_input') + $t('name')" />
-          </ElFormItem>
-          <ElFormItem :label="$t('component')" prop="component">
-            <ElInput v-model="form.component" :placeholder="$t('placeholder_input') + $t('component')"
-              :disabled="form.category === 'D'" />
-          </ElFormItem>
-          <ElFormItem :label="$t('icon')" prop="meta.icon">
-            <ElInput v-model="form.meta.icon" :placeholder="$t('placeholder_input') + $t('icon')" />
-          </ElFormItem>
-          <ElFormItem :label="$t('path')" prop="path">
-            <ElInput v-model="form.path" :placeholder="$t('placeholder_input') + $t('path')" />
-          </ElFormItem>
-          <ElFormItem :label="$t('description')" prop="description">
-            <ElInput v-model="form.description" type="textarea" :placeholder="$t('description')" />
-          </ElFormItem>
-        </ElSpace>
+        <ElRow :gutter="20" class="w-full !mx-0">
+          <ElCol :span="12">
+            <ElFormItem :label="$t('name')" prop="name">
+              <ElInput v-model="form.name" :placeholder="$t('placeholderInput') + $t('name')" disabled />
+            </ElFormItem>
+          </ElCol>
+          <ElCol :span="12">
+            <ElFormItem :label="$t('path')" prop="path">
+              <ElInput v-model="form.path" :placeholder="$t('placeholderInput') + $t('path')" disabled />
+            </ElFormItem>
+          </ElCol>
+        </ElRow>
+        <ElRow :gutter="20" class="w-full !mx-0">
+          <ElCol :span="12">
+            <ElFormItem :label="$t('component')" prop="component">
+              <ElInput v-model="form.component" :placeholder="$t('placeholderInput') + $t('component')" disabled />
+            </ElFormItem>
+          </ElCol>
+          <ElCol :span="12">
+            <ElFormItem :label="$t('order')" prop="order">
+              <ElInputNumber v-model="form.order" :placeholder="$t('placeholderInput') + $t('order')" />
+            </ElFormItem>
+          </ElCol>
+        </ElRow>
+        <ElRow :gutter="20" class="w-full !mx-0">
+          <ElCol>
+            <ElFormItem :label="$t('icon')" prop="meta.icon" class="relative">
+              <!-- width 相对body设置, popover默认设置了 position: absolute -->
+              <ElPopover trigger="click" width="36%">
+                <template #reference>
+                  <ElInput v-model="form.meta.icon" :placeholder="$t('placeholderInput') + $t('icon')">
+                  </ElInput>
+                </template>
+                <!-- <div> -->
+                <ElInput v-model="iconName" :placeholder="$t('placeholderInput') + $t('icon')">
+                </ElInput>
+                <div class="flex flex-wrap max-h-48 overflow-y-scroll mt-4">
+                  <div v-for="(icon, index) in filterIcons" :key="index" @click="form.meta.icon = ('i-ph:' + icon)"
+                    :class="['inline-flex items-center cursor-pointer w-1/5 h-8 hover:text-[var(--el-color-primary)]', { 'text-[var(--el-color-primary)': form.meta.icon === ('i-ph:' + icon) }]">
+                    <div :class="['w-5 h-5', 'i-ph:' + icon]" />
+                    <span class="ml-2 text-base">{{ icon }}</span>
+                  </div>
+                </div>
+                <!-- </div> -->
+              </ElPopover>
+            </ElFormItem>
+          </ElCol>
+
+        </ElRow>
+        <ElRow :gutter="20" class="w-full !mx-0">
+          <ElCol>
+            <ElFormItem :label="$t('description')" prop="description">
+              <ElInput v-model="form.description" type="textarea" :placeholder="$t('description')" />
+            </ElFormItem>
+          </ElCol>
+        </ElRow>
       </ElForm>
       <template #footer>
         <ElButton type="primary" :loading="saveLoading" @click="onSubmit">

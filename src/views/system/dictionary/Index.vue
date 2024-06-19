@@ -2,13 +2,14 @@
 import { ref, reactive, onMounted } from 'vue'
 import type { FormInstance, FormRules } from 'element-plus'
 import Dialog from 'components/Dialog.vue'
-import { retrieveDictionaries, retrieveDictionarySubset, fetchDictionary } from '~/api/dictionaries'
+import { retrieveDictionaries, fetchDictionary } from '~/api/dictionaries'
 import type { Dictionary } from '~/api/models.type'
+import SubPage from './SubPage.vue'
 
 
 const loading = ref<boolean>(false)
 const datas = ref<Array<Dictionary>>([])
-const pagination = ref({
+const pagination = reactive({
   page: 1,
   size: 10,
   total: 0
@@ -36,29 +37,24 @@ const rules = reactive<FormRules<typeof form>>({
 
 /**
  * 分页变化
- * @param value 当前页码
+ * @param currentPage 当前页码
+ * @param pageSize 分页大小
  */
 function pageChange(currentPage: number, pageSize: number) {
-  pagination.value.page = currentPage
-  pagination.value.size = pageSize
+  pagination.page = currentPage
+  pagination.size = pageSize
   load()
 }
 
 /**
  * 加载列表
  */
-function load(row?: Dictionary, treeNode?: unknown, resolve?: (data: Dictionary[]) => void) {
+function load() {
   loading.value = true
-  if (row && row.id && resolve) {
-    retrieveDictionarySubset(row.id).then(res => {
-      resolve(res.data)
-    }).finally(() => loading.value = false)
-  } else {
-    retrieveDictionaries(1, 10).then(res => {
-      datas.value = res.data.content
-      pagination.value.total = res.data.totalElements
-    }).finally(() => loading.value = false)
-  }
+  retrieveDictionaries(pagination.page, pagination.size).then(res => {
+    datas.value = res.data.content
+    pagination.total = res.data.totalElements
+  }).finally(() => loading.value = false)
 }
 
 /**
@@ -111,6 +107,14 @@ function onSubmit() {
     }
   })
 }
+
+/**
+ * 删除
+ * @param id 主键
+ */
+ function removeHandler(id: number) {
+  datas.value = datas.value.filter(item => item.id !== id)
+}
 </script>
 
 <template>
@@ -119,7 +123,7 @@ function onSubmit() {
       <ElCard shadow="never" class="search">
         <ElForm ref="searchFormRef" inline :model="searchForm">
           <ElFormItem :label="$t('name')" prop="name">
-            <ElInput v-model="searchForm.name" :placeholder="$t('placeholder_input') + $t('name')" />
+            <ElInput v-model="searchForm.name" :placeholder="$t('placeholderInput') + $t('name')" />
           </ElFormItem>
           <ElFormItem>
             <ElButton type="primary" @click="load">
@@ -169,8 +173,12 @@ function onSubmit() {
         </ElRow>
 
         <ElTable v-loading="loading" :data="datas" lazy :load="load" row-key="id" stripe table-layout="auto">
+          <el-table-column type="expand">
+            <template #default="props">
+              <SubPage :superior-id="props.row.id" :title="props.row.name" />
+            </template>
+          </el-table-column>
           <ElTableColumn type="selection" width="55" />
-          <ElTableColumn type="index" :label="$t('no')" width="55" />
           <ElTableColumn prop="name" :label="$t('name')" />
           <ElTableColumn prop="enabled" :label="$t('status')">
             <template #default="scope">
@@ -178,16 +186,14 @@ function onSubmit() {
                 style="--el-switch-on-color: var(--el-color-success);" />
             </template>
           </ElTableColumn>
-          <ElTableColumn :show-overflow-tooltip="true" prop="description" :label="$t('description')" />
-          <ElTableColumn :label="$t('actions')">
+          <ElTableColumn prop="order" :label="$t('order')" />
+          <ElTableColumn show-overflow-tooltip prop="description" :label="$t('description')" />
+          <ElTableColumn :label="$t('action')">
             <template #default="scope">
-              <ElButton size="small" type="success">
-                <div class="i-ph:plus"></div>{{ $t('add_sub') }}
-              </ElButton>
               <ElButton size="small" type="primary" @click="saveOrUpdate(scope.row.id)">
                 <div class="i-ph:pencil-simple-line"></div>{{ $t('edit') }}
               </ElButton>
-              <ElButton size="small" type="danger">
+              <ElButton size="small" type="danger" @click="removeHandler(scope.row.id)">
                 <div class="i-ph:trash"></div>{{ $t('remove') }}
               </ElButton>
             </template>
@@ -200,17 +206,26 @@ function onSubmit() {
 
     <Dialog v-model="dialogVisible" :title="$t('dictionary')" :width="'32%'">
       <ElForm ref="formRef" :model="form" :rules="rules" label-position="top">
-        <ElSpace size="large" wrap fill :fill-ratio="45" class="w-full">
-          <ElFormItem :label="$t('name')" prop="name">
-            <ElInput v-model="form.name" :placeholder="$t('placeholder_input') + $t('name')" />
-          </ElFormItem>
-          <ElFormItem :label="$t('order')" prop="order">
-            <ElInputNumber v-model="form.order" :placeholder="$t('placeholder_input') + $t('order')" />
-          </ElFormItem>
-          <ElFormItem :label="$t('description')" prop="description">
-            <ElInput v-model="form.description" type="textarea" :placeholder="$t('description')" />
-          </ElFormItem>
-        </ElSpace>
+        <ElRow :gutter="20" class="w-full !mx-0">
+          <ElCol :span="12">
+            <ElFormItem :label="$t('name')" prop="name">
+              <ElInput v-model="form.name" :placeholder="$t('placeholderInput') + $t('name')" />
+            </ElFormItem>
+          </ElCol>
+          <ElCol :span="12">
+            <ElFormItem :label="$t('order')" prop="order">
+              <ElInputNumber v-model="form.order" :placeholder="$t('placeholderInput') + $t('order')" />
+            </ElFormItem>
+          </ElCol>
+        </ElRow>
+        <ElRow :gutter="20" class="w-full !mx-0">
+          <ElCol>
+            <ElFormItem :label="$t('description')" prop="description">
+              <ElInput v-model="form.description" type="textarea"
+                :placeholder="$t('placeholderInput') + $t('description')" />
+            </ElFormItem>
+          </ElCol>
+        </ElRow>
       </ElForm>
       <template #footer>
         <ElButton type="primary" :loading="saveLoading" @click="onSubmit">

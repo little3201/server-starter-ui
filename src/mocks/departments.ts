@@ -4,12 +4,12 @@ import type { Department, TreeNode } from '~/api/models.type'
 const datas: Department[] = []
 const subDatas: Department[] = []
 
-for (let i = 1; i < 200; i++) {
+for (let i = 1; i < 28; i++) {
   const data: Department = {
     id: i,
     name: 'department_' + i,
     enabled: i % 3 > 0,
-    description: '这是描述',
+    description: '这是描述内容，请参考嘻嘻嘻嘻嘻嘻嘻嘻',
     hasChildren: i % 3 > 0
   }
   for (let j = 0; j < i; j++) {
@@ -65,13 +65,13 @@ export const departmentsHandlers = [
   http.get('/api/departments/:id', ({ params }) => {
     const { id } = params
     if (id) {
+      if (id === 'tree') {
+        return HttpResponse.json(treeNodes)
+      }
       return HttpResponse.json(datas.filter(item => item.id === Number(id))[0])
     } else {
       return HttpResponse.json(null)
     }
-  }),
-  http.get('/api/departments/tree', () => {
-    return HttpResponse.json(treeNodes)
   }),
   http.get('/api/departments/:id/subset', ({ params }) => {
     const superiorId = params.id

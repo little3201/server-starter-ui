@@ -1,24 +1,64 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
-import { retrieveLogs } from '~/api/logs'
-import type { Log } from '~/api/models.type'
+import { ref, onMounted, reactive } from 'vue'
+import { dayjs } from 'element-plus'
+import { retrieveActionLogs } from '~/api/action-logs'
+import type { ActionLog } from '~/api/models.type'
 
-const datas = ref<Array<Log>>([])
+
+const pagination = reactive({
+  page: 1,
+  size: 10,
+  total: 0
+})
+
+const loading = ref<boolean>(false)
+const datas = ref<Array<ActionLog>>([])
 const searchFormRef = ref()
 
 const searchForm = ref({
   title: ''
 })
 
+const dialogVisible = ref<boolean>(false)
+/**
+ * 分页变化
+ * @param value 当前页码
+ */
+function pageChange(currentPage: number, pageSize: number) {
+  pagination.page = currentPage
+  pagination.size = pageSize
+  load()
+}
+
+/**
+ * 加载列表
+ */
 function load() {
-  retrieveLogs(1, 10).then(res => {
+  retrieveActionLogs(pagination.page, pagination.size).then(res => {
     datas.value = res.data.content
-  })
+    pagination.total = res.data.totalElements
+  }).finally(() => loading.value = false)
 }
 
 onMounted(() => {
   load()
 })
+
+/**
+ * 详情
+ * @param id 主键
+ */
+function detailHandler(id: number) {
+  dialogVisible.value = true
+}
+
+/**
+ * 删除
+ * @param id 主键
+ */
+function removeHandler(id: number) {
+  datas.value = datas.value.filter(item => item.id !== id)
+}
 </script>
 
 <template>
@@ -26,7 +66,7 @@ onMounted(() => {
     <ElCard shadow="never" class="search">
       <ElForm ref="searchFormRef" inline :model="searchForm">
         <ElFormItem :label="$t('title')" prop="title">
-          <ElInput v-model="searchForm.title" :placeholder="$t('placeholder_input') + $t('title')" />
+          <ElInput v-model="searchForm.title" :placeholder="$t('placeholderInput') + $t('title')" />
         </ElFormItem>
         <ElFormItem>
           <ElButton type="primary" @click="load">
@@ -69,20 +109,45 @@ onMounted(() => {
         </ElCol>
       </ElRow>
 
-      <ElTable :data="datas" lazy :load="load" row-key="id" stripe table-layout="auto">
+      <ElTable :data="datas" lazy :load="load" row-key="id" stripe table-layout="auto" height="calc(100vh - 350px)">
         <ElTableColumn type="selection" width="55" />
         <ElTableColumn type="index" :label="$t('no')" width="55" />
-        <ElTableColumn prop="title" :label="$t('title')" />
-        <ElTableColumn :show-overflow-tooltip="true" prop="content" :label="$t('content')" />
-        <ElTableColumn :label="$t('actions')">
+        <ElTableColumn prop="module" :label="$t('module')" />
+        <ElTableColumn prop="operation" :label="$t('operation')" />
+        <ElTableColumn prop="method" :label="$t('method')" />
+        <ElTableColumn show-overflow-tooltip prop="params" :label="$t('params')" />
+        <ElTableColumn prop="operator" :label="$t('operator')" />
+        <ElTableColumn prop="ip" :label="$t('ip')" />
+        <ElTableColumn prop="location" :label="$t('location')" />
+        <ElTableColumn prop="status" :label="$t('status')">
           <template #default="scope">
-            <ElButton size="small" type="danger">
+            <ElTag v-if="scope.row.status === 1" type="success" effect="light" round>{{ $t('success') }}</ElTag>
+            <ElTag v-else type="danger" effect="light" round>{{ $t('failure') }}</ElTag>
+          </template>
+        </ElTableColumn>
+        <ElTableColumn prop="operateTime" :label="$t('operateTime')">
+          <template #default="scope">
+              {{ dayjs(scope.row.operateTime).format('YY-M-D HH:mm:ss') }}
+          </template>
+        </ElTableColumn>
+        <ElTableColumn :label="$t('action')" width="160">
+          <template #default="scope">
+            <ElButton size="small" type="success" @click="detailHandler(scope.row.id)">
+              <div class="i-ph:file-text"></div>{{ $t('detail') }}
+            </ElButton>
+            <ElButton size="small" type="danger" @click="removeHandler(scope.row.id)">
               <div class="i-ph:trash"></div>{{ $t('remove') }}
             </ElButton>
           </template>
         </ElTableColumn>
       </ElTable>
-      <ElPagination :total="100" />
+      <ElPagination layout="prev, pager, next, sizes, jumper, ->, total" @change="pageChange"
+        :total="pagination.total" />
     </ElCard>
   </ElSpace>
+
+
+  <Dialog v-model="dialogVisible" :title="$t('detail')" :width="'36%'">
+
+  </Dialog>
 </template>

@@ -3,10 +3,10 @@ import type { User } from '~/api/models.type'
 
 const datas: User[] = []
 
-for (let i = 1; i < 20; i++) {
+for (let i = 1; i < 28; i++) {
   const data: User = {
     id: i,
-    username: 'username' + i, 
+    username: 'username' + i,
     email: 'lastname_' + i + '@test.com',
     role: i,
     enabled: i % 2 > 0
@@ -32,9 +32,16 @@ export const usersHandlers = [
     // as the response body.
     let data = {}
     if (deapartmentId) {
-      data = {
-        content: Array.from(datas.slice(0, Number(deapartmentId))),
-        totalElements: datas.length
+      if (Number(deapartmentId) == 1) {
+        data = {
+          content: Array.from(datas.slice(Number(page) * Number(size), (Number(page) + 1) * Number(size))),
+          totalElements: datas.length
+        }
+      } else {
+        data = {
+          content: Array.from(datas.slice(0, Number(deapartmentId))),
+          totalElements: datas.length
+        }
       }
     } else {
       data = {
@@ -42,7 +49,7 @@ export const usersHandlers = [
         totalElements: datas.length
       }
     }
-    
+
 
     return HttpResponse.json(data)
   }),

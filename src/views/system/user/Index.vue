@@ -6,11 +6,10 @@ import { retrieveDepartments, retrieveDepartmentTree } from '~/api/departments'
 import { retrieveUsers, fetchUser } from '~/api/users'
 import { retrieveRoles } from '~/api/roles'
 import type { TreeNode, Department, User, Role } from '~/api/models.type'
-import { ElButton, ElCol } from 'element-plus'
 
 const loading = ref<boolean>(false)
 const datas = ref<Array<User>>([])
-const pagination = ref({
+const pagination = reactive({
   page: 1,
   size: 10,
   total: 0
@@ -21,7 +20,7 @@ const treeLoading = ref<boolean>(false)
 const currentNodeKey = ref<number>()
 const currentNode = ref('')
 
-const groupTree = ref<TreeNode[]>([])
+const departmentTree = ref<TreeNode[]>([])
 const departmentsOptions = ref<Department[]>([])
 const rolesOptions = ref<Role[]>([])
 
@@ -65,9 +64,9 @@ const filterNode = (value: string, data: TreeNode) => {
 function loadTree() {
   treeLoading.value = true
   retrieveDepartmentTree().then(res => {
-    groupTree.value = res.data
+    departmentTree.value = res.data
     currentNodeKey.value =
-      (res.data[0] && res.data[0]?.children && res.data[0].children[0].id) || ''
+      (res.data[0] && res.data[0]?.id) || ''
 
     treeEl.value.setCurrentKey(currentNodeKey.value)
 
@@ -84,17 +83,18 @@ function currentChange(data: TreeNode) {
     return
   }
   currentNodeKey.value = data.id
-  pagination.value.page = 1
+  pagination.page = 1
   load()
 }
 
 /**
  * 分页变化
- * @param value 当前页码
+ * @param currentPage 当前页码
+ * @param pageSize 分页大小
  */
 function pageChange(currentPage: number, pageSize: number) {
-  pagination.value.page = currentPage
-  pagination.value.size = pageSize
+  pagination.page = currentPage
+  pagination.size = pageSize
   load()
 }
 
@@ -121,9 +121,9 @@ function fetchRoles() {
  */
 function load() {
   loading.value = true
-  retrieveUsers(pagination.value.page, pagination.value.size, currentNodeKey.value, searchForm.value).then(res => {
+  retrieveUsers(pagination.page, pagination.size, currentNodeKey.value, searchForm.value).then(res => {
     datas.value = res.data.content
-    pagination.value.total = res.data.totalElements
+    pagination.total = res.data.totalElements
   }).finally(() => loading.value = false)
 }
 
@@ -190,6 +190,14 @@ function onSubmit() {
     }
   })
 }
+
+/**
+ * 删除
+ * @param id 主键
+ */
+function removeHandler(id: number) {
+  datas.value = datas.value.filter(item => item.id !== id)
+}
 </script>
 
 <template>
@@ -204,9 +212,9 @@ function onSubmit() {
           </ElInput>
         </ElFormItem>
         <ElDivider />
-        <ElTree ref="treeEl" v-loading="treeLoading" :data="groupTree" default-expand-all :expand-on-click-node="false"
-          node-key="id" :current-node-key="currentNodeKey" :props="{ label: 'name' }" :filter-node-method="filterNode"
-          @current-change="currentChange">
+        <ElTree ref="treeEl" v-loading="treeLoading" :data="departmentTree" default-expand-all
+          :expand-on-click-node="false" node-key="id" :current-node-key="currentNodeKey" :props="{ label: 'name' }"
+          :filter-node-method="filterNode" @current-change="currentChange">
           <template #default="{ data }">
             <div :title="data.name" class="whitespace-nowrap overflow-ellipsis overflow-hidden">
               {{ data.name }}
@@ -219,10 +227,10 @@ function onSubmit() {
         <ElCard shadow="never" class="search">
           <ElForm inline :model="searchForm">
             <ElFormItem :label="$t('username')" prop="username">
-              <ElInput v-model="searchForm.username" :placeholder="$t('placeholder_input') + $t('username')" />
+              <ElInput v-model="searchForm.username" :placeholder="$t('placeholderInput') + $t('username')" />
             </ElFormItem>
             <ElFormItem :label="$t('email')" prop="email">
-              <ElInput type="email" v-model="searchForm.email" :placeholder="$t('placeholder_input') + $t('email')" />
+              <ElInput type="email" v-model="searchForm.email" :placeholder="$t('placeholderInput') + $t('email')" />
             </ElFormItem>
             <ElFormItem>
               <ElButton type="primary" @click="load">
@@ -275,7 +283,7 @@ function onSubmit() {
             layout="prev, pager, next, sizes, jumper, ->, total">
             <ElTableColumn type="selection" width="55" />
             <ElTableColumn type="index" :label="$t('no')" width="55" />
-            <ElTableColumn :show-overflow-tooltip="true" prop="username" :label="$t('username')">
+            <ElTableColumn show-overflow-tooltip prop="username" :label="$t('username')">
               <template #default="scope">
                 <div style="display: flex; align-items: center">
                   <ElAvatar :size="28" src="#" />
@@ -283,20 +291,20 @@ function onSubmit() {
                 </div>
               </template>
             </ElTableColumn>
-            <ElTableColumn :show-overflow-tooltip="true" prop="email" :label="$t('email')" />
-            <ElTableColumn :show-overflow-tooltip="true" prop="role" :label="$t('role')" />
+            <ElTableColumn show-overflow-tooltip prop="email" :label="$t('email')" />
+            <ElTableColumn show-overflow-tooltip prop="role" :label="$t('role')" />
             <ElTableColumn prop="enabled" :label="$t('status')">
               <template #default="scope">
                 <ElSwitch size="small" v-model="scope.row.enabled"
                   style="--el-switch-on-color: var(--el-color-success);" />
               </template>
             </ElTableColumn>
-            <ElTableColumn :label="$t('actions')">
+            <ElTableColumn :label="$t('action')">
               <template #default="scope">
                 <ElButton size="small" type="primary" @click="saveOrUpdate(scope.row.id)">
                   <div class="i-ph:pencil-simple-line"></div>{{ $t('edit') }}
                 </ElButton>
-                <ElButton size="small" type="danger">
+                <ElButton size="small" type="danger" @click="removeHandler(scope.row.id)">
                   <div class="i-ph:trash"></div>{{ $t('remove') }}
                 </ElButton>
               </template>
@@ -308,28 +316,38 @@ function onSubmit() {
       </ElSpace>
     </div>
 
-    <Dialog v-model="dialogVisible" :title="$t('User')" :width="'36%'">
+    <Dialog v-model="dialogVisible" :title="$t('user')" :width="'36%'">
       <ElForm ref="formRef" :model="form" :rules="rules" label-position="top">
-        <ElSpace size="large" wrap fill :fill-ratio="45" class="w-full">
-          <ElFormItem :label="$t('username')" prop="username">
-            <ElInput v-model="form.username" :placeholder="$t('placeholder_input') + $t('username')" />
-          </ElFormItem>
-          <ElFormItem :label="$t('email')" prop="email">
-            <ElInput type="email" v-model="form.email" :placeholder="$t('placeholder_input') + $t('email')"
-              show-password />
-          </ElFormItem>
-          <ElFormItem :label="$t('role')" prop="role">
-            <ElSelect v-model="form.role" :placeholder="$t('placeholder_select') + $t('role')" style="width: 100%">
-              <el-option v-for="item in rolesOptions" :key="item.id" :label="item.name" :value="item.id" />
-            </ElSelect>
-          </ElFormItem>
-          <ElFormItem :label="$t('department')" prop="department">
-            <ElSelect v-model="form.department" :placeholder="$t('placeholder_select') + $t('department')"
-              style="width: 100%">
-              <el-option v-for="item in departmentsOptions" :key="item.id" :label="item.name" :value="item.id" />
-            </ElSelect>
-          </ElFormItem>
-        </ElSpace>
+        <ElRow :gutter="20" class="w-full !mx-0">
+          <ElCol :span="12">
+            <ElFormItem :label="$t('username')" prop="username">
+              <ElInput v-model="form.username" :placeholder="$t('placeholderInput') + $t('username')" />
+            </ElFormItem>
+          </ElCol>
+          <ElCol :span="12">
+            <ElFormItem :label="$t('email')" prop="email">
+              <ElInput type="email" v-model="form.email" :placeholder="$t('placeholderInput') + $t('email')"
+                show-password />
+            </ElFormItem>
+          </ElCol>
+        </ElRow>
+        <ElRow :gutter="20" class="w-full !mx-0">
+          <ElCol :span="12">
+            <ElFormItem :label="$t('role')" prop="role">
+              <ElSelect v-model="form.role" :placeholder="$t('placeholderSelect') + $t('role')" style="width: 100%">
+                <ElOption v-for="item in rolesOptions" :key="item.id" :label="item.name" :value="item.id" />
+              </ElSelect>
+            </ElFormItem>
+          </ElCol>
+          <ElCol :span="12">
+            <ElFormItem :label="$t('department')" prop="department">
+              <ElSelect v-model="form.department" :placeholder="$t('placeholderSelect') + $t('department')"
+                style="width: 100%">
+                <ElOption v-for="item in departmentsOptions" :key="item.id" :label="item.name" :value="item.id" />
+              </ElSelect>
+            </ElFormItem>
+          </ElCol>
+        </ElRow>
       </ElForm>
       <template #footer>
         <ElButton type="primary" :loading="saveLoading" @click="onSubmit">

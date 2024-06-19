@@ -8,8 +8,11 @@ export const retrievePrivilegeSubset = (id: number) => {
   return api.get(`/privileges/${id}/subset`)
 }
 
-export const retrievePrivilegeTree = (username: string) => {
-  return api.get(`/privileges/${username}`)
+export const retrievePrivilegeTree = (username?: string) => {
+  if (username) {
+    return api.get(`/privileges/${username}`)
+  }
+  return api.get(`/privileges/tree`)
 }
 
 export const fetchPrivilege = (id: number) => {

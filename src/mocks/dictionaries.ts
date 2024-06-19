@@ -4,7 +4,7 @@ import type { Dictionary } from '~/api/models.type'
 const datas: Dictionary[] = []
 const subDatas: Dictionary[] = []
 
-for (let i = 1; i < 20; i++) {
+for (let i = 1; i < 28; i++) {
   const data: Dictionary = {
     id: i,
     name: 'dictionary_' + i,
