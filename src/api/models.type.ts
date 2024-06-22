@@ -4,11 +4,11 @@ export interface User {
   email: string
   avatar?: string
   role?: number
-  department?: number
+  organization?: number
   enabled?: boolean
 }
 
-export interface Department {
+export interface Organization {
   id?: number
   name: string
   superiorId?: number
@@ -78,11 +78,11 @@ export interface ActionLog {
   method: string
   operator: string
   operation: string
-  params: string
+  params: string | null
   ip: string
   location: string
-  status: number
-  operateTime: string
+  status: number | null
+  operateTime: string | null
 }
 
 export interface AccessLog {
@@ -93,10 +93,10 @@ export interface AccessLog {
   params: string | null
   ip: string
   location: string
-  status: number
-  responseTime: number
-  responseCode: number
-  responseMessage: string
+  status: number | null
+  responseTime: number | null
+  responseCode: number | null
+  responseMessage: string | null
 }
 
 export interface AuditLog {
@@ -108,8 +108,8 @@ export interface AuditLog {
   newValue: string | null
   ip: string
   location: string
-  status: number
-  actionTime: string
+  status: number | null
+  actionTime: string | null
 }
 
 export interface SchedulerLog {
@@ -120,5 +120,5 @@ export interface SchedulerLog {
   cronExpression: string
   startTime: string
   endTime: string
-  status: number
+  status: number | null
 }

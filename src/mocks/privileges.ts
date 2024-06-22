@@ -17,13 +17,13 @@ const datas: PrivilegeTreeNode[] = [
     children: [
       {
         id: 2,
-        path: 'department',
-        component: 'views/system/department/Index',
-        name: 'Department',
+        path: 'organization',
+        component: 'views/system/organization/Index',
+        name: 'Organization',
         order: 1,
         enabled: true,
         meta: {
-          icon: 'i-ph:users'
+          icon: 'i-ph:tree-structure'
         }
       },
       {
@@ -45,7 +45,7 @@ const datas: PrivilegeTreeNode[] = [
         order: 3,
         enabled: true,
         meta: {
-          icon: 'i-ph:list-dashes'
+          icon: 'i-ph:lock-key'
         }
       },
       {
@@ -56,7 +56,7 @@ const datas: PrivilegeTreeNode[] = [
         order: 4,
         enabled: true,
         meta: {
-          icon: 'i-ph:user-list'
+          icon: 'i-ph:user-circle'
         }
       },
       {
@@ -92,7 +92,7 @@ const datas: PrivilegeTreeNode[] = [
         order: 1,
         enabled: true,
         meta: {
-          icon: 'i-ph:file-text'
+          icon: 'i-ph:clipboard-text'
         }
       },
       {
@@ -103,7 +103,7 @@ const datas: PrivilegeTreeNode[] = [
         order: 2,
         enabled: true,
         meta: {
-          icon: 'i-ph:file-magnifying-glass'
+          icon: 'i-ph:file-text'
         }
       },
       {
@@ -146,13 +146,13 @@ const dataArray: Privilege[] = [
   },
   {
     id: 2,
-    path: 'department',
-    component: 'views/system/department/Index',
-    name: 'Department',
+    path: 'organization',
+    component: 'views/system/organization/Index',
+    name: 'Organization',
     order: 1,
     enabled: true,
     meta: {
-      icon: 'i-ph:users'
+      icon: 'i-ph:tree-structure'
     }
   },
   {
@@ -174,7 +174,7 @@ const dataArray: Privilege[] = [
     order: 3,
     enabled: true,
     meta: {
-      icon: 'i-ph:list-dashes'
+      icon: 'i-ph:lock-key'
     }
   },
   {
@@ -185,7 +185,7 @@ const dataArray: Privilege[] = [
     order: 4,
     enabled: true,
     meta: {
-      icon: 'i-ph:user-list'
+      icon: 'i-ph:user-circle'
     }
   },
   {
@@ -219,7 +219,7 @@ const dataArray: Privilege[] = [
     order: 1,
     enabled: true,
     meta: {
-      icon: 'i-ph:file-text'
+      icon: 'i-ph:clipboard-text'
     }
   },
   {
@@ -230,7 +230,7 @@ const dataArray: Privilege[] = [
     order: 2,
     enabled: true,
     meta: {
-      icon: 'i-ph:file-magnifying-glass'
+      icon: 'i-ph:file-text'
     }
   },
   {

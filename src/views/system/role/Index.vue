@@ -4,7 +4,7 @@ import type { FormInstance, FormRules } from 'element-plus'
 import Dialog from 'components/Dialog.vue'
 import { retrieveRoles, retrieveRolePrivileges, retrieveRoleDepartments, fetchRole } from '~/api/roles'
 import { retrievePrivilegeTree } from '~/api/privileges'
-import { retrieveDepartmentTree } from '~/api/departments'
+import { retrieveDepartmentTree } from '~/api/organizations'
 import type { Role, TreeNode } from '~/api/models.type'
 
 const loading = ref<boolean>(false)
@@ -19,8 +19,8 @@ const privilegeTreeLoading = ref<boolean>(false)
 const privilegeTree = ref<Array<Number>>([])
 const rolePrivileges = ref<Array<TreeNode>>([])
 
-const departmentTreeLoading = ref<boolean>(false)
-const departmentTree = ref<Array<TreeNode>>([])
+const organizationTreeLoading = ref<boolean>(false)
+const organizationTree = ref<Array<TreeNode>>([])
 const roleDepartments = ref<Array<Number>>([])
 
 const saveLoading = ref<boolean>(false)
@@ -43,6 +43,8 @@ const rules = reactive<FormRules<typeof form>>({
   ]
 })
 
+const dataPrivilege = ref<number>(1)
+
 /**
  * 权限树
  */
@@ -54,13 +56,13 @@ function loadPrivilegeTree() {
 }
 
 /**
- * 部门树
+ * 组织树
  */
 function loadDepartmentTree() {
-  departmentTreeLoading.value = true
+  organizationTreeLoading.value = true
   retrieveDepartmentTree().then(res => {
-    departmentTree.value = res.data
-  }).finally(() => departmentTreeLoading.value = false)
+    organizationTree.value = res.data
+  }).finally(() => organizationTreeLoading.value = false)
 }
 
 /**
@@ -142,7 +144,7 @@ function onSubmit() {
  * 删除
  * @param id 主键
  */
- function removeHandler(id: number) {
+function removeHandler(id: number) {
   datas.value = datas.value.filter(item => item.id !== id)
 }
 
@@ -152,7 +154,7 @@ function onSubmit() {
 function handlePrivilegeCheckChange() { }
 
 /**
- * 部门树操作
+ * 组织树操作
  */
 function handleDepartmentCheckChange() { }
 
@@ -169,6 +171,15 @@ function handleCurrentChange(row: Role | undefined) {
       })
   }
 }
+
+/**
+ * 确认
+ */
+function confirmEvent(id: number) {
+  if (id) {
+    removeHandler(id)
+  }
+}
 </script>
 
 <template>
@@ -177,7 +188,7 @@ function handleCurrentChange(row: Role | undefined) {
       <ElCard shadow="never" class="search">
         <ElForm ref="searchFormRef" inline :model="searchForm">
           <ElFormItem :label="$t('name')" prop="name">
-            <ElInput v-model="searchForm.name" :placeholder="$t('placeholderInput') + $t('name')" />
+            <ElInput v-model="searchForm.name" :placeholder="$t('inputText') + $t('name')" />
           </ElFormItem>
           <ElFormItem>
             <ElButton type="primary" @click="load">
@@ -198,20 +209,20 @@ function handleCurrentChange(row: Role | undefined) {
                 <ElButton type="primary" @click="saveOrUpdate()">
                   <div class="i-ph:plus"></div>{{ $t('add') }}
                 </ElButton>
-                <ElButton type="danger">
+                <ElButton type="danger" plain>
                   <div class="i-ph:trash"></div>{{ $t('remove') }}
                 </ElButton>
-                <ElButton type="warning" @click="dialogVisible = true">
+                <ElButton type="warning" plain @click="dialogVisible = true">
                   <div class="i-ph:file-arrow-up"></div>{{ $t('import') }}
                 </ElButton>
-                <ElButton type="success">
+                <ElButton type="success" plain>
                   <div class="i-ph:cloud-arrow-down"></div>{{ $t('export') }}
                 </ElButton>
               </ElCol>
 
               <ElCol :span="8" class="text-right">
                 <ElTooltip class="box-item" effect="dark" :content="$t('refresh')" placement="top">
-                  <ElButton type="primary" circle @click="load">
+                  <ElButton type="primary" plain circle @click="load">
                     <template #icon>
                       <div class="i-ph:arrow-clockwise"></div>
                     </template>
@@ -219,9 +230,9 @@ function handleCurrentChange(row: Role | undefined) {
                 </ElTooltip>
 
                 <ElTooltip class="box-item" effect="dark" :content="$t('settings')" placement="top">
-                  <ElButton type="success" circle>
+                  <ElButton type="success" plain circle>
                     <template #icon>
-                      <div class="i-ph:list-magnifying-glass"></div>
+                      <div class="i-ph:table"></div>
                     </template>
                   </ElButton>
                 </ElTooltip>
@@ -242,12 +253,12 @@ function handleCurrentChange(row: Role | undefined) {
               <ElTableColumn show-overflow-tooltip prop="description" :label="$t('description')" />
               <ElTableColumn :label="$t('action')">
                 <template #default="scope">
-                  <ElButton size="small" type="primary" @click="saveOrUpdate(scope.row.id)">
+                  <ElButton size="small" type="primary" link @click="saveOrUpdate(scope.row.id)">
                     <div class="i-ph:pencil-simple-line"></div>{{ $t('edit') }}
                   </ElButton>
-                  <ElPopconfirm title="Are you sure to delete this?">
+                  <ElPopconfirm :title="$t('removeConfirm')" :width="240" @confirm="confirmEvent(scope.row.id)">
                     <template #reference>
-                      <ElButton size="small" type="danger" @click="removeHandler(scope.row.id)">
+                      <ElButton size="small" type="danger" link>
                         <div class="i-ph:trash"></div>{{ $t('remove') }}
                       </ElButton>
                     </template>
@@ -266,22 +277,25 @@ function handleCurrentChange(row: Role | undefined) {
                 <ElTree ref="treeEl" v-loading="privilegeTreeLoading" :data="privilegeTree" default-expand-all
                   :expand-on-click-node="false" node-key="id" :props="{ label: 'name' }" show-checkbox
                   @check-change="handlePrivilegeCheckChange" :default-checked-keys="rolePrivileges">
-                  <template #default="{ data }">
-                    <div :title="data.name" class="whitespace-nowrap overflow-ellipsis overflow-hidden">
-                      {{ data.name }}
+                  <template #default="{ node, data }">
+                    <div class="inline-flex items-center whitespace-nowrap overflow-ellipsis overflow-hidden">
+                      <div :class="data.meta.icon" />
+                      <span class="ml-2">{{ $t(node.label.replace(node.label[0], node.label[0].toLowerCase())) }}</span>
                     </div>
                   </template>
                 </ElTree>
               </ElTabPane>
               <ElTabPane :label="$t('dataPrivilege')">
-                <ElTree ref="treeEl" v-loading="departmentTreeLoading" :data="departmentTree" default-expand-all
-                  :expand-on-click-node="false" node-key="id" :props="{ label: 'name' }" show-checkbox
-                  @check-change="handleDepartmentCheckChange" :default-checked-keys="roleDepartments">
-                  <template #default="{ data }">
-                    <div :title="data.name" class="whitespace-nowrap overflow-ellipsis overflow-hidden">
-                      {{ data.name }}
-                    </div>
-                  </template>
+                <ElSelect v-model="dataPrivilege" class="mb-3">
+                  <ElOption :value="0" label="全部" />
+                  <ElOption :value="1" label="本部门" />
+                  <ElOption :value="2" label="仅自己" />
+                  <ElOption :value="3" label="自定义" />
+                </ElSelect>
+                <ElTree v-if="dataPrivilege === 3" ref="treeEl" v-loading="organizationTreeLoading"
+                  :data="organizationTree" default-expand-all :expand-on-click-node="false" node-key="id"
+                  :props="{ label: 'name' }" show-checkbox @check-change="handleDepartmentCheckChange"
+                  :default-checked-keys="roleDepartments">
                 </ElTree>
               </ElTabPane>
             </ElTabs>
@@ -295,25 +309,24 @@ function handleCurrentChange(row: Role | undefined) {
         <ElRow :gutter="20" class="w-full !mx-0">
           <ElCol>
             <ElFormItem :label="$t('name')" prop="name">
-              <ElInput v-model="form.name" :placeholder="$t('placeholderInput') + $t('name')" />
+              <ElInput v-model="form.name" :placeholder="$t('inputText') + $t('name')" />
             </ElFormItem>
           </ElCol>
         </ElRow>
         <ElRow :gutter="20" class="w-full !mx-0">
           <ElCol>
             <ElFormItem :label="$t('description')" prop="description">
-              <ElInput v-model="form.description" type="textarea"
-                :placeholder="$t('placeholderInput') + $t('description')" />
+              <ElInput v-model="form.description" type="textarea" :placeholder="$t('inputText') + $t('description')" />
             </ElFormItem>
           </ElCol>
         </ElRow>
       </ElForm>
       <template #footer>
-        <ElButton type="primary" :loading="saveLoading" @click="onSubmit">
-          <div class="i-ph:check-circle"></div> {{ $t('commit') }}
-        </ElButton>
         <ElButton @click="dialogVisible = false">
           <div class="i-ph:x-circle"></div>{{ $t('cancle') }}
+        </ElButton>
+        <ElButton type="primary" :loading="saveLoading" @click="onSubmit">
+          <div class="i-ph:check-circle"></div> {{ $t('commit') }}
         </ElButton>
       </template>
     </Dialog>

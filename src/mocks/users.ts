@@ -27,7 +27,7 @@ export const usersHandlers = [
     const url = new URL(request.url)
     const page = url.searchParams.get('page')
     const size = url.searchParams.get('size')
-    const deapartmentId = url.searchParams.get('departmentId')
+    const deapartmentId = url.searchParams.get('organizationId')
     // Construct a JSON response with the list of all User
     // as the response body.
     let data = {}

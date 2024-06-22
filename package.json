@@ -39,7 +39,8 @@
     "unplugin-vue-components": "^0.26.0",
     "vite": "^5.2.5",
     "vue-tsc": "^2.0.7",
-    "vue-types": "^5.1.2"
+    "vue-types": "^5.1.2",
+    "vuedraggable": "^4.1.0"
   },
   "license": "MIT",
   "msw": {

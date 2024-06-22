@@ -13,5 +13,5 @@ export const retrieveRolePrivileges = (id: number) => {
 }
 
 export const retrieveRoleDepartments = (id: number) => {
-  return api.get(`/roles/${id}/departments`)
+  return api.get(`/roles/${id}/organizations`)
 }

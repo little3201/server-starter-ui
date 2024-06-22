@@ -26,7 +26,7 @@ export const rolesHandlers = [
     if (id) {
       if (param === 'privileges') {
         return HttpResponse.json(rolePrivileges)
-      } else if (param === 'departments') {
+      } else if (param === 'organizations') {
         return HttpResponse.json(roleDepartments)
       }
     } else {

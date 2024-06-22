@@ -111,7 +111,7 @@ function onSubmit() {
           <div class="i-ph:plus"></div>{{ $t('add') }}
         </ElButton>
         <ElTooltip class="box-item" effect="dark" :content="$t('refresh')" placement="top">
-          <ElButton type="primary" circle @click="load">
+          <ElButton type="primary" plain circle @click="load">
             <template #icon>
               <div class="i-ph:arrow-clockwise"></div>
             </template>
@@ -132,10 +132,10 @@ function onSubmit() {
       <ElTableColumn show-overflow-tooltip prop="description" :label="$t('description')" />
       <ElTableColumn :label="$t('action')">
         <template #default="scope">
-          <ElButton size="small" type="primary" @click="saveOrUpdate(scope.row.id)">
+          <ElButton size="small" type="primary" link @click="saveOrUpdate(scope.row.id)">
             <div class="i-ph:pencil-simple-line"></div>{{ $t('edit') }}
           </ElButton>
-          <ElButton size="small" type="danger" @click="removeHandler(scope.row.id)">
+          <ElButton size="small" type="danger" link @click="removeHandler(scope.row.id)">
             <div class="i-ph:trash"></div>{{ $t('remove') }}
           </ElButton>
         </template>
@@ -148,12 +148,12 @@ function onSubmit() {
       <ElRow :gutter="20" class="w-full !mx-0">
         <ElCol :span="12">
           <ElFormItem :label="$t('name')" prop="name">
-            <ElInput v-model="form.name" :placeholder="$t('placeholderInput') + $t('name')" />
+            <ElInput v-model="form.name" :placeholder="$t('inputText') + $t('name')" />
           </ElFormItem>
         </ElCol>
         <ElCol :span="12">
           <ElFormItem :label="$t('order')" prop="order">
-            <ElInputNumber v-model="form.order" :placeholder="$t('placeholderInput') + $t('order')" />
+            <ElInputNumber v-model="form.order" :placeholder="$t('inputText') + $t('order')" />
           </ElFormItem>
         </ElCol>
       </ElRow>
@@ -161,17 +161,17 @@ function onSubmit() {
         <ElCol>
           <ElFormItem :label="$t('description')" prop="description">
             <ElInput v-model="form.description" type="textarea"
-              :placeholder="$t('placeholderInput') + $t('description')" />
+              :placeholder="$t('inputText') + $t('description')" />
           </ElFormItem>
         </ElCol>
       </ElRow>
     </ElForm>
     <template #footer>
-      <ElButton type="primary" :loading="saveLoading" @click="onSubmit">
-        <div class="i-ph:check-circle"></div> {{ $t('commit') }}
-      </ElButton>
       <ElButton @click="dialogVisible = false">
         <div class="i-ph:x-circle"></div>{{ $t('cancle') }}
+      </ElButton>
+      <ElButton type="primary" :loading="saveLoading" @click="onSubmit">
+        <div class="i-ph:check-circle"></div> {{ $t('commit') }}
       </ElButton>
     </template>
   </Dialog>

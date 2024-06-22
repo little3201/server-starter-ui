@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, onMounted, reactive } from 'vue'
 import { dayjs } from 'element-plus'
-import { retrieveActionLogs } from '~/api/action-logs'
+import { retrieveActionLogs, fetchActionLog } from '~/api/action-logs'
 import type { ActionLog } from '~/api/models.type'
 
 
@@ -17,6 +17,20 @@ const searchFormRef = ref()
 
 const searchForm = ref({
   title: ''
+})
+
+const detailLoading = ref<boolean>(false)
+const detail = ref<ActionLog>({
+  id: undefined,
+  module: "",
+  operator: "",
+  method: "PST",
+  operation: "",
+  params: null,
+  ip: "",
+  location: "",
+  status: null,
+  operateTime: null
 })
 
 const dialogVisible = ref<boolean>(false)
@@ -40,6 +54,17 @@ function load() {
   }).finally(() => loading.value = false)
 }
 
+/**
+ * 加载
+ * @param id 主键
+ */
+function loadOne(id: number) {
+  detailLoading.value = true
+  fetchActionLog(id).then(res => {
+    detail.value = res.data
+  }).finally(() => detailLoading.value = false)
+}
+
 onMounted(() => {
   load()
 })
@@ -50,6 +75,7 @@ onMounted(() => {
  */
 function detailHandler(id: number) {
   dialogVisible.value = true
+  loadOne(id)
 }
 
 /**
@@ -66,7 +92,7 @@ function removeHandler(id: number) {
     <ElCard shadow="never" class="search">
       <ElForm ref="searchFormRef" inline :model="searchForm">
         <ElFormItem :label="$t('title')" prop="title">
-          <ElInput v-model="searchForm.title" :placeholder="$t('placeholderInput') + $t('title')" />
+          <ElInput v-model="searchForm.title" :placeholder="$t('inputText') + $t('title')" />
         </ElFormItem>
         <ElFormItem>
           <ElButton type="primary" @click="load">
@@ -82,17 +108,17 @@ function removeHandler(id: number) {
     <ElCard shadow="never">
       <ElRow :gutter="20" justify="space-between" class="mb-4">
         <ElCol :span="16" class="text-left">
-          <ElButton type="danger">
+          <ElButton type="danger" plain>
             <div class="i-ph:trash"></div>{{ $t('clear') }}
           </ElButton>
-          <ElButton type="success">
+          <ElButton type="success" plain>
             <div class="i-ph:cloud-arrow-down"></div>{{ $t('export') }}
           </ElButton>
         </ElCol>
 
         <ElCol :span="8" class="text-right">
           <ElTooltip class="box-item" effect="dark" :content="$t('refresh')" placement="top">
-            <ElButton type="primary" circle @click="load">
+            <ElButton type="primary" plain circle @click="load">
               <template #icon>
                 <div class="i-ph:arrow-clockwise"></div>
               </template>
@@ -100,9 +126,9 @@ function removeHandler(id: number) {
           </ElTooltip>
 
           <ElTooltip class="box-item" effect="dark" :content="$t('settings')" placement="top">
-            <ElButton type="success" circle>
+            <ElButton type="success" plain circle>
               <template #icon>
-                <div class="i-ph:list-magnifying-glass"></div>
+                <div class="i-ph:table"></div>
               </template>
             </ElButton>
           </ElTooltip>
@@ -127,15 +153,15 @@ function removeHandler(id: number) {
         </ElTableColumn>
         <ElTableColumn prop="operateTime" :label="$t('operateTime')">
           <template #default="scope">
-              {{ dayjs(scope.row.operateTime).format('YY-M-D HH:mm:ss') }}
+            {{ dayjs(scope.row.operateTime).format('YY-M-D HH:mm:ss') }}
           </template>
         </ElTableColumn>
         <ElTableColumn :label="$t('action')" width="160">
           <template #default="scope">
-            <ElButton size="small" type="success" @click="detailHandler(scope.row.id)">
+            <ElButton size="small" type="success" link @click="detailHandler(scope.row.id)">
               <div class="i-ph:file-text"></div>{{ $t('detail') }}
             </ElButton>
-            <ElButton size="small" type="danger" @click="removeHandler(scope.row.id)">
+            <ElButton size="small" type="danger" link @click="removeHandler(scope.row.id)">
               <div class="i-ph:trash"></div>{{ $t('remove') }}
             </ElButton>
           </template>
@@ -147,7 +173,20 @@ function removeHandler(id: number) {
   </ElSpace>
 
 
-  <Dialog v-model="dialogVisible" :title="$t('detail')" :width="'36%'">
-
+  <Dialog v-model="dialogVisible" :title="$t('detail')">
+    <ElDescriptions v-loading="detailLoading">
+      <ElDescriptionsItem :label="$t('module')">{{ detail.module }}</ElDescriptionsItem>
+      <ElDescriptionsItem :label="$t('operation')">{{ detail.operation }}</ElDescriptionsItem>
+      <ElDescriptionsItem :label="$t('method')">{{ detail.method }}</ElDescriptionsItem>
+      <ElDescriptionsItem :label="$t('params')">{{ detail.params }}</ElDescriptionsItem>
+      <ElDescriptionsItem :label="$t('ip')">{{ detail.ip }}</ElDescriptionsItem>
+      <ElDescriptionsItem :label="$t('location')">{{ detail.location }}</ElDescriptionsItem>
+      <ElDescriptionsItem :label="$t('operator')">{{ detail.operator }}</ElDescriptionsItem>
+      <ElDescriptionsItem :label="$t('status')">
+        <ElTag v-if="detail.status === 1" type="success" effect="light" round>{{ $t('success') }}</ElTag>
+        <ElTag v-else type="danger" effect="light" round>{{ $t('failure') }}</ElTag>
+      </ElDescriptionsItem>
+      <ElDescriptionsItem :label="$t('operateTime')">{{ dayjs(detail.operateTime).format('YY-M-D HH:mm:ss') }}</ElDescriptionsItem>
+    </ElDescriptions>
   </Dialog>
 </template>

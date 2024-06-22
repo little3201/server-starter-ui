@@ -2,10 +2,10 @@
 import { ref, reactive, onMounted, watch } from 'vue'
 import type { FormInstance, FormRules } from 'element-plus'
 import Dialog from 'components/Dialog.vue'
-import { retrieveDepartments, retrieveDepartmentTree } from '~/api/departments'
+import { retrieveDepartments, retrieveDepartmentTree } from '~/api/organizations'
 import { retrieveUsers, fetchUser } from '~/api/users'
 import { retrieveRoles } from '~/api/roles'
-import type { TreeNode, Department, User, Role } from '~/api/models.type'
+import type { TreeNode, Organization, User, Role } from '~/api/models.type'
 
 const loading = ref<boolean>(false)
 const datas = ref<Array<User>>([])
@@ -20,8 +20,8 @@ const treeLoading = ref<boolean>(false)
 const currentNodeKey = ref<number>()
 const currentNode = ref('')
 
-const departmentTree = ref<TreeNode[]>([])
-const departmentsOptions = ref<Department[]>([])
+const organizationTree = ref<TreeNode[]>([])
+const organizationsOptions = ref<Organization[]>([])
 const rolesOptions = ref<Role[]>([])
 
 const saveLoading = ref<boolean>(false)
@@ -37,7 +37,7 @@ const form = ref<User>({
   username: '',
   email: '',
   role: undefined,
-  department: undefined
+  organization: undefined
 })
 
 const rules = reactive<FormRules<typeof form>>({
@@ -64,7 +64,7 @@ const filterNode = (value: string, data: TreeNode) => {
 function loadTree() {
   treeLoading.value = true
   retrieveDepartmentTree().then(res => {
-    departmentTree.value = res.data
+    organizationTree.value = res.data
     currentNodeKey.value =
       (res.data[0] && res.data[0]?.id) || ''
 
@@ -99,11 +99,11 @@ function pageChange(currentPage: number, pageSize: number) {
 }
 
 /**
- * 加载部门
+ * 加载组织
  */
 function fetchDepartments() {
   retrieveDepartments(1, 10).then(res => {
-    departmentsOptions.value = res.data.content
+    organizationsOptions.value = res.data.content
   })
 }
 
@@ -212,14 +212,9 @@ function removeHandler(id: number) {
           </ElInput>
         </ElFormItem>
         <ElDivider />
-        <ElTree ref="treeEl" v-loading="treeLoading" :data="departmentTree" default-expand-all
+        <ElTree ref="treeEl" v-loading="treeLoading" :data="organizationTree" default-expand-all
           :expand-on-click-node="false" node-key="id" :current-node-key="currentNodeKey" :props="{ label: 'name' }"
           :filter-node-method="filterNode" @current-change="currentChange">
-          <template #default="{ data }">
-            <div :title="data.name" class="whitespace-nowrap overflow-ellipsis overflow-hidden">
-              {{ data.name }}
-            </div>
-          </template>
         </ElTree>
       </ElCard>
 
@@ -227,10 +222,10 @@ function removeHandler(id: number) {
         <ElCard shadow="never" class="search">
           <ElForm inline :model="searchForm">
             <ElFormItem :label="$t('username')" prop="username">
-              <ElInput v-model="searchForm.username" :placeholder="$t('placeholderInput') + $t('username')" />
+              <ElInput v-model="searchForm.username" :placeholder="$t('inputText') + $t('username')" />
             </ElFormItem>
             <ElFormItem :label="$t('email')" prop="email">
-              <ElInput type="email" v-model="searchForm.email" :placeholder="$t('placeholderInput') + $t('email')" />
+              <ElInput type="email" v-model="searchForm.email" :placeholder="$t('inputText') + $t('email')" />
             </ElFormItem>
             <ElFormItem>
               <ElButton type="primary" @click="load">
@@ -249,20 +244,17 @@ function removeHandler(id: number) {
               <ElButton type="primary" @click="saveOrUpdate()">
                 <div class="i-ph:plus"></div>{{ $t('add') }}
               </ElButton>
-              <ElButton type="danger">
-                <div class="i-ph:trash"></div>{{ $t('remove') }}
-              </ElButton>
-              <ElButton type="warning" @click="dialogVisible = true">
+              <ElButton type="warning" plain @click="dialogVisible = true">
                 <div class="i-ph:file-arrow-up"></div>{{ $t('import') }}
               </ElButton>
-              <ElButton type="success">
+              <ElButton type="success" plain>
                 <div class="i-ph:cloud-arrow-down"></div>{{ $t('export') }}
               </ElButton>
             </ElCol>
 
             <ElCol :span="8" class="text-right">
               <ElTooltip class="box-item" effect="dark" :content="$t('refresh')" placement="top">
-                <ElButton type="primary" circle @click="load">
+                <ElButton type="primary" plain circle @click="load">
                   <template #icon>
                     <div class="i-ph:arrow-clockwise"></div>
                   </template>
@@ -270,9 +262,9 @@ function removeHandler(id: number) {
               </ElTooltip>
 
               <ElTooltip class="box-item" effect="dark" :content="$t('settings')" placement="top">
-                <ElButton type="success" circle>
+                <ElButton type="success" plain circle>
                   <template #icon>
-                    <div class="i-ph:list-magnifying-glass"></div>
+                    <div class="i-ph:table"></div>
                   </template>
                 </ElButton>
               </ElTooltip>
@@ -301,10 +293,10 @@ function removeHandler(id: number) {
             </ElTableColumn>
             <ElTableColumn :label="$t('action')">
               <template #default="scope">
-                <ElButton size="small" type="primary" @click="saveOrUpdate(scope.row.id)">
+                <ElButton size="small" type="primary" link @click="saveOrUpdate(scope.row.id)">
                   <div class="i-ph:pencil-simple-line"></div>{{ $t('edit') }}
                 </ElButton>
-                <ElButton size="small" type="danger" @click="removeHandler(scope.row.id)">
+                <ElButton size="small" type="danger" link @click="removeHandler(scope.row.id)">
                   <div class="i-ph:trash"></div>{{ $t('remove') }}
                 </ElButton>
               </template>
@@ -321,12 +313,12 @@ function removeHandler(id: number) {
         <ElRow :gutter="20" class="w-full !mx-0">
           <ElCol :span="12">
             <ElFormItem :label="$t('username')" prop="username">
-              <ElInput v-model="form.username" :placeholder="$t('placeholderInput') + $t('username')" />
+              <ElInput v-model="form.username" :placeholder="$t('inputText') + $t('username')" />
             </ElFormItem>
           </ElCol>
           <ElCol :span="12">
             <ElFormItem :label="$t('email')" prop="email">
-              <ElInput type="email" v-model="form.email" :placeholder="$t('placeholderInput') + $t('email')"
+              <ElInput type="email" v-model="form.email" :placeholder="$t('inputText') + $t('email')"
                 show-password />
             </ElFormItem>
           </ElCol>
@@ -334,27 +326,27 @@ function removeHandler(id: number) {
         <ElRow :gutter="20" class="w-full !mx-0">
           <ElCol :span="12">
             <ElFormItem :label="$t('role')" prop="role">
-              <ElSelect v-model="form.role" :placeholder="$t('placeholderSelect') + $t('role')" style="width: 100%">
+              <ElSelect v-model="form.role" :placeholder="$t('selectText') + $t('role')" style="width: 100%">
                 <ElOption v-for="item in rolesOptions" :key="item.id" :label="item.name" :value="item.id" />
               </ElSelect>
             </ElFormItem>
           </ElCol>
           <ElCol :span="12">
-            <ElFormItem :label="$t('department')" prop="department">
-              <ElSelect v-model="form.department" :placeholder="$t('placeholderSelect') + $t('department')"
+            <ElFormItem :label="$t('organization')" prop="organization">
+              <ElSelect v-model="form.organization" :placeholder="$t('selectText') + $t('organization')"
                 style="width: 100%">
-                <ElOption v-for="item in departmentsOptions" :key="item.id" :label="item.name" :value="item.id" />
+                <ElOption v-for="item in organizationsOptions" :key="item.id" :label="item.name" :value="item.id" />
               </ElSelect>
             </ElFormItem>
           </ElCol>
         </ElRow>
       </ElForm>
       <template #footer>
-        <ElButton type="primary" :loading="saveLoading" @click="onSubmit">
-          <div class="i-ph:check-circle"></div> {{ $t('commit') }}
-        </ElButton>
         <ElButton @click="dialogVisible = false">
           <div class="i-ph:x-circle"></div>{{ $t('cancle') }}
+        </ElButton>
+        <ElButton type="primary" :loading="saveLoading" @click="onSubmit">
+          <div class="i-ph:check-circle"></div> {{ $t('commit') }}
         </ElButton>
       </template>
     </Dialog>
