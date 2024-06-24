@@ -167,10 +167,10 @@ function handleCheckedChange(value: string[]) {
           </ElFormItem>
           <ElFormItem>
             <ElButton type="primary" @click="load">
-              <div class="ph:magnifying-glass"></div>{{ $t('search') }}
+              <div class="i-ph:magnifying-glass"></div>{{ $t('search') }}
             </ElButton>
             <ElButton @click="reset">
-              <div class="ph:arrow-counter-clockwise"></div>{{ $t('reset') }}
+              <div class="i-ph:arrow-counter-clockwise"></div>{{ $t('reset') }}
             </ElButton>
           </ElFormItem>
         </ElForm>
@@ -180,16 +180,16 @@ function handleCheckedChange(value: string[]) {
         <ElRow :gutter="20" justify="space-between" class="mb-4">
           <ElCol :span="16" class="text-left">
             <ElButton type="primary" @click="saveOrUpdate()">
-              <div class="ph:plus"></div>{{ $t('add') }}
+              <div class="i-ph:plus"></div>{{ $t('add') }}
             </ElButton>
             <ElButton type="danger" plain>
-              <div class="ph:trash"></div>{{ $t('remove') }}
+              <div class="i-ph:trash"></div>{{ $t('remove') }}
             </ElButton>
             <ElButton type="warning" plain @click="dialogVisible = true">
-              <div class="ph:file-arrow-up"></div>{{ $t('import') }}
+              <div class="i-ph:file-arrow-up"></div>{{ $t('import') }}
             </ElButton>
             <ElButton type="success" plain>
-              <div class="ph:cloud-arrow-down"></div>{{ $t('export') }}
+              <div class="i-ph:cloud-arrow-down"></div>{{ $t('export') }}
             </ElButton>
           </ElCol>
 
@@ -197,7 +197,7 @@ function handleCheckedChange(value: string[]) {
             <ElTooltip :content="$t('refresh')" placement="top">
               <ElButton type="primary" plain circle @click="load">
                 <template #icon>
-                  <div class="ph:arrow-clockwise"></div>
+                  <div class="i-ph:arrow-clockwise"></div>
                 </template>
               </ElButton>
             </ElTooltip>
@@ -208,7 +208,7 @@ function handleCheckedChange(value: string[]) {
                   <template #reference>
                     <ElButton type="success" plain circle>
                       <template #icon>
-                        <div class="ph:table"></div>
+                        <div class="i-ph:table"></div>
                       </template>
                     </ElButton>
                   </template>
@@ -221,7 +221,7 @@ function handleCheckedChange(value: string[]) {
                       <draggable v-model="columns" item-key="simple">
                         <template #item="{ element }">
                           <div class="flex items-center space-x-2">
-                            <div class="ph:dots-six-vertical w-4 h-4 hover:cursor-move"></div>
+                            <div class="i-ph:dots-six-vertical w-4 h-4 hover:cursor-move"></div>
                             <ElCheckbox :label="element" :value="element" :disabled="element === columns[0]">
                               <div class="inline-flex items-center space-x-4">
                                 {{ $t(element) }}
@@ -252,12 +252,12 @@ function handleCheckedChange(value: string[]) {
           <ElTableColumn :label="$t('action')">
             <template #default="scope">
               <ElButton size="small" type="primary" link @click="saveOrUpdate(scope.row.id)">
-                <div class="ph:pencil-simple-line"></div>{{ $t('edit') }}
+                <div class="i-ph:pencil-simple-line"></div>{{ $t('edit') }}
               </ElButton>
               <ElPopconfirm v-if="!scope.row.hasChildren" :title="$t('removeConfirm')" :width="240" @confirm="confirmEvent(scope.row.id)">
                 <template #reference>
                   <ElButton size="small" type="danger" link>
-                    <div class="ph:trash"></div>{{ $t('remove') }}
+                    <div class="i-ph:trash"></div>{{ $t('remove') }}
                   </ElButton>
                 </template>
               </ElPopconfirm>
@@ -288,10 +288,10 @@ function handleCheckedChange(value: string[]) {
       </ElForm>
       <template #footer>
         <ElButton type="primary" :loading="saveLoading" @click="onSubmit">
-          <div class="ph:check-circle"></div> {{ $t('commit') }}
+          <div class="i-ph:check-circle"></div> {{ $t('commit') }}
         </ElButton>
         <ElButton @click="dialogVisible = false">
-          <div class="ph:x-circle"></div>{{ $t('cancle') }}
+          <div class="i-ph:x-circle"></div>{{ $t('cancle') }}
         </ElButton>
       </template>
     </Dialog>
