@@ -1,25 +1,41 @@
 import type { App } from 'vue'
 import { createI18n } from 'vue-i18n'
 import type { I18n } from 'vue-i18n'
-import { useStorage } from '~/hooks/web/useStorage'
 
 import zhCN from '~/locales/zh-CN'
 import en from '~/locales/en'
 
-const { getStorage } = useStorage('localStorage')
+function getLang() {
+  const locale = localStorage.getItem('locale')
+  if (locale) {
+    const { lang } = JSON.parse(locale)
+    return lang
+  }
+  return undefined
+}
 
 const messages = {
-  'en': en, 
+  'en': en,
   'zh-CN': zhCN
 }
 
 export const i18n = createI18n({
   legacy: false,
-  locale: getStorage('lang') || 'zh-CN',
-  fallbackLocale: 'zh-CN',
+  locale: getLang() || 'zh-CN',
   messages: messages,
-})  as I18n
+}) as I18n
 
 export const setupI18n = async (app: App<Element>) => {
   app.use(i18n)
 }
+
+export const localeMap = [
+  {
+    lang: 'zh-CN',
+    name: '简体中文'
+  },
+  {
+    lang: 'en',
+    name: 'English'
+  }
+]

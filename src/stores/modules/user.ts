@@ -16,7 +16,7 @@ export const useUserStore = defineStore('user', {
       access_token: undefined,
       role: undefined,
       // 记住我
-      rememberMe: true
+      rememberMe: false
     }
   },
   getters: {
@@ -43,17 +43,18 @@ export const useUserStore = defineStore('user', {
     setRole(role: string | undefined) {
       this.role = role
     },
+    setRememberMe(rememberMe: boolean): boolean {
+      return this.rememberMe = rememberMe
+    },
     clear() {
       const tagsViewStore = useTagsViewStore()
       tagsViewStore.delAllViews()
       this.setAccessToken(undefined)
       this.setUser(undefined)
       this.setRole(undefined)
+      this.setRememberMe(false)
       // 跳转 login
       router.replace('/login')
-    },
-    setRememberMe(rememberMe: boolean) {
-      this.rememberMe = rememberMe
     }
   },
   persist: true

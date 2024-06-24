@@ -1,11 +1,3 @@
-export const setCssVar = (prop: string, val: any, dom = document.documentElement) => {
-  dom.style.setProperty(prop, val)
-}
-
-export const getCssVar = (prop: string, dom = document.documentElement) => {
-  return getComputedStyle(dom).getPropertyValue(prop)
-}
-
 /**
  * @param str 需要转下划线的驼峰字符串
  * @returns 字符串下划线
@@ -33,4 +25,18 @@ export const findIndex = <T = Recordable>(ary: Array<T>, fn: Fn): number => {
     }
   })
   return index
+}
+
+export const is = (val: unknown, type: string) => {
+  return toString.call(val) === `[object ${type}]`
+}
+
+export const isNumber = (val: unknown): val is number => {
+  return is(val, 'Number')
+}
+
+export const isUrl = (path: string): boolean => {
+  const reg =
+    /(((^https?:(?:\/\/)?)(?:[-:&=\+\$,\w]+@)?[A-Za-z0-9.-]+(?::\d+)?|(?:www.|[-:&=\+\$,\w]+@)[A-Za-z0-9.-]+)((?:\/[\+~%\/.\w-_]*)?\??(?:[-\+=&%@.\w_]*)#?(?:[\w]*))?)$/
+  return reg.test(path)
 }

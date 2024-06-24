@@ -51,7 +51,7 @@ function pageChange(currentPage: number, pageSize: number) {
  */
 function load() {
   loading.value = true
-  retrieveDictionaries(pagination.page, pagination.size).then(res => {
+  retrieveDictionaries(pagination.page, pagination.size, searchForm.value).then(res => {
     datas.value = res.data.content
     pagination.total = res.data.totalElements
   }).finally(() => loading.value = false)
@@ -107,30 +107,22 @@ function onSubmit() {
     }
   })
 }
-
-/**
- * 删除
- * @param id 主键
- */
- function removeHandler(id: number) {
-  datas.value = datas.value.filter(item => item.id !== id)
-}
 </script>
 
 <template>
   <div>
     <ElSpace size="large" fill>
       <ElCard shadow="never" class="search">
-        <ElForm ref="searchFormRef" inline :model="searchForm">
+        <ElForm inline :model="searchForm" @submit.prevent>
           <ElFormItem :label="$t('name')" prop="name">
             <ElInput v-model="searchForm.name" :placeholder="$t('inputText') + $t('name')" />
           </ElFormItem>
           <ElFormItem>
             <ElButton type="primary" @click="load">
-              <div class="i-ph:magnifying-glass"></div>{{ $t('search') }}
+              <div class="ph:magnifying-glass"></div>{{ $t('search') }}
             </ElButton>
             <ElButton @click="reset">
-              <div class="i-ph:arrow-counter-clockwise"></div>{{ $t('reset') }}
+              <div class="ph:arrow-counter-clockwise"></div>{{ $t('reset') }}
             </ElButton>
           </ElFormItem>
         </ElForm>
@@ -139,17 +131,11 @@ function onSubmit() {
       <ElCard shadow="never">
         <ElRow :gutter="20" justify="space-between" class="mb-4">
           <ElCol :span="16" class="text-left">
-            <ElButton type="primary" @click="saveOrUpdate()">
-              <div class="i-ph:plus"></div>{{ $t('add') }}
-            </ElButton>
-            <ElButton type="danger" plain>
-              <div class="i-ph:trash"></div>{{ $t('remove') }}
-            </ElButton>
             <ElButton type="warning" plain @click="dialogVisible = true">
-              <div class="i-ph:file-arrow-up"></div>{{ $t('import') }}
+              <div class="ph:file-arrow-up"></div>{{ $t('import') }}
             </ElButton>
             <ElButton type="success" plain>
-              <div class="i-ph:cloud-arrow-down"></div>{{ $t('export') }}
+              <div class="ph:cloud-arrow-down"></div>{{ $t('export') }}
             </ElButton>
           </ElCol>
 
@@ -157,7 +143,7 @@ function onSubmit() {
             <ElTooltip class="box-item" effect="dark" :content="$t('refresh')" placement="top">
               <ElButton type="primary" plain circle @click="load">
                 <template #icon>
-                  <div class="i-ph:arrow-clockwise"></div>
+                  <div class="ph:arrow-clockwise"></div>
                 </template>
               </ElButton>
             </ElTooltip>
@@ -165,20 +151,21 @@ function onSubmit() {
             <ElTooltip class="box-item" effect="dark" :content="$t('settings')" placement="top">
               <ElButton type="success" plain circle>
                 <template #icon>
-                  <div class="i-ph:table"></div>
+                  <div class="ph:table"></div>
                 </template>
               </ElButton>
             </ElTooltip>
           </ElCol>
         </ElRow>
 
-        <ElTable v-loading="loading" :data="datas" lazy :load="load" row-key="id" stripe table-layout="auto">
+        <ElTable v-loading="loading" :data="datas" lazy :load="load" row-key="id" stripe table-layout="auto"
+          height="calc(100vh - 350px)">
+          <ElTableColumn type="selection" width="55" />
           <el-table-column type="expand">
             <template #default="props">
               <SubPage :superior-id="props.row.id" :title="props.row.name" />
             </template>
           </el-table-column>
-          <ElTableColumn type="selection" width="55" />
           <ElTableColumn prop="name" :label="$t('name')" />
           <ElTableColumn prop="enabled" :label="$t('status')">
             <template #default="scope">
@@ -191,10 +178,7 @@ function onSubmit() {
           <ElTableColumn :label="$t('action')">
             <template #default="scope">
               <ElButton size="small" type="primary" link @click="saveOrUpdate(scope.row.id)">
-                <div class="i-ph:pencil-simple-line"></div>{{ $t('edit') }}
-              </ElButton>
-              <ElButton size="small" type="danger" link @click="removeHandler(scope.row.id)">
-                <div class="i-ph:trash"></div>{{ $t('remove') }}
+                <div class="ph:pencil-simple-line"></div>{{ $t('edit') }}
               </ElButton>
             </template>
           </ElTableColumn>
@@ -221,18 +205,17 @@ function onSubmit() {
         <ElRow :gutter="20" class="w-full !mx-0">
           <ElCol>
             <ElFormItem :label="$t('description')" prop="description">
-              <ElInput v-model="form.description" type="textarea"
-                :placeholder="$t('inputText') + $t('description')" />
+              <ElInput v-model="form.description" type="textarea" :placeholder="$t('inputText') + $t('description')" />
             </ElFormItem>
           </ElCol>
         </ElRow>
       </ElForm>
       <template #footer>
         <ElButton @click="dialogVisible = false">
-          <div class="i-ph:x-circle"></div>{{ $t('cancle') }}
+          <div class="ph:x-circle"></div>{{ $t('cancle') }}
         </ElButton>
         <ElButton type="primary" :loading="saveLoading" @click="onSubmit">
-          <div class="i-ph:check-circle"></div> {{ $t('commit') }}
+          <div class="ph:check-circle"></div> {{ $t('commit') }}
         </ElButton>
       </template>
     </Dialog>

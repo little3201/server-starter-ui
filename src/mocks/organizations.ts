@@ -10,11 +10,11 @@ for (let i = 1; i < 28; i++) {
     name: 'organization_' + i,
     enabled: i % 3 > 0,
     description: '这是描述内容，请参考嘻嘻嘻嘻嘻嘻嘻嘻',
-    hasChildren: i % 3 > 0
+    hasChildren: i > 2 && i % 3 > 0
   }
-  for (let j = 0; j < i; j++) {
+  for (let j = 1; j < i; j++) {
     const subData: Organization = {
-      id: 100 + j,
+      id: 100 + i,
       name: 'organization_' + i + '_' + j,
       superiorId: i,
       enabled: j % 2 > 0,
@@ -30,28 +30,20 @@ const treeNodes: TreeNode[] = [
   {
     id: 1,
     name: 'organization_1',
-    enabled: true,
-    description: 'description',
     children: [
       {
         id: 2,
         name: 'organization_2',
-        enabled: true,
-        description: 'description',
         children: [
         ]
       },
       {
         id: 3,
         name: 'organization_3',
-        enabled: true,
-        description: 'description',
         children: [
           {
             id: 4,
             name: 'organization_4',
-            enabled: true,
-            description: 'description',
             children: [
             ]
           }
@@ -67,8 +59,13 @@ export const organizationsHandlers = [
     if (id) {
       if (id === 'tree') {
         return HttpResponse.json(treeNodes)
+      } else {
+        let array = datas.filter(item => item.id === Number(id))
+        if (array.length === 0) {
+          array = subDatas.filter(item => item.id === Number(id))
+        }
+        return HttpResponse.json(array[0])
       }
-      return HttpResponse.json(datas.filter(item => item.id === Number(id))[0])
     } else {
       return HttpResponse.json(null)
     }

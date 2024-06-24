@@ -13,10 +13,9 @@ const pagination = reactive({
 
 const loading = ref<boolean>(false)
 const datas = ref<Array<SchedulerLog>>([])
-const searchFormRef = ref()
-
 const searchForm = ref({
-  title: ''
+  name: null,
+  method: null
 })
 
 const detailLoading = ref<boolean>(false)
@@ -63,6 +62,17 @@ function loadOne(id: number) {
   }).finally(() => detailLoading.value = false)
 }
 
+/**
+ * reset
+ */
+ function reset() {
+  searchForm.value = {
+    name: null,
+    method: null
+  }
+  load()
+}
+
 onMounted(() => {
   load()
 })
@@ -83,21 +93,35 @@ function detailHandler(id: number) {
 function removeHandler(id: number) {
   datas.value = datas.value.filter(item => item.id !== id)
 }
+
+/**
+ * 确认
+ * @param id 主键
+ */
+function confirmEvent(id: number) {
+  if (id) {
+    removeHandler(id)
+  }
+}
+
 </script>
 
 <template>
   <ElSpace size="large" fill>
     <ElCard shadow="never" class="search">
-      <ElForm ref="searchFormRef" inline :model="searchForm">
-        <ElFormItem :label="$t('title')" prop="title">
-          <ElInput v-model="searchForm.title" :placeholder="$t('inputText') + $t('title')" />
+      <ElForm inline :model="searchForm">
+        <ElFormItem :label="$t('name')" prop="name">
+          <ElInput v-model="searchForm.name" :placeholder="$t('inputText') + $t('name')" />
+        </ElFormItem>
+        <ElFormItem :label="$t('method')" prop="method">
+          <ElInput v-model="searchForm.method" :placeholder="$t('inputText') + $t('method')" />
         </ElFormItem>
         <ElFormItem>
           <ElButton type="primary" @click="load">
-            <div class="i-ph:magnifying-glass"></div>{{ $t('search') }}
+            <div class="ph:magnifying-glass"></div>{{ $t('search') }}
           </ElButton>
-          <ElButton>
-            <div class="i-ph:arrow-counter-clockwise"></div>{{ $t('reset') }}
+          <ElButton @click="reset">
+            <div class="ph:arrow-counter-clockwise"></div>{{ $t('reset') }}
           </ElButton>
         </ElFormItem>
       </ElForm>
@@ -107,10 +131,10 @@ function removeHandler(id: number) {
       <ElRow :gutter="20" justify="space-between" class="mb-4">
         <ElCol :span="16" class="text-left">
           <ElButton type="danger" plain>
-            <div class="i-ph:trash"></div>{{ $t('clear') }}
+            <div class="ph:trash"></div>{{ $t('clear') }}
           </ElButton>
           <ElButton type="success" plain>
-            <div class="i-ph:cloud-arrow-down"></div>{{ $t('export') }}
+            <div class="ph:cloud-arrow-down"></div>{{ $t('export') }}
           </ElButton>
         </ElCol>
 
@@ -118,7 +142,7 @@ function removeHandler(id: number) {
           <ElTooltip class="box-item" effect="dark" :content="$t('refresh')" placement="top">
             <ElButton type="primary" plain circle @click="load">
               <template #icon>
-                <div class="i-ph:arrow-clockwise"></div>
+                <div class="ph:arrow-clockwise"></div>
               </template>
             </ElButton>
           </ElTooltip>
@@ -126,7 +150,7 @@ function removeHandler(id: number) {
           <ElTooltip class="box-item" effect="dark" :content="$t('settings')" placement="top">
             <ElButton type="success" plain circle>
               <template #icon>
-                <div class="i-ph:table"></div>
+                <div class="ph:table"></div>
               </template>
             </ElButton>
           </ElTooltip>
@@ -159,11 +183,15 @@ function removeHandler(id: number) {
         <ElTableColumn :label="$t('action')" width="160">
           <template #default="scope">
             <ElButton size="small" type="success" link @click="detailHandler(scope.row.id)">
-              <div class="i-ph:file-text"></div>{{ $t('detail') }}
+              <div class="ph:file-text"></div>{{ $t('detail') }}
             </ElButton>
-            <ElButton size="small" type="danger" link @click="removeHandler(scope.row.id)">
-              <div class="i-ph:trash"></div>{{ $t('remove') }}
-            </ElButton>
+            <ElPopconfirm :title="$t('removeConfirm')" :width="240" @confirm="confirmEvent(scope.row.id)">
+              <template #reference>
+                <ElButton size="small" type="danger" link>
+                  <div class="ph:trash"></div>{{ $t('remove') }}
+                </ElButton>
+              </template>
+            </ElPopconfirm>
           </template>
         </ElTableColumn>
       </ElTable>

@@ -14,6 +14,7 @@ const datas: PrivilegeTreeNode[] = [
     meta: {
       icon: 'i-ph:gear'
     },
+    description: 'this is description for this row',
     children: [
       {
         id: 2,
@@ -24,7 +25,8 @@ const datas: PrivilegeTreeNode[] = [
         enabled: true,
         meta: {
           icon: 'i-ph:tree-structure'
-        }
+        },
+        description: 'this is description for this row'
       },
       {
         id: 3,
@@ -35,7 +37,8 @@ const datas: PrivilegeTreeNode[] = [
         enabled: true,
         meta: {
           icon: 'i-ph:user'
-        }
+        },
+        description: 'this is description for this row'
       },
       {
         id: 4,
@@ -46,7 +49,8 @@ const datas: PrivilegeTreeNode[] = [
         enabled: true,
         meta: {
           icon: 'i-ph:lock-key'
-        }
+        },
+        description: 'this is description for this row'
       },
       {
         id: 5,
@@ -57,7 +61,8 @@ const datas: PrivilegeTreeNode[] = [
         enabled: true,
         meta: {
           icon: 'i-ph:user-circle'
-        }
+        },
+        description: 'this is description for this row'
       },
       {
         id: 6,
@@ -68,7 +73,8 @@ const datas: PrivilegeTreeNode[] = [
         enabled: true,
         meta: {
           icon: 'i-ph:book'
-        }
+        },
+        description: 'this is description for this row'
       }
     ]
   },
@@ -83,6 +89,7 @@ const datas: PrivilegeTreeNode[] = [
     meta: {
       icon: 'i-ph:files'
     },
+    description: 'this is description for this row',
     children: [
       {
         id: 8,
@@ -93,7 +100,8 @@ const datas: PrivilegeTreeNode[] = [
         enabled: true,
         meta: {
           icon: 'i-ph:clipboard-text'
-        }
+        },
+        description: 'this is description for this row'
       },
       {
         id: 9,
@@ -104,7 +112,8 @@ const datas: PrivilegeTreeNode[] = [
         enabled: true,
         meta: {
           icon: 'i-ph:file-text'
-        }
+        },
+        description: 'this is description for this row'
       },
       {
         id: 10,
@@ -115,7 +124,8 @@ const datas: PrivilegeTreeNode[] = [
         enabled: true,
         meta: {
           icon: 'i-ph:file-lock'
-        }
+        },
+        description: 'this is description for this row'
       },
       {
         id: 11,
@@ -126,11 +136,13 @@ const datas: PrivilegeTreeNode[] = [
         enabled: true,
         meta: {
           icon: 'i-ph:file-cloud'
-        }
+        },
+        description: 'this is description for this row'
       }
     ]
   }
 ]
+
 const dataArray: Privilege[] = [
   {
     id: 1,
@@ -143,6 +155,7 @@ const dataArray: Privilege[] = [
     meta: {
       icon: 'i-ph:gear'
     },
+    description: 'this is description for this row'
   },
   {
     id: 2,
@@ -153,7 +166,8 @@ const dataArray: Privilege[] = [
     enabled: true,
     meta: {
       icon: 'i-ph:tree-structure'
-    }
+    },
+    description: 'this is description for this row'
   },
   {
     id: 3,
@@ -164,7 +178,8 @@ const dataArray: Privilege[] = [
     enabled: true,
     meta: {
       icon: 'i-ph:user'
-    }
+    },
+    description: 'this is description for this row'
   },
   {
     id: 4,
@@ -175,7 +190,8 @@ const dataArray: Privilege[] = [
     enabled: true,
     meta: {
       icon: 'i-ph:lock-key'
-    }
+    },
+    description: 'this is description for this row'
   },
   {
     id: 5,
@@ -186,7 +202,8 @@ const dataArray: Privilege[] = [
     enabled: true,
     meta: {
       icon: 'i-ph:user-circle'
-    }
+    },
+    description: 'this is description for this row'
   },
   {
     id: 6,
@@ -197,7 +214,8 @@ const dataArray: Privilege[] = [
     enabled: true,
     meta: {
       icon: 'i-ph:book'
-    }
+    },
+    description: 'this is description for this row'
   },
   {
     id: 7,
@@ -210,6 +228,7 @@ const dataArray: Privilege[] = [
     meta: {
       icon: 'i-ph:files'
     },
+    description: 'this is description for this row'
   },
   {
     id: 8,
@@ -220,7 +239,8 @@ const dataArray: Privilege[] = [
     enabled: true,
     meta: {
       icon: 'i-ph:clipboard-text'
-    }
+    },
+    description: 'this is description for this row'
   },
   {
     id: 9,
@@ -231,7 +251,8 @@ const dataArray: Privilege[] = [
     enabled: true,
     meta: {
       icon: 'i-ph:file-text'
-    }
+    },
+    description: 'this is description for this row'
   },
   {
     id: 10,
@@ -242,7 +263,8 @@ const dataArray: Privilege[] = [
     enabled: true,
     meta: {
       icon: 'i-ph:file-lock'
-    }
+    },
+    description: 'this is description for this row'
   },
   {
     id: 11,
@@ -253,7 +275,8 @@ const dataArray: Privilege[] = [
     enabled: true,
     meta: {
       icon: 'i-ph:file-cloud'
-    }
+    },
+    description: 'this is description for this row'
   }
 ]
 

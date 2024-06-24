@@ -12,7 +12,7 @@ export const constantRouterMap: AppRouteRecordRaw[] = [
     children: [
       {
         path: '',
-        name: 'Home',
+        name: '',
         component: () => import('~/views/Index.vue'),
         meta: {
           hidden: true
@@ -60,4 +60,13 @@ export const constantRouterMap: AppRouteRecordRaw[] = [
       noTagsView: true
     }
   },
+  // {
+  //   path: '/:path(.*)*',
+  //   redirect: '/404',
+  //   name: 'NotFound',
+  //   component: '',
+  //   meta: {
+  //     hidden: true
+  //   }
+  // }
 ]

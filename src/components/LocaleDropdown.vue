@@ -1,15 +1,15 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { useAppStore } from 'stores/modules/app'
+import { localeMap } from '~/composables/i18n'
+import { useLocaleStore } from 'stores/modules/locale'
 
 // 多语言相关
-const appStore = useAppStore()
 
 const { locale } = useI18n()
+const localStore = useLocaleStore()
 
-const currentLang = computed(() => appStore.getLocale)
-const languages = computed(() => appStore.getLocaleMap)
+const currentLang = computed(() => localStore.getLang)
 
 const setHtmlPageLang = (locale: string) => {
   document.querySelector('html')?.setAttribute('lang', locale)
@@ -19,7 +19,7 @@ const setLang = (lang: string) => {
   if (lang === currentLang.value) return
   locale.value = lang
   // 设置lang
-  appStore.setLocale(lang)
+  localStore.setLang(lang)
   // 修改html中lang
   setHtmlPageLang(lang)
 }
@@ -30,7 +30,7 @@ const setLang = (lang: string) => {
     <div class="i-ph:translate cursor-pointer w-6 h-6 text-white" />
     <template #dropdown>
       <ElDropdownMenu>
-        <ElDropdownItem v-for="item in languages" :key="item.lang" :command="item.lang">
+        <ElDropdownItem v-for="item in localeMap" :key="item.lang" :command="item.lang">
           {{ item.name }}
         </ElDropdownItem>
       </ElDropdownMenu>

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, useAttrs, ref, unref, useSlots } from 'vue'
 import { propTypes } from '~/utils/propTypes'
-import { isNumber } from '~/utils/is'
+import { isNumber } from '~/utils'
 
 const slots = useSlots()
 
@@ -12,7 +12,7 @@ const props = defineProps({
 })
 
 const getBindValue = computed(() => {
-  const delArr: string[] = ['fullscreen', 'title', 'maxHeight']
+  const delArr: string[] = [ 'title', 'maxHeight']
   const attrs = useAttrs()
   const obj = { ...attrs, ...props } as { [key: string]: any }
   for (const key in obj) {
@@ -40,7 +40,7 @@ const dialogStyle = computed(() => {
 
 <template>
   <ElDialog v-bind="getBindValue" :fullscreen="isFullscreen" align-center destroy-on-close lock-scroll draggable
-    :close-on-click-modal="false" :show-close="false">
+    append-to-body :close-on-click-modal="false" :show-close="false">
     <template #header="{ close, titleId, titleClass }">
       <div class="flex justify-between items-center">
         <slot name="title">

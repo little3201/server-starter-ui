@@ -6,7 +6,7 @@ import type {
   RouteRecordNormalized
 } from 'vue-router'
 import { omit, cloneDeep } from 'lodash-es'
-import { isUrl } from '~/utils/is'
+import { isUrl } from '~/utils'
 
 const Layout = () => import('components/layouts/Index.vue')
 

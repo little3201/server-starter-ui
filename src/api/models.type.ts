@@ -20,8 +20,6 @@ export interface Organization {
 export interface TreeNode {
   id?: number
   name: string
-  enabled?: boolean
-  description?: string
   children?: TreeNode[]
 }
 
@@ -42,6 +40,8 @@ export interface PrivilegeTreeNode extends TreeNode {
   meta: {
     icon: string
   }
+  enabled?: boolean
+  description?: string
   hasChildren?: boolean
   children?: PrivilegeTreeNode[]
 }

@@ -30,17 +30,17 @@ const formRef = ref<FormInstance>()
 const form = reactive({
   username: '',
   password: '',
-  rememberMe: true
+  rememberMe: false
 })
 
 const rules = reactive<FormRules<typeof form>>({
   username: [
     { required: true, message: t('inputText') + t('username'), trigger: 'blur' },
-    { min: 3, max: 5, message: 'Length should be 3 to 5', trigger: 'blur' },
+    { min: 5, max: 12, message: t('lengthRange', {min: 5, max: 12}), trigger: 'blur' },
   ],
   password: [
     { required: true, message: t('inputText') + t('password'), trigger: 'blur' },
-    { min: 8, max: 16, message: 'Length should be 8 to 16', trigger: 'blur' },
+    { min: 8, max: 16, message: t('lengthRange', {min: 8, max: 16}), trigger: 'blur' },
   ]
 })
 

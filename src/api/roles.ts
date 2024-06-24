@@ -1,7 +1,10 @@
 import { api } from '~/composables/axios'
 
-export const retrieveRoles = (page: number, size: number, params?: object) => {
-  return api.get('/roles', { params: { page: page - 1, size: size, ...params } })
+export const retrieveRoles = (page?: number, size?: number, params?: object) => {
+  if (page && size) {
+    return api.get('/roles', { params: { page: page - 1, size: size, ...params } })
+  }
+  return api.get('/roles')
 }
 
 export const fetchRole = (id: number) => {

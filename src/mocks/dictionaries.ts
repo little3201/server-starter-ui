@@ -14,14 +14,14 @@ for (let i = 1; i < 28; i++) {
     hasChildren: i > 0,
     children: []
   }
-  for (let j = 0; j < i; j++) {
+  for (let j = 1; j < i; j++) {
     const subData: Dictionary = {
-      id: 100 + j,
+      id: 100 + i,
       name: 'dictionary_' + i + '_' + j,
       order: j,
       superiorId: i,
       enabled: j % 2 > 0,
-      description: 'description',
+      description: 'this is description for this row',
       hasChildren: false
     }
     subDatas.push(subData)
@@ -33,7 +33,11 @@ export const dictionariesHandlers = [
   http.get('/api/dictionaries/:id', ({ params }) => {
     const { id } = params
     if (id) {
-      return HttpResponse.json(datas.filter(item => item.id === Number(id))[0])
+      let array = datas.filter(item => item.id === Number(id))
+      if (array.length === 0) {
+        array = subDatas.filter(item => item.id === Number(id))
+      }
+      return HttpResponse.json(array[0])
     } else {
       return HttpResponse.json(null)
     }

@@ -95,9 +95,20 @@ function onSubmit() {
  * 删除
  * @param id 主键
  */
- function removeHandler(id: number) {
+function removeHandler(id: number) {
   datas.value = datas.value.filter(item => item.id !== id)
 }
+
+/**
+ * 确认
+ * @param id 主键
+ */
+function confirmEvent(id: number) {
+  if (id) {
+    removeHandler(id)
+  }
+}
+
 </script>
 
 <template>
@@ -108,12 +119,12 @@ function onSubmit() {
       </ElCol>
       <ElCol :span="12" class="text-right">
         <ElButton type="primary" @click="saveOrUpdate()">
-          <div class="i-ph:plus"></div>{{ $t('add') }}
+          <div class="ph:plus"></div>{{ $t('add') }}
         </ElButton>
         <ElTooltip class="box-item" effect="dark" :content="$t('refresh')" placement="top">
           <ElButton type="primary" plain circle @click="load">
             <template #icon>
-              <div class="i-ph:arrow-clockwise"></div>
+              <div class="ph:arrow-clockwise"></div>
             </template>
           </ElButton>
         </ElTooltip>
@@ -133,11 +144,15 @@ function onSubmit() {
       <ElTableColumn :label="$t('action')">
         <template #default="scope">
           <ElButton size="small" type="primary" link @click="saveOrUpdate(scope.row.id)">
-            <div class="i-ph:pencil-simple-line"></div>{{ $t('edit') }}
+            <div class="ph:pencil-simple-line"></div>{{ $t('edit') }}
           </ElButton>
-          <ElButton size="small" type="danger" link @click="removeHandler(scope.row.id)">
-            <div class="i-ph:trash"></div>{{ $t('remove') }}
-          </ElButton>
+          <ElPopconfirm :title="$t('removeConfirm')" :width="240" @confirm="confirmEvent(scope.row.id)">
+            <template #reference>
+              <ElButton size="small" type="danger" link>
+                <div class="ph:trash"></div>{{ $t('remove') }}
+              </ElButton>
+            </template>
+          </ElPopconfirm>
         </template>
       </ElTableColumn>
     </ElTable>
@@ -160,18 +175,17 @@ function onSubmit() {
       <ElRow :gutter="20" class="w-full !mx-0">
         <ElCol>
           <ElFormItem :label="$t('description')" prop="description">
-            <ElInput v-model="form.description" type="textarea"
-              :placeholder="$t('inputText') + $t('description')" />
+            <ElInput v-model="form.description" type="textarea" :placeholder="$t('inputText') + $t('description')" />
           </ElFormItem>
         </ElCol>
       </ElRow>
     </ElForm>
     <template #footer>
       <ElButton @click="dialogVisible = false">
-        <div class="i-ph:x-circle"></div>{{ $t('cancle') }}
+        <div class="ph:x-circle"></div>{{ $t('cancle') }}
       </ElButton>
       <ElButton type="primary" :loading="saveLoading" @click="onSubmit">
-        <div class="i-ph:check-circle"></div> {{ $t('commit') }}
+        <div class="ph:check-circle"></div> {{ $t('commit') }}
       </ElButton>
     </template>
   </Dialog>

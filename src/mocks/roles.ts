@@ -15,7 +15,7 @@ for (let i = 1; i < 28; i++) {
     name: 'role_' + i,
     privilege: i,
     enabled: i % 3 > 0,
-    description: 'description'
+    description: 'this is description for this row'
   }
   datas.push(data)
 }
@@ -45,14 +45,17 @@ export const rolesHandlers = [
     const url = new URL(request.url)
     const page = url.searchParams.get('page')
     const size = url.searchParams.get('size')
-    // Construct a JSON response with the list of all Role
-    // as the response body.
-    const data = {
-      content: Array.from(datas.slice(Number(page) * Number(size), (Number(page) + 1) * Number(size))),
-      totalElements: datas.length
+    if (page && size) {
+      // Construct a JSON response with the list of all Role
+      // as the response body.
+      const data = {
+        content: Array.from(datas.slice(Number(page) * Number(size), (Number(page) + 1) * Number(size))),
+        totalElements: datas.length
+      }
+      return HttpResponse.json(data)
+    } else {
+      return HttpResponse.json(datas)
     }
-
-    return HttpResponse.json(data)
   }),
   http.post('/api/roles', async ({ request }) => {
     // Read the intercepted request body as JSON.

@@ -149,6 +149,16 @@ function removeHandler(id: number) {
 }
 
 /**
+ * 确认
+ * @param id 主键
+ */
+ function confirmEvent(id: number) {
+  if (id) {
+    removeHandler(id)
+  }
+}
+
+/**
  * 权限树操作
  */
 function handlePrivilegeCheckChange() { }
@@ -172,30 +182,22 @@ function handleCurrentChange(row: Role | undefined) {
   }
 }
 
-/**
- * 确认
- */
-function confirmEvent(id: number) {
-  if (id) {
-    removeHandler(id)
-  }
-}
 </script>
 
 <template>
   <div>
     <ElSpace size="large" fill>
       <ElCard shadow="never" class="search">
-        <ElForm ref="searchFormRef" inline :model="searchForm">
+        <ElForm inline :model="searchForm" @submit.prevent>
           <ElFormItem :label="$t('name')" prop="name">
             <ElInput v-model="searchForm.name" :placeholder="$t('inputText') + $t('name')" />
           </ElFormItem>
           <ElFormItem>
             <ElButton type="primary" @click="load">
-              <div class="i-ph:magnifying-glass"></div>{{ $t('search') }}
+              <div class="ph:magnifying-glass"></div>{{ $t('search') }}
             </ElButton>
             <ElButton @click="reset">
-              <div class="i-ph:arrow-counter-clockwise"></div>{{ $t('reset') }}
+              <div class="ph:arrow-counter-clockwise"></div>{{ $t('reset') }}
             </ElButton>
           </ElFormItem>
         </ElForm>
@@ -207,16 +209,16 @@ function confirmEvent(id: number) {
             <ElRow :gutter="20" justify="space-between" class="mb-4">
               <ElCol :span="16" class="text-left">
                 <ElButton type="primary" @click="saveOrUpdate()">
-                  <div class="i-ph:plus"></div>{{ $t('add') }}
+                  <div class="ph:plus"></div>{{ $t('add') }}
                 </ElButton>
                 <ElButton type="danger" plain>
-                  <div class="i-ph:trash"></div>{{ $t('remove') }}
+                  <div class="ph:trash"></div>{{ $t('remove') }}
                 </ElButton>
                 <ElButton type="warning" plain @click="dialogVisible = true">
-                  <div class="i-ph:file-arrow-up"></div>{{ $t('import') }}
+                  <div class="ph:file-arrow-up"></div>{{ $t('import') }}
                 </ElButton>
                 <ElButton type="success" plain>
-                  <div class="i-ph:cloud-arrow-down"></div>{{ $t('export') }}
+                  <div class="ph:cloud-arrow-down"></div>{{ $t('export') }}
                 </ElButton>
               </ElCol>
 
@@ -224,7 +226,7 @@ function confirmEvent(id: number) {
                 <ElTooltip class="box-item" effect="dark" :content="$t('refresh')" placement="top">
                   <ElButton type="primary" plain circle @click="load">
                     <template #icon>
-                      <div class="i-ph:arrow-clockwise"></div>
+                      <div class="ph:arrow-clockwise"></div>
                     </template>
                   </ElButton>
                 </ElTooltip>
@@ -232,7 +234,7 @@ function confirmEvent(id: number) {
                 <ElTooltip class="box-item" effect="dark" :content="$t('settings')" placement="top">
                   <ElButton type="success" plain circle>
                     <template #icon>
-                      <div class="i-ph:table"></div>
+                      <div class="ph:table"></div>
                     </template>
                   </ElButton>
                 </ElTooltip>
@@ -240,7 +242,7 @@ function confirmEvent(id: number) {
             </ElRow>
 
             <ElTable v-loading="loading" :data="datas" lazy :load="load" row-key="id" stripe table-layout="auto"
-              highlight-current-row @current-change="handleCurrentChange">
+              highlight-current-row @current-change="handleCurrentChange" height="calc(100vh - 350px)">
               <ElTableColumn type="selection" width="55" />
               <ElTableColumn type="index" :label="$t('no')" width="55" />
               <ElTableColumn prop="name" :label="$t('name')" />
@@ -254,12 +256,12 @@ function confirmEvent(id: number) {
               <ElTableColumn :label="$t('action')">
                 <template #default="scope">
                   <ElButton size="small" type="primary" link @click="saveOrUpdate(scope.row.id)">
-                    <div class="i-ph:pencil-simple-line"></div>{{ $t('edit') }}
+                    <div class="ph:pencil-simple-line"></div>{{ $t('edit') }}
                   </ElButton>
                   <ElPopconfirm :title="$t('removeConfirm')" :width="240" @confirm="confirmEvent(scope.row.id)">
                     <template #reference>
                       <ElButton size="small" type="danger" link>
-                        <div class="i-ph:trash"></div>{{ $t('remove') }}
+                        <div class="ph:trash"></div>{{ $t('remove') }}
                       </ElButton>
                     </template>
                   </ElPopconfirm>
@@ -323,10 +325,10 @@ function confirmEvent(id: number) {
       </ElForm>
       <template #footer>
         <ElButton @click="dialogVisible = false">
-          <div class="i-ph:x-circle"></div>{{ $t('cancle') }}
+          <div class="ph:x-circle"></div>{{ $t('cancle') }}
         </ElButton>
         <ElButton type="primary" :loading="saveLoading" @click="onSubmit">
-          <div class="i-ph:check-circle"></div> {{ $t('commit') }}
+          <div class="ph:check-circle"></div> {{ $t('commit') }}
         </ElButton>
       </template>
     </Dialog>

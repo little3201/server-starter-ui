@@ -61,7 +61,7 @@ function load(row?: Organization, treeNode?: unknown, resolve?: (data: Organizat
       resolve(res.data)
     }).finally(() => loading.value = false)
   } else {
-    retrieveDepartments(pagination.page, pagination.size).then(res => {
+    retrieveDepartments(pagination.page, pagination.size, searchForm.value).then(res => {
       datas.value = res.data.content
       pagination.total = res.data.totalElements
     }).finally(() => loading.value = false)
@@ -128,6 +128,16 @@ function removeHandler(id: number) {
 }
 
 /**
+ * 确认
+ * @param id 主键
+ */
+function confirmEvent(id: number) {
+  if (id) {
+    removeHandler(id)
+  }
+}
+
+/**
  * 全选操作
  * @param val 是否全选
  */
@@ -151,16 +161,16 @@ function handleCheckedChange(value: string[]) {
   <div>
     <ElSpace size="large" fill>
       <ElCard shadow="never" class="search">
-        <ElForm ref="searchFormRef" inline :model="searchForm">
+        <ElForm inline :model="searchForm" @submit.prevent>
           <ElFormItem :label="$t('name')" prop="name">
             <ElInput v-model="searchForm.name" :placeholder="$t('inputText') + $t('name')" />
           </ElFormItem>
           <ElFormItem>
             <ElButton type="primary" @click="load">
-              <div class="i-ph:magnifying-glass"></div>{{ $t('search') }}
+              <div class="ph:magnifying-glass"></div>{{ $t('search') }}
             </ElButton>
             <ElButton @click="reset">
-              <div class="i-ph:arrow-counter-clockwise"></div>{{ $t('reset') }}
+              <div class="ph:arrow-counter-clockwise"></div>{{ $t('reset') }}
             </ElButton>
           </ElFormItem>
         </ElForm>
@@ -170,16 +180,16 @@ function handleCheckedChange(value: string[]) {
         <ElRow :gutter="20" justify="space-between" class="mb-4">
           <ElCol :span="16" class="text-left">
             <ElButton type="primary" @click="saveOrUpdate()">
-              <div class="i-ph:plus"></div>{{ $t('add') }}
+              <div class="ph:plus"></div>{{ $t('add') }}
             </ElButton>
             <ElButton type="danger" plain>
-              <div class="i-ph:trash"></div>{{ $t('remove') }}
+              <div class="ph:trash"></div>{{ $t('remove') }}
             </ElButton>
             <ElButton type="warning" plain @click="dialogVisible = true">
-              <div class="i-ph:file-arrow-up"></div>{{ $t('import') }}
+              <div class="ph:file-arrow-up"></div>{{ $t('import') }}
             </ElButton>
             <ElButton type="success" plain>
-              <div class="i-ph:cloud-arrow-down"></div>{{ $t('export') }}
+              <div class="ph:cloud-arrow-down"></div>{{ $t('export') }}
             </ElButton>
           </ElCol>
 
@@ -187,7 +197,7 @@ function handleCheckedChange(value: string[]) {
             <ElTooltip :content="$t('refresh')" placement="top">
               <ElButton type="primary" plain circle @click="load">
                 <template #icon>
-                  <div class="i-ph:arrow-clockwise"></div>
+                  <div class="ph:arrow-clockwise"></div>
                 </template>
               </ElButton>
             </ElTooltip>
@@ -198,7 +208,7 @@ function handleCheckedChange(value: string[]) {
                   <template #reference>
                     <ElButton type="success" plain circle>
                       <template #icon>
-                        <div class="i-ph:table"></div>
+                        <div class="ph:table"></div>
                       </template>
                     </ElButton>
                   </template>
@@ -208,10 +218,10 @@ function handleCheckedChange(value: string[]) {
                     </ElCheckbox>
                     <ElDivider />
                     <ElCheckboxGroup v-model="checkedColumns" @change="handleCheckedChange">
-                      <draggable v-model="columns">
+                      <draggable v-model="columns" item-key="simple">
                         <template #item="{ element }">
                           <div class="flex items-center space-x-2">
-                            <div class="i-ph:dots-six-vertical w-4 h-4 hover:cursor-move"></div>
+                            <div class="ph:dots-six-vertical w-4 h-4 hover:cursor-move"></div>
                             <ElCheckbox :label="element" :value="element" :disabled="element === columns[0]">
                               <div class="inline-flex items-center space-x-4">
                                 {{ $t(element) }}
@@ -228,7 +238,8 @@ function handleCheckedChange(value: string[]) {
           </ElCol>
         </ElRow>
 
-        <ElTable v-loading="loading" :data="datas" lazy :load="load" row-key="id" stripe table-layout="auto">
+        <ElTable v-loading="loading" :data="datas" lazy :load="load" row-key="id" stripe table-layout="auto"
+          height="calc(100vh - 350px)">
           <ElTableColumn type="selection" width="55" />
           <ElTableColumn prop="name" :label="$t('name')" />
           <ElTableColumn prop="enabled" :label="$t('status')">
@@ -241,11 +252,15 @@ function handleCheckedChange(value: string[]) {
           <ElTableColumn :label="$t('action')">
             <template #default="scope">
               <ElButton size="small" type="primary" link @click="saveOrUpdate(scope.row.id)">
-                <div class="i-ph:pencil-simple-line"></div>{{ $t('edit') }}
+                <div class="ph:pencil-simple-line"></div>{{ $t('edit') }}
               </ElButton>
-              <ElButton size="small" type="danger" link @click="removeHandler(scope.row.id)">
-                <div class="i-ph:trash"></div>{{ $t('remove') }}
-              </ElButton>
+              <ElPopconfirm v-if="!scope.row.hasChildren" :title="$t('removeConfirm')" :width="240" @confirm="confirmEvent(scope.row.id)">
+                <template #reference>
+                  <ElButton size="small" type="danger" link>
+                    <div class="ph:trash"></div>{{ $t('remove') }}
+                  </ElButton>
+                </template>
+              </ElPopconfirm>
             </template>
           </ElTableColumn>
         </ElTable>
@@ -273,10 +288,10 @@ function handleCheckedChange(value: string[]) {
       </ElForm>
       <template #footer>
         <ElButton type="primary" :loading="saveLoading" @click="onSubmit">
-          <div class="i-ph:check-circle"></div> {{ $t('commit') }}
+          <div class="ph:check-circle"></div> {{ $t('commit') }}
         </ElButton>
         <ElButton @click="dialogVisible = false">
-          <div class="i-ph:x-circle"></div>{{ $t('cancle') }}
+          <div class="ph:x-circle"></div>{{ $t('cancle') }}
         </ElButton>
       </template>
     </Dialog>

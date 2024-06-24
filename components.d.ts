@@ -64,6 +64,7 @@ declare module 'vue' {
     ElTag: typeof import('element-plus/es')['ElTag']
     ElTooltip: typeof import('element-plus/es')['ElTooltip']
     ElTree: typeof import('element-plus/es')['ElTree']
+    ElTreeSelect: typeof import('element-plus/es')['ElTreeSelect']
     Error: typeof import('./src/components/Error.vue')['default']
     Footer: typeof import('./src/components/layouts/Footer.vue')['default']
     Index: typeof import('./src/components/layouts/Index.vue')['default']

@@ -92,6 +92,8 @@ export default {
   pageError: '抱歉，您访问的页面不存在。',
   networkError: '抱歉，服务器报告错误。',
   returnToHome: '返回首页',
+  
+  lengthRange: '长度在 {min} 到 {max} 个字符',
 
   default: '默认',
   large: '较大',

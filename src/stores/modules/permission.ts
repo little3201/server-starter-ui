@@ -42,18 +42,6 @@ export const usePermissionStore = defineStore('permission', {
         // 过滤菜单
         routerMap = generateRoutesByServer(routers as AppCustomRouteRecordRaw[])
 
-        routerMap.concat([
-          {
-            path: '/:path(.*)*',
-            redirect: '/404',
-            name: 'NotFound',
-            component: '',
-            meta: {
-              hidden: true
-            }
-          }
-        ])
-
         // 渲染菜单的所有路由
         this.routers = cloneDeep(constantRouterMap).concat(routerMap)
         resolve()

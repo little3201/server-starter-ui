@@ -2,10 +2,10 @@
 import { ref, reactive, onMounted, watch } from 'vue'
 import type { FormInstance, FormRules } from 'element-plus'
 import Dialog from 'components/Dialog.vue'
-import { retrieveDepartments, retrieveDepartmentTree } from '~/api/organizations'
+import { retrieveDepartmentTree } from '~/api/organizations'
 import { retrieveUsers, fetchUser } from '~/api/users'
 import { retrieveRoles } from '~/api/roles'
-import type { TreeNode, Organization, User, Role } from '~/api/models.type'
+import type { TreeNode, User, Role } from '~/api/models.type'
 
 const loading = ref<boolean>(false)
 const datas = ref<Array<User>>([])
@@ -21,7 +21,7 @@ const currentNodeKey = ref<number>()
 const currentNode = ref('')
 
 const organizationTree = ref<TreeNode[]>([])
-const organizationsOptions = ref<Organization[]>([])
+const organizationsOptions = ref<TreeNode[]>([])
 const rolesOptions = ref<Role[]>([])
 
 const saveLoading = ref<boolean>(false)
@@ -99,11 +99,11 @@ function pageChange(currentPage: number, pageSize: number) {
 }
 
 /**
- * 加载组织
+ * 加载组织树
  */
 function fetchDepartments() {
-  retrieveDepartments(1, 10).then(res => {
-    organizationsOptions.value = res.data.content
+  retrieveDepartmentTree().then(res => {
+    organizationsOptions.value = res.data
   })
 }
 
@@ -111,8 +111,8 @@ function fetchDepartments() {
  * 加载角色
  */
 function fetchRoles() {
-  retrieveRoles(1, 10).then(res => {
-    rolesOptions.value = res.data.content
+  retrieveRoles().then(res => {
+    rolesOptions.value = res.data
   })
 }
 
@@ -125,6 +125,17 @@ function load() {
     datas.value = res.data.content
     pagination.total = res.data.totalElements
   }).finally(() => loading.value = false)
+}
+
+/**
+ * 角色显示格式化
+ */
+function formatRole(value: number) {
+  const roles = rolesOptions.value.filter(item => item.id === value)
+  if (roles && roles.length > 0) {
+    return roles[0].name
+  }
+  return ""
 }
 
 /**
@@ -198,6 +209,16 @@ function onSubmit() {
 function removeHandler(id: number) {
   datas.value = datas.value.filter(item => item.id !== id)
 }
+
+/**
+ * 确认
+ * @param id 主键
+ */
+function confirmEvent(id: number) {
+  if (id) {
+    removeHandler(id)
+  }
+}
 </script>
 
 <template>
@@ -207,7 +228,7 @@ function removeHandler(id: number) {
         <ElFormItem prop="currentNode">
           <ElInput v-model="currentNode" :placeholder="$t('search')" clearable>
             <template #prefix>
-              <div class="i-ph:magnifying-glass"></div>
+              <div class="ph:magnifying-glass"></div>
             </template>
           </ElInput>
         </ElFormItem>
@@ -229,10 +250,10 @@ function removeHandler(id: number) {
             </ElFormItem>
             <ElFormItem>
               <ElButton type="primary" @click="load">
-                <div class="i-ph:magnifying-glass"></div>{{ $t('search') }}
+                <div class="ph:magnifying-glass"></div>{{ $t('search') }}
               </ElButton>
               <ElButton @click="reset">
-                <div class="i-ph:arrow-counter-clockwise"></div>{{ $t('reset') }}
+                <div class="ph:arrow-counter-clockwise"></div>{{ $t('reset') }}
               </ElButton>
             </ElFormItem>
           </ElForm>
@@ -242,13 +263,13 @@ function removeHandler(id: number) {
           <ElRow :gutter="20" justify="space-between" class="mb-4">
             <ElCol :span="16" class="text-left">
               <ElButton type="primary" @click="saveOrUpdate()">
-                <div class="i-ph:plus"></div>{{ $t('add') }}
+                <div class="ph:plus"></div>{{ $t('add') }}
               </ElButton>
               <ElButton type="warning" plain @click="dialogVisible = true">
-                <div class="i-ph:file-arrow-up"></div>{{ $t('import') }}
+                <div class="ph:file-arrow-up"></div>{{ $t('import') }}
               </ElButton>
               <ElButton type="success" plain>
-                <div class="i-ph:cloud-arrow-down"></div>{{ $t('export') }}
+                <div class="ph:cloud-arrow-down"></div>{{ $t('export') }}
               </ElButton>
             </ElCol>
 
@@ -256,7 +277,7 @@ function removeHandler(id: number) {
               <ElTooltip class="box-item" effect="dark" :content="$t('refresh')" placement="top">
                 <ElButton type="primary" plain circle @click="load">
                   <template #icon>
-                    <div class="i-ph:arrow-clockwise"></div>
+                    <div class="ph:arrow-clockwise"></div>
                   </template>
                 </ElButton>
               </ElTooltip>
@@ -264,7 +285,7 @@ function removeHandler(id: number) {
               <ElTooltip class="box-item" effect="dark" :content="$t('settings')" placement="top">
                 <ElButton type="success" plain circle>
                   <template #icon>
-                    <div class="i-ph:table"></div>
+                    <div class="ph:table"></div>
                   </template>
                 </ElButton>
               </ElTooltip>
@@ -272,7 +293,7 @@ function removeHandler(id: number) {
           </ElRow>
 
           <ElTable v-loading="loading" :data="datas" lazy :load="load" row-key="id" stripe table-layout="auto"
-            layout="prev, pager, next, sizes, jumper, ->, total">
+            height="calc(100vh - 350px)">
             <ElTableColumn type="selection" width="55" />
             <ElTableColumn type="index" :label="$t('no')" width="55" />
             <ElTableColumn show-overflow-tooltip prop="username" :label="$t('username')">
@@ -284,7 +305,11 @@ function removeHandler(id: number) {
               </template>
             </ElTableColumn>
             <ElTableColumn show-overflow-tooltip prop="email" :label="$t('email')" />
-            <ElTableColumn show-overflow-tooltip prop="role" :label="$t('role')" />
+            <ElTableColumn show-overflow-tooltip prop="role" :label="$t('role')">
+              <template #default="scope">
+                {{ formatRole(scope.row.role) }}
+              </template>
+            </ElTableColumn>
             <ElTableColumn prop="enabled" :label="$t('status')">
               <template #default="scope">
                 <ElSwitch size="small" v-model="scope.row.enabled"
@@ -294,11 +319,15 @@ function removeHandler(id: number) {
             <ElTableColumn :label="$t('action')">
               <template #default="scope">
                 <ElButton size="small" type="primary" link @click="saveOrUpdate(scope.row.id)">
-                  <div class="i-ph:pencil-simple-line"></div>{{ $t('edit') }}
+                  <div class="ph:pencil-simple-line"></div>{{ $t('edit') }}
                 </ElButton>
-                <ElButton size="small" type="danger" link @click="removeHandler(scope.row.id)">
-                  <div class="i-ph:trash"></div>{{ $t('remove') }}
-                </ElButton>
+                <ElPopconfirm :title="$t('removeConfirm')" :width="240" @confirm="confirmEvent(scope.row.id)">
+                  <template #reference>
+                    <ElButton size="small" type="danger" link>
+                      <div class="ph:trash"></div>{{ $t('remove') }}
+                    </ElButton>
+                  </template>
+                </ElPopconfirm>
               </template>
             </ElTableColumn>
           </ElTable>
@@ -318,8 +347,7 @@ function removeHandler(id: number) {
           </ElCol>
           <ElCol :span="12">
             <ElFormItem :label="$t('email')" prop="email">
-              <ElInput type="email" v-model="form.email" :placeholder="$t('inputText') + $t('email')"
-                show-password />
+              <ElInput type="email" v-model="form.email" :placeholder="$t('inputText') + $t('email')" show-password />
             </ElFormItem>
           </ElCol>
         </ElRow>
@@ -333,20 +361,18 @@ function removeHandler(id: number) {
           </ElCol>
           <ElCol :span="12">
             <ElFormItem :label="$t('organization')" prop="organization">
-              <ElSelect v-model="form.organization" :placeholder="$t('selectText') + $t('organization')"
-                style="width: 100%">
-                <ElOption v-for="item in organizationsOptions" :key="item.id" :label="item.name" :value="item.id" />
-              </ElSelect>
+              <ElTreeSelect v-model="form.organization" :data="organizationsOptions" node-key="id"
+                :props="{ label: 'name' }" check-strictly :render-after-expand="false" />
             </ElFormItem>
           </ElCol>
         </ElRow>
       </ElForm>
       <template #footer>
         <ElButton @click="dialogVisible = false">
-          <div class="i-ph:x-circle"></div>{{ $t('cancle') }}
+          <div class="ph:x-circle"></div>{{ $t('cancle') }}
         </ElButton>
         <ElButton type="primary" :loading="saveLoading" @click="onSubmit">
-          <div class="i-ph:check-circle"></div> {{ $t('commit') }}
+          <div class="ph:check-circle"></div> {{ $t('commit') }}
         </ElButton>
       </template>
     </Dialog>

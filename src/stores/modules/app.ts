@@ -9,8 +9,6 @@ interface AppState {
   title: string
   currentSize: ComponentSize
   sizeMap: ComponentSize[]
-  locale: string
-  localeMap: LocaleType[]
 }
 
 export const useAppStore = defineStore('app', {
@@ -22,18 +20,7 @@ export const useAppStore = defineStore('app', {
       greyMode: false, // 是否开始灰色模式，用于特殊悼念日
 
       currentSize: 'default', // 组件尺寸
-      sizeMap: ['default', 'large', 'small'],
-      locale: 'zh-CN',
-      localeMap: [
-        {
-          lang: 'zh-CN',
-          name: '简体中文'
-        },
-        {
-          lang: 'en',
-          name: 'English'
-        }
-      ]
+      sizeMap: ['default', 'large', 'small']
     }
   },
   getters: {
@@ -54,12 +41,6 @@ export const useAppStore = defineStore('app', {
     },
     getSizeMap(): ComponentSize[] {
       return this.sizeMap
-    },
-    getLocale(): string {
-      return this.locale
-    },
-    getLocaleMap(): LocaleType[] {
-      return this.localeMap
     }
   },
   actions: {
@@ -84,9 +65,6 @@ export const useAppStore = defineStore('app', {
     },
     setCurrentSize(currentSize: ComponentSize) {
       this.currentSize = currentSize
-    },
-    setLocale(locale: string) {
-      this.locale = locale
     },
     initTheme() {
       const isDark = useDark({

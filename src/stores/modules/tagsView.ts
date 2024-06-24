@@ -1,7 +1,6 @@
 import router from '~/router'
 import type { RouteLocationNormalizedLoaded } from 'vue-router'
 import { defineStore } from 'pinia'
-import { store } from '../index'
 import { findIndex } from '~/utils'
 import { getRawRoute } from '~/utils/routerHelper'
 

@@ -95,6 +95,8 @@ export default {
   networkError: 'Sorry, the server reported an error.',
   returnToHome: 'Return to home',
 
+  lengthRange: 'The length should be between {min} and {max}',
+  
   default: 'Default',
   large: 'Large',
   small: 'Small',

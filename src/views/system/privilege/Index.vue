@@ -17,11 +17,36 @@ const saveLoading = ref<boolean>(false)
 const dialogVisible = ref<boolean>(false)
 
 const searchForm = ref({
-  name: null
+  name: null,
+  path: null,
+  component: null
 })
 
 const iconName = ref('')
-const icons = ref(['gear', 'user', 'users', 'book', 'plus', 'trash', 'key', 'gear', 'user', 'users', 'book', 'plus', 'trash', 'key', 'gear', 'user', 'users', 'book', 'plus', 'trash', 'key', 'gear', 'user', 'users', 'book', 'plus', 'trash', 'key'])
+const icons = ref([
+  "user",
+  "user-circle",
+  "buildings",
+  "book",
+  "table",
+  "plus",
+  "pencil",
+  "trash",
+  "arrows-clockwise",
+  "file-arrow-up",
+  "cloud-arrow-down",
+  "trash-simple",
+  "lock-key",
+  "list",
+  "users-three",
+  "tree-structure",
+  "hierarchy",
+  "clipboard-text",
+  "sign-in",
+  "clock",
+  "gear"
+]
+)
 const filterIcons = computed(() => icons.value.filter(item => item.includes(iconName.value)))
 
 const formRef = ref<FormInstance>()
@@ -82,7 +107,9 @@ function load(row?: Privilege, treeNode?: unknown, resolve?: (data: Privilege[])
  */
 function reset() {
   searchForm.value = {
-    name: null
+    name: null,
+    path: null,
+    component: null
   }
   load()
 }
@@ -135,9 +162,15 @@ function onSubmit() {
   <div>
     <ElSpace size="large" fill>
       <ElCard shadow="never" class="search">
-        <ElForm ref="searchFormRef" inline :model="searchForm">
+        <ElForm inline :model="searchForm">
           <ElFormItem :label="$t('name')" prop="name">
             <ElInput v-model="searchForm.name" :placeholder="$t('inputText') + $t('name')" />
+          </ElFormItem>
+          <ElFormItem :label="$t('path')" prop="path">
+            <ElInput v-model="searchForm.path" :placeholder="$t('inputText') + $t('path')" />
+          </ElFormItem>
+          <ElFormItem :label="$t('component')" prop="component">
+            <ElInput v-model="searchForm.component" :placeholder="$t('inputText') + $t('component')" />
           </ElFormItem>
           <ElFormItem>
             <ElButton type="primary" @click="load">
@@ -154,17 +187,17 @@ function onSubmit() {
         <ElRow :gutter="20" justify="space-between" class="mb-4">
           <ElCol :span="16" class="text-left">
             <ElButton type="warning" plain @click="dialogVisible = true">
-              <div class="i-ph:file-arrow-up"></div>{{ $t('import') }}
+              <div class="i-ph:file-arrow-up" />{{ $t('import') }}
             </ElButton>
             <ElButton type="success" plain>
-              <div class="i-ph:cloud-arrow-down"></div>{{ $t('export') }}
+              <div class="i-ph:cloud-arrow-down" />{{ $t('export') }}
             </ElButton>
           </ElCol>
           <ElCol :span="8" class="text-right">
             <ElTooltip class="box-item" effect="dark" :content="$t('refresh')" placement="top">
               <ElButton type="primary" plain circle @click="load">
                 <template #icon>
-                  <div class="i-ph:arrow-clockwise"></div>
+                  <div class="i-ph:arrow-clockwise" />
                 </template>
               </ElButton>
             </ElTooltip>
@@ -172,14 +205,15 @@ function onSubmit() {
             <ElTooltip class="box-item" effect="dark" :content="$t('settings')" placement="top">
               <ElButton type="success" plain circle>
                 <template #icon>
-                  <div class="i-ph:table"></div>
+                  <div class="i-ph:table" />
                 </template>
               </ElButton>
             </ElTooltip>
           </ElCol>
         </ElRow>
 
-        <ElTable v-loading="loading" :data="datas" lazy :load="load" row-key="id" stripe table-layout="auto">
+        <ElTable v-loading="loading" :data="datas" lazy :load="load" row-key="id" stripe table-layout="auto"
+          height="calc(100vh - 350px)">
           <ElTableColumn type="selection" width="55" />
           <ElTableColumn prop="name" :label="$t('name')">
             <template #default="scope">
@@ -247,23 +281,23 @@ function onSubmit() {
               <ElPopover trigger="click" width="36%">
                 <template #reference>
                   <ElInput v-model="form.meta.icon" :placeholder="$t('inputText') + $t('icon')">
+                    <template #prefix>
+                      <div :class="form.meta.icon" />
+                    </template>
                   </ElInput>
                 </template>
-                <!-- <div> -->
                 <ElInput v-model="iconName" :placeholder="$t('inputText') + $t('icon')">
                 </ElInput>
                 <div class="flex flex-wrap max-h-48 overflow-y-scroll mt-4">
-                  <div v-for="(icon, index) in filterIcons" :key="index" @click="form.meta.icon = ('i-ph:' + icon)"
-                    :class="['inline-flex items-center cursor-pointer w-1/5 h-8 hover:text-[var(--el-color-primary)]', { 'text-[var(--el-color-primary)': form.meta.icon === ('i-ph:' + icon) }]">
+                  <div v-for="(icon, index) in filterIcons" :key="index" @click="form.meta.icon = ('ph:' + icon)"
+                    :class="['inline-flex items-center cursor-pointer w-1/3 h-8 hover:text-[var(--el-color-primary)]', { 'text-[var(--el-color-primary)': form.meta.icon === ('ph:' + icon) }]">
                     <div :class="['w-5 h-5', 'i-ph:' + icon]" />
                     <span class="ml-2 text-base">{{ icon }}</span>
                   </div>
                 </div>
-                <!-- </div> -->
               </ElPopover>
             </ElFormItem>
           </ElCol>
-
         </ElRow>
         <ElRow :gutter="20" class="w-full !mx-0">
           <ElCol>

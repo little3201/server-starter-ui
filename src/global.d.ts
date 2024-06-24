@@ -26,10 +26,7 @@ declare global {
     alwaysShow?: boolean
     icon?: string
     noCache?: boolean
-    breadcrumb?: boolean
-    affix?: boolean
     noTagsView?: boolean
-    canTo?: boolean
     permission?: string[]
   }
 
