@@ -19,5 +19,5 @@ export const handlers = [
   ...actionLogsHandlers,
   ...accessLogsHandlers,
   ...auditLogsHandlers,
-  ...schedulerLogsHandlers,
+  ...schedulerLogsHandlers
 ]

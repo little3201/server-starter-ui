@@ -2,8 +2,8 @@
 import { ref, reactive, onMounted, computed } from 'vue'
 import type { FormInstance, FormRules } from 'element-plus'
 import Dialog from 'components/Dialog.vue'
-import { retrievePrivileges, retrievePrivilegeSubset, fetchPrivilege } from '~/api/privileges'
-import type { Privilege, PrivilegeTreeNode } from '~/api/models.type'
+import { retrievePrivileges, fetchPrivilege } from '~/api/privileges'
+import type { Privilege, PrivilegeTreeNode } from '~/models'
 
 const loading = ref<boolean>(false)
 const datas = ref<Array<PrivilegeTreeNode>>([])
@@ -24,27 +24,23 @@ const searchForm = ref({
 
 const iconName = ref('')
 const icons = ref([
+  "gear",
   "user",
   "user-circle",
-  "buildings",
   "book",
-  "table",
-  "plus",
-  "pencil",
-  "trash",
-  "arrows-clockwise",
-  "file-arrow-up",
-  "cloud-arrow-down",
-  "trash-simple",
   "lock-key",
-  "list",
-  "users-three",
+  "key",
   "tree-structure",
-  "hierarchy",
+  "test-tube",
+  "database",
+  "flask",
+  "notepad",
+  "file-arrow-up",
+  "file-cloud",
+  "file-lock",
+  "file-text",
   "clipboard-text",
-  "sign-in",
-  "clock",
-  "gear"
+  "files"
 ]
 )
 const filterIcons = computed(() => icons.value.filter(item => item.includes(iconName.value)))
@@ -60,6 +56,7 @@ const form = ref<Privilege>({
   redirect: '',
   meta: {
     icon: '',
+    actions: []
   },
   enabled: true,
   description: ''
@@ -88,18 +85,12 @@ function pageChange(currentPage: number, pageSize: number) {
 /**
  * 加载列表
  */
-function load(row?: Privilege, treeNode?: unknown, resolve?: (data: Privilege[]) => void) {
+function load() {
   loading.value = true
-  if (row && row.id && resolve) {
-    retrievePrivilegeSubset(row.id).then(res => {
-      resolve(res.data)
-    }).finally(() => loading.value = false)
-  } else {
-    retrievePrivileges(pagination.page, pagination.size, searchForm.value).then(res => {
-      datas.value = res.data.content
-      pagination.total = res.data.totalElements
-    }).finally(() => loading.value = false)
-  }
+  retrievePrivileges(pagination.page, pagination.size, searchForm.value).then(res => {
+    datas.value = res.data.content
+    pagination.total = res.data.totalElements
+  }).finally(() => loading.value = false)
 }
 
 /**
@@ -174,10 +165,10 @@ function onSubmit() {
           </ElFormItem>
           <ElFormItem>
             <ElButton type="primary" @click="load">
-              <div class="i-ph:magnifying-glass"></div>{{ $t('search') }}
+              <div class="i-ph:magnifying-glass" />{{ $t('search') }}
             </ElButton>
             <ElButton @click="reset">
-              <div class="i-ph:arrow-counter-clockwise"></div>{{ $t('reset') }}
+              <div class="i-ph:arrow-counter-clockwise" />{{ $t('reset') }}
             </ElButton>
           </ElFormItem>
         </ElForm>
@@ -205,7 +196,7 @@ function onSubmit() {
             <ElTooltip class="box-item" effect="dark" :content="$t('settings')" placement="top">
               <ElButton type="success" plain circle>
                 <template #icon>
-                  <div class="i-ph:table" />
+                  <div class="i-ph:text-columns" />
                 </template>
               </ElButton>
             </ElTooltip>
@@ -238,7 +229,7 @@ function onSubmit() {
           <ElTableColumn :label="$t('action')">
             <template #default="scope">
               <ElButton size="small" type="primary" link @click="saveOrUpdate(scope.row.id)">
-                <div class="i-ph:pencil-simple-line"></div>{{ $t('edit') }}
+                <div class="i-ph:pencil-simple-line" />{{ $t('edit') }}
               </ElButton>
             </template>
           </ElTableColumn>
@@ -248,7 +239,7 @@ function onSubmit() {
       </ElCard>
     </ElSpace>
 
-    <Dialog v-model="dialogVisible" :title="$t('privilege')" :width="'40%'">
+    <Dialog v-model="dialogVisible" :title="$t('privilege')" width="36%">
       <ElForm ref="formRef" :model="form" :rules="rules" label-position="top">
         <ElRow :gutter="20" class="w-full !mx-0">
           <ElCol :span="12">
@@ -276,7 +267,7 @@ function onSubmit() {
         </ElRow>
         <ElRow :gutter="20" class="w-full !mx-0">
           <ElCol>
-            <ElFormItem :label="$t('icon')" prop="meta.icon" class="relative">
+            <ElFormItem :label="$t('icon')" prop="meta.icon">
               <!-- width 相对body设置, popover默认设置了 position: absolute -->
               <ElPopover trigger="click" width="36%">
                 <template #reference>
@@ -301,6 +292,20 @@ function onSubmit() {
         </ElRow>
         <ElRow :gutter="20" class="w-full !mx-0">
           <ElCol>
+            <ElFormItem :label="$t('actions')" prop="meta.actions">
+              <!-- width 相对body设置, popover默认设置了 position: absolute -->
+              <ElSelect multiple v-model="form.meta.actions" :placeholder="$t('selectText') + $t('actions')">
+                <ElOption value="add">{{ $t('add') }}</ElOption>
+                <ElOption value="edit">{{ $t('edit') }}</ElOption>
+                <ElOption value="remove">{{ $t('remove') }}</ElOption>
+                <ElOption value="import">{{ $t('import') }}</ElOption>
+                <ElOption value="export">{{ $t('export') }}</ElOption>
+              </ElSelect>
+            </ElFormItem>
+          </ElCol>
+        </ElRow>
+        <ElRow :gutter="20" class="w-full !mx-0">
+          <ElCol>
             <ElFormItem :label="$t('description')" prop="description">
               <ElInput v-model="form.description" type="textarea" :placeholder="$t('description')" />
             </ElFormItem>
@@ -309,10 +314,10 @@ function onSubmit() {
       </ElForm>
       <template #footer>
         <ElButton @click="dialogVisible = false">
-          <div class="i-ph:x-circle"></div>{{ $t('cancle') }}
+          <div class="i-ph:x-circle" />{{ $t('cancle') }}
         </ElButton>
         <ElButton type="primary" :loading="saveLoading" @click="onSubmit">
-          <div class="i-ph:check-circle"></div> {{ $t('commit') }}
+          <div class="i-ph:check-circle" /> {{ $t('commit') }}
         </ElButton>
       </template>
     </Dialog>

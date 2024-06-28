@@ -9,17 +9,9 @@ import { omit, cloneDeep } from 'lodash-es'
 import { isUrl } from '~/utils'
 
 const Layout = () => import('components/layouts/Index.vue')
+const BlankLayout = () => import('components/layouts/BlankLayout.vue')
 
 const modules = import.meta.glob('../views/**/*.{vue,tsx}')
-
-export const getParentLayout = () => {
-  return () =>
-    new Promise((resolve) => {
-      resolve({
-        name: 'ParentLayout'
-      })
-    })
-}
 
 export const getRawRoute = (route: RouteLocationNormalized): RouteLocationNormalized => {
   if (!route) return route
@@ -55,7 +47,7 @@ export const generateRoutesByServer = (routes: AppCustomRouteRecordRaw[]): AppRo
       } else {
         // 动态加载路由文件，可根据实际情况进行自定义逻辑
         data.component =
-          component === '#' ? Layout : component.includes('##') ? getParentLayout() : comModule
+          component === '#' ? Layout : component.includes('##') ? BlankLayout : comModule
       }
     }
     // recursive child routes

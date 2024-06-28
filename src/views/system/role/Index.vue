@@ -5,7 +5,7 @@ import Dialog from 'components/Dialog.vue'
 import { retrieveRoles, retrieveRolePrivileges, retrieveRoleDepartments, fetchRole } from '~/api/roles'
 import { retrievePrivilegeTree } from '~/api/privileges'
 import { retrieveDepartmentTree } from '~/api/organizations'
-import type { Role, TreeNode } from '~/api/models.type'
+import type { Role, TreeNode } from '~/models'
 
 const loading = ref<boolean>(false)
 const datas = ref<Array<Role>>([])
@@ -152,7 +152,7 @@ function removeHandler(id: number) {
  * 确认
  * @param id 主键
  */
- function confirmEvent(id: number) {
+function confirmEvent(id: number) {
   if (id) {
     removeHandler(id)
   }
@@ -194,10 +194,10 @@ function handleCurrentChange(row: Role | undefined) {
           </ElFormItem>
           <ElFormItem>
             <ElButton type="primary" @click="load">
-              <div class="i-ph:magnifying-glass"></div>{{ $t('search') }}
+              <div class="i-ph:magnifying-glass" />{{ $t('search') }}
             </ElButton>
             <ElButton @click="reset">
-              <div class="i-ph:arrow-counter-clockwise"></div>{{ $t('reset') }}
+              <div class="i-ph:arrow-counter-clockwise" />{{ $t('reset') }}
             </ElButton>
           </ElFormItem>
         </ElForm>
@@ -209,16 +209,16 @@ function handleCurrentChange(row: Role | undefined) {
             <ElRow :gutter="20" justify="space-between" class="mb-4">
               <ElCol :span="16" class="text-left">
                 <ElButton type="primary" @click="saveOrUpdate()">
-                  <div class="i-ph:plus"></div>{{ $t('add') }}
+                  <div class="i-ph:plus" />{{ $t('add') }}
                 </ElButton>
                 <ElButton type="danger" plain>
-                  <div class="i-ph:trash"></div>{{ $t('remove') }}
+                  <div class="i-ph:trash" />{{ $t('remove') }}
                 </ElButton>
                 <ElButton type="warning" plain @click="dialogVisible = true">
-                  <div class="i-ph:file-arrow-up"></div>{{ $t('import') }}
+                  <div class="i-ph:file-arrow-up" />{{ $t('import') }}
                 </ElButton>
                 <ElButton type="success" plain>
-                  <div class="i-ph:cloud-arrow-down"></div>{{ $t('export') }}
+                  <div class="i-ph:cloud-arrow-down" />{{ $t('export') }}
                 </ElButton>
               </ElCol>
 
@@ -226,7 +226,7 @@ function handleCurrentChange(row: Role | undefined) {
                 <ElTooltip class="box-item" effect="dark" :content="$t('refresh')" placement="top">
                   <ElButton type="primary" plain circle @click="load">
                     <template #icon>
-                      <div class="i-ph:arrow-clockwise"></div>
+                      <div class="i-ph:arrow-clockwise" />
                     </template>
                   </ElButton>
                 </ElTooltip>
@@ -234,7 +234,7 @@ function handleCurrentChange(row: Role | undefined) {
                 <ElTooltip class="box-item" effect="dark" :content="$t('settings')" placement="top">
                   <ElButton type="success" plain circle>
                     <template #icon>
-                      <div class="i-ph:table"></div>
+                      <div class="i-ph:text-columns" />
                     </template>
                   </ElButton>
                 </ElTooltip>
@@ -256,12 +256,12 @@ function handleCurrentChange(row: Role | undefined) {
               <ElTableColumn :label="$t('action')">
                 <template #default="scope">
                   <ElButton size="small" type="primary" link @click="saveOrUpdate(scope.row.id)">
-                    <div class="i-ph:pencil-simple-line"></div>{{ $t('edit') }}
+                    <div class="i-ph:pencil-simple-line" />{{ $t('edit') }}
                   </ElButton>
                   <ElPopconfirm :title="$t('removeConfirm')" :width="240" @confirm="confirmEvent(scope.row.id)">
                     <template #reference>
                       <ElButton size="small" type="danger" link>
-                        <div class="i-ph:trash"></div>{{ $t('remove') }}
+                        <div class="i-ph:trash" />{{ $t('remove') }}
                       </ElButton>
                     </template>
                   </ElPopconfirm>
@@ -275,7 +275,7 @@ function handleCurrentChange(row: Role | undefined) {
         <ElCol :span="8">
           <ElCard shadow="never" class="h-full">
             <ElTabs stretch>
-              <ElTabPane :label="$t('actionPrivilege')">
+              <ElTabPane :label="$t('actionPrivilege')" style="height: calc(100vh - 350px); overflow-y: scroll;">
                 <ElTree ref="treeEl" v-loading="privilegeTreeLoading" :data="privilegeTree" default-expand-all
                   :expand-on-click-node="false" node-key="id" :props="{ label: 'name' }" show-checkbox
                   @check-change="handlePrivilegeCheckChange" :default-checked-keys="rolePrivileges">
@@ -287,7 +287,7 @@ function handleCurrentChange(row: Role | undefined) {
                   </template>
                 </ElTree>
               </ElTabPane>
-              <ElTabPane :label="$t('dataPrivilege')">
+              <ElTabPane :label="$t('dataPrivilege')" style="height: calc(100vh - 350px); overflow-y: scroll;">
                 <ElSelect v-model="dataPrivilege" class="mb-3">
                   <ElOption :value="0" label="全部" />
                   <ElOption :value="1" label="本部门" />
@@ -306,7 +306,7 @@ function handleCurrentChange(row: Role | undefined) {
       </ElRow>
     </ElSpace>
 
-    <Dialog v-model="dialogVisible" :title="$t('role')" :width="'23%'">
+    <Dialog v-model="dialogVisible" :title="$t('role')" width="25%">
       <ElForm ref="formRef" :model="form" :rules="rules" label-position="top">
         <ElRow :gutter="20" class="w-full !mx-0">
           <ElCol>
@@ -325,10 +325,10 @@ function handleCurrentChange(row: Role | undefined) {
       </ElForm>
       <template #footer>
         <ElButton @click="dialogVisible = false">
-          <div class="i-ph:x-circle"></div>{{ $t('cancle') }}
+          <div class="i-ph:x-circle" />{{ $t('cancle') }}
         </ElButton>
         <ElButton type="primary" :loading="saveLoading" @click="onSubmit">
-          <div class="i-ph:check-circle"></div> {{ $t('commit') }}
+          <div class="i-ph:check-circle" /> {{ $t('commit') }}
         </ElButton>
       </template>
     </Dialog>

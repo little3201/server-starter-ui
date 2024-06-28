@@ -25,7 +25,7 @@ export const usePermissionStore = defineStore('permission', {
       return this.routers
     },
     getAddRouters(): AppRouteRecordRaw[] {
-      return flatMultiLevelRoutes(cloneDeep(this.addRouters))
+      return this.addRouters
     },
     getIsRoutesAdded(): boolean {
       return this.isRoutesAdded
@@ -53,7 +53,7 @@ export const usePermissionStore = defineStore('permission', {
     setIsRoutesAdded(state: boolean): void {
       this.isRoutesAdded = state
     },
-    setAddRouters(routers: AppCustomRouteRecordRaw[]):void {
+    setAddRouters(routers: AppCustomRouteRecordRaw[]): void {
       this.addRouters = routers
     },
     clear(): void {

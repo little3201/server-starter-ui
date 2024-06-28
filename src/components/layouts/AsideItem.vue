@@ -14,7 +14,7 @@ defineProps({
 })
 
 function isSubMenu(route: AppRouteRecordRaw) {
-  if (route.children) {
+  if (route.children && route.children.length > 0) {
     let children = route.children
     for (const child of children) {
       if (child.meta.hidden) {
@@ -58,7 +58,9 @@ function isSubMenu(route: AppRouteRecordRaw) {
   background-color: var(--el-menu-hover-bg-color) !important;
 }
 
-.el-sub-menu.is-active .el-sub-menu__title {
-  color: var(--el-menu-active-color) !important;
-}
+// .el-sub-menu.is-active {
+//   .el-sub-menu__title {
+//     color: var(--el-menu-active-color) !important;
+//   }
+// }
 </style>

@@ -141,7 +141,7 @@ watch(
                   </ElRadioButton>
                 </ElRadioGroup>
 
-                <div class="ml-12px cursor-move handle"><Icon icon="ep:rank" /></div>
+                <div class="ml-12px cursor-move handle"><Icon icon="ep:rank" / />
               </div>
             </div>
           </ElCheckboxGroup>

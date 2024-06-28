@@ -12,7 +12,7 @@ export const constantRouterMap: AppRouteRecordRaw[] = [
     children: [
       {
         path: '',
-        name: '',
+        name: 'Index',
         component: () => import('~/views/Index.vue'),
         meta: {
           hidden: true

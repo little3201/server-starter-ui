@@ -84,7 +84,6 @@ async function fetchPrivileges(username: string) {
   const res = await retrievePrivilegeTree(username)
   if (res.data) {
     const routers: AppCustomRouteRecordRaw[] = res.data || []
-
     permissionStore.setAddRouters(routers)
 
     const redirect = currentRoute.value.query.redirect as string

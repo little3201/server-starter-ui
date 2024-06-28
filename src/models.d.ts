@@ -32,17 +32,17 @@ export interface Role {
 }
 
 export interface PrivilegeTreeNode extends TreeNode {
-  superiorId?: number
   path: string
   order: number
   component: string
   redirect?: string
   meta: {
     icon: string
+    hidden?: boolean
+    actions?: string[]
   }
   enabled?: boolean
   description?: string
-  hasChildren?: boolean
   children?: PrivilegeTreeNode[]
 }
 
@@ -56,6 +56,8 @@ export interface Privilege {
   redirect?: string
   meta: {
     icon: string
+    hidden?: boolean
+    actions?: string[]
   }
   enabled?: boolean
   description?: string

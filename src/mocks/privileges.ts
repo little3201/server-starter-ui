@@ -1,5 +1,5 @@
 import { http, HttpResponse } from 'msw'
-import type { Privilege, PrivilegeTreeNode } from '~/api/models.type'
+import type { Privilege, PrivilegeTreeNode } from '~/models'
 
 
 const datas: PrivilegeTreeNode[] = [
@@ -94,7 +94,7 @@ const datas: PrivilegeTreeNode[] = [
       {
         id: 8,
         path: 'action',
-        component: 'views/log/action/Index',
+        component: 'views/logs/action/Index',
         name: 'ActionLog',
         order: 1,
         enabled: true,
@@ -106,7 +106,7 @@ const datas: PrivilegeTreeNode[] = [
       {
         id: 9,
         path: 'access',
-        component: 'views/log/access/Index',
+        component: 'views/logs/access/Index',
         name: 'AccessLog',
         order: 2,
         enabled: true,
@@ -118,7 +118,7 @@ const datas: PrivilegeTreeNode[] = [
       {
         id: 10,
         path: 'audit',
-        component: 'views/log/audit/Index',
+        component: 'views/logs/audit/Index',
         name: 'AuditLog',
         order: 3,
         enabled: true,
@@ -130,7 +130,7 @@ const datas: PrivilegeTreeNode[] = [
       {
         id: 11,
         path: 'scheduler',
-        component: 'views/log/scheduler/Index',
+        component: 'views/logs/scheduler/Index',
         name: 'SchedulerLog',
         order: 4,
         enabled: true,
@@ -292,10 +292,6 @@ export const privilegesHandlers = [
     } else {
       return HttpResponse.json(null)
     }
-  }),
-  http.get('/api/privileges/:id/subset', ({ params }) => {
-    const superiorId = params.id
-    return HttpResponse.json(datas.filter(item => item.superiorId === Number(superiorId)))
   }),
   http.get('/api/privileges', ({ request }) => {
     const url = new URL(request.url)

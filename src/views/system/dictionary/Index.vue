@@ -3,7 +3,7 @@ import { ref, reactive, onMounted } from 'vue'
 import type { FormInstance, FormRules } from 'element-plus'
 import Dialog from 'components/Dialog.vue'
 import { retrieveDictionaries, fetchDictionary } from '~/api/dictionaries'
-import type { Dictionary } from '~/api/models.type'
+import type { Dictionary } from '~/models'
 import SubPage from './SubPage.vue'
 
 
@@ -119,10 +119,10 @@ function onSubmit() {
           </ElFormItem>
           <ElFormItem>
             <ElButton type="primary" @click="load">
-              <div class="i-ph:magnifying-glass"></div>{{ $t('search') }}
+              <div class="i-ph:magnifying-glass" />{{ $t('search') }}
             </ElButton>
             <ElButton @click="reset">
-              <div class="i-ph:arrow-counter-clockwise"></div>{{ $t('reset') }}
+              <div class="i-ph:arrow-counter-clockwise" />{{ $t('reset') }}
             </ElButton>
           </ElFormItem>
         </ElForm>
@@ -132,10 +132,10 @@ function onSubmit() {
         <ElRow :gutter="20" justify="space-between" class="mb-4">
           <ElCol :span="16" class="text-left">
             <ElButton type="warning" plain @click="dialogVisible = true">
-              <div class="i-ph:file-arrow-up"></div>{{ $t('import') }}
+              <div class="i-ph:file-arrow-up" />{{ $t('import') }}
             </ElButton>
             <ElButton type="success" plain>
-              <div class="i-ph:cloud-arrow-down"></div>{{ $t('export') }}
+              <div class="i-ph:cloud-arrow-down" />{{ $t('export') }}
             </ElButton>
           </ElCol>
 
@@ -143,7 +143,7 @@ function onSubmit() {
             <ElTooltip class="box-item" effect="dark" :content="$t('refresh')" placement="top">
               <ElButton type="primary" plain circle @click="load">
                 <template #icon>
-                  <div class="i-ph:arrow-clockwise"></div>
+                  <div class="i-ph:arrow-clockwise" />
                 </template>
               </ElButton>
             </ElTooltip>
@@ -151,7 +151,7 @@ function onSubmit() {
             <ElTooltip class="box-item" effect="dark" :content="$t('settings')" placement="top">
               <ElButton type="success" plain circle>
                 <template #icon>
-                  <div class="i-ph:table"></div>
+                  <div class="i-ph:text-columns" />
                 </template>
               </ElButton>
             </ElTooltip>
@@ -161,11 +161,11 @@ function onSubmit() {
         <ElTable v-loading="loading" :data="datas" lazy :load="load" row-key="id" stripe table-layout="auto"
           height="calc(100vh - 350px)">
           <ElTableColumn type="selection" width="55" />
-          <el-table-column type="expand">
+          <ElTableColumn type="expand">
             <template #default="props">
               <SubPage :superior-id="props.row.id" :title="props.row.name" />
             </template>
-          </el-table-column>
+          </ElTableColumn>
           <ElTableColumn prop="name" :label="$t('name')" />
           <ElTableColumn prop="enabled" :label="$t('status')">
             <template #default="scope">
@@ -178,7 +178,7 @@ function onSubmit() {
           <ElTableColumn :label="$t('action')">
             <template #default="scope">
               <ElButton size="small" type="primary" link @click="saveOrUpdate(scope.row.id)">
-                <div class="i-ph:pencil-simple-line"></div>{{ $t('edit') }}
+                <div class="i-ph:pencil-simple-line" />{{ $t('edit') }}
               </ElButton>
             </template>
           </ElTableColumn>
@@ -188,7 +188,7 @@ function onSubmit() {
       </ElCard>
     </ElSpace>
 
-    <Dialog v-model="dialogVisible" :title="$t('dictionary')" :width="'32%'">
+    <Dialog v-model="dialogVisible" :title="$t('dictionary')" width="25%">
       <ElForm ref="formRef" :model="form" :rules="rules" label-position="top">
         <ElRow :gutter="20" class="w-full !mx-0">
           <ElCol :span="12">
@@ -212,10 +212,10 @@ function onSubmit() {
       </ElForm>
       <template #footer>
         <ElButton @click="dialogVisible = false">
-          <div class="i-ph:x-circle"></div>{{ $t('cancle') }}
+          <div class="i-ph:x-circle" />{{ $t('cancle') }}
         </ElButton>
         <ElButton type="primary" :loading="saveLoading" @click="onSubmit">
-          <div class="i-ph:check-circle"></div> {{ $t('commit') }}
+          <div class="i-ph:check-circle" /> {{ $t('commit') }}
         </ElButton>
       </template>
     </Dialog>
