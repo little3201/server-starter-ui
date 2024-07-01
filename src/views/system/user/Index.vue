@@ -293,7 +293,7 @@ function confirmEvent(id: number) {
           </ElRow>
 
           <ElTable v-loading="loading" :data="datas" lazy :load="load" row-key="id" stripe table-layout="auto"
-            height="calc(100vh - 350px)">
+            >
             <ElTableColumn type="selection" width="55" />
             <ElTableColumn type="index" :label="$t('no')" width="55" />
             <ElTableColumn show-overflow-tooltip prop="username" :label="$t('username')">

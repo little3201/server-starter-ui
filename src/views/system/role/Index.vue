@@ -242,7 +242,7 @@ function handleCurrentChange(row: Role | undefined) {
             </ElRow>
 
             <ElTable v-loading="loading" :data="datas" lazy :load="load" row-key="id" stripe table-layout="auto"
-              highlight-current-row @current-change="handleCurrentChange" height="calc(100vh - 350px)">
+              highlight-current-row @current-change="handleCurrentChange">
               <ElTableColumn type="selection" width="55" />
               <ElTableColumn type="index" :label="$t('no')" width="55" />
               <ElTableColumn prop="name" :label="$t('name')" />
@@ -275,8 +275,8 @@ function handleCurrentChange(row: Role | undefined) {
         <ElCol :span="8">
           <ElCard shadow="never" class="h-full">
             <ElTabs stretch>
-              <ElTabPane :label="$t('actionPrivilege')" style="height: calc(100vh - 350px); overflow-y: scroll;">
-                <ElTree ref="treeEl" v-loading="privilegeTreeLoading" :data="privilegeTree" default-expand-all
+              <ElTabPane :label="$t('actionPrivilege')" class="w-full">
+                <ElTree ref="treeEl" v-loading="privilegeTreeLoading" :data="privilegeTree"
                   :expand-on-click-node="false" node-key="id" :props="{ label: 'name' }" show-checkbox
                   @check-change="handlePrivilegeCheckChange" :default-checked-keys="rolePrivileges">
                   <template #default="{ node, data }">
@@ -287,7 +287,7 @@ function handleCurrentChange(row: Role | undefined) {
                   </template>
                 </ElTree>
               </ElTabPane>
-              <ElTabPane :label="$t('dataPrivilege')" style="height: calc(100vh - 350px); overflow-y: scroll;">
+              <ElTabPane :label="$t('dataPrivilege')" class="w-full">
                 <ElSelect v-model="dataPrivilege" class="mb-3">
                   <ElOption :value="0" label="全部" />
                   <ElOption :value="1" label="本部门" />

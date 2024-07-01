@@ -36,11 +36,11 @@ const form = reactive({
 const rules = reactive<FormRules<typeof form>>({
   username: [
     { required: true, message: t('inputText') + t('username'), trigger: 'blur' },
-    { min: 5, max: 12, message: t('lengthRange', {min: 5, max: 12}), trigger: 'blur' },
+    { min: 5, max: 12, message: t('lengthRange', { min: 5, max: 12 }), trigger: 'blur' },
   ],
   password: [
     { required: true, message: t('inputText') + t('password'), trigger: 'blur' },
-    { min: 8, max: 16, message: t('lengthRange', {min: 8, max: 16}), trigger: 'blur' },
+    { min: 8, max: 16, message: t('lengthRange', { min: 8, max: 16 }), trigger: 'blur' },
   ]
 })
 
@@ -150,42 +150,54 @@ function show() {
             </Transition>
           </section>
         </section>
-        <section class="w-1/2 h-full flex-row items-center bg-[#e3f4fa] dark:bg-black">
+        <section class="flex flex-row items-center w-1/2 h-full  bg-[#e3f4fa] dark:bg-black">
           <Transition appear enter-active-class="animate__animated animate__slideInRight"
             leave-active-class="animate__animated animate__slideOutRight">
-            <div class="inline-flex flex-col h-full space-y-2xl justify-center items-center">
+            <div class="flex flex-col w-full h-full space-y-2xl justify-center items-center">
               <div class="text-center">
-                <ElImage alt="logo" src="/vite.svg" style="height: 120px; max-width: 120px" />
+                <img src="/vite.svg" alt="" class="w-24 h-24" />
               </div>
               <div class="text-2xl text-center mb-xs">
                 {{ $t('signinTo') }}
               </div>
-              <ElForm ref="formRef" :model="form" :rules="rules" class="bg-transparent space-y-3xl px-12">
-                <ElFormItem prop="username">
-                  <ElInput size="large" :disable="loading" v-model="form.username" :placeholder="$t('username')">
-                    <template #prefix>
-                      <div class="i-ph:user" />
-                    </template>
-                  </ElInput>
-                </ElFormItem>
-                <ElFormItem prop="password">
-                  <ElInput size="large" :disable="loading" type="password" v-model="form.password"
-                    :placeholder="$t('password')" show-password style="width: 23rem">
-                    <template #prefix>
-                      <div class="i-ph:key" />
-                    </template>
-                  </ElInput>
-                </ElFormItem>
-                <ElFormItem prop="rememberMe">
-                  <ElCheckbox :disable="loading" v-model="form.rememberMe" :label="$t('rememberMe')" dense
-                    v:model-value="changeRememberMe" />
-                </ElFormItem>
-                <ElFormItem>
-                  <ElButton size="large" type="primary" :loading="loading" @click="onSubmit(formRef)" class="w-full"
-                    title="signin_submit">
-                    {{ $t('signin') }}
-                  </ElButton>
-                </ElFormItem>
+              <ElForm ref="formRef" :model="form" :rules="rules" class="bg-transparent w-full">
+                <ElRow class="px-12 my-3">
+                  <ElCol>
+                    <ElFormItem prop="username">
+                      <ElInput size="large" :disable="loading" v-model="form.username" :placeholder="$t('username')">
+                        <template #prefix>
+                          <div class="i-ph:user" />
+                        </template>
+                      </ElInput>
+                    </ElFormItem>
+                  </ElCol>
+                </ElRow>
+                <ElRow class="px-12">
+                  <ElCol>
+                    <ElFormItem prop="password">
+                      <ElInput size="large" :disable="loading" type="password" v-model="form.password"
+                        :placeholder="$t('password')" show-password>
+                        <template #prefix>
+                          <div class="i-ph:key" />
+                        </template>
+                      </ElInput>
+                    </ElFormItem>
+                  </ElCol>
+                </ElRow>
+                <ElRow class="px-12">
+                  <ElCol>
+                    <ElFormItem prop="rememberMe">
+                      <ElCheckbox :disable="loading" v-model="form.rememberMe" :label="$t('rememberMe')" dense
+                        v:model-value="changeRememberMe" />
+                    </ElFormItem>
+                    <ElFormItem>
+                      <ElButton size="large" type="primary" :loading="loading" @click="onSubmit(formRef)" class="w-full"
+                        title="signin_submit">
+                        {{ $t('signin') }}
+                      </ElButton>
+                    </ElFormItem>
+                  </ElCol>
+                </ElRow>
               </ElForm>
             </div>
           </Transition>

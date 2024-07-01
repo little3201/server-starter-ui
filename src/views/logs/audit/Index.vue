@@ -140,7 +140,7 @@ function detailHandler(id: number) {
           </ElCol>
         </ElRow>
 
-        <ElTable :data="datas" lazy :load="load" row-key="id" stripe table-layout="auto" height="calc(100vh - 350px)">
+        <ElTable :data="datas" lazy :load="load" row-key="id" stripe table-layout="auto" >
           <ElTableColumn type="index" :label="$t('no')" width="55" />
           <ElTableColumn prop="action" :label="$t('action')" />
           <ElTableColumn prop="resource" :label="$t('resource')" />
