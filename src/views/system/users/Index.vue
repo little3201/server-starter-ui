@@ -46,7 +46,6 @@ const rules = reactive<FormRules<typeof form>>({
   ],
   email: [
     { required: true, trigger: 'blur' },
-    { min: 8, max: 16, message: 'Length should be 8 to 16', trigger: 'blur' },
   ]
 })
 

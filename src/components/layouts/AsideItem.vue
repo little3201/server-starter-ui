@@ -32,16 +32,15 @@ function isSubMenu(route: AppRouteRecordRaw) {
   <template v-for="route in routes">
     <ElSubMenu v-if="route.children && isSubMenu(route)" :index="pathResolve(parentPath, route.path)">
       <template #title>
-        <div :class="[route.meta.icon, 'mr-2']" />{{ $t(route.name.replace(route.name[0],
-          route.name[0].toLowerCase()))
-        }}
+        <div :class="[route.meta.icon, 'mr-2']" />
+        {{ $t(route.name) }}
       </template>
       <AsideItem :routes="route.children" :parent-path="pathResolve(parentPath, route.path)" />
     </ElSubMenu>
 
     <ElMenuItem v-else-if="!route.meta.hidden" :index="pathResolve(parentPath, route.path)">
       <div :class="[route.meta.icon, 'mr-2 ']" />{{
-        $t(route.name.replace(route.name[0], route.name[0].toLowerCase())) }}
+        $t(route.name) }}
     </ElMenuItem>
   </template>
 </template>
@@ -62,5 +61,4 @@ function isSubMenu(route: AppRouteRecordRaw) {
 //   .el-sub-menu__title {
 //     color: var(--el-menu-active-color) !important;
 //   }
-// }
-</style>
+// }</style>

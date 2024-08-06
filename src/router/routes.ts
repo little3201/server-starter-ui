@@ -3,7 +3,7 @@ import Layout from 'components/layouts/Index.vue'
 export const constantRouterMap: AppRouteRecordRaw[] = [
   {
     path: '/',
-    name: 'Home',
+    name: 'home',
     component: Layout,
     redirect: '/',
     meta: {
