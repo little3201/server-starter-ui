@@ -27,6 +27,10 @@ export const findIndex = <T = Recordable>(ary: Array<T>, fn: Fn): number => {
   return index
 }
 
+export const isString = (val: unknown): val is string => {
+  return is(val, 'String')
+}
+
 export const is = (val: unknown, type: string) => {
   return toString.call(val) === `[object ${type}]`
 }

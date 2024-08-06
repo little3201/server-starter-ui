@@ -239,7 +239,7 @@ function handleCheckedChange(value: string[]) {
         </ElRow>
 
         <ElTable v-loading="loading" :data="datas" lazy :load="load" row-key="id" stripe table-layout="auto"
-          height="calc(100vh - 350px)">
+          >
           <ElTableColumn type="selection" width="55" />
           <ElTableColumn prop="name" :label="$t('name')" />
           <ElTableColumn prop="enabled" :label="$t('status')">
