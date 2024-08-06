@@ -1,4 +1,4 @@
-import Layout from 'components/layouts/Index.vue'
+import Layout from '~/layouts/Index.vue'
 
 export const constantRouterMap: AppRouteRecordRaw[] = [
   {

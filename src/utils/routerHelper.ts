@@ -4,8 +4,8 @@ import type {
 } from 'vue-router'
 import { isUrl } from '~/utils'
 
-const Layout = () => import('components/layouts/Index.vue')
-const BlankLayout = () => import('components/layouts/BlankLayout.vue')
+const Layout = () => import('~/layouts/Index.vue')
+const BlankLayout = () => import('~/layouts/BlankLayout.vue')
 
 const modules = import.meta.glob('../views/**/*.{vue,tsx}')
 
