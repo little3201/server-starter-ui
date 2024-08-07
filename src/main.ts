@@ -16,14 +16,14 @@ import { setupRouter } from '~/router'
 import { setupI18n } from '~/composables/i18n'
 
 async function prepareApp() {
-  if (
-    process.env.NODE_ENV !== 'production'
-  ) {
+  // if (
+  //   process.env.NODE_ENV !== 'production'
+  // ) {
     const { worker } = await import('~/composables/msw-browser')
     return worker.start()
-  }
+  // }
 
-  return Promise.resolve()
+  // return Promise.resolve()
 }
 
 const app = createApp(App)
