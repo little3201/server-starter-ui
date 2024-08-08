@@ -1,6 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import type { RouteRecordRaw } from 'vue-router'
-import type { App } from 'vue'
 import { constantRouterMap } from './routes'
 import ProgressBar from "@badrap/bar-of-progress"
 import { useUserStore } from 'stores/modules/user'
@@ -58,9 +57,5 @@ router.beforeEach(async (to, from, next) => {
 router.afterEach((to) => {
   progress.finish()
 })
-
-export const setupRouter = (app: App<Element>) => {
-  app.use(router)
-}
 
 export default router

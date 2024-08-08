@@ -20,24 +20,20 @@ body {
   background: radial-gradient(circle at top right, #ffffff, var(--el-color-primary));
 }
 
-.bg-negative-gradient {
-  background: radial-gradient(circle at center bottom, #e05969, var(--el-color-error));
+.bg-error-gradient {
+  background: radial-gradient(circle at center left, var(--el-color-error), var(--el-color-error-dark-2));
 }
 
-.bg-positive-gradient {
-  background: radial-gradient(circle at center right, #26A69A, var(--el-color-success));
+.bg-success-gradient {
+  background: radial-gradient(circle at center right, var(--el-color-success-light-3), var(--el-color-success));
 }
 
 .bg-warning-gradient {
-  background: radial-gradient(circle at bottom left, #cf9900, var(--el-color-warning));
+  background: radial-gradient(circle at center top, var(--el-color-warning-light-3), var(--el-color-warning));
 }
 
-.el-header {
-  --el-header-height: 50px !important;
-}
-
-.el-footer {
-  --el-footer-height: 50px !important;
+.el-menu {
+  border-right: initial !important;
 }
 
 .el-dialog {

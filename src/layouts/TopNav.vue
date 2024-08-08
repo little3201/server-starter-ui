@@ -2,10 +2,10 @@
 import { useAppStore } from 'stores/modules/app'
 import { useUserStore } from 'stores/modules/user'
 import { usePermissionStore } from 'stores/modules/permission'
-import ThemeSwitch from 'components/ThemeSwitch.vue'
-import LocaleDropdown from 'components/LocaleDropdown.vue'
+import ThemeToogle from 'components/ThemeToogle.vue'
+import LanguageSelector from 'components/LanguageSelector.vue'
 import SizeDropdown from 'components/SizeDropdown.vue'
-import { api } from '~/composables/axios'
+import { api } from '~/boot/axios'
 
 const appStore = useAppStore()
 const userStore = useUserStore()
@@ -27,8 +27,8 @@ function signOut() {
     </div>
 
     <div class="inline-flex justify-end items-center space-x-4">
-      <ThemeSwitch />
-      <LocaleDropdown />
+      <ThemeToogle />
+      <LanguageSelector />
       <SizeDropdown />
       <ElDropdown trigger="click">
         <ElSpace>

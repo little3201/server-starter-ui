@@ -56,12 +56,14 @@ declare module 'vue' {
     ElTree: typeof import('element-plus/es')['ElTree']
     ElTreeSelect: typeof import('element-plus/es')['ElTreeSelect']
     Error: typeof import('./src/components/Error.vue')['default']
+    LanguageSelector: typeof import('./src/components/LanguageSelector.vue')['default']
     LocaleDropdown: typeof import('./src/components/LocaleDropdown.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     SizeDropdown: typeof import('./src/components/SizeDropdown.vue')['default']
     TagsView: typeof import('./src/components/TagsView.vue')['default']
     ThemeSwitch: typeof import('./src/components/ThemeSwitch.vue')['default']
+    ThemeToogle: typeof import('./src/components/ThemeToogle.vue')['default']
   }
   export interface ComponentCustomProperties {
     vLoading: typeof import('element-plus/es')['ElLoadingDirective']

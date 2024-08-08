@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { localeMap } from '~/composables/i18n'
+import { localeMap } from '~/boot/i18n'
 import { useLocaleStore } from 'stores/modules/locale'
 
 // 多语言相关

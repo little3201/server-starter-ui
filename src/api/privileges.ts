@@ -1,4 +1,4 @@
-import { api } from '~/composables/axios'
+import { api } from '~/boot/axios'
 
 export const retrievePrivileges = (page: number, size: number, params?: object) => {
   return api.get('/privileges', { params: { page: page - 1, size: size, ...params } })

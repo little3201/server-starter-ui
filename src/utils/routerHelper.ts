@@ -7,7 +7,7 @@ import { isUrl } from '~/utils'
 const Layout = () => import('~/layouts/Index.vue')
 const BlankLayout = () => import('~/layouts/BlankLayout.vue')
 
-const modules = import.meta.glob('../views/**/*.{vue,tsx}')
+const modules = import.meta.glob('../pages/**/*.{vue,tsx}')
 
 export const getRawRoute = (route: RouteLocationNormalized): RouteLocationNormalized => {
   if (!route) return route
@@ -55,9 +55,8 @@ export const generateRoutesByServer = (routes: AppCustomRouteRecordRaw[]): AppRo
   return res
 }
 
-
 export const pathResolve = (parentPath: string, path: string) => {
   if (isUrl(path)) return path
-  const childPath = path.startsWith('/') || !path ? path : `/${path}`
+  const childPath = path.startsWith('/') ? path : `/${path}`
   return `${parentPath}${childPath}`.replace(/\/\//g, '/').trim()
 }

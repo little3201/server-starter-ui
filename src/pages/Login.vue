@@ -4,13 +4,13 @@ import lottie from 'lottie-web'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { ElFormItem, type FormInstance, type FormRules } from 'element-plus'
-import ThemeSwitch from 'components/ThemeSwitch.vue'
-import LocaleDropdown from 'components/LocaleDropdown.vue'
+import ThemeToogle from 'components/ThemeToogle.vue'
+import LanguageSelector from 'components/LanguageSelector.vue'
 import Footer from '~/layouts/Footer.vue'
 import { useAppStore } from 'stores/modules/app'
 import { useUserStore } from 'stores/modules/user'
 import { usePermissionStore } from 'stores/modules/permission'
-import { api } from '~/composables/axios'
+import { api } from '~/boot/axios'
 import { retrievePrivilegeTree } from '~/api/privileges'
 
 
@@ -40,7 +40,7 @@ const rules = reactive<FormRules<typeof form>>({
   ],
   password: [
     { required: true, message: t('inputText') + t('password'), trigger: 'blur' },
-    { min: 8, max: 16, message: t('lengthRange', { min: 8, max: 16 }), trigger: 'blur' },
+    { min: 8, max: 32, message: t('lengthRange', { min: 8, max: 16 }), trigger: 'blur' },
   ]
 })
 
@@ -107,15 +107,15 @@ function show() {
 <template>
   <ElContainer class="h-screen relative overflow-hidden bg-[#e3f4fa] dark:bg-black">
     <figure class="absolute bg-primary-gradient rounded-full"
-      style="height: 500px; width: 500px;  top: -270px; right: -200px; background-color: var(--ep-color-primary);" />
-    <figure class="absolute bg-positive-gradient rounded-full"
-      style="height: 300px; width: 300px; bottom: 50px; right: -100px; background-color: var(--ep-color-success);" />
+      style="height: 31em; width: 31em;  top: -14em; right: -12em; " />
+    <figure class="absolute bg-success-gradient rounded-full"
+      style="height: 19em; width: 19em; bottom: 6em; right: -7em; " />
     <figure class="absolute bg-warning-gradient rounded-full"
-      style="height: 600px; width: 600px; bottom: -270px; left: -200px; background-color: var(--ep-color-warning);" />
-    <figure class="absolute bg-negative-gradient rounded-full"
-      style="height: 300px;  width: 300px; bottom: -230px; left: 200px; background-color: var(--ep-color-danger);" />
+      style="height: 40em; width: 40em; bottom: -17em; left: -15em;" />
+    <figure class="absolute bg-error-gradient rounded-full"
+      style="height: 19em;  width: 19em; bottom: -12em; left: 12em; " />
 
-    <ElHeader class="flex flex-nowrap items-center z-10">
+    <ElHeader class="flex flex-nowrap items-center z-10" height="50px">
       <div class="inline-flex flex-grow justify-between">
         <div class="inline-flex items-center">
           <img src="/vite.svg" alt="" class="w-12 h-12 mr-3" />
@@ -123,8 +123,8 @@ function show() {
         </div>
 
         <div class="inline-flex justify-end items-center space-x-4">
-          <ThemeSwitch />
-          <LocaleDropdown class=" dark:text-white" />
+          <ThemeToogle />
+          <LanguageSelector class=" dark:text-white" />
         </div>
       </div>
     </ElHeader>
@@ -157,7 +157,7 @@ function show() {
               <div class="text-center">
                 <img src="/vite.svg" alt="" class="w-24 h-24" />
               </div>
-              <div class="text-2xl text-center mb-xs">
+              <div class="text-lg font-bold text-center mb-xs">
                 {{ $t('signinTo') }}
               </div>
               <ElForm ref="formRef" :model="form" :rules="rules" class="bg-transparent w-full">
@@ -204,7 +204,7 @@ function show() {
         </section>
       </section>
     </ElMain>
-    <ElFooter class="z-10">
+    <ElFooter class="z-10" height="50px">
       <Footer />
     </ElFooter>
   </ElContainer>

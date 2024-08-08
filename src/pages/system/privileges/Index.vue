@@ -203,17 +203,12 @@ function onSubmit() {
           </ElCol>
         </ElRow>
 
-        <ElTable v-loading="loading" :data="datas" lazy :load="load" row-key="id" stripe table-layout="auto"
-          >
+        <ElTable v-loading="loading" :data="datas" lazy :load="load" row-key="id" stripe table-layout="auto">
           <ElTableColumn type="selection" width="55" />
-          <ElTableColumn prop="name" :label="$t('name')">
+          <ElTableColumn prop="name" :label="$t('name')" class-name="name-cell">
             <template #default="scope">
-              {{ $t(scope.row.name.replace(scope.row.name[0], scope.row.name[0].toLowerCase())) }}
-            </template>
-          </ElTableColumn>
-          <ElTableColumn prop="meta.icon" :label="$t('icon')">
-            <template #default="scope">
-              <div :class="scope.row.meta.icon" />
+              <div :class="scope.row.meta.icon" class="inline-block mr-2" />
+              {{ $t(scope.row.name) }}
             </template>
           </ElTableColumn>
           <ElTableColumn prop="path" :label="$t('path')" />
@@ -323,3 +318,12 @@ function onSubmit() {
     </Dialog>
   </div>
 </template>
+
+<style lang="scss">
+.name-cell {
+  .cell {
+    display: inline-flex;
+    align-items: center;
+  }
+}
+</style>

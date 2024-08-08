@@ -13,7 +13,7 @@ export const constantRouterMap: AppRouteRecordRaw[] = [
       {
         path: '',
         name: 'Index',
-        component: () => import('~/views/Index.vue'),
+        component: () => import('~/pages/Index.vue'),
         meta: {
           hidden: true
         }
@@ -22,7 +22,7 @@ export const constantRouterMap: AppRouteRecordRaw[] = [
   },
   {
     path: '/login',
-    component: () => import('~/views/Login.vue'),
+    component: () => import('~/pages/Login.vue'),
     name: 'Login',
     meta: {
       hidden: true,
@@ -32,7 +32,7 @@ export const constantRouterMap: AppRouteRecordRaw[] = [
   },
   {
     path: '/404',
-    component: () => import('~/views/error/404.vue'),
+    component: () => import('~/pages/error/404.vue'),
     name: '404',
     meta: {
       hidden: true,
@@ -42,7 +42,7 @@ export const constantRouterMap: AppRouteRecordRaw[] = [
   },
   {
     path: '/403',
-    component: () => import('~/views/error/403.vue'),
+    component: () => import('~/pages/error/403.vue'),
     name: '403',
     meta: {
       hidden: true,
@@ -52,21 +52,12 @@ export const constantRouterMap: AppRouteRecordRaw[] = [
   },
   {
     path: '/500',
-    component: () => import('~/views/error/500.vue'),
+    component: () => import('~/pages/error/500.vue'),
     name: '500',
     meta: {
       hidden: true,
       title: '500',
       noTagsView: true
     }
-  },
-  // {
-  //   path: '/:path(.*)*',
-  //   redirect: '/404',
-  //   name: 'NotFound',
-  //   component: '',
-  //   meta: {
-  //     hidden: true
-  //   }
-  // }
+  }
 ]

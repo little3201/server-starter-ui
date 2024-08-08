@@ -1,4 +1,4 @@
-import { api } from '~/composables/axios'
+import { api } from '~/boot/axios'
 
 export const retrieveAuditLogs = (page: number, size: number) => {
   return api.get('/audit-logs', { params: { page: page - 1, size: size } })

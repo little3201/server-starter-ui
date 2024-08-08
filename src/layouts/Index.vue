@@ -6,7 +6,7 @@ import Footer from '~/layouts/Footer.vue'
 
 <template>
   <ElContainer class="h-screen">
-    <ElHeader class="flex flex-nowrap bg-[var(--el-color-primary)] z-10">
+    <ElHeader class="flex flex-nowrap bg-[var(--el-color-primary)] z-10" height="50px">
       <TopNav />
     </ElHeader>
     <ElContainer>
@@ -21,7 +21,7 @@ import Footer from '~/layouts/Footer.vue'
             </Transition>
           </RouterView>
         </ElMain>
-        <ElFooter>
+        <ElFooter height="50px">
           <Footer />
         </ElFooter>
       </ElContainer>

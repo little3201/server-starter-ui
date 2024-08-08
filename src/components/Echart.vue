@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, PropType, ref, unref, watch, onMounted, onBeforeUnmount, onActivated } from 'vue'
 import { debounce } from 'lodash-es'
-import echarts from '~/composables/echarts'
+import echarts from '~/boot/echarts'
 import type { EChartsOption } from 'echarts'
 import { propTypes } from '~/utils/propTypes'
 import { useAppStore } from 'stores/modules/app'

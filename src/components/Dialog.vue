@@ -11,8 +11,14 @@ const props = defineProps({
   maxHeight: propTypes.oneOfType([String, Number])
 })
 
+// const props = withDefaults(defineProps(), {
+//   modelValue: false,
+//   title: 'Dialog',
+//   maxHeight: null
+// })
+
 const getBindValue = computed(() => {
-  const delArr: string[] = [ 'title', 'maxHeight']
+  const delArr: string[] = ['title', 'maxHeight']
   const attrs = useAttrs()
   const obj = { ...attrs, ...props } as { [key: string]: any }
   for (const key in obj) {

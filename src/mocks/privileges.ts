@@ -19,7 +19,7 @@ const datas: PrivilegeTreeNode[] = [
       {
         id: 2,
         path: 'organizations',
-        component: 'views/system/organizations/Index',
+        component: 'pages/system/organizations/Index',
         name: 'organizations',
         order: 1,
         enabled: true,
@@ -31,7 +31,7 @@ const datas: PrivilegeTreeNode[] = [
       {
         id: 3,
         path: 'users',
-        component: 'views/system/users/Index',
+        component: 'pages/system/users/Index',
         name: 'users',
         order: 2,
         enabled: true,
@@ -43,7 +43,7 @@ const datas: PrivilegeTreeNode[] = [
       {
         id: 4,
         path: 'privileges',
-        component: 'views/system/privileges/Index',
+        component: 'pages/system/privileges/Index',
         name: 'privileges',
         order: 3,
         enabled: true,
@@ -55,7 +55,7 @@ const datas: PrivilegeTreeNode[] = [
       {
         id: 5,
         path: 'roles',
-        component: 'views/system/roles/Index',
+        component: 'pages/system/roles/Index',
         name: 'roles',
         order: 4,
         enabled: true,
@@ -67,7 +67,7 @@ const datas: PrivilegeTreeNode[] = [
       {
         id: 6,
         path: 'dictionaries',
-        component: 'views/system/dictionaries/Index',
+        component: 'pages/system/dictionaries/Index',
         name: 'dictionaries',
         order: 5,
         enabled: true,
@@ -94,7 +94,7 @@ const datas: PrivilegeTreeNode[] = [
       {
         id: 8,
         path: 'action',
-        component: 'views/logs/action/Index',
+        component: 'pages/logs/action/Index',
         name: 'actionLog',
         order: 1,
         enabled: true,
@@ -106,7 +106,7 @@ const datas: PrivilegeTreeNode[] = [
       {
         id: 9,
         path: 'access',
-        component: 'views/logs/access/Index',
+        component: 'pages/logs/access/Index',
         name: 'accessLog',
         order: 2,
         enabled: true,
@@ -118,7 +118,7 @@ const datas: PrivilegeTreeNode[] = [
       {
         id: 10,
         path: 'audit',
-        component: 'views/logs/audit/Index',
+        component: 'pages/logs/audit/Index',
         name: 'auditLog',
         order: 3,
         enabled: true,
@@ -130,7 +130,7 @@ const datas: PrivilegeTreeNode[] = [
       {
         id: 11,
         path: 'scheduler',
-        component: 'views/logs/scheduler/Index',
+        component: 'pages/logs/scheduler/Index',
         name: 'schedulerLog',
         order: 4,
         enabled: true,
@@ -160,7 +160,7 @@ const dataArray: Privilege[] = [
   {
     id: 2,
     path: 'organizations',
-    component: 'views/system/organizations/Index',
+    component: 'pages/system/organizations/Index',
     name: 'organizations',
     order: 1,
     enabled: true,
@@ -172,7 +172,7 @@ const dataArray: Privilege[] = [
   {
     id: 3,
     path: 'users',
-    component: 'views/system/users/Index',
+    component: 'pages/system/users/Index',
     name: 'users',
     order: 2,
     enabled: true,
@@ -184,7 +184,7 @@ const dataArray: Privilege[] = [
   {
     id: 4,
     path: 'privileges',
-    component: 'views/system/privileges/Index',
+    component: 'pages/system/privileges/Index',
     name: 'privileges',
     order: 3,
     enabled: true,
@@ -196,7 +196,7 @@ const dataArray: Privilege[] = [
   {
     id: 5,
     path: 'roles',
-    component: 'views/system/roles/Index',
+    component: 'pages/system/roles/Index',
     name: 'roles',
     order: 4,
     enabled: true,
@@ -208,7 +208,7 @@ const dataArray: Privilege[] = [
   {
     id: 6,
     path: 'dictionaries',
-    component: 'views/system/dictionaries/Index',
+    component: 'pages/system/dictionaries/Index',
     name: 'dictionaries',
     order: 5,
     enabled: true,
@@ -233,7 +233,7 @@ const dataArray: Privilege[] = [
   {
     id: 8,
     path: 'action',
-    component: 'views/logs/action/Index',
+    component: 'pages/logs/action/Index',
     name: 'actionLog',
     order: 1,
     enabled: true,
@@ -245,7 +245,7 @@ const dataArray: Privilege[] = [
   {
     id: 9,
     path: 'access',
-    component: 'views/logs/access/Index',
+    component: 'pages/logs/access/Index',
     name: 'accesslog',
     order: 2,
     enabled: true,
@@ -257,7 +257,7 @@ const dataArray: Privilege[] = [
   {
     id: 10,
     path: 'audit',
-    component: 'views/logs/audit/Index',
+    component: 'pages/logs/audit/Index',
     name: 'auditlog',
     order: 3,
     enabled: true,
@@ -269,7 +269,7 @@ const dataArray: Privilege[] = [
   {
     id: 11,
     path: 'scheduler',
-    component: 'views/logs/scheduler/Index',
+    component: 'pages/logs/scheduler/Index',
     name: 'schedulerlog',
     order: 4,
     enabled: true,
