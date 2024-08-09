@@ -5,8 +5,8 @@ import { isNumber } from '~/utils'
 const slots = useSlots()
 
 const props = withDefaults(defineProps<{
-  modelValue: boolean,
-  title: string,
+  modelValue: boolean
+  title: string
   maxHeight: string | number
 }>(), {
   modelValue: false,

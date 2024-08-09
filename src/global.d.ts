@@ -47,7 +47,7 @@ declare global {
   }
 
   declare interface ContextMenuSchema {
-    disabled?: boolean | undefined
+    disabled?: boolean
     divided?: boolean
     icon?: string
     label: string

@@ -2,7 +2,7 @@
 import { pathResolve } from '~/utils/routerHelper'
 
 withDefaults(defineProps<{
-  items: AppRouteRecordRaw[],
+  items: AppRouteRecordRaw[]
   parentPath?: string
 }>(), {
   parentPath: ''

@@ -8,7 +8,7 @@ const emit = defineEmits(['visibleChange'])
 const props = withDefaults(defineProps<{
   schema: ContextMenuSchema[]
   trigger: 'click' | 'hover' | 'focus' | 'contextmenu'
-  tagItem: RouteLocationNormalizedLoaded
+  tagItem?: RouteLocationNormalizedLoaded
 }>(), {
   trigger: 'contextmenu'
 })

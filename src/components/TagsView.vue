@@ -222,7 +222,7 @@ const visibleChange = (visible: boolean, tagItem: RouteLocationNormalizedLoaded)
   if (visible) {
     for (const v of unref(itemRefs)) {
       const elDropdownMenuRef = v.elDropdownMenuRef
-      if (tagItem.fullPath !== v.tagItem.fullPath) {
+      if (tagItem.fullPath !== v.tagItem?.fullPath) {
         elDropdownMenuRef?.handleClose()
         setSelectTag(tagItem)
       }
@@ -286,7 +286,7 @@ watch(
             {
               icon: 'i-ph:close-outlined',
               label: $t('closeTab'),
-              disabled: !!visitedViews?.length && selectedTag?.meta.affix,
+              disabled: !!visitedViews?.length && (selectedTag?.meta.affix ? true : false),
               command: () => {
                 closeSelectedTag(item)
               }
@@ -369,7 +369,7 @@ watch(
       {
         icon: 'i-ph:x-circle',
         label: $t('closeTab'),
-        disabled: !!visitedViews?.length && selectedTag?.meta.affix,
+        disabled: !!(visitedViews?.length ?? 0) && (selectedTag?.meta.affix ? true : false),
         command: () => {
           closeSelectedTag(selectedTag!)
         }
