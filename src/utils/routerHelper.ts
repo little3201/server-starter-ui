@@ -4,7 +4,7 @@ import type {
 } from 'vue-router'
 import { isUrl } from '~/utils'
 
-const Layout = () => import('~/layouts/Index.vue')
+const MainLayout = () => import('~/layouts/MainLayout.vue')
 const BlankLayout = () => import('~/layouts/BlankLayout.vue')
 
 const modules = import.meta.glob('../pages/**/*.{vue,tsx}')
@@ -33,17 +33,22 @@ export const generateRoutesByServer = (routes: AppCustomRouteRecordRaw[]): AppRo
       path: route.path,
       name: route.name,
       redirect: route.redirect,
-      meta: route.meta
+      meta: {
+        icon: route.icon,
+        hidden: route.hidden || false,
+        actions: route.actions || []
+      }
     }
     if (route.component) {
       const comModule = modules[`../${route.component}.vue`] || modules[`../${route.component}.tsx`]
       const component = route.component as string
-      if (!comModule && !component.includes('#')) {
-        console.error(`未找到${route.component}.vue文件或${route.component}.tsx文件，请创建`)
-      } else {
-        // 动态加载路由文件，可根据实际情况进行自定义逻辑
+      if (comModule || component.includes('#')) {
+        // 动态加载路由文件
         data.component =
-          component === '#' ? Layout : component.includes('##') ? BlankLayout : comModule
+          component === '#' ? MainLayout : component.includes('##') ? BlankLayout : comModule
+      } else {
+        // dev
+        console.error(`未找到${route.component}.vue文件或${route.component}.tsx文件，请创建`)
       }
     }
     // recursive child routes

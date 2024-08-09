@@ -1,10 +1,10 @@
-import Layout from '~/layouts/Index.vue'
+import MainLayout from '~/layouts/MainLayout.vue'
 
 export const constantRouterMap: AppRouteRecordRaw[] = [
   {
     path: '/',
     name: 'home',
-    component: Layout,
+    component: MainLayout,
     redirect: '/',
     meta: {
       icon: 'i-ph:house',
@@ -31,32 +31,12 @@ export const constantRouterMap: AppRouteRecordRaw[] = [
     }
   },
   {
-    path: '/404',
-    component: () => import('~/pages/error/404.vue'),
-    name: '404',
+    path: '/:cacheAll(.*)*',
+    component: () => import('~/pages/ErrorNotFound.vue'),
+    name: 'ErrorNotFound',
     meta: {
       hidden: true,
-      title: '404',
-      noTagsView: true
-    }
-  },
-  {
-    path: '/403',
-    component: () => import('~/pages/error/403.vue'),
-    name: '403',
-    meta: {
-      hidden: true,
-      title: '403',
-      noTagsView: true
-    }
-  },
-  {
-    path: '/500',
-    component: () => import('~/pages/error/500.vue'),
-    name: '500',
-    meta: {
-      hidden: true,
-      title: '500',
+      title: 'ErrorNotFound',
       noTagsView: true
     }
   }

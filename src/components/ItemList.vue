@@ -3,7 +3,7 @@ import type { PropType } from 'vue'
 import { pathResolve } from '~/utils/routerHelper'
 
 defineProps({
-  routes: {
+  items: {
     type: Array as PropType<AppRouteRecordRaw[]>,
     required: true
   },
@@ -29,18 +29,18 @@ function isSubMenu(route: AppRouteRecordRaw) {
 </script>
 
 <template>
-  <template v-for="route in routes">
-    <ElSubMenu v-if="route.children && isSubMenu(route)" :index="pathResolve(parentPath, route.path)">
+  <template v-for="item in items">
+    <ElSubMenu v-if="item.children && isSubMenu(item)" :index="pathResolve(parentPath, item.path)">
       <template #title>
-        <div :class="[route.meta.icon, 'mr-2']" />
-        {{ $t(route.name) }}
+        <div :class="[item.meta.icon, 'mr-2']" />
+        {{ $t(item.name) }}
       </template>
-      <AsideItem :routes="route.children" :parent-path="pathResolve(parentPath, route.path)" />
+      <ItemList :items="item.children" :parent-path="pathResolve(parentPath, item.path)" />
     </ElSubMenu>
 
-    <ElMenuItem v-else-if="!route.meta.hidden" :index="pathResolve(parentPath, route.path)">
-      <div :class="[route.meta.icon, 'mr-2 ']" />{{
-        $t(route.name) }}
+    <ElMenuItem v-else-if="!item.meta.hidden" :index="pathResolve(parentPath, item.path)">
+      <div :class="[item.meta.icon, 'mr-2 ']" />{{
+        $t(item.name) }}
     </ElMenuItem>
   </template>
 </template>
@@ -56,9 +56,4 @@ function isSubMenu(route: AppRouteRecordRaw) {
 .el-menu-item.is-active {
   background-color: var(--el-menu-hover-bg-color) !important;
 }
-
-// .el-sub-menu.is-active {
-//   .el-sub-menu__title {
-//     color: var(--el-menu-active-color) !important;
-//   }
-// }</style>
+</style>

@@ -11,8 +11,12 @@ const localStore = useLocaleStore()
 
 const currentLang = computed(() => localStore.getLang)
 
-const setHtmlPageLang = (locale: string) => {
-  document.querySelector('html')?.setAttribute('lang', locale)
+const setHtmlPageLang = (locale: string = 'zh-CN') => {
+  const htmlElement = document.querySelector('html');
+
+  if (htmlElement) {
+    htmlElement.setAttribute('lang', locale);
+  }
 }
 
 const setLang = (lang: string) => {

@@ -7,6 +7,7 @@ export {}
 
 declare module 'vue' {
   export interface GlobalComponents {
+    AsideItem: typeof import('./src/components/AsideItem.vue')['default']
     ConfigGlobal: typeof import('./src/components/ConfigGlobal.vue')['default']
     ContextMenu: typeof import('./src/components/ContextMenu.vue')['default']
     Dialog: typeof import('./src/components/Dialog.vue')['default']
@@ -56,6 +57,7 @@ declare module 'vue' {
     ElTree: typeof import('element-plus/es')['ElTree']
     ElTreeSelect: typeof import('element-plus/es')['ElTreeSelect']
     Error: typeof import('./src/components/Error.vue')['default']
+    ItemList: typeof import('./src/components/ItemList.vue')['default']
     LanguageSelector: typeof import('./src/components/LanguageSelector.vue')['default']
     LocaleDropdown: typeof import('./src/components/LocaleDropdown.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']

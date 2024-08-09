@@ -3,6 +3,7 @@ import pageError from '~/assets/svgs/404.svg'
 import networkError from '~/assets/svgs/500.svg'
 import noPermission from '~/assets/svgs/403.svg'
 import { propTypes } from '~/utils/propTypes'
+import { useRouter } from 'vue-router'
 
 interface ErrorMap {
   url: string
@@ -30,15 +31,11 @@ const errorMap: {
   }
 }
 
-const props = defineProps({
+const { push } = useRouter()
+
+defineProps({
   type: propTypes.string.validate((v: string) => ['404', '500', '403'].includes(v)).def('404')
 })
-
-const emit = defineEmits(['errorClick'])
-
-const btnClick = () => {
-  emit('errorClick', props.type)
-}
 </script>
 
 <template>
@@ -49,7 +46,7 @@ const btnClick = () => {
           <img width="350" :src="errorMap[type].url" alt="" />
           <div class="text-base text-[var(--el-color-info)]">{{ $t(errorMap[type].message) }}</div>
           <div class="mt-5">
-            <ElButton size="large" type="primary" @click="btnClick">{{ $t(errorMap[type].buttonText) }}</ElButton>
+            <ElButton size="large" type="primary" @click="push('/')">{{ $t(errorMap[type].buttonText) }}</ElButton>
           </div>
         </div>
       </div>

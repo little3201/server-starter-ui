@@ -7,13 +7,11 @@ const datas: PrivilegeTreeNode[] = [
     id: 1,
     path: '/system',
     component: '#',
-    redirect: '/system/user',
+    redirect: '/system/users',
     name: 'system',
     order: 1,
     enabled: true,
-    meta: {
-      icon: 'i-ph:gear'
-    },
+    icon: 'i-ph:gear',
     description: 'this is description for this row',
     children: [
       {
@@ -23,9 +21,7 @@ const datas: PrivilegeTreeNode[] = [
         name: 'organizations',
         order: 1,
         enabled: true,
-        meta: {
-          icon: 'i-ph:tree-structure'
-        },
+        icon: 'i-ph:tree-structure',
         description: 'this is description for this row'
       },
       {
@@ -35,9 +31,7 @@ const datas: PrivilegeTreeNode[] = [
         name: 'users',
         order: 2,
         enabled: true,
-        meta: {
-          icon: 'i-ph:user'
-        },
+        icon: 'i-ph:user',
         description: 'this is description for this row'
       },
       {
@@ -47,9 +41,7 @@ const datas: PrivilegeTreeNode[] = [
         name: 'privileges',
         order: 3,
         enabled: true,
-        meta: {
-          icon: 'i-ph:lock-key'
-        },
+        icon: 'i-ph:lock-key',
         description: 'this is description for this row'
       },
       {
@@ -59,9 +51,7 @@ const datas: PrivilegeTreeNode[] = [
         name: 'roles',
         order: 4,
         enabled: true,
-        meta: {
-          icon: 'i-ph:user-circle'
-        },
+        icon: 'i-ph:user-circle',
         description: 'this is description for this row'
       },
       {
@@ -71,9 +61,7 @@ const datas: PrivilegeTreeNode[] = [
         name: 'dictionaries',
         order: 5,
         enabled: true,
-        meta: {
-          icon: 'i-ph:book'
-        },
+        icon: 'i-ph:book',
         description: 'this is description for this row'
       }
     ]
@@ -86,9 +74,7 @@ const datas: PrivilegeTreeNode[] = [
     name: 'logs',
     order: 2,
     enabled: true,
-    meta: {
-      icon: 'i-ph:files'
-    },
+    icon: 'i-ph:files',
     description: 'this is description for this row',
     children: [
       {
@@ -98,9 +84,7 @@ const datas: PrivilegeTreeNode[] = [
         name: 'actionLog',
         order: 1,
         enabled: true,
-        meta: {
-          icon: 'i-ph:clipboard-text'
-        },
+        icon: 'i-ph:clipboard-text',
         description: 'this is description for this row'
       },
       {
@@ -110,9 +94,7 @@ const datas: PrivilegeTreeNode[] = [
         name: 'accessLog',
         order: 2,
         enabled: true,
-        meta: {
-          icon: 'i-ph:file-text'
-        },
+        icon: 'i-ph:file-text',
         description: 'this is description for this row'
       },
       {
@@ -122,9 +104,7 @@ const datas: PrivilegeTreeNode[] = [
         name: 'auditLog',
         order: 3,
         enabled: true,
-        meta: {
-          icon: 'i-ph:file-lock'
-        },
+        icon: 'i-ph:file-lock',
         description: 'this is description for this row'
       },
       {
@@ -134,9 +114,7 @@ const datas: PrivilegeTreeNode[] = [
         name: 'schedulerLog',
         order: 4,
         enabled: true,
-        meta: {
-          icon: 'i-ph:file-cloud'
-        },
+        icon: 'i-ph:file-cloud',
         description: 'this is description for this row'
       }
     ]
@@ -152,9 +130,7 @@ const dataArray: Privilege[] = [
     name: 'system',
     order: 1,
     enabled: true,
-    meta: {
-      icon: 'i-ph:gear'
-    },
+    icon: 'i-ph:gear',
     description: 'this is description for this row'
   },
   {
@@ -164,9 +140,7 @@ const dataArray: Privilege[] = [
     name: 'organizations',
     order: 1,
     enabled: true,
-    meta: {
-      icon: 'i-ph:tree-structure'
-    },
+    icon: 'i-ph:tree-structure',
     description: 'this is description for this row'
   },
   {
@@ -176,9 +150,7 @@ const dataArray: Privilege[] = [
     name: 'users',
     order: 2,
     enabled: true,
-    meta: {
-      icon: 'i-ph:user'
-    },
+    icon: 'i-ph:user',
     description: 'this is description for this row'
   },
   {
@@ -188,9 +160,7 @@ const dataArray: Privilege[] = [
     name: 'privileges',
     order: 3,
     enabled: true,
-    meta: {
-      icon: 'i-ph:lock-key'
-    },
+    icon: 'i-ph:lock-key',
     description: 'this is description for this row'
   },
   {
@@ -200,9 +170,7 @@ const dataArray: Privilege[] = [
     name: 'roles',
     order: 4,
     enabled: true,
-    meta: {
-      icon: 'i-ph:user-circle'
-    },
+    icon: 'i-ph:user-circle',
     description: 'this is description for this row'
   },
   {
@@ -212,9 +180,7 @@ const dataArray: Privilege[] = [
     name: 'dictionaries',
     order: 5,
     enabled: true,
-    meta: {
-      icon: 'i-ph:book'
-    },
+    icon: 'i-ph:book',
     description: 'this is description for this row'
   },
   {
@@ -225,9 +191,7 @@ const dataArray: Privilege[] = [
     name: 'logs',
     order: 2,
     enabled: true,
-    meta: {
-      icon: 'i-ph:files'
-    },
+    icon: 'i-ph:files',
     description: 'this is description for this row'
   },
   {
@@ -237,9 +201,7 @@ const dataArray: Privilege[] = [
     name: 'actionLog',
     order: 1,
     enabled: true,
-    meta: {
-      icon: 'i-ph:clipboard-text'
-    },
+    icon: 'i-ph:clipboard-text',
     description: 'this is description for this row'
   },
   {
@@ -249,9 +211,7 @@ const dataArray: Privilege[] = [
     name: 'accesslog',
     order: 2,
     enabled: true,
-    meta: {
-      icon: 'i-ph:file-text'
-    },
+    icon: 'i-ph:file-text',
     description: 'this is description for this row'
   },
   {
@@ -261,9 +221,7 @@ const dataArray: Privilege[] = [
     name: 'auditlog',
     order: 3,
     enabled: true,
-    meta: {
-      icon: 'i-ph:file-lock'
-    },
+    icon: 'i-ph:file-lock',
     description: 'this is description for this row'
   },
   {
@@ -273,9 +231,7 @@ const dataArray: Privilege[] = [
     name: 'schedulerlog',
     order: 4,
     enabled: true,
-    meta: {
-      icon: 'i-ph:file-cloud'
-    },
+    icon: 'i-ph:file-cloud',
     description: 'this is description for this row'
   }
 ]

@@ -1,0 +1,86 @@
+<script setup lang="ts">
+import { computed } from 'vue'
+import { useRouter } from 'vue-router'
+import { useAppStore } from 'stores/modules/app'
+import { useUserStore } from 'stores/modules/user'
+import { usePermissionStore } from 'stores/modules/permission'
+
+import ThemeToogle from 'components/ThemeToogle.vue'
+import LanguageSelector from 'components/LanguageSelector.vue'
+import SizeDropdown from 'components/SizeDropdown.vue'
+import ItemList from 'components/ItemList.vue'
+
+import { api } from '~/boot/axios'
+
+const { currentRoute } = useRouter()
+
+const appStore = useAppStore()
+const userStore = useUserStore()
+const permissionStore = usePermissionStore()
+
+const routes = computed(() => permissionStore.getRouters)
+
+function signOut() {
+  api.post("/logout").then(() => {
+    userStore.clear()
+    permissionStore.clear()
+  });
+}
+</script>
+
+<template>
+  <ElContainer class="h-screen">
+    <ElHeader class="flex flex-nowrap bg-[var(--el-color-primary)] z-10" height="50px">
+      <div class="inline-flex flex-grow justify-between">
+        <div class="inline-flex items-center">
+          <img src="/vite.svg" alt="" class="w-8 h-8 mr-3" />
+          <span class="text-20px font-bold text-white">{{ appStore.getTitle }}</span>
+        </div>
+
+        <div class="inline-flex justify-end items-center space-x-4">
+          <ThemeToogle />
+          <LanguageSelector />
+          <SizeDropdown />
+          <ElDropdown trigger="click">
+            <ElSpace>
+              <ElAvatar :size="28" src="#" />
+              <span class="text-white">{{ userStore.getUser?.username }}</span>
+            </ElSpace>
+            <template #dropdown>
+              <ElDropdownMenu>
+                <ElDropdownItem>
+                  {{ $t('profile') }}
+                </ElDropdownItem>
+                <ElDropdownItem divided @click="signOut">
+                  {{ $t('signout') }}
+                </ElDropdownItem>
+              </ElDropdownMenu>
+            </template>
+          </ElDropdown>
+        </div>
+      </div>
+    </ElHeader>
+    <ElContainer>
+      <ElAside width="200px">
+        <ElScrollbar>
+          <ElMenu router unique-opened :default-active="currentRoute.fullPath">
+            <ItemList :items="routes" />
+          </ElMenu>
+        </ElScrollbar>
+      </ElAside>
+      <ElContainer class=" bg-[#F5F7FA] dark:bg-[#303133] h-[calc(100vh-50px)]">
+        <ElMain>
+          <RouterView v-slot="{ Component }">
+            <Transition name="el-fade-in">
+              <component :is="Component" />
+            </Transition>
+          </RouterView>
+        </ElMain>
+        <ElFooter height="50px">
+          <p class="text-sm text-center">&copy; {{ new Date().getFullYear() }}
+            All Rights Reserved.</p>
+        </ElFooter>
+      </ElContainer>
+    </ElContainer>
+  </ElContainer>
+</template>

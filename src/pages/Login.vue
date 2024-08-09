@@ -6,7 +6,6 @@ import { useI18n } from 'vue-i18n'
 import { ElFormItem, type FormInstance, type FormRules } from 'element-plus'
 import ThemeToogle from 'components/ThemeToogle.vue'
 import LanguageSelector from 'components/LanguageSelector.vue'
-import Footer from '~/layouts/Footer.vue'
 import { useAppStore } from 'stores/modules/app'
 import { useUserStore } from 'stores/modules/user'
 import { usePermissionStore } from 'stores/modules/permission'
@@ -205,7 +204,8 @@ function show() {
       </section>
     </ElMain>
     <ElFooter class="z-10" height="50px">
-      <Footer />
+      <p class="text-sm text-center">&copy; {{ new Date().getFullYear() }}
+        All Rights Reserved.</p>
     </ElFooter>
   </ElContainer>
 </template>

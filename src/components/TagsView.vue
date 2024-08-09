@@ -277,7 +277,7 @@ watch(
           <ContextMenu :ref="itemRefs.set" :schema="[
             {
               icon: 'i-ph:sync-outlined',
-              label: $$t('reload'),
+              label: $t('reload'),
               disabled: selectedTag?.fullPath !== item.fullPath,
               command: () => {
                 refreshSelectedTag(item)
@@ -285,7 +285,7 @@ watch(
             },
             {
               icon: 'i-ph:close-outlined',
-              label: $$t('closeTab'),
+              label: $t('closeTab'),
               disabled: !!visitedViews?.length && selectedTag?.meta.affix,
               command: () => {
                 closeSelectedTag(item)
@@ -294,7 +294,7 @@ watch(
             {
               divided: true,
               icon: 'i-ph:vertical-right-outlined',
-              label: $$t('closeTheLeftTab'),
+              label: $t('closeTheLeftTab'),
               disabled:
                 !!visitedViews?.length &&
                 (item.fullPath === visitedViews[0].fullPath ||
@@ -305,7 +305,7 @@ watch(
             },
             {
               icon: 'i-ph:vertical-left-outlined',
-              label: $$t('closeTheRightTab'),
+              label: $t('closeTheRightTab'),
               disabled:
                 !!visitedViews?.length &&
                 (item.fullPath === visitedViews[visitedViews.length - 1].fullPath ||
@@ -317,7 +317,7 @@ watch(
             {
               divided: true,
               icon: 'i-ph:tag-outlined',
-              label: $$t('closeOther'),
+              label: $t('closeOther'),
               disabled: selectedTag?.fullPath !== item.fullPath,
               command: () => {
                 closeOthersTags()
@@ -325,7 +325,7 @@ watch(
             },
             {
               icon: 'i-ph:line-outlined',
-              label: $$t('closeAll'),
+              label: $t('closeAll'),
               command: () => {
                 closeAllTags()
               }
@@ -336,13 +336,13 @@ watch(
             }
           ]" @visible-change="visibleChange">
             <div>
-              <router-link :ref="tagLinksRefs.set" :to="{ ...item }" custom v-slot="{ navigate }">
+              <RouterLink :ref="tagLinksRefs.set" :to="{ ...item }" custom v-slot="{ navigate }">
                 <div @click="navigate" class="h-full flex justify-center items-center whitespace-nowrap pl-15px">
                   <div :class="['i-ph:arrow-left mr-1 ', item?.matched?.[1]?.meta?.icon || item?.meta?.icon]" />
-                  {{ $$t(item?.meta?.title as string) }}
+                  {{ $t(item?.meta?.title as string) }}
                   <div @click.prevent.stop="closeSelectedTag(item)" class="i-ph:x-circle mr-1 " />
                 </div>
-              </router-link>
+              </RouterLink>
             </div>
           </ContextMenu>
         </div>

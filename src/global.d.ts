@@ -24,7 +24,7 @@ declare global {
     icon?: string
     noCache?: boolean
     noTagsView?: boolean
-    permission?: string[]
+    actions?: string[]
   }
 
   declare interface AppRouteRecordRaw extends Omit<RouteRecordRaw, 'meta' | 'children'> {
@@ -47,7 +47,7 @@ declare global {
   }
 
   declare interface ContextMenuSchema {
-    disabled?: boolean
+    disabled?: boolean | undefined
     divided?: boolean
     icon?: string
     label: string
