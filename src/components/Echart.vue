@@ -11,8 +11,8 @@ const appStore = useAppStore()
 
 const props = withDefaults(defineProps<{
   options: EChartsOption
-  width: number | string
-  height: number | string
+  width?: number | string
+  height?: number | string
 }>(), {
   width: '100%',
   height: '500px'

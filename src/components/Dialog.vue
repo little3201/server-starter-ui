@@ -7,7 +7,7 @@ const slots = useSlots()
 const props = withDefaults(defineProps<{
   modelValue: boolean
   title: string
-  maxHeight: string | number
+  maxHeight?: string | number
 }>(), {
   modelValue: false,
   title: 'Dialog',

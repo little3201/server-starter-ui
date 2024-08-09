@@ -33,7 +33,7 @@ const errorMap: {
 const { push } = useRouter()
 
 withDefaults(defineProps<{
-  type: '404' | '500' | '403'
+  type?: '404' | '500' | '403'
 }>(), {
   type: '404'
 })
