@@ -1,24 +1,16 @@
 <script setup lang="ts">
+import { ref } from 'vue'
 import { ElDropdown, ElDropdownMenu, ElDropdownItem } from 'element-plus'
-import { PropType, ref } from 'vue'
 import type { RouteLocationNormalizedLoaded } from 'vue-router'
-
 
 const emit = defineEmits(['visibleChange'])
 
-const props = defineProps({
-  schema: {
-    type: Array as PropType<ContextMenuSchema[]>,
-    default: () => []
-  },
-  trigger: {
-    type: String as PropType<'click' | 'hover' | 'focus' | 'contextmenu'>,
-    default: 'contextmenu'
-  },
-  tagItem: {
-    type: Object as PropType<RouteLocationNormalizedLoaded>,
-    default: () => ({})
-  }
+const props = withDefaults(defineProps<{
+  schema: ContextMenuSchema[]
+  trigger: 'click' | 'hover' | 'focus' | 'contextmenu'
+  tagItem: RouteLocationNormalizedLoaded
+}>(), {
+  trigger: 'contextmenu'
 })
 
 const command = (item: ContextMenuSchema) => {

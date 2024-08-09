@@ -1,16 +1,11 @@
 <script setup lang="ts">
-import type { PropType } from 'vue'
 import { pathResolve } from '~/utils/routerHelper'
 
-defineProps({
-  items: {
-    type: Array as PropType<AppRouteRecordRaw[]>,
-    required: true
-  },
-  parentPath: {
-    type: String,
-    default: ''
-  }
+withDefaults(defineProps<{
+  items: AppRouteRecordRaw[],
+  parentPath?: string
+}>(), {
+  parentPath: ''
 })
 
 function isSubMenu(route: AppRouteRecordRaw) {
@@ -29,8 +24,8 @@ function isSubMenu(route: AppRouteRecordRaw) {
 </script>
 
 <template>
-  <template v-for="item in items">
-    <ElSubMenu v-if="item.children && isSubMenu(item)" :index="pathResolve(parentPath, item.path)">
+  <template v-for="item in items" :key="item.name">
+    <ElSubMenu v-if="item.children && isSubMenu(item)" :index="item.name">
       <template #title>
         <div :class="[item.meta.icon, 'mr-2']" />
         {{ $t(item.name) }}
@@ -38,7 +33,7 @@ function isSubMenu(route: AppRouteRecordRaw) {
       <ItemList :items="item.children" :parent-path="pathResolve(parentPath, item.path)" />
     </ElSubMenu>
 
-    <ElMenuItem v-else-if="!item.meta.hidden" :index="pathResolve(parentPath, item.path)">
+    <ElMenuItem v-else-if="!item.meta.hidden" :index="item.name">
       <div :class="[item.meta.icon, 'mr-2 ']" />{{
         $t(item.name) }}
     </ElMenuItem>

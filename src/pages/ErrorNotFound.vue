@@ -2,7 +2,6 @@
 import pageError from '~/assets/svgs/404.svg'
 import networkError from '~/assets/svgs/500.svg'
 import noPermission from '~/assets/svgs/403.svg'
-import { propTypes } from '~/utils/propTypes'
 import { useRouter } from 'vue-router'
 
 interface ErrorMap {
@@ -33,8 +32,10 @@ const errorMap: {
 
 const { push } = useRouter()
 
-defineProps({
-  type: propTypes.string.validate((v: string) => ['404', '500', '403'].includes(v)).def('404')
+withDefaults(defineProps<{
+  type: '404' | '500' | '403'
+}>(), {
+  type: '404'
 })
 </script>
 

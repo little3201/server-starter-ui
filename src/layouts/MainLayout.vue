@@ -7,7 +7,6 @@ import { usePermissionStore } from 'stores/modules/permission'
 
 import ThemeToogle from 'components/ThemeToogle.vue'
 import LanguageSelector from 'components/LanguageSelector.vue'
-import SizeDropdown from 'components/SizeDropdown.vue'
 import ItemList from 'components/ItemList.vue'
 
 import { api } from '~/boot/axios'
@@ -40,7 +39,6 @@ function signOut() {
         <div class="inline-flex justify-end items-center space-x-4">
           <ThemeToogle />
           <LanguageSelector />
-          <SizeDropdown />
           <ElDropdown trigger="click">
             <ElSpace>
               <ElAvatar :size="28" src="#" />
