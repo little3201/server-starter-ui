@@ -5,26 +5,16 @@ import Dialog from 'components/Dialog.vue'
 import { retrieveDictionarySubset, fetchDictionary } from '~/api/dictionaries'
 import type { Dictionary } from '~/models'
 
-const props = defineProps({
-  superiorId: {
-    type: Number,
-    required: true
-  },
-  title: {
-    type: String,
-    required: true
-  }
-})
+const props = defineProps<{
+  superiorId: number,
+  title: string
+}>()
 
 const loading = ref<boolean>(false)
 const datas = ref<Array<Dictionary>>([])
 
 const saveLoading = ref<boolean>(false)
 const dialogVisible = ref<boolean>(false)
-
-const searchForm = ref({
-  name: null
-})
 
 const formRef = ref<FormInstance>()
 const form = ref<Dictionary>({

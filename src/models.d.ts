@@ -36,11 +36,9 @@ export interface PrivilegeTreeNode extends TreeNode {
   order: number
   component: string
   redirect?: string
-  meta: {
-    icon: string
-    hidden?: boolean
-    actions?: string[]
-  }
+  icon: string
+  hidden?: boolean
+  actions?: string[]
   enabled?: boolean
   description?: string
   children?: PrivilegeTreeNode[]
@@ -54,11 +52,9 @@ export interface Privilege {
   order: number
   component: string
   redirect?: string
-  meta: {
-    icon: string
-    hidden?: boolean
-    actions?: string[]
-  }
+  icon: string
+  hidden?: boolean
+  actions?: string[]
   enabled?: boolean
   description?: string
 }

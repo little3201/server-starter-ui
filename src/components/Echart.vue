@@ -1,22 +1,21 @@
 <script setup lang="ts">
-import { computed, PropType, ref, unref, watch, onMounted, onBeforeUnmount, onActivated } from 'vue'
+import { computed, ref, unref, watch, onMounted, onBeforeUnmount, onActivated } from 'vue'
 import { debounce } from 'lodash-es'
-import echarts from '~/composables/echarts'
+import echarts from '~/boot/echarts'
 import type { EChartsOption } from 'echarts'
-import { propTypes } from '~/utils/propTypes'
 import { useAppStore } from 'stores/modules/app'
 import { isString } from '~/utils'
 
 
 const appStore = useAppStore()
 
-const props = defineProps({
-  options: {
-    type: Object as PropType<EChartsOption>,
-    required: true
-  },
-  width: propTypes.oneOfType([Number, String]).def('100%'),
-  height: propTypes.oneOfType([Number, String]).def('500px')
+const props = withDefaults(defineProps<{
+  options: EChartsOption
+  width?: number | string
+  height?: number | string
+}>(), {
+  width: '100%',
+  height: '500px'
 })
 
 const isDark = computed(() => appStore.getIsDark)
@@ -33,7 +32,7 @@ const options = computed(() => {
   })
 })
 
-const elRef = ref<ElRef>()
+const elRef = ref<HTMLElement | null>(null)
 
 let echartRef: Nullable<echarts.ECharts> = null
 

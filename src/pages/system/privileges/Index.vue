@@ -54,11 +54,8 @@ const form = ref<Privilege>({
   order: 1,
   component: '',
   redirect: '',
-  meta: {
-    icon: '',
-    actions: []
-  },
-  enabled: true,
+  icon: '',
+  actions: [],
   description: ''
 })
 
@@ -203,17 +200,12 @@ function onSubmit() {
           </ElCol>
         </ElRow>
 
-        <ElTable v-loading="loading" :data="datas" lazy :load="load" row-key="id" stripe table-layout="auto"
-          >
+        <ElTable v-loading="loading" :data="datas" lazy :load="load" row-key="id" stripe table-layout="auto">
           <ElTableColumn type="selection" width="55" />
-          <ElTableColumn prop="name" :label="$t('name')">
+          <ElTableColumn prop="name" :label="$t('name')" class-name="name-cell">
             <template #default="scope">
-              {{ $t(scope.row.name.replace(scope.row.name[0], scope.row.name[0].toLowerCase())) }}
-            </template>
-          </ElTableColumn>
-          <ElTableColumn prop="meta.icon" :label="$t('icon')">
-            <template #default="scope">
-              <div :class="scope.row.meta.icon" />
+              <div :class="scope.row.icon" class="inline-block mr-2" />
+              {{ $t(scope.row.name) }}
             </template>
           </ElTableColumn>
           <ElTableColumn prop="path" :label="$t('path')" />
@@ -271,17 +263,17 @@ function onSubmit() {
               <!-- width 相对body设置, popover默认设置了 position: absolute -->
               <ElPopover trigger="click" width="36%">
                 <template #reference>
-                  <ElInput v-model="form.meta.icon" :placeholder="$t('inputText') + $t('icon')">
+                  <ElInput v-model="form.icon" :placeholder="$t('inputText') + $t('icon')">
                     <template #prefix>
-                      <div :class="form.meta.icon" />
+                      <div :class="form.icon" />
                     </template>
                   </ElInput>
                 </template>
                 <ElInput v-model="iconName" :placeholder="$t('inputText') + $t('icon')">
                 </ElInput>
                 <div class="flex flex-wrap max-h-48 overflow-y-scroll mt-4">
-                  <div v-for="(icon, index) in filterIcons" :key="index" @click="form.meta.icon = ('ph:' + icon)"
-                    :class="['inline-flex items-center cursor-pointer w-1/3 h-8 hover:text-[var(--el-color-primary)]', { 'text-[var(--el-color-primary)': form.meta.icon === ('ph:' + icon) }]">
+                  <div v-for="(icon, index) in filterIcons" :key="index" @click="form.icon = ('ph:' + icon)" :class="['inline-flex items-center cursor-pointer w-1/3 h-8 hover:text-[var(--el-color-primary)]',
+                    { 'text-[var(--el-color-primary)': form.icon === ('ph:' + icon) }]">
                     <div :class="['w-5 h-5', 'i-ph:' + icon]" />
                     <span class="ml-2 text-base">{{ icon }}</span>
                   </div>
@@ -294,7 +286,7 @@ function onSubmit() {
           <ElCol>
             <ElFormItem :label="$t('actions')" prop="meta.actions">
               <!-- width 相对body设置, popover默认设置了 position: absolute -->
-              <ElSelect multiple v-model="form.meta.actions" :placeholder="$t('selectText') + $t('actions')">
+              <ElSelect multiple v-model="form.actions" :placeholder="$t('selectText') + $t('actions')">
                 <ElOption value="add">{{ $t('add') }}</ElOption>
                 <ElOption value="edit">{{ $t('edit') }}</ElOption>
                 <ElOption value="remove">{{ $t('remove') }}</ElOption>
@@ -323,3 +315,12 @@ function onSubmit() {
     </Dialog>
   </div>
 </template>
+
+<style lang="scss">
+.name-cell {
+  .cell {
+    display: inline-flex;
+    align-items: center;
+  }
+}
+</style>

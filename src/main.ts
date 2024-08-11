@@ -8,29 +8,23 @@ import 'animate.css'
 // If you want to use ElMessage, import it.
 import "element-plus/theme-chalk/src/message.scss"
 
-// 引入状态管理
-import { setupStore } from '~/stores'
-// 路由
-import { setupRouter } from '~/router'
-
-import { setupI18n } from '~/composables/i18n'
+import pinia from '~/stores'
+import router from '~/router'
+import { i18n } from '~/boot/i18n'
 
 async function prepareApp() {
-  // if (
-  //   process.env.NODE_ENV !== 'production'
-  // ) {
-    const { worker } = await import('~/composables/msw-browser')
+  if (
+    process.env.NODE_ENV !== 'production'
+  ) {
+    const { worker } = await import('~/boot/msw-browser')
     return worker.start()
-  // }
+  }
 
-  // return Promise.resolve()
+  return Promise.resolve()
 }
 
 const app = createApp(App)
-setupStore(app)
-setupRouter(app)
-setupI18n(app)
 
 prepareApp().then(() => {
-  app.mount('#app')
+  app.use(pinia).use(router).use(i18n).mount('#app')
 })

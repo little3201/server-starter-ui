@@ -1,9 +1,10 @@
 import { defineStore } from 'pinia'
 import { useTagsViewStore } from './tagsView'
 import router from '~/router'
+import type {User} from '~/models'
 
 interface UserState {
-  user?: UserType
+  user?: User
   access_token: string | undefined
   role?: string
   rememberMe: boolean
@@ -23,7 +24,7 @@ export const useUserStore = defineStore('user', {
     getAccessToken(): string | undefined {
       return this.access_token
     },
-    getUser(): UserType | undefined {
+    getUser(): User | undefined {
       return this.user
     },
     getRole(): string | undefined {
@@ -37,7 +38,7 @@ export const useUserStore = defineStore('user', {
     setAccessToken(access_token: string | undefined) {
       this.access_token = access_token
     },
-    setUser(user?: UserType) {
+    setUser(user?: User) {
       this.user = user
     },
     setRole(role: string | undefined) {

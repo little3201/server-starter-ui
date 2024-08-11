@@ -1,13 +1,29 @@
 import router from '~/router'
-import type { RouteLocationNormalizedLoaded } from 'vue-router'
+import type {
+  RouteLocationNormalizedLoaded,
+  RouteLocationNormalized,
+  RouteRecordNormalized
+} from 'vue-router'
 import { defineStore } from 'pinia'
 import { findIndex } from '~/utils'
-import { getRawRoute } from '~/utils/routerHelper'
 
 export interface TagsViewState {
   visitedViews: RouteLocationNormalizedLoaded[]
   cachedViews: Set<string>
   selectedTag?: RouteLocationNormalizedLoaded
+}
+
+const getRawRoute = (route: RouteLocationNormalized): RouteLocationNormalized => {
+  if (!route) return route
+  const { matched, ...opt } = route
+  return {
+    ...opt,
+    matched: (matched ? matched.map((item) => ({
+      meta: item.meta,
+      name: item.name,
+      path: item.path
+    })) : undefined) as RouteRecordNormalized[]
+  }
 }
 
 export const useTagsViewStore = defineStore('tagsView', {

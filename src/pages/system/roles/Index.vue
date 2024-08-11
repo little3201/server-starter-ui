@@ -281,8 +281,8 @@ function handleCurrentChange(row: Role | undefined) {
                   @check-change="handlePrivilegeCheckChange" :default-checked-keys="rolePrivileges">
                   <template #default="{ node, data }">
                     <div class="inline-flex items-center whitespace-nowrap overflow-ellipsis overflow-hidden">
-                      <div :class="data.meta.icon" />
-                      <span class="ml-2">{{ $t(node.label.replace(node.label[0], node.label[0].toLowerCase())) }}</span>
+                      <div :class="data.icon" />
+                      <span class="ml-2">{{ $t(node.label) }}</span>
                     </div>
                   </template>
                 </ElTree>

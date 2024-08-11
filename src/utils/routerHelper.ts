@@ -1,63 +1,43 @@
-import type {
-  RouteLocationNormalized,
-  RouteRecordNormalized
-} from 'vue-router'
-import { isUrl } from '~/utils'
+import type { RouteRecordRaw } from 'vue-router'
+import type { PrivilegeTreeNode } from '~/models'
 
-const Layout = () => import('~/layouts/Index.vue')
+const MainLayout = () => import('~/layouts/MainLayout.vue')
 const BlankLayout = () => import('~/layouts/BlankLayout.vue')
 
-const modules = import.meta.glob('../views/**/*.{vue,tsx}')
-
-export const getRawRoute = (route: RouteLocationNormalized): RouteLocationNormalized => {
-  if (!route) return route
-  const { matched, ...opt } = route
-  return {
-    ...opt,
-    matched: (matched
-      ? matched.map((item) => ({
-        meta: item.meta,
-        name: item.name,
-        path: item.path
-      }))
-      : undefined) as RouteRecordNormalized[]
-  }
-}
+const modules = import.meta.glob('../pages/**/*.{vue,tsx}')
 
 // 路由生成
-export const generateRoutesByServer = (routes: AppCustomRouteRecordRaw[]): AppRouteRecordRaw[] => {
-  const res: AppRouteRecordRaw[] = []
-
+export const generateRoutes = (routes: PrivilegeTreeNode[]): RouteRecordRaw[] => {
+  const res: RouteRecordRaw[] = []
   for (const route of routes) {
-    const data: AppRouteRecordRaw = {
+    const data: RouteRecordRaw = {
       path: route.path,
       name: route.name,
       redirect: route.redirect,
-      meta: route.meta
+      component: null,
+      children: []
     }
     if (route.component) {
       const comModule = modules[`../${route.component}.vue`] || modules[`../${route.component}.tsx`]
       const component = route.component as string
-      if (!comModule && !component.includes('#')) {
-        console.error(`未找到${route.component}.vue文件或${route.component}.tsx文件，请创建`)
-      } else {
-        // 动态加载路由文件，可根据实际情况进行自定义逻辑
-        data.component =
-          component === '#' ? Layout : component.includes('##') ? BlankLayout : comModule
+      if (comModule || component.includes('#')) {
+        // 动态加载路由文件
+        data.component = comModule
+      } else if (component.includes('#')) {
+        data.component = component === '#' ? MainLayout : BlankLayout
       }
     }
     // recursive child routes
     if (route.children) {
-      data.children = generateRoutesByServer(route.children)
+      data.children = generateRoutes(route.children)
     }
     res.push(data)
   }
   return res
 }
 
-
 export const pathResolve = (parentPath: string, path: string) => {
-  if (isUrl(path)) return path
-  const childPath = path.startsWith('/') || !path ? path : `/${path}`
+  if (!path) return ''
+  const childPath = path.startsWith('/') ? path : `/${path}`
   return `${parentPath}${childPath}`.replace(/\/\//g, '/').trim()
 }

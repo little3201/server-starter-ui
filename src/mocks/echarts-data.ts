@@ -1,25 +1,24 @@
 import { EChartsOption } from 'echarts'
-import { t } from '~/composables/i18n'
 
 export const lineOptions: EChartsOption = {
   title: {
-    text: t('monthlySales'),
+    text: 'monthlySales',
     left: 'center'
   },
   xAxis: {
     data: [
-      t('january'),
-      t('february'),
-      t('march'),
-      t('april'),
-      t('may'),
-      t('june'),
-      t('july'),
-      t('august'),
-      t('september'),
-      t('october'),
-      t('november'),
-      t('december')
+      'january',
+      'february',
+      'march',
+      'april',
+      'may',
+      'june',
+      'july',
+      'august',
+      'september',
+      'october',
+      'november',
+      'december'
     ],
     boundaryGap: false,
     axisTick: {
@@ -46,12 +45,12 @@ export const lineOptions: EChartsOption = {
     }
   },
   legend: {
-    data: [t('estimate'), t('actual')],
+    data: ['estimate', 'actual'],
     top: 50
   },
   series: [
     {
-      name: t('estimate'),
+      name: 'estimate',
       smooth: true,
       type: 'line',
       data: [100, 120, 161, 134, 105, 160, 165, 114, 163, 185, 118, 123],
@@ -59,7 +58,7 @@ export const lineOptions: EChartsOption = {
       animationEasing: 'cubicInOut'
     },
     {
-      name: t('actual'),
+      name: 'actual',
       smooth: true,
       type: 'line',
       itemStyle: {},
@@ -72,7 +71,7 @@ export const lineOptions: EChartsOption = {
 
 export const pieOptions: EChartsOption = {
   title: {
-    text: t('userAccessSource'),
+    text: 'userAccessSource',
     left: 'center'
   },
   tooltip: {
@@ -83,25 +82,25 @@ export const pieOptions: EChartsOption = {
     orient: 'vertical',
     left: 'left',
     data: [
-      t('directAccess'),
-      t('mailMarketing'),
-      t('allianceAdvertising'),
-      t('videoAdvertising'),
-      t('searchEngines')
+      'directAccess',
+      'mailMarketing',
+      'allianceAdvertising',
+      'videoAdvertising',
+      'searchEngines'
     ]
   },
   series: [
     {
-      name: t('userAccessSource'),
+      name: 'userAccessSource',
       type: 'pie',
       radius: '55%',
       center: ['50%', '60%'],
       data: [
-        { value: 335, name: t('directAccess') },
-        { value: 310, name: t('mailMarketing') },
-        { value: 234, name: t('allianceAdvertising') },
-        { value: 135, name: t('videoAdvertising') },
-        { value: 1548, name: t('searchEngines') }
+        { value: 335, name: 'directAccess' },
+        { value: 310, name: 'mailMarketing' },
+        { value: 234, name: 'allianceAdvertising' },
+        { value: 135, name: 'videoAdvertising' },
+        { value: 1548, name: 'searchEngines' }
       ]
     }
   ]
@@ -109,7 +108,7 @@ export const pieOptions: EChartsOption = {
 
 export const barOptions: EChartsOption = {
   title: {
-    text: t('weeklyUserActivity'),
+    text: 'weeklyUserActivity',
     left: 'center'
   },
   tooltip: {
@@ -126,13 +125,13 @@ export const barOptions: EChartsOption = {
   xAxis: {
     type: 'category',
     data: [
-      t('monday'),
-      t('tuesday'),
-      t('wednesday'),
-      t('thursday'),
-      t('friday'),
-      t('saturday'),
-      t('sunday')
+      'monday',
+      'tuesday',
+      'wednesday',
+      'thursday',
+      'friday',
+      'saturday',
+      'sunday'
     ],
     axisTick: {
       alignWithLabel: true
@@ -143,7 +142,7 @@ export const barOptions: EChartsOption = {
   },
   series: [
     {
-      name: t('activeQuantity'),
+      name: 'activeQuantity',
       data: [13253, 34235, 26321, 12340, 24643, 1322, 1324],
       type: 'bar'
     }
@@ -152,30 +151,30 @@ export const barOptions: EChartsOption = {
 
 export const radarOption: EChartsOption = {
   legend: {
-    data: [t('workplace.personal'), t('workplace.team')]
+    data: ['workplace.personal', 'workplace.team']
   },
   radar: {
     // shape: 'circle',
     indicator: [
-      { name: t('workplace.quote'), max: 65 },
-      { name: t('workplace.contribution'), max: 160 },
-      { name: t('workplace.hot'), max: 300 },
-      { name: t('workplace.yield'), max: 130 },
-      { name: t('workplace.follow'), max: 100 }
+      { name: 'workplace.quote', max: 65 },
+      { name: 'workplace.contribution', max: 160 },
+      { name: 'workplace.hot', max: 300 },
+      { name: 'workplace.yield', max: 130 },
+      { name: 'workplace.follow', max: 100 }
     ]
   },
   series: [
     {
-      name: `xxx${t('workplace.index')}`,
+      name: `xxx${'workplace.index'}`,
       type: 'radar',
       data: [
         {
           value: [42, 30, 20, 35, 80],
-          name: t('workplace.personal')
+          name: 'workplace.personal'
         },
         {
           value: [50, 140, 290, 100, 90],
-          name: t('workplace.team')
+          name: 'workplace.team'
         }
       ]
     }

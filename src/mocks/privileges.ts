@@ -7,73 +7,61 @@ const datas: PrivilegeTreeNode[] = [
     id: 1,
     path: '/system',
     component: '#',
-    redirect: '/system/user',
+    redirect: '/system/users',
     name: 'system',
     order: 1,
     enabled: true,
-    meta: {
-      icon: 'i-ph:gear'
-    },
+    icon: 'i-ph:gear',
     description: 'this is description for this row',
     children: [
       {
         id: 2,
         path: 'organizations',
-        component: 'views/system/organizations/Index',
+        component: 'pages/system/organizations/Index',
         name: 'organizations',
         order: 1,
         enabled: true,
-        meta: {
-          icon: 'i-ph:tree-structure'
-        },
+        icon: 'i-ph:tree-structure',
         description: 'this is description for this row'
       },
       {
         id: 3,
         path: 'users',
-        component: 'views/system/users/Index',
+        component: 'pages/system/users/Index',
         name: 'users',
         order: 2,
         enabled: true,
-        meta: {
-          icon: 'i-ph:user'
-        },
+        icon: 'i-ph:user',
         description: 'this is description for this row'
       },
       {
         id: 4,
         path: 'privileges',
-        component: 'views/system/privileges/Index',
+        component: 'pages/system/privileges/Index',
         name: 'privileges',
         order: 3,
         enabled: true,
-        meta: {
-          icon: 'i-ph:lock-key'
-        },
+        icon: 'i-ph:lock-key',
         description: 'this is description for this row'
       },
       {
         id: 5,
         path: 'roles',
-        component: 'views/system/roles/Index',
+        component: 'pages/system/roles/Index',
         name: 'roles',
         order: 4,
         enabled: true,
-        meta: {
-          icon: 'i-ph:user-circle'
-        },
+        icon: 'i-ph:user-circle',
         description: 'this is description for this row'
       },
       {
         id: 6,
         path: 'dictionaries',
-        component: 'views/system/dictionaries/Index',
+        component: 'pages/system/dictionaries/Index',
         name: 'dictionaries',
         order: 5,
         enabled: true,
-        meta: {
-          icon: 'i-ph:book'
-        },
+        icon: 'i-ph:book',
         description: 'this is description for this row'
       }
     ]
@@ -86,57 +74,47 @@ const datas: PrivilegeTreeNode[] = [
     name: 'logs',
     order: 2,
     enabled: true,
-    meta: {
-      icon: 'i-ph:files'
-    },
+    icon: 'i-ph:files',
     description: 'this is description for this row',
     children: [
       {
         id: 8,
         path: 'action',
-        component: 'views/logs/action/Index',
+        component: 'pages/logs/action/Index',
         name: 'actionLog',
         order: 1,
         enabled: true,
-        meta: {
-          icon: 'i-ph:clipboard-text'
-        },
+        icon: 'i-ph:clipboard-text',
         description: 'this is description for this row'
       },
       {
         id: 9,
         path: 'access',
-        component: 'views/logs/access/Index',
+        component: 'pages/logs/access/Index',
         name: 'accessLog',
         order: 2,
         enabled: true,
-        meta: {
-          icon: 'i-ph:file-text'
-        },
+        icon: 'i-ph:file-text',
         description: 'this is description for this row'
       },
       {
         id: 10,
         path: 'audit',
-        component: 'views/logs/audit/Index',
+        component: 'pages/logs/audit/Index',
         name: 'auditLog',
         order: 3,
         enabled: true,
-        meta: {
-          icon: 'i-ph:file-lock'
-        },
+        icon: 'i-ph:file-lock',
         description: 'this is description for this row'
       },
       {
         id: 11,
         path: 'scheduler',
-        component: 'views/logs/scheduler/Index',
+        component: 'pages/logs/scheduler/Index',
         name: 'schedulerLog',
         order: 4,
         enabled: true,
-        meta: {
-          icon: 'i-ph:file-cloud'
-        },
+        icon: 'i-ph:file-cloud',
         description: 'this is description for this row'
       }
     ]
@@ -152,69 +130,57 @@ const dataArray: Privilege[] = [
     name: 'system',
     order: 1,
     enabled: true,
-    meta: {
-      icon: 'i-ph:gear'
-    },
+    icon: 'i-ph:gear',
     description: 'this is description for this row'
   },
   {
     id: 2,
     path: 'organizations',
-    component: 'views/system/organizations/Index',
+    component: 'pages/system/organizations/Index',
     name: 'organizations',
     order: 1,
     enabled: true,
-    meta: {
-      icon: 'i-ph:tree-structure'
-    },
+    icon: 'i-ph:tree-structure',
     description: 'this is description for this row'
   },
   {
     id: 3,
     path: 'users',
-    component: 'views/system/users/Index',
+    component: 'pages/system/users/Index',
     name: 'users',
     order: 2,
     enabled: true,
-    meta: {
-      icon: 'i-ph:user'
-    },
+    icon: 'i-ph:user',
     description: 'this is description for this row'
   },
   {
     id: 4,
     path: 'privileges',
-    component: 'views/system/privileges/Index',
+    component: 'pages/system/privileges/Index',
     name: 'privileges',
     order: 3,
     enabled: true,
-    meta: {
-      icon: 'i-ph:lock-key'
-    },
+    icon: 'i-ph:lock-key',
     description: 'this is description for this row'
   },
   {
     id: 5,
     path: 'roles',
-    component: 'views/system/roles/Index',
+    component: 'pages/system/roles/Index',
     name: 'roles',
     order: 4,
     enabled: true,
-    meta: {
-      icon: 'i-ph:user-circle'
-    },
+    icon: 'i-ph:user-circle',
     description: 'this is description for this row'
   },
   {
     id: 6,
     path: 'dictionaries',
-    component: 'views/system/dictionaries/Index',
+    component: 'pages/system/dictionaries/Index',
     name: 'dictionaries',
     order: 5,
     enabled: true,
-    meta: {
-      icon: 'i-ph:book'
-    },
+    icon: 'i-ph:book',
     description: 'this is description for this row'
   },
   {
@@ -225,57 +191,47 @@ const dataArray: Privilege[] = [
     name: 'logs',
     order: 2,
     enabled: true,
-    meta: {
-      icon: 'i-ph:files'
-    },
+    icon: 'i-ph:files',
     description: 'this is description for this row'
   },
   {
     id: 8,
     path: 'action',
-    component: 'views/logs/action/Index',
+    component: 'pages/logs/action/Index',
     name: 'actionLog',
     order: 1,
     enabled: true,
-    meta: {
-      icon: 'i-ph:clipboard-text'
-    },
+    icon: 'i-ph:clipboard-text',
     description: 'this is description for this row'
   },
   {
     id: 9,
     path: 'access',
-    component: 'views/logs/access/Index',
+    component: 'pages/logs/access/Index',
     name: 'accesslog',
     order: 2,
     enabled: true,
-    meta: {
-      icon: 'i-ph:file-text'
-    },
+    icon: 'i-ph:file-text',
     description: 'this is description for this row'
   },
   {
     id: 10,
     path: 'audit',
-    component: 'views/logs/audit/Index',
+    component: 'pages/logs/audit/Index',
     name: 'auditlog',
     order: 3,
     enabled: true,
-    meta: {
-      icon: 'i-ph:file-lock'
-    },
+    icon: 'i-ph:file-lock',
     description: 'this is description for this row'
   },
   {
     id: 11,
     path: 'scheduler',
-    component: 'views/logs/scheduler/Index',
+    component: 'pages/logs/scheduler/Index',
     name: 'schedulerlog',
     order: 4,
     enabled: true,
-    meta: {
-      icon: 'i-ph:file-cloud'
-    },
+    icon: 'i-ph:file-cloud',
     description: 'this is description for this row'
   }
 ]

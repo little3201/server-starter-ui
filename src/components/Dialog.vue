@@ -1,18 +1,21 @@
 <script setup lang="ts">
 import { computed, useAttrs, ref, unref, useSlots } from 'vue'
-import { propTypes } from '~/utils/propTypes'
 import { isNumber } from '~/utils'
 
 const slots = useSlots()
 
-const props = defineProps({
-  modelValue: propTypes.bool.def(false),
-  title: propTypes.string.def('Dialog'),
-  maxHeight: propTypes.oneOfType([String, Number])
+const props = withDefaults(defineProps<{
+  modelValue: boolean
+  title: string
+  maxHeight?: string | number
+}>(), {
+  modelValue: false,
+  title: 'Dialog',
+  maxHeight: undefined
 })
 
 const getBindValue = computed(() => {
-  const delArr: string[] = [ 'title', 'maxHeight']
+  const delArr: string[] = ['title', 'maxHeight']
   const attrs = useAttrs()
   const obj = { ...attrs, ...props } as { [key: string]: any }
   for (const key in obj) {
