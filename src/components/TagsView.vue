@@ -9,7 +9,7 @@ import { usePermissionStore } from 'stores/modules/permission'
 import { useTagsViewStore } from 'stores/modules/tagsView'
 import { useScrollTo } from '~/hooks/event/useScrollTo'
 import { useTagsView } from '~/hooks/web/useTagsView'
-import { pathResolve, generateRoutesByServer } from '~/utils/routerHelper'
+import { pathResolve, generateRoutes } from '~/utils/routerHelper'
 import ContextMenu from 'components/ContextMenu.vue'
 
 
@@ -19,7 +19,7 @@ const { closeAll, closeLeft, closeRight, closeOther, closeCurrent, refreshPage }
 
 const permissionStore = usePermissionStore()
 
-const routers = computed(() => generateRoutesByServer(permissionStore.getRouters))
+const routers = computed(() => generateRoutes(permissionStore.getRouters))
 
 const tagsViewStore = useTagsViewStore()
 

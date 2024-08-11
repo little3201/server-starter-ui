@@ -7,18 +7,13 @@ const BlankLayout = () => import('~/layouts/BlankLayout.vue')
 const modules = import.meta.glob('../pages/**/*.{vue,tsx}')
 
 // 路由生成
-export const generateRoutesByServer = (routes: PrivilegeTreeNode[]): RouteRecordRaw[] => {
+export const generateRoutes = (routes: PrivilegeTreeNode[]): RouteRecordRaw[] => {
   const res: RouteRecordRaw[] = []
   for (const route of routes) {
     const data: RouteRecordRaw = {
       path: route.path,
       name: route.name,
       redirect: route.redirect,
-      meta: {
-        icon: route.icon,
-        hidden: route.hidden || false,
-        actions: route.actions || []
-      },
       component: null,
       children: []
     }
@@ -27,16 +22,14 @@ export const generateRoutesByServer = (routes: PrivilegeTreeNode[]): RouteRecord
       const component = route.component as string
       if (comModule || component.includes('#')) {
         // 动态加载路由文件
-        data.component =
-          component === '#' ? MainLayout : component.includes('##') ? BlankLayout : comModule
-      } else {
-        // dev
-        console.error(`未找到${route.component}.vue文件或${route.component}.tsx文件，请创建`)
+        data.component = comModule
+      } else if (component.includes('#')) {
+        data.component = component === '#' ? MainLayout : BlankLayout
       }
     }
     // recursive child routes
     if (route.children) {
-      data.children = generateRoutesByServer(route.children)
+      data.children = generateRoutes(route.children)
     }
     res.push(data)
   }

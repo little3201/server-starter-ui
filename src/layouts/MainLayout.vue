@@ -17,7 +17,7 @@ const appStore = useAppStore()
 const userStore = useUserStore()
 const permissionStore = usePermissionStore()
 
-const routes = computed(() => permissionStore.getRouters)
+const privileges = computed(() => permissionStore.getPrivileges)
 
 function signOut() {
   api.post("/logout").then(() => {
@@ -65,7 +65,7 @@ function signOut() {
             <ElMenuItem :index="'/'">
               <div class="i-ph:house mr-2" />{{ $t('home') }}
             </ElMenuItem>
-            <ItemList :items="routes" />
+            <ItemList :items="privileges" />
           </ElMenu>
         </ElScrollbar>
       </ElAside>

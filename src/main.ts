@@ -8,11 +8,8 @@ import 'animate.css'
 // If you want to use ElMessage, import it.
 import "element-plus/theme-chalk/src/message.scss"
 
-// 引入状态管理
 import pinia from '~/stores'
-// 路由
 import router from '~/router'
-// 国际化
 import { i18n } from '~/boot/i18n'
 
 async function prepareApp() {

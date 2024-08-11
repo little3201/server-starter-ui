@@ -12,7 +12,7 @@ import { usePermissionStore } from 'stores/modules/permission'
 import { api } from '~/boot/axios'
 import { retrievePrivilegeTree } from '~/api/privileges'
 import { PrivilegeTreeNode } from '~/models'
-import { generateRoutesByServer } from '~/utils/routerHelper'
+import { generateRoutes } from '~/utils/routerHelper'
 
 
 const { t } = useI18n()
@@ -88,7 +88,7 @@ async function fetchPrivileges(username: string) {
     // 生成路由
     permissionStore.setPrivileges(nodes)
     
-    generateRoutesByServer(nodes).forEach((route) => {
+    generateRoutes(nodes).forEach((route) => {
       router.addRoute(route)
     })
     const redirect = router.currentRoute.value.query.redirect as string

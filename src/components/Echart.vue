@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, PropType, ref, unref, watch, onMounted, onBeforeUnmount, onActivated } from 'vue'
+import { computed, ref, unref, watch, onMounted, onBeforeUnmount, onActivated } from 'vue'
 import { debounce } from 'lodash-es'
 import echarts from '~/boot/echarts'
 import type { EChartsOption } from 'echarts'
@@ -32,7 +32,7 @@ const options = computed(() => {
   })
 })
 
-const elRef = ref<ElRef>()
+const elRef = ref<HTMLElement | null>(null)
 
 let echartRef: Nullable<echarts.ECharts> = null
 

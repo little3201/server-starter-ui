@@ -5,7 +5,7 @@ import ProgressBar from "@badrap/bar-of-progress"
 import { useUserStore } from 'stores/modules/user'
 import { usePermissionStore } from 'stores/modules/permission'
 
-import { generateRoutesByServer } from '~/utils/routerHelper'
+import { generateRoutes } from '~/utils/routerHelper'
 
 const router = createRouter({
   history: createWebHistory(),
@@ -30,7 +30,7 @@ router.beforeEach(async (to, from, next) => {
       // 获取权限，注册路由表
       if (!permissionStore.getRouters.length) {
         const nodes = permissionStore.getPrivileges
-        const routers = generateRoutesByServer(nodes)
+        const routers = generateRoutes(nodes)
 
         // 动态添加可访问路由表
         permissionStore.setRouters(routers)
