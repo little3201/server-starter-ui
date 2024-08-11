@@ -27,15 +27,17 @@ router.beforeEach(async (to, from, next) => {
       next({ path: '/' })
     } else {
       const permissionStore = usePermissionStore()
+      // 获取权限，注册路由表
       if (!permissionStore.getRouters.length) {
         const nodes = permissionStore.getPrivileges
         const routers = generateRoutesByServer(nodes)
 
+        // 动态添加可访问路由表
         permissionStore.setRouters(routers)
         routers.forEach((route) => {
-          router.addRoute(route as RouteRecordRaw) // 动态添加可访问路由表
+          router.addRoute(route as RouteRecordRaw)
         })
-
+        // 捕获所有未匹配的路径，放在配置的末尾
         router.addRoute({
           path: '/:cacheAll(.*)*',
           name: 'ErrorNotFound',
