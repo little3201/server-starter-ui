@@ -4,8 +4,8 @@ import { constantRouterMap } from './routes'
 import ProgressBar from "@badrap/bar-of-progress"
 import { useUserStore } from 'stores/modules/user'
 import { usePermissionStore } from 'stores/modules/permission'
-import { generateRoutesByServer } from '~/utils/routerHelper'
 
+import { generateRoutesByServer } from '~/utils/routerHelper'
 
 const router = createRouter({
   history: createWebHistory(),
@@ -23,27 +23,32 @@ router.beforeEach(async (to, from, next) => {
   // 判断是否登录
   const access_token = userStore.getAccessToken
   if (access_token && access_token.length > 0) {
-    const permissionStore = usePermissionStore()
     if (to.path === '/login') {
       next({ path: '/' })
     } else {
-      if (permissionStore.getIsRoutesAdded) {
+      const permissionStore = usePermissionStore()
+      if (!permissionStore.getRouters.length) {
+        const nodes = permissionStore.getPrivileges
+        const routers = generateRoutesByServer(nodes)
+
+        permissionStore.setRouters(routers)
+        routers.forEach((route) => {
+          router.addRoute(route as RouteRecordRaw) // 动态添加可访问路由表
+        })
+
+        router.addRoute({
+          path: '/:cacheAll(.*)*',
+          name: 'ErrorNotFound',
+          component: () => import('~/pages/ErrorNotFound.vue')
+        })
+
+        const redirectPath = from.query.redirect || to.path
+        const redirect = decodeURIComponent(redirectPath as string)
+        const nextData = to.path === redirect ? { ...to, replace: true } : { path: redirect }
+        next(nextData)
+      } else {
         next()
-        return
       }
-      const addRouters = permissionStore.getAddRouters as AppCustomRouteRecordRaw[]
-
-      await permissionStore.generateRoutes(addRouters)
-
-      generateRoutesByServer(addRouters).forEach((route) => {
-        router.addRoute(route as unknown as RouteRecordRaw) // 动态添加可访问路由表
-      })
-
-      const redirectPath = from.query.redirect || to.path
-      const redirect = decodeURIComponent(redirectPath as string)
-      const nextData = to.path === redirect ? { ...to, replace: true } : { path: redirect }
-      permissionStore.setIsRoutesAdded(true)
-      next(nextData)
     }
   } else {
     if (NO_REDIRECT_WHITE_LIST.indexOf(to.path) !== -1) {

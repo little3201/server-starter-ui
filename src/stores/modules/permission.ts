@@ -1,68 +1,47 @@
 import { defineStore } from 'pinia'
-import { constantRouterMap } from '~/router/routes'
-import {
-  generateRoutesByServer
-} from '~/utils/routerHelper'
-import { cloneDeep } from 'lodash-es'
+
+import type { RouteRecordRaw } from 'vue-router'
+import type { PrivilegeTreeNode } from '~/models'
 
 export interface PermissionState {
-  routers: AppRouteRecordRaw[]
-  addRouters: AppRouteRecordRaw[]
-  isRoutesAdded: boolean
-  menuTabRouters: AppRouteRecordRaw[]
+  privileges: PrivilegeTreeNode[]
+  routers: RouteRecordRaw[]
+  menuTabRouters: RouteRecordRaw[]
 }
 
 export const usePermissionStore = defineStore('permission', {
   state: (): PermissionState => ({
+    privileges: [],
     routers: [],
-    addRouters: [],
-    isRoutesAdded: false, // 标识是否已经添加过路由
     menuTabRouters: []
   }),
   getters: {
-    getRouters(): AppRouteRecordRaw[] {
+    getPrivileges(): PrivilegeTreeNode[] {
+      return this.privileges
+    },
+    getRouters(): RouteRecordRaw[] {
       return this.routers
     },
-    getAddRouters(): AppRouteRecordRaw[] {
-      return this.addRouters
-    },
-    getIsRoutesAdded(): boolean {
-      return this.isRoutesAdded
-    },
-    getMenuTabRouters(): AppRouteRecordRaw[] {
+    getMenuTabRouters(): RouteRecordRaw[] {
       return this.menuTabRouters
     }
   },
   actions: {
-    generateRoutes(routers?: AppCustomRouteRecordRaw[]) {
-      return new Promise<void>((resolve) => {
-        let routerMap: AppRouteRecordRaw[] = []
-
-        // 过滤菜单
-        routerMap = generateRoutesByServer(routers as AppCustomRouteRecordRaw[])
-
-        // 渲染菜单的所有路由
-        this.routers = cloneDeep(constantRouterMap).concat(routerMap)
-        resolve()
-      })
+    setPrivileges(privileges: PrivilegeTreeNode[]) {
+      this.privileges = privileges
     },
-    setMenuTabRouters(routers: AppRouteRecordRaw[]): void {
+    setRouters(routers: RouteRecordRaw[]) {
+      this.routers = routers
+    },
+    setMenuTabRouters(routers: RouteRecordRaw[]): void {
       this.menuTabRouters = routers
     },
-    setIsRoutesAdded(state: boolean): void {
-      this.isRoutesAdded = state
-    },
-    setAddRouters(routers: AppCustomRouteRecordRaw[]): void {
-      this.addRouters = routers
-    },
     clear(): void {
-      this.setIsRoutesAdded(false)
       this.setMenuTabRouters([])
       this.routers = []
-      this.addRouters = []
     }
   },
   persist: {
-    paths: ['routers', 'addRouters', 'menuTabRouters']
+    paths: ['privileges', 'menuTabRouters']
   }
 })

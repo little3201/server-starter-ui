@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { onMounted, watch, computed, unref, ref, nextTick } from 'vue'
 import { useRouter } from 'vue-router'
-import type { RouteLocationNormalizedLoaded, RouterLinkProps } from 'vue-router'
+import type { RouteLocationNormalizedLoaded, RouterLinkProps, RouteRecordRaw } from 'vue-router'
 import { cloneDeep } from 'lodash-es'
 import { useTemplateRefsList } from '@vueuse/core'
 import { ElScrollbar } from 'element-plus'
@@ -9,7 +9,7 @@ import { usePermissionStore } from 'stores/modules/permission'
 import { useTagsViewStore } from 'stores/modules/tagsView'
 import { useScrollTo } from '~/hooks/event/useScrollTo'
 import { useTagsView } from '~/hooks/web/useTagsView'
-import { pathResolve } from '~/utils/routerHelper'
+import { pathResolve, generateRoutesByServer } from '~/utils/routerHelper'
 import ContextMenu from 'components/ContextMenu.vue'
 
 
@@ -19,7 +19,7 @@ const { closeAll, closeLeft, closeRight, closeOther, closeCurrent, refreshPage }
 
 const permissionStore = usePermissionStore()
 
-const routers = computed(() => permissionStore.getRouters)
+const routers = computed(() => generateRoutesByServer(permissionStore.getRouters))
 
 const tagsViewStore = useTagsViewStore()
 
@@ -31,14 +31,13 @@ const selectedTag = computed(() => tagsViewStore.getSelectedTag)
 
 const setSelectTag = tagsViewStore.setSelectedTag
 
-
-const filterAffixTags = (routes: AppRouteRecordRaw[], parentPath = '') => {
+const filterAffixTags = (routes: RouteRecordRaw[], parentPath = '') => {
   let tags: RouteLocationNormalizedLoaded[] = []
   routes.forEach((route) => {
     const meta = route.meta ?? {}
     const tagPath = pathResolve(parentPath, route.path)
     if (meta?.affix) {
-      tags.push({ ...route, path: tagPath, fullPath: tagPath } as RouteLocationNormalizedLoaded)
+      tags.push({ ...route, path: tagPath, fullPath: tagPath } as unknown as RouteLocationNormalizedLoaded)
     }
     if (route.children) {
       const tempTags: RouteLocationNormalizedLoaded[] = filterAffixTags(route.children, tagPath)
@@ -89,14 +88,14 @@ const toLastView = () => {
     push(latestView)
   } else {
     if (
-      unref(currentRoute).path === permissionStore.getAddRouters[0].path ||
-      unref(currentRoute).path === permissionStore.getAddRouters[0].redirect
+      unref(currentRoute).path === permissionStore.getMenuTabRouters[0].path ||
+      unref(currentRoute).path === permissionStore.getMenuTabRouters[0].redirect
     ) {
       addTags()
       return
     }
     // You can set another route
-    push(permissionStore.getAddRouters[0].path)
+    push(permissionStore.getMenuTabRouters[0].path)
   }
 }
 

@@ -62,17 +62,16 @@ function signOut() {
       <ElAside width="200px">
         <ElScrollbar>
           <ElMenu router unique-opened :default-active="currentRoute.fullPath">
+            <ElMenuItem :index="'/'">
+              <div class="i-ph:house mr-2" />{{ $t('home') }}
+            </ElMenuItem>
             <ItemList :items="routes" />
           </ElMenu>
         </ElScrollbar>
       </ElAside>
       <ElContainer class=" bg-[#F5F7FA] dark:bg-[#303133] h-[calc(100vh-50px)]">
         <ElMain>
-          <RouterView v-slot="{ Component }">
-            <Transition name="el-fade-in">
-              <component :is="Component" />
-            </Transition>
-          </RouterView>
+          <RouterView />
         </ElMain>
         <ElFooter height="50px">
           <p class="text-sm text-center">&copy; {{ new Date().getFullYear() }}

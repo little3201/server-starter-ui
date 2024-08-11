@@ -1,18 +1,19 @@
 <script setup lang="ts">
+import type { PrivilegeTreeNode } from '~/models'
 import { pathResolve } from '~/utils/routerHelper'
 
 withDefaults(defineProps<{
-  items: AppRouteRecordRaw[]
+  items: PrivilegeTreeNode[]
   parentPath?: string
 }>(), {
   parentPath: ''
 })
 
-function isSubMenu(route: AppRouteRecordRaw) {
+function isSubMenu(route: PrivilegeTreeNode) {
   if (route.children && route.children.length > 0) {
     let children = route.children
     for (const child of children) {
-      if (child.meta.hidden) {
+      if (child.hidden) {
         return false
       }
     }
@@ -27,14 +28,14 @@ function isSubMenu(route: AppRouteRecordRaw) {
   <template v-for="item in items" :key="item.name">
     <ElSubMenu v-if="item.children && isSubMenu(item)" :index="pathResolve(parentPath, item.path)">
       <template #title>
-        <div :class="[item.meta.icon, 'mr-2']" />
+        <div :class="[item.icon, 'mr-2']" />
         {{ $t(item.name) }}
       </template>
       <ItemList :items="item.children" :parent-path="pathResolve(parentPath, item.path)" />
     </ElSubMenu>
 
-    <ElMenuItem v-else-if="!item.meta.hidden" :index="pathResolve(parentPath, item.path)">
-      <div :class="[item.meta.icon, 'mr-2 ']" />{{
+    <ElMenuItem v-else-if="!item.hidden" :index="pathResolve(parentPath, item.path)">
+      <div :class="[item.icon, 'mr-2 ']" />{{
         $t(item.name) }}
     </ElMenuItem>
   </template>

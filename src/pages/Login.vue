@@ -11,10 +11,12 @@ import { useUserStore } from 'stores/modules/user'
 import { usePermissionStore } from 'stores/modules/permission'
 import { api } from '~/boot/axios'
 import { retrievePrivilegeTree } from '~/api/privileges'
+import { PrivilegeTreeNode } from '~/models'
+import { generateRoutesByServer } from '~/utils/routerHelper'
 
 
 const { t } = useI18n()
-const { currentRoute, replace } = useRouter()
+const router = useRouter()
 
 const appStore = useAppStore()
 const userStore = useUserStore()
@@ -82,11 +84,15 @@ function signIn(formData: { username: string, password: string }) {
 async function fetchPrivileges(username: string) {
   const res = await retrievePrivilegeTree(username)
   if (res.data) {
-    const routers: AppCustomRouteRecordRaw[] = res.data || []
-    permissionStore.setAddRouters(routers)
-
-    const redirect = currentRoute.value.query.redirect as string
-    replace(redirect || '/')
+    const nodes: PrivilegeTreeNode[] = res.data || []
+    // 生成路由
+    permissionStore.setPrivileges(nodes)
+    
+    generateRoutesByServer(nodes).forEach((route) => {
+      router.addRoute(route)
+    })
+    const redirect = router.currentRoute.value.query.redirect as string
+    router.replace(redirect || '/')
   }
 }
 

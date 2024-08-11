@@ -1,35 +1,16 @@
-import type {
-  RouteLocationNormalized,
-  RouteRecordNormalized
-} from 'vue-router'
-import { isUrl } from '~/utils'
+import type { RouteRecordRaw } from 'vue-router'
+import type { PrivilegeTreeNode } from '~/models'
 
 const MainLayout = () => import('~/layouts/MainLayout.vue')
 const BlankLayout = () => import('~/layouts/BlankLayout.vue')
 
 const modules = import.meta.glob('../pages/**/*.{vue,tsx}')
 
-export const getRawRoute = (route: RouteLocationNormalized): RouteLocationNormalized => {
-  if (!route) return route
-  const { matched, ...opt } = route
-  return {
-    ...opt,
-    matched: (matched
-      ? matched.map((item) => ({
-        meta: item.meta,
-        name: item.name,
-        path: item.path
-      }))
-      : undefined) as RouteRecordNormalized[]
-  }
-}
-
 // 路由生成
-export const generateRoutesByServer = (routes: AppCustomRouteRecordRaw[]): AppRouteRecordRaw[] => {
-  const res: AppRouteRecordRaw[] = []
-
+export const generateRoutesByServer = (routes: PrivilegeTreeNode[]): RouteRecordRaw[] => {
+  const res: RouteRecordRaw[] = []
   for (const route of routes) {
-    const data: AppRouteRecordRaw = {
+    const data: RouteRecordRaw = {
       path: route.path,
       name: route.name,
       redirect: route.redirect,
@@ -37,7 +18,9 @@ export const generateRoutesByServer = (routes: AppCustomRouteRecordRaw[]): AppRo
         icon: route.icon,
         hidden: route.hidden || false,
         actions: route.actions || []
-      }
+      },
+      component: null,
+      children: []
     }
     if (route.component) {
       const comModule = modules[`../${route.component}.vue`] || modules[`../${route.component}.tsx`]
@@ -61,7 +44,7 @@ export const generateRoutesByServer = (routes: AppCustomRouteRecordRaw[]): AppRo
 }
 
 export const pathResolve = (parentPath: string, path: string) => {
-  if (isUrl(path)) return path
+  if (!path) return ''
   const childPath = path.startsWith('/') ? path : `/${path}`
   return `${parentPath}${childPath}`.replace(/\/\//g, '/').trim()
 }
