@@ -1,7 +1,7 @@
 import { http, HttpResponse } from 'msw'
-import type { ActionLog } from '~/models'
+import type { OperationLog } from '~/models'
 
-const datas: ActionLog[] = [
+const datas: OperationLog[] = [
   {
     id: 1,
     module: 'System',
@@ -137,8 +137,8 @@ const datas: ActionLog[] = [
 ]
 
 
-export const actionLogsHandlers = [
-  http.get('/api/action-logs/:id', ({ params }) => {
+export const operationLogsHandlers = [
+  http.get('/api/operations-logs/:id', ({ params }) => {
     const { id } = params
     if (id) {
       return HttpResponse.json(datas.filter(item => item.id === Number(id))[0])
@@ -146,7 +146,7 @@ export const actionLogsHandlers = [
       return HttpResponse.json(null)
     }
   }),
-  http.get('/api/action-logs', ({ request }) => {
+  http.get('/api/operations-logs', ({ request }) => {
     const url = new URL(request.url)
     const page = url.searchParams.get('page')
     const size = url.searchParams.get('size')
@@ -159,7 +159,7 @@ export const actionLogsHandlers = [
 
     return HttpResponse.json(data)
   }),
-  http.delete('/api/action-logs/:id', ({ params }) => {
+  http.delete('/api/operations-logs/:id', ({ params }) => {
     // All request path params are provided in the "params"
     // argument of the response resolver.
     const { id } = params

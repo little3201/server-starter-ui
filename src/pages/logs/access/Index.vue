@@ -179,7 +179,7 @@ function confirmEvent(id: number) {
           <ElTableColumn prop="responseTime" :label="$t('responseTime')" />
           <ElTableColumn prop="responseCode" :label="$t('responseCode')" />
           <ElTableColumn show-overflow-tooltip prop="responseMessage" :label="$t('responseMessage')" />
-          <ElTableColumn :label="$t('action')" width="160">
+          <ElTableColumn :label="$t('actions')" width="160">
             <template #default="scope">
               <ElButton size="small" type="success" link @click="detailHandler(scope.row.id)">
                 <div class="i-ph:file-text" />{{ $t('detail') }}

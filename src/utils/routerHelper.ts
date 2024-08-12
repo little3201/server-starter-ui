@@ -20,7 +20,7 @@ export const generateRoutes = (routes: PrivilegeTreeNode[]): RouteRecordRaw[] =>
     if (route.component) {
       const comModule = modules[`../${route.component}.vue`] || modules[`../${route.component}.tsx`]
       const component = route.component as string
-      if (comModule || component.includes('#')) {
+      if (comModule) {
         // 动态加载路由文件
         data.component = comModule
       } else if (component.includes('#')) {

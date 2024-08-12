@@ -181,7 +181,7 @@ function confirmEvent(id: number) {
               {{ dayjs(scope.row.endTime).format('YYYY-MM-DD HH:mm:ss') }}
             </template>
           </ElTableColumn>
-          <ElTableColumn :label="$t('action')" width="160">
+          <ElTableColumn :label="$t('actions')" width="160">
             <template #default="scope">
               <ElButton size="small" type="success" link @click="detailHandler(scope.row.id)">
                 <div class="i-ph:file-text" />{{ $t('detail') }}

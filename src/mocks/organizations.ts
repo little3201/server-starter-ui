@@ -54,18 +54,17 @@ const treeNodes: TreeNode[] = [
 ]
 
 export const organizationsHandlers = [
+  http.get('/api/organizations/tree', () => {
+    return HttpResponse.json(treeNodes)
+  }),
   http.get('/api/organizations/:id', ({ params }) => {
     const { id } = params
     if (id) {
-      if (id === 'tree') {
-        return HttpResponse.json(treeNodes)
-      } else {
-        let array = datas.filter(item => item.id === Number(id))
-        if (array.length === 0) {
-          array = subDatas.filter(item => item.id === Number(id))
-        }
-        return HttpResponse.json(array[0])
+      let array = datas.filter(item => item.id === Number(id))
+      if (array.length === 0) {
+        array = subDatas.filter(item => item.id === Number(id))
       }
+      return HttpResponse.json(array[0])
     } else {
       return HttpResponse.json(null)
     }

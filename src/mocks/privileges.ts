@@ -2,7 +2,7 @@ import { http, HttpResponse } from 'msw'
 import type { Privilege, PrivilegeTreeNode } from '~/models'
 
 
-const datas: PrivilegeTreeNode[] = [
+const datas: Privilege[] = [
   {
     id: 1,
     path: '/system',
@@ -10,59 +10,179 @@ const datas: PrivilegeTreeNode[] = [
     redirect: '/system/users',
     name: 'system',
     order: 1,
-    enabled: true,
     icon: 'i-ph:gear',
-    description: 'this is description for this row',
+    count: 5,
+    enabled: true,
+    description: 'this is description for this row'
+  },
+  {
+    id: 7,
+    path: '/logs',
+    component: '#',
+    redirect: '/logs/operations',
+    name: 'logs',
+    order: 2,
+    icon: 'i-ph:files',
+    count: 3,
+    enabled: true,
+    description: 'this is description for this row'
+  }
+]
+
+const subDatas: Privilege[] = [
+  {
+    id: 2,
+    superiorId: 1,
+    path: 'organizations',
+    component: 'pages/system/organizations/Index',
+    name: 'organizations',
+    order: 1,
+    count: 0,
+    icon: 'i-ph:tree-structure',
+    enabled: true,
+    description: 'this is description for this row'
+  },
+  {
+    id: 3,
+    superiorId: 1,
+    path: 'users',
+    component: 'pages/system/users/Index',
+    name: 'users',
+    order: 2,
+    count: 0,
+    icon: 'i-ph:user',
+    enabled: true,
+    description: 'this is description for this row'
+  },
+  {
+    id: 4,
+    superiorId: 1,
+    path: 'privileges',
+    component: 'pages/system/privileges/Index',
+    name: 'privileges',
+    order: 3,
+    count: 0,
+    icon: 'i-ph:lock-key',
+    enabled: true,
+    description: 'this is description for this row'
+  },
+  {
+    id: 5,
+    superiorId: 1,
+    path: 'roles',
+    component: 'pages/system/roles/Index',
+    name: 'roles',
+    order: 4,
+    count: 0,
+    icon: 'i-ph:user-circle',
+    enabled: true,
+    description: 'this is description for this row'
+  },
+  {
+    id: 6,
+    superiorId: 1,
+    path: 'dictionaries',
+    component: 'pages/system/dictionaries/Index',
+    name: 'dictionaries',
+    order: 5,
+    count: 0,
+    icon: 'i-ph:book',
+    enabled: true,
+    description: 'this is description for this row'
+  },
+  {
+    id: 8,
+    superiorId: 7,
+    path: 'operations',
+    component: 'pages/logs/operations/Index',
+    name: 'actionLog',
+    order: 1,
+    count: 0,
+    icon: 'i-ph:clipboard-text',
+    enabled: true,
+    description: 'this is description for this row'
+  },
+  {
+    id: 9,
+    superiorId: 7,
+    path: 'access',
+    component: 'pages/logs/access/Index',
+    name: 'accesslog',
+    order: 2,
+    count: 0,
+    icon: 'i-ph:file-text',
+    enabled: true,
+    description: 'this is description for this row'
+  },
+  {
+    id: 10,
+    superiorId: 7,
+    path: 'audit',
+    component: 'pages/logs/audit/Index',
+    name: 'auditlog',
+    order: 3,
+    count: 0,
+    icon: 'i-ph:file-lock',
+    enabled: true,
+    description: 'this is description for this row'
+  },
+  {
+    id: 11,
+    superiorId: 7,
+    path: 'scheduler',
+    component: 'pages/logs/scheduler/Index',
+    name: 'schedulerlog',
+    order: 4,
+    count: 0,
+    icon: 'i-ph:file-cloud',
+    enabled: true,
+    description: 'this is description for this row'
+  }
+]
+
+const treeNodes: PrivilegeTreeNode[] = [
+  {
+    id: 1,
+    path: '/system',
+    component: '#',
+    redirect: '/system/users',
+    name: 'system',
+    icon: 'i-ph:gear',
     children: [
       {
         id: 2,
         path: 'organizations',
         component: 'pages/system/organizations/Index',
         name: 'organizations',
-        order: 1,
-        enabled: true,
-        icon: 'i-ph:tree-structure',
-        description: 'this is description for this row'
+        icon: 'i-ph:tree-structure'
       },
       {
         id: 3,
         path: 'users',
         component: 'pages/system/users/Index',
         name: 'users',
-        order: 2,
-        enabled: true,
-        icon: 'i-ph:user',
-        description: 'this is description for this row'
+        icon: 'i-ph:user'
       },
       {
         id: 4,
         path: 'privileges',
         component: 'pages/system/privileges/Index',
         name: 'privileges',
-        order: 3,
-        enabled: true,
-        icon: 'i-ph:lock-key',
-        description: 'this is description for this row'
+        icon: 'i-ph:lock-key'
       },
       {
         id: 5,
         path: 'roles',
         component: 'pages/system/roles/Index',
         name: 'roles',
-        order: 4,
-        enabled: true,
-        icon: 'i-ph:user-circle',
-        description: 'this is description for this row'
+        icon: 'i-ph:user-circle'
       },
       {
         id: 6,
         path: 'dictionaries',
         component: 'pages/system/dictionaries/Index',
         name: 'dictionaries',
-        order: 5,
-        enabled: true,
-        icon: 'i-ph:book',
-        description: 'this is description for this row'
+        icon: 'i-ph:book'
       }
     ]
   },
@@ -70,181 +190,60 @@ const datas: PrivilegeTreeNode[] = [
     id: 7,
     path: '/logs',
     component: '#',
-    redirect: '/logs/action',
+    redirect: '/logs/operations',
     name: 'logs',
-    order: 2,
-    enabled: true,
     icon: 'i-ph:files',
-    description: 'this is description for this row',
     children: [
       {
         id: 8,
-        path: 'action',
-        component: 'pages/logs/action/Index',
-        name: 'actionLog',
-        order: 1,
-        enabled: true,
-        icon: 'i-ph:clipboard-text',
-        description: 'this is description for this row'
+        path: 'operations',
+        component: 'pages/logs/operations/Index',
+        name: 'operationsLog',
+        icon: 'i-ph:clipboard-text'
       },
       {
         id: 9,
         path: 'access',
         component: 'pages/logs/access/Index',
         name: 'accessLog',
-        order: 2,
-        enabled: true,
-        icon: 'i-ph:file-text',
-        description: 'this is description for this row'
+        icon: 'i-ph:file-text'
       },
       {
         id: 10,
         path: 'audit',
         component: 'pages/logs/audit/Index',
         name: 'auditLog',
-        order: 3,
-        enabled: true,
-        icon: 'i-ph:file-lock',
-        description: 'this is description for this row'
+        icon: 'i-ph:file-lock'
       },
       {
         id: 11,
         path: 'scheduler',
         component: 'pages/logs/scheduler/Index',
         name: 'schedulerLog',
-        order: 4,
-        enabled: true,
-        icon: 'i-ph:file-cloud',
-        description: 'this is description for this row'
+        icon: 'i-ph:file-cloud'
       }
     ]
   }
 ]
 
-const dataArray: Privilege[] = [
-  {
-    id: 1,
-    path: '/system',
-    component: '#',
-    redirect: '/system/users',
-    name: 'system',
-    order: 1,
-    enabled: true,
-    icon: 'i-ph:gear',
-    description: 'this is description for this row'
-  },
-  {
-    id: 2,
-    path: 'organizations',
-    component: 'pages/system/organizations/Index',
-    name: 'organizations',
-    order: 1,
-    enabled: true,
-    icon: 'i-ph:tree-structure',
-    description: 'this is description for this row'
-  },
-  {
-    id: 3,
-    path: 'users',
-    component: 'pages/system/users/Index',
-    name: 'users',
-    order: 2,
-    enabled: true,
-    icon: 'i-ph:user',
-    description: 'this is description for this row'
-  },
-  {
-    id: 4,
-    path: 'privileges',
-    component: 'pages/system/privileges/Index',
-    name: 'privileges',
-    order: 3,
-    enabled: true,
-    icon: 'i-ph:lock-key',
-    description: 'this is description for this row'
-  },
-  {
-    id: 5,
-    path: 'roles',
-    component: 'pages/system/roles/Index',
-    name: 'roles',
-    order: 4,
-    enabled: true,
-    icon: 'i-ph:user-circle',
-    description: 'this is description for this row'
-  },
-  {
-    id: 6,
-    path: 'dictionaries',
-    component: 'pages/system/dictionaries/Index',
-    name: 'dictionaries',
-    order: 5,
-    enabled: true,
-    icon: 'i-ph:book',
-    description: 'this is description for this row'
-  },
-  {
-    id: 7,
-    path: '/logs',
-    component: '#',
-    redirect: '/log/action',
-    name: 'logs',
-    order: 2,
-    enabled: true,
-    icon: 'i-ph:files',
-    description: 'this is description for this row'
-  },
-  {
-    id: 8,
-    path: 'action',
-    component: 'pages/logs/action/Index',
-    name: 'actionLog',
-    order: 1,
-    enabled: true,
-    icon: 'i-ph:clipboard-text',
-    description: 'this is description for this row'
-  },
-  {
-    id: 9,
-    path: 'access',
-    component: 'pages/logs/access/Index',
-    name: 'accesslog',
-    order: 2,
-    enabled: true,
-    icon: 'i-ph:file-text',
-    description: 'this is description for this row'
-  },
-  {
-    id: 10,
-    path: 'audit',
-    component: 'pages/logs/audit/Index',
-    name: 'auditlog',
-    order: 3,
-    enabled: true,
-    icon: 'i-ph:file-lock',
-    description: 'this is description for this row'
-  },
-  {
-    id: 11,
-    path: 'scheduler',
-    component: 'pages/logs/scheduler/Index',
-    name: 'schedulerlog',
-    order: 4,
-    enabled: true,
-    icon: 'i-ph:file-cloud',
-    description: 'this is description for this row'
-  }
-]
-
 export const privilegesHandlers = [
+  http.get('/api/privileges/:username/tree', ({ params }) => {
+    const { username } = params
+    console.log("username: ", username)
+    return HttpResponse.json(treeNodes)
+  }),
+  http.get('/api/privileges/:id/subset', ({ params }) => {
+    const { id } = params
+    return HttpResponse.json(subDatas.filter(item => item.superiorId === Number(id)))
+  }),
   http.get('/api/privileges/:id', ({ params }) => {
     const { id } = params
     if (id) {
-      let res = dataArray.filter(item => item.id === Number(id))[0]
-      if (res) {
-        return HttpResponse.json(res)
+      let res = datas.filter(item => item.id === Number(id))[0]
+      if (!res) {
+        res = subDatas.filter(item => item.id === Number(id))[0]
       }
-      return HttpResponse.json(datas)
+      return HttpResponse.json(res)
     } else {
       return HttpResponse.json(null)
     }
@@ -267,7 +266,7 @@ export const privilegesHandlers = [
     const newData = await request.json() as PrivilegeTreeNode
 
     // Push the new Dictionary to the map of all Dictionarys.
-    datas.push(newData)
+    treeNodes.push(newData)
 
     // Don't forget to declare a semantic "201 Created"
     // response and send back the newly created Dictionary!
@@ -279,7 +278,7 @@ export const privilegesHandlers = [
     const { id } = params
 
     // Let's attempt to grab the Dictionary by its ID.
-    const deletedData = datas.filter(item => item.id === Number(id))
+    const deletedData = treeNodes.filter(item => item.id === Number(id))
 
     // Respond with a "404 Not Found" response if the given
     // Dictionary ID does not exist.
@@ -288,7 +287,7 @@ export const privilegesHandlers = [
     }
 
     // Delete the Dictionary from the "allDictionarys" map.
-    datas.pop()
+    treeNodes.pop()
 
     // Respond with a "200 OK" response and the deleted Dictionary.
     return HttpResponse.json(deletedData)

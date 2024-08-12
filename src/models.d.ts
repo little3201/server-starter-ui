@@ -26,21 +26,17 @@ export interface TreeNode {
 export interface Role {
   id?: number
   name: string
-  privilege: number | undefined
+  privileges: number | undefined
   enabled?: boolean
   description?: string
 }
 
 export interface PrivilegeTreeNode extends TreeNode {
   path: string
-  order: number
   component: string
   redirect?: string
   icon: string
-  hidden?: boolean
   actions?: string[]
-  enabled?: boolean
-  description?: string
   children?: PrivilegeTreeNode[]
 }
 
@@ -55,6 +51,8 @@ export interface Privilege {
   icon: string
   hidden?: boolean
   actions?: string[]
+  count: number
+  hasChildren?: boolean
   enabled?: boolean
   description?: string
 }
@@ -70,7 +68,7 @@ export interface Dictionary {
   children?: []
 }
 
-export interface ActionLog {
+export interface OperationLog {
   id?: number
   module: string
   method: string
@@ -100,7 +98,7 @@ export interface AccessLog {
 export interface AuditLog {
   id?: number
   operator: string
-  action: string
+  operation: string
   resource: string
   oldValue: string | null
   newValue: string | null

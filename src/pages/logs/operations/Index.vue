@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, onMounted, reactive } from 'vue'
 import { dayjs } from 'element-plus'
-import { retrieveActionLogs, fetchActionLog } from '~/api/action-logs'
+import { retrieveActionLogs, fetchActionLog } from '~/api/operations-logs'
 import type { ActionLog } from '~/models'
 
 
@@ -182,7 +182,7 @@ function confirmEvent(id: number) {
               {{ dayjs(scope.row.operateTime).format('YYYY-MM-DD HH:mm:ss') }}
             </template>
           </ElTableColumn>
-          <ElTableColumn :label="$t('action')" width="160">
+          <ElTableColumn :label="$t('actions')" width="160">
             <template #default="scope">
               <ElButton size="small" type="success" link @click="detailHandler(scope.row.id)">
                 <div class="i-ph:file-text" />{{ $t('detail') }}

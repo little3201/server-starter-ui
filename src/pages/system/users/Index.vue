@@ -2,7 +2,7 @@
 import { ref, reactive, onMounted, watch } from 'vue'
 import type { FormInstance, FormRules } from 'element-plus'
 import Dialog from 'components/Dialog.vue'
-import { retrieveDepartmentTree } from '~/api/organizations'
+import { retrieveOrganizationTree } from '~/api/organizations'
 import { retrieveUsers, fetchUser } from '~/api/users'
 import { retrieveRoles } from '~/api/roles'
 import type { TreeNode, User, Role } from '~/models'
@@ -62,7 +62,7 @@ const filterNode = (value: string, data: TreeNode) => {
  */
 function loadTree() {
   treeLoading.value = true
-  retrieveDepartmentTree().then(res => {
+  retrieveOrganizationTree().then(res => {
     organizationTree.value = res.data
     currentNodeKey.value =
       (res.data[0] && res.data[0]?.id) || ''
@@ -100,8 +100,8 @@ function pageChange(currentPage: number, pageSize: number) {
 /**
  * 加载组织树
  */
-function fetchDepartments() {
-  retrieveDepartmentTree().then(res => {
+function fetchOrganizations() {
+  retrieveOrganizationTree().then(res => {
     organizationsOptions.value = res.data
   })
 }
@@ -150,7 +150,7 @@ function reset() {
 
 onMounted(() => {
   loadTree()
-  fetchDepartments()
+  fetchOrganizations()
   fetchRoles()
 })
 
@@ -315,7 +315,7 @@ function confirmEvent(id: number) {
                   style="--el-switch-on-color: var(--el-color-success);" />
               </template>
             </ElTableColumn>
-            <ElTableColumn :label="$t('action')">
+            <ElTableColumn :label="$t('actions')">
               <template #default="scope">
                 <ElButton size="small" type="primary" link @click="saveOrUpdate(scope.row.id)">
                   <div class="i-ph:pencil-simple-line" />{{ $t('edit') }}

@@ -1,11 +1,14 @@
 <script setup lang="ts">
 import { ref, reactive, onMounted } from 'vue'
 import type { FormInstance, FormRules } from 'element-plus'
+import { useUserStore } from 'stores/modules/user'
 import Dialog from 'components/Dialog.vue'
 import { retrieveRoles, retrieveRolePrivileges, retrieveRoleDepartments, fetchRole } from '~/api/roles'
 import { retrievePrivilegeTree } from '~/api/privileges'
-import { retrieveDepartmentTree } from '~/api/organizations'
+import { retrieveOrganizationTree } from '~/api/organizations'
 import type { Role, TreeNode } from '~/models'
+
+const userStore = useUserStore()
 
 const loading = ref<boolean>(false)
 const datas = ref<Array<Role>>([])
@@ -33,7 +36,7 @@ const searchForm = ref({
 const formRef = ref<FormInstance>()
 const form = ref<Role>({
   name: '',
-  privilege: undefined,
+  privileges: undefined,
   description: ''
 })
 
@@ -50,7 +53,9 @@ const dataPrivilege = ref<number>(1)
  */
 function loadPrivilegeTree() {
   privilegeTreeLoading.value = true
-  retrievePrivilegeTree().then(res => {
+
+  const username = userStore.getUser?.username as string
+  retrievePrivilegeTree(username).then(res => {
     privilegeTree.value = res.data
   }).finally(() => privilegeTreeLoading.value = false)
 }
@@ -60,7 +65,7 @@ function loadPrivilegeTree() {
  */
 function loadDepartmentTree() {
   organizationTreeLoading.value = true
-  retrieveDepartmentTree().then(res => {
+  retrieveOrganizationTree().then(res => {
     organizationTree.value = res.data
   }).finally(() => organizationTreeLoading.value = false)
 }
@@ -253,7 +258,7 @@ function handleCurrentChange(row: Role | undefined) {
                 </template>
               </ElTableColumn>
               <ElTableColumn show-overflow-tooltip prop="description" :label="$t('description')" />
-              <ElTableColumn :label="$t('action')">
+              <ElTableColumn :label="$t('actions')">
                 <template #default="scope">
                   <ElButton size="small" type="primary" link @click="saveOrUpdate(scope.row.id)">
                     <div class="i-ph:pencil-simple-line" />{{ $t('edit') }}

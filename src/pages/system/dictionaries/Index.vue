@@ -175,7 +175,7 @@ function onSubmit() {
           </ElTableColumn>
           <ElTableColumn prop="order" :label="$t('order')" />
           <ElTableColumn show-overflow-tooltip prop="description" :label="$t('description')" />
-          <ElTableColumn :label="$t('action')">
+          <ElTableColumn :label="$t('actions')">
             <template #default="scope">
               <ElButton size="small" type="primary" link @click="saveOrUpdate(scope.row.id)">
                 <div class="i-ph:pencil-simple-line" />{{ $t('edit') }}

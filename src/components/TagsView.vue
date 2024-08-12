@@ -19,7 +19,7 @@ const { closeAll, closeLeft, closeRight, closeOther, closeCurrent, refreshPage }
 
 const permissionStore = usePermissionStore()
 
-const routers = computed(() => generateRoutes(permissionStore.getRouters))
+const routers = computed(() => generateRoutes(permissionStore.getPrivileges))
 
 const tagsViewStore = useTagsViewStore()
 

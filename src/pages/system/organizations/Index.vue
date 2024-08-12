@@ -3,7 +3,7 @@ import { ref, reactive, onMounted } from 'vue'
 import type { FormInstance, FormRules } from 'element-plus'
 import draggable from 'vuedraggable'
 import Dialog from 'components/Dialog.vue'
-import { retrieveDepartments, retrieveDepartmentSubset, fetchDepartment } from '~/api/organizations'
+import { retrieveOrganizations, retrieveOrganizationSubset, fetchOrganization } from '~/api/organizations'
 import type { Organization } from '~/models'
 
 
@@ -57,11 +57,11 @@ function pageChange(currentPage: number, pageSize: number) {
 function load(row?: Organization, treeNode?: unknown, resolve?: (data: Organization[]) => void) {
   loading.value = true
   if (row && row.id && resolve) {
-    retrieveDepartmentSubset(row.id).then(res => {
+    retrieveOrganizationSubset(row.id).then(res => {
       resolve(res.data)
     }).finally(() => loading.value = false)
   } else {
-    retrieveDepartments(pagination.page, pagination.size, searchForm.value).then(res => {
+    retrieveOrganizations(pagination.page, pagination.size, searchForm.value).then(res => {
       datas.value = res.data.content
       pagination.total = res.data.totalElements
     }).finally(() => loading.value = false)
@@ -98,7 +98,7 @@ function saveOrUpdate(id?: number) {
  * @param id 主键
  */
 function loadOne(id: number) {
-  fetchDepartment(id).then(res => {
+  fetchOrganization(id).then(res => {
     form.value = res.data
   })
 }
@@ -249,7 +249,7 @@ function handleCheckedChange(value: string[]) {
             </template>
           </ElTableColumn>
           <ElTableColumn show-overflow-tooltip prop="description" :label="$t('description')" />
-          <ElTableColumn :label="$t('action')">
+          <ElTableColumn :label="$t('actions')">
             <template #default="scope">
               <ElButton size="small" type="primary" link @click="saveOrUpdate(scope.row.id)">
                 <div class="i-ph:pencil-simple-line" />{{ $t('edit') }}
