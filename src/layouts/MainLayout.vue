@@ -34,16 +34,16 @@ function signOut() {
           <LanguageSelector />
           <ElDropdown trigger="click">
             <ElSpace>
-              <ElAvatar :size="28" src="#" />
+              <ElAvatar :size="28" :src="userStore.user?.avatar" />
               <span class="text-white">{{ userStore.user?.username }}</span>
             </ElSpace>
             <template #dropdown>
               <ElDropdownMenu>
                 <ElDropdownItem>
-                  {{ $t('profile') }}
+                  <div class="i-ph:user-gear mr-2 " />{{ $t('profile') }}
                 </ElDropdownItem>
                 <ElDropdownItem divided @click="signOut">
-                  {{ $t('signout') }}
+                  <div class="i-ph:sign-out mr-2 " />{{ $t('signout') }}
                 </ElDropdownItem>
               </ElDropdownMenu>
             </template>

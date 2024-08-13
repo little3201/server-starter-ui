@@ -3,7 +3,7 @@ import { computed, ref, unref, watch, onMounted, onBeforeUnmount, onActivated } 
 import { debounce } from 'lodash-es'
 import echarts from '~/boot/echarts'
 import type { EChartsOption } from 'echarts'
-import { useAppStore } from 'stores/app'
+import { useAppStore } from 'stores/app-store'
 import { isString } from '~/utils'
 
 
