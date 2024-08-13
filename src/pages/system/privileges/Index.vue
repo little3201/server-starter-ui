@@ -2,11 +2,11 @@
 import { ref, reactive, onMounted, computed } from 'vue'
 import type { FormInstance, FormRules } from 'element-plus'
 import Dialog from 'components/Dialog.vue'
-import { retrievePrivileges, fetchPrivilege } from '~/api/privileges'
-import type { Privilege, PrivilegeTreeNode } from '~/models'
+import { retrievePrivileges, retrievePrivilegesSubset, fetchPrivilege } from '~/api/privileges'
+import type { Privilege } from '~/models'
 
 const loading = ref<boolean>(false)
-const datas = ref<Array<PrivilegeTreeNode>>([])
+const datas = ref<Array<Privilege>>([])
 const pagination = reactive({
   page: 1,
   size: 10,
@@ -55,6 +55,7 @@ const form = ref<Privilege>({
   component: '',
   redirect: '',
   icon: '',
+  count: 0,
   actions: [],
   description: ''
 })
@@ -82,12 +83,25 @@ function pageChange(currentPage: number, pageSize: number) {
 /**
  * 加载列表
  */
-function load() {
+function load(
+  row?: Privilege,
+  treeNode?: unknown,
+  resolve?: (date: Privilege[]) => void) {
   loading.value = true
-  retrievePrivileges(pagination.page, pagination.size, searchForm.value).then(res => {
-    datas.value = res.data.content
-    pagination.total = res.data.totalElements
-  }).finally(() => loading.value = false)
+  if (row && row.id && resolve) {
+    retrievePrivilegesSubset(row.id).then(res => {
+      resolve(res.data)
+    }).finally(() => loading.value = false)
+  } else {
+    retrievePrivileges(pagination.page, pagination.size, searchForm.value).then(res => {
+      let list = res.data.content
+      list.forEach((element: Privilege) => {
+        element.hasChildren = element.count > 0
+      })
+      datas.value = list
+      pagination.total = res.data.totalElements
+    }).finally(() => loading.value = false)
+  }
 }
 
 /**
@@ -144,6 +158,15 @@ function onSubmit() {
   })
 }
 
+/**
+ * expand 回调
+ * @param row 数据行
+ * @param expanded 是否展开
+ */
+function expandChange(row: Privilege, expanded: boolean) {
+  console.log("row: ", row)
+  console.log("expanded: ", expanded)
+}
 </script>
 
 <template>
@@ -200,7 +223,8 @@ function onSubmit() {
           </ElCol>
         </ElRow>
 
-        <ElTable v-loading="loading" :data="datas" lazy :load="load" row-key="id" stripe table-layout="auto">
+        <ElTable v-loading="loading" :data="datas" lazy :load="load" row-key="id" stripe table-layout="auto"
+          @expand-change="expandChange">
           <ElTableColumn type="selection" width="55" />
           <ElTableColumn prop="name" :label="$t('name')" class-name="name-cell">
             <template #default="scope">
@@ -218,7 +242,7 @@ function onSubmit() {
             </template>
           </ElTableColumn>
           <ElTableColumn show-overflow-tooltip prop="description" :label="$t('description')" />
-          <ElTableColumn :label="$t('action')">
+          <ElTableColumn :label="$t('actions')">
             <template #default="scope">
               <ElButton size="small" type="primary" link @click="saveOrUpdate(scope.row.id)">
                 <div class="i-ph:pencil-simple-line" />{{ $t('edit') }}
@@ -231,7 +255,7 @@ function onSubmit() {
       </ElCard>
     </ElSpace>
 
-    <Dialog v-model="dialogVisible" :title="$t('privilege')" width="36%">
+    <Dialog v-model="dialogVisible" :title="$t('privileges')" width="36%">
       <ElForm ref="formRef" :model="form" :rules="rules" label-position="top">
         <ElRow :gutter="20" class="w-full !mx-0">
           <ElCol :span="12">

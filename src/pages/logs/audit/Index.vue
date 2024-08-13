@@ -21,7 +21,7 @@ const searchForm = ref({
 const detailLoading = ref<boolean>(false)
 const detail = ref<AuditLog>({
   id: undefined,
-  action: "",
+  operation: "",
   operator: "",
   resource: "",
   oldValue: "",
@@ -142,7 +142,7 @@ function detailHandler(id: number) {
 
         <ElTable :data="datas" lazy :load="load" row-key="id" stripe table-layout="auto" >
           <ElTableColumn type="index" :label="$t('no')" width="55" />
-          <ElTableColumn prop="action" :label="$t('action')" />
+          <ElTableColumn prop="operation" :label="$t('operation')" />
           <ElTableColumn prop="resource" :label="$t('resource')" />
           <ElTableColumn show-overflow-tooltip prop="oldValue" :label="$t('oldValue')" />
           <ElTableColumn show-overflow-tooltip prop="newValue" :label="$t('newValue')" />
@@ -159,7 +159,7 @@ function detailHandler(id: number) {
               {{ dayjs(scope.row.actionTime).format('YYYY-MM-DD HH:mm:ss') }}
             </template>
           </ElTableColumn>
-          <ElTableColumn :label="$t('action')">
+          <ElTableColumn :label="$t('operation')">
             <template #default="scope">
               <ElButton size="small" type="success" link @click="detailHandler(scope.row.id)">
                 <div class="i-ph:file-text" />{{ $t('detail') }}
@@ -174,7 +174,7 @@ function detailHandler(id: number) {
 
     <Dialog v-model="dialogVisible" :title="$t('detail')">
       <ElDescriptions v-loading="detailLoading">
-        <ElDescriptionsItem :label="$t('action')">{{ detail.action }}</ElDescriptionsItem>
+        <ElDescriptionsItem :label="$t('operation')">{{ detail.operation }}</ElDescriptionsItem>
         <ElDescriptionsItem :label="$t('resource')">{{ detail.resource }}</ElDescriptionsItem>
         <ElDescriptionsItem :label="$t('oldValue')">{{ detail.oldValue }}</ElDescriptionsItem>
         <ElDescriptionsItem :label="$t('ip')">{{ detail.ip }}</ElDescriptionsItem>

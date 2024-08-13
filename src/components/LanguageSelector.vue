@@ -2,14 +2,14 @@
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { localeMap } from '~/boot/i18n'
-import { useLocaleStore } from 'stores/modules/locale'
+import { useLocaleStore } from '~/stores/locale-store'
 
 // 多语言相关
 
 const { locale } = useI18n()
 const localStore = useLocaleStore()
 
-const currentLang = computed(() => localStore.getLang)
+const currentLang = computed(() => localStore.lang)
 
 const setHtmlPageLang = (locale: string = 'zh-CN') => {
   const htmlElement = document.querySelector('html');
@@ -23,7 +23,7 @@ const setLang = (lang: string) => {
   if (lang === currentLang.value) return
   locale.value = lang
   // 设置lang
-  localStore.setLang(lang)
+  localStore.changeLang(lang)
   // 修改html中lang
   setHtmlPageLang(lang)
 }

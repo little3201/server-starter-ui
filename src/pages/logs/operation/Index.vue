@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { ref, onMounted, reactive } from 'vue'
 import { dayjs } from 'element-plus'
-import { retrieveActionLogs, fetchActionLog } from '~/api/action-logs'
-import type { ActionLog } from '~/models'
+import { retrieveOperationLogs, fetchOperationLog } from '~/api/operation-logs'
+import type { OperationLog } from '~/models'
 
 
 const pagination = reactive({
@@ -12,7 +12,7 @@ const pagination = reactive({
 })
 
 const loading = ref<boolean>(false)
-const datas = ref<Array<ActionLog>>([])
+const datas = ref<Array<OperationLog>>([])
 
 const searchForm = ref({
   module: null,
@@ -20,7 +20,7 @@ const searchForm = ref({
 })
 
 const detailLoading = ref<boolean>(false)
-const detail = ref<ActionLog>({
+const detail = ref<OperationLog>({
   id: undefined,
   module: "",
   operator: "",
@@ -48,7 +48,7 @@ function pageChange(currentPage: number, pageSize: number) {
  * 加载列表
  */
 function load() {
-  retrieveActionLogs(pagination.page, pagination.size).then(res => {
+  retrieveOperationLogs(pagination.page, pagination.size).then(res => {
     datas.value = res.data.content
     pagination.total = res.data.totalElements
   }).finally(() => loading.value = false)
@@ -60,7 +60,7 @@ function load() {
  */
 function loadOne(id: number) {
   detailLoading.value = true
-  fetchActionLog(id).then(res => {
+  fetchOperationLog(id).then(res => {
     detail.value = res.data
   }).finally(() => detailLoading.value = false)
 }
@@ -161,7 +161,7 @@ function confirmEvent(id: number) {
           </ElCol>
         </ElRow>
 
-        <ElTable :data="datas" lazy :load="load" row-key="id" stripe table-layout="auto" >
+        <ElTable :data="datas" lazy :load="load" row-key="id" stripe table-layout="auto">
           <ElTableColumn type="selection" width="55" />
           <ElTableColumn type="index" :label="$t('no')" width="55" />
           <ElTableColumn prop="module" :label="$t('module')" />
@@ -182,7 +182,7 @@ function confirmEvent(id: number) {
               {{ dayjs(scope.row.operateTime).format('YYYY-MM-DD HH:mm:ss') }}
             </template>
           </ElTableColumn>
-          <ElTableColumn :label="$t('action')" width="160">
+          <ElTableColumn :label="$t('actions')" width="160">
             <template #default="scope">
               <ElButton size="small" type="success" link @click="detailHandler(scope.row.id)">
                 <div class="i-ph:file-text" />{{ $t('detail') }}

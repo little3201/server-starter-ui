@@ -6,7 +6,7 @@ export const commonHandlers = [
 
     const username = info.get('username')
 
-    return HttpResponse.json({ user: { username: username, avatar: '' }, access_token: "eyJhsdf3SFgasd4asdf" }, {
+    return HttpResponse.json({ user: { username: username, avatar: '/vite.svg' }, access_token: "eyJhsdf3SFgasd4asdf" }, {
       headers: {
         'Set-Cookie': 'logged_in=yes'
       }

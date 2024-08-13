@@ -5,7 +5,7 @@ const datas: AuditLog[] = [
   {
     id: 1,
     operator: "admin",
-    action: "Create",
+    operation: "Create",
     resource: "User",
     oldValue: null,
     newValue: "{\"operator\:\"john\", \"role\:\"admin\"}",
@@ -17,7 +17,7 @@ const datas: AuditLog[] = [
   {
     id: 2,
     operator: "john",
-    action: "Update",
+    operation: "Update",
     resource: "Profile",
     oldValue: "{\"email\:\"old@example.com\"}",
     newValue: "{\"email\:\"john@example.com\"}",
@@ -29,7 +29,7 @@ const datas: AuditLog[] = [
   {
     id: 3,
     operator: "alice",
-    action: "Delete",
+    operation: "Delete",
     resource: "Post",
     oldValue: "{\"post_id\:123, \"content\:\"Hello World\"}",
     newValue: null,
@@ -41,7 +41,7 @@ const datas: AuditLog[] = [
   {
     id: 4,
     operator: "bob",
-    action: "Upload",
+    operation: "Upload",
     resource: "File",
     oldValue: null,
     newValue: "{\"file_name\:\"report.pdf\"}",
@@ -53,7 +53,7 @@ const datas: AuditLog[] = [
   {
     id: 5,
     operator: "carol",
-    action: "Login",
+    operation: "Login",
     resource: "Session",
     oldValue: null,
     newValue: "{\"status\:\"active\"}",
@@ -65,7 +65,7 @@ const datas: AuditLog[] = [
   {
     id: 6,
     operator: "dave",
-    action: "Logout",
+    operation: "Logout",
     resource: "Session",
     oldValue: "{\"status\:\"active\"}",
     newValue: "{\"status\:\"inactive\"}",
@@ -77,7 +77,7 @@ const datas: AuditLog[] = [
   {
     id: 7,
     operator: "admin",
-    action: "Change Password",
+    operation: "Change Password",
     resource: "User",
     oldValue: "{\"id\:2, \"password\:\"old\"}",
     newValue: "{\"id\:2, \"password\:\"new\"}",
@@ -89,7 +89,7 @@ const datas: AuditLog[] = [
   {
     id: 8,
     operator: "john",
-    action: "View",
+    operation: "View",
     resource: "Report",
     oldValue: null,
     newValue: "{\"report_id\:45}",
@@ -101,7 +101,7 @@ const datas: AuditLog[] = [
   {
     id: 9,
     operator: "alice",
-    action: "Download",
+    operation: "Download",
     resource: "File",
     oldValue: null,
     newValue: "{\"file_id\:789}",
@@ -113,7 +113,7 @@ const datas: AuditLog[] = [
   {
     id: 10,
     operator: "bob",
-    action: "Update",
+    operation: "Update",
     resource: "Settings",
     oldValue: "{\"theme\:\"light\"}",
     newValue: "{\"theme\:\"dark\"}",
@@ -125,7 +125,7 @@ const datas: AuditLog[] = [
   {
     id: 11,
     operator: "bob",
-    action: "Update",
+    operation: "Update",
     resource: "Settings",
     oldValue: "{\"theme\:\"light\"}",
     newValue: "{\"theme\:\"dark\"}",
@@ -135,7 +135,6 @@ const datas: AuditLog[] = [
     actionTime: "2024-07-01T00:00:00"
   }
 ]
-
 
 
 export const auditLogsHandlers = [

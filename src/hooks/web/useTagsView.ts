@@ -1,4 +1,4 @@
-import { useTagsViewStore } from 'stores/modules/tagsView'
+import { useTagsViewStore } from '~/stores/tagsView'
 import { RouteLocationNormalizedLoaded, useRouter } from 'vue-router'
 import { computed, nextTick, unref } from 'vue'
 

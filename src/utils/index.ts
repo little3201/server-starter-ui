@@ -44,3 +44,9 @@ export const isUrl = (path: string): boolean => {
     /(((^https?:(?:\/\/)?)(?:[-:&=\+\$,\w]+@)?[A-Za-z0-9.-]+(?::\d+)?|(?:www.|[-:&=\+\$,\w]+@)[A-Za-z0-9.-]+)((?:\/[\+~%\/.\w-_]*)?\??(?:[-\+=&%@.\w_]*)#?(?:[\w]*))?)$/
   return reg.test(path)
 }
+
+export const pathResolve = (parentPath: string, path: string) => {
+  if (!path) return ''
+  const childPath = path.startsWith('/') ? path : `/${path}`
+  return `${parentPath}${childPath}`.replace(/\/\//g, '/').trim()
+}
