@@ -18,29 +18,25 @@ export const useUserStore = defineStore('user', {
   }),
   actions: {
     async logout() {
-      await api.post('/logout').then(() => {
-        document.cookie = `logged_in=; max-age=0;`
-        this.$reset()
-      })
+      await api.post('/logout')
+      document.cookie = `logged_in=; max-age=0;`
+      this.$reset()
     },
 
     /**
      * Attempt to login a user
      */
     async login(username: string, password: string) {
-      await api.post('/login', new URLSearchParams({ username, password }))
-        .then(res => {
-          this.$patch({
-            user: res.data.user,
-            access_token: res.data.access_token
-          })
-          // privileges
-          retrievePrivilegeTree(username).then(response => {
-            this.$patch({
-              privileges: response.data
-            })
-          })
-        })
+      const res = await api.post('/login', new URLSearchParams({ username, password }))
+      this.$patch({
+        user: res.data.user,
+        access_token: res.data.access_token
+      })
+      // privileges
+      const response = await retrievePrivilegeTree(username)
+      this.$patch({
+        privileges: response.data
+      })
     },
 
     updateRoutes(routes: RouteRecordRaw[]) {

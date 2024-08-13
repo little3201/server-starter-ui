@@ -62,7 +62,10 @@ function signIn(username: string, password: string) {
   loading.value = true
   userStore.login(username, password).then(() => {
     // 生成路由
-    generateRoutes(userStore.privileges).forEach((route) => {
+    const routes = generateRoutes(userStore.privileges)
+    userStore.updateRoutes(routes)
+
+    routes.forEach((route) => {
       router.addRoute(route)
     })
     const redirect = router.currentRoute.value.query.redirect as string

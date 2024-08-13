@@ -5,15 +5,13 @@ import ProgressBar from "@badrap/bar-of-progress"
 import { useUserStore } from '~/stores/user-store'
 import type { PrivilegeTreeNode } from '~/models'
 
+const progress = new ProgressBar({ color: '#1677ff' })
+
 const router = createRouter({
   history: createWebHistory(),
   routes: constantRouterMap as RouteRecordRaw[],
   scrollBehavior: () => ({ left: 0, top: 0 })
 })
-
-const NO_REDIRECT_WHITE_LIST: string[] = ['/login']
-
-const progress = new ProgressBar({ color: '#1677ff' })
 
 router.beforeEach(async (to, from, next) => {
   progress.start()
@@ -25,8 +23,8 @@ router.beforeEach(async (to, from, next) => {
       next({ path: '/' })
     } else {
       // 获取权限，注册路由表
-      if (to.path !== '/' && !userStore.routes.length) {
-        const routes = generateRoutes(userStore.privileges)
+      if (!userStore.routes.length) {
+        const routes = generateRoutes(userStore.privileges as PrivilegeTreeNode[])
 
         // 动态添加可访问路由表
         userStore.updateRoutes(routes)
@@ -49,7 +47,7 @@ router.beforeEach(async (to, from, next) => {
       }
     }
   } else {
-    if (NO_REDIRECT_WHITE_LIST.indexOf(to.path) !== -1) {
+    if (to.path == '/login') {
       next()
     } else {
       // 重定向到登录页
@@ -80,7 +78,7 @@ export const generateRoutes = (routes: PrivilegeTreeNode[]): RouteRecordRaw[] =>
       children: []
     }
     if (route.component) {
-      const comModule = modules[`../${route.component}.vue`] || modules[`../${route.component}.tsx`]
+      const comModule = modules[`../${route.component}.vue`]
       const component = route.component as string
       if (comModule) {
         // 动态加载路由文件
