@@ -42,7 +42,7 @@ export default {
   dictionaries: 'Dictionaries',
   profile: 'Profile',
   logs: 'Logs',
-  operationsLog: 'Operations Log',
+  operationLog: 'Operation Log',
   accessLog: 'Access Log',
   auditLog: 'Audit Log',
   schedulerLog: 'Scheduler Log',

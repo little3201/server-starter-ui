@@ -41,7 +41,7 @@ export default {
   dictionaries: '字典',
   profile: '个人中心',
   logs: '日志记录',
-  operationsLog: '操作日志',
+  operationLog: '操作日志',
   accessLog: '访问日志',
   auditLog: '审计日志',
   schedulerLog: '调度日志',
