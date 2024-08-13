@@ -6,13 +6,9 @@ import { useI18n } from 'vue-i18n'
 import { ElFormItem, type FormInstance, type FormRules } from 'element-plus'
 import ThemeToogle from 'components/ThemeToogle.vue'
 import LanguageSelector from 'components/LanguageSelector.vue'
-import { useAppStore } from 'stores/modules/app'
-import { useUserStore } from 'stores/modules/user'
-import { usePermissionStore } from 'stores/modules/permission'
-import { api } from '~/boot/axios'
-import { retrievePrivilegeTree } from '~/api/privileges'
-import { PrivilegeTreeNode } from '~/models'
-import { generateRoutes } from '~/utils/routerHelper'
+import { useAppStore } from '~/stores/app-store'
+import { useUserStore } from '~/stores/user-store'
+import { generateRoutes } from '~/router'
 
 
 const { t } = useI18n()
@@ -20,7 +16,6 @@ const router = useRouter()
 
 const appStore = useAppStore()
 const userStore = useUserStore()
-const permissionStore = usePermissionStore()
 
 const lottieRef = ref<HTMLDivElement>()
 
@@ -55,7 +50,7 @@ function onSubmit(formEl: FormInstance | undefined) {
   formEl.validate((valid, fields) => {
     if (valid) {
       loading.value = true
-      signIn(form)
+      signIn(form.username, form.password)
     } else {
       console.log('error submit!', fields)
     }
@@ -63,37 +58,16 @@ function onSubmit(formEl: FormInstance | undefined) {
 }
 
 // 登录
-function signIn(formData: { username: string, password: string }) {
+function signIn(username: string, password: string) {
   loading.value = true
-
-  api.post('/login', new URLSearchParams(formData)).then(res => {
-    userStore.setUser(res.data.user)
-    userStore.setRole(res.data.user.role)
-    userStore.setRememberMe(form.rememberMe)
-
-    // set token
-    userStore.setAccessToken(res.data.access_token)
-    api.defaults.headers.common['Authorization'] = 'Bearer ' + res.data.access_token;
-
-    // privileges
-    fetchPrivileges(formData.username)
-  }).finally(() => loading.value = false)
-}
-
-// 获取权限
-async function fetchPrivileges(username: string) {
-  const res = await retrievePrivilegeTree(username)
-  if (res.data) {
-    const nodes: PrivilegeTreeNode[] = res.data || []
+  userStore.login(username, password).then(() => {
     // 生成路由
-    permissionStore.setPrivileges(nodes)
-    
-    generateRoutes(nodes).forEach((route) => {
+    generateRoutes(userStore.privileges).forEach((route) => {
       router.addRoute(route)
     })
     const redirect = router.currentRoute.value.query.redirect as string
     router.replace(redirect || '/')
-  }
+  }).finally(() => loading.value = false)
 }
 
 function show() {

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import { useAppStore } from 'stores/modules/app'
+import { useAppStore } from 'stores/app'
 import { Sunny, Moon } from '@element-plus/icons-vue'
 
 const appStore = useAppStore()

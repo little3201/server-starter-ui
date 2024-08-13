@@ -7,7 +7,7 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import ConfigGlobal from 'components/ConfigGlobal.vue'
-import { useAppStore } from 'stores/modules/app'
+import { useAppStore } from '~/stores/app-store'
 
 const appStore = useAppStore()
 

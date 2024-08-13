@@ -1,12 +1,10 @@
 import axios, { AxiosError, AxiosInstance, InternalAxiosRequestConfig, AxiosResponse } from 'axios'
 import { ElMessage } from 'element-plus'
 
-const PATH_URL = import.meta.env.VITE_API_BASE_PATH
-
 const abortControllerMap: Map<string, AbortController> = new Map()
 
 const api: AxiosInstance = axios.create({
-  baseURL: PATH_URL,
+  baseURL: import.meta.env.VITE_API_BASE_API,
   timeout: 10000
 })
 
@@ -23,7 +21,10 @@ api.interceptors.response.use(
   (res: AxiosResponse) => {
     const url = res.config.url || ''
     abortControllerMap.delete(url)
-    // 这里不能做任何处理，否则后面的 interceptors 拿不到完整的上下文了
+    // 设置token
+    if (res.data && res.data.access_token) {
+      api.defaults.headers.common['Authorization'] = 'Bearer ' + res.data.access_token
+    }
     return res
   },
   (error: AxiosError) => {

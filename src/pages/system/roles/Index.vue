@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, reactive, onMounted } from 'vue'
 import type { FormInstance, FormRules } from 'element-plus'
-import { useUserStore } from 'stores/modules/user'
+import { useUserStore } from '~/stores/user-store'
 import Dialog from 'components/Dialog.vue'
 import { retrieveRoles, retrieveRolePrivileges, retrieveRoleDepartments, fetchRole } from '~/api/roles'
 import { retrievePrivilegeTree } from '~/api/privileges'

@@ -2,7 +2,7 @@
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { localeMap } from '~/boot/i18n'
-import { useLocaleStore } from 'stores/modules/locale'
+import { useLocaleStore } from '~/stores/locale-store'
 
 // 多语言相关
 

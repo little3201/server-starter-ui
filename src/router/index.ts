@@ -2,10 +2,8 @@ import { createRouter, createWebHistory } from 'vue-router'
 import type { RouteRecordRaw } from 'vue-router'
 import { constantRouterMap } from './routes'
 import ProgressBar from "@badrap/bar-of-progress"
-import { useUserStore } from 'stores/modules/user'
-import { usePermissionStore } from 'stores/modules/permission'
-
-import { generateRoutes } from '~/utils/routerHelper'
+import { useUserStore } from '~/stores/user-store'
+import type { PrivilegeTreeNode } from '~/models'
 
 const router = createRouter({
   history: createWebHistory(),
@@ -21,19 +19,17 @@ router.beforeEach(async (to, from, next) => {
   progress.start()
   const userStore = useUserStore()
   // 判断是否登录
-  const access_token = userStore.getAccessToken
+  const access_token = userStore.access_token
   if (access_token && access_token.length > 0) {
     if (to.path === '/login') {
       next({ path: '/' })
     } else {
-      const permissionStore = usePermissionStore()
       // 获取权限，注册路由表
-      if (!permissionStore.getRouters.length) {
-        const nodes = permissionStore.getPrivileges
-        const routers = generateRoutes(nodes)
+      if (to.path !== '/' && !userStore.routers.length) {
+        const routers = generateRoutes(userStore.privileges)
 
         // 动态添加可访问路由表
-        permissionStore.setRouters(routers)
+        userStore.updateRouters(routers)
         routers.forEach((route) => {
           router.addRoute(route as RouteRecordRaw)
         })
@@ -56,7 +52,8 @@ router.beforeEach(async (to, from, next) => {
     if (NO_REDIRECT_WHITE_LIST.indexOf(to.path) !== -1) {
       next()
     } else {
-      next(`/login?redirect=${to.path}`) // 重定向到登录页
+      // 重定向到登录页
+      next(`/login?redirect=${to.path}`)
     }
   }
 })
@@ -64,5 +61,41 @@ router.beforeEach(async (to, from, next) => {
 router.afterEach((to) => {
   progress.finish()
 })
+
+
+// 生成路由
+const MainLayout = () => import('~/layouts/MainLayout.vue')
+const BlankLayout = () => import('~/layouts/BlankLayout.vue')
+
+const modules = import.meta.glob('../pages/**/*.{vue,tsx}')
+
+export const generateRoutes = (routes: PrivilegeTreeNode[]): RouteRecordRaw[] => {
+  const res: RouteRecordRaw[] = []
+  for (const route of routes) {
+    const data: RouteRecordRaw = {
+      path: route.path,
+      name: route.name,
+      redirect: route.redirect,
+      component: null,
+      children: []
+    }
+    if (route.component) {
+      const comModule = modules[`../${route.component}.vue`] || modules[`../${route.component}.tsx`]
+      const component = route.component as string
+      if (comModule) {
+        // 动态加载路由文件
+        data.component = comModule
+      } else if (component.includes('#')) {
+        data.component = component === '#' ? MainLayout : BlankLayout
+      }
+    }
+    // recursive child routes
+    if (route.children) {
+      data.children = generateRoutes(route.children)
+    }
+    res.push(data)
+  }
+  return res
+}
 
 export default router

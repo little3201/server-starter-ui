@@ -1,0 +1,53 @@
+import { defineStore } from 'pinia'
+import { api } from '~/boot/axios'
+import { retrievePrivilegeTree } from '~/api/privileges'
+import type { Privilege } from '~/models'
+import type { RouteRecordRaw } from 'vue-router'
+
+interface User {
+  username: string
+  avatar: string
+}
+
+export const useUserStore = defineStore('user', {
+  state: () => ({
+    user: null as User | null,
+    access_token: null as string | null,
+    privileges: [] as Privilege[],
+    routers: [] as RouteRecordRaw[]
+  }),
+  actions: {
+    async logout() {
+      await api.post('/logout').then(() => {
+        document.cookie = `logged_in=; max-age=0;`
+        this.$reset()
+      })
+    },
+
+    /**
+     * Attempt to login a user
+     */
+    async login(username: string, password: string) {
+      await api.post('/login', new URLSearchParams({ username, password }))
+        .then(res => {
+          this.$patch({
+            user: res.data.user,
+            access_token: res.data.access_token
+          })
+          // privileges
+          retrievePrivilegeTree(username).then(response => {
+            this.$patch({
+              privileges: response.data
+            })
+          })
+        })
+    },
+
+    updateRouters(routers: RouteRecordRaw[]) {
+      this.routers = routers
+    }
+  },
+  persist: {
+    paths: ['user', 'access_token', 'privileges']
+  }
+})

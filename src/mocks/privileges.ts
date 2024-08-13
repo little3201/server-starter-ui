@@ -19,7 +19,7 @@ const datas: Privilege[] = [
     id: 7,
     path: '/logs',
     component: '#',
-    redirect: '/logs/operations',
+    redirect: '/logs/operation',
     name: 'logs',
     order: 2,
     icon: 'i-ph:files',
@@ -93,8 +93,8 @@ const subDatas: Privilege[] = [
   {
     id: 8,
     superiorId: 7,
-    path: 'operations',
-    component: 'pages/logs/operations/Index',
+    path: 'operation',
+    component: 'pages/logs/operation/Index',
     name: 'actionLog',
     order: 1,
     count: 0,
@@ -190,15 +190,15 @@ const treeNodes: PrivilegeTreeNode[] = [
     id: 7,
     path: '/logs',
     component: '#',
-    redirect: '/logs/operations',
+    redirect: '/logs/',
     name: 'logs',
     icon: 'i-ph:files',
     children: [
       {
         id: 8,
-        path: 'operations',
-        component: 'pages/logs/operations/Index',
-        name: 'operationsLog',
+        path: 'operation',
+        component: 'pages/logs/operation/Index',
+        name: 'operationLog',
         icon: 'i-ph:clipboard-text'
       },
       {

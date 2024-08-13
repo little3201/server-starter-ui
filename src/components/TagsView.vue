@@ -5,11 +5,12 @@ import type { RouteLocationNormalizedLoaded, RouterLinkProps, RouteRecordRaw } f
 import { cloneDeep } from 'lodash-es'
 import { useTemplateRefsList } from '@vueuse/core'
 import { ElScrollbar } from 'element-plus'
-import { usePermissionStore } from 'stores/modules/permission'
-import { useTagsViewStore } from 'stores/modules/tagsView'
+import { useUserStore } from '~/stores/user-store'
+import { useTagsViewStore } from '~/stores/tags-store'
 import { useScrollTo } from '~/hooks/event/useScrollTo'
 import { useTagsView } from '~/hooks/web/useTagsView'
-import { pathResolve, generateRoutes } from '~/utils/routerHelper'
+import { pathResolve } from '~/utils'
+import { generateRoutes } from '~/router'
 import ContextMenu from 'components/ContextMenu.vue'
 
 
@@ -17,9 +18,10 @@ const { currentRoute, push } = useRouter()
 
 const { closeAll, closeLeft, closeRight, closeOther, closeCurrent, refreshPage } = useTagsView()
 
-const permissionStore = usePermissionStore()
+const userStore = useUserStore()
 
-const routers = computed(() => generateRoutes(permissionStore.getPrivileges))
+const routers = computed(() => generateRoutes(userStore.privileges))
+const tagsView: RouteRecordRaw[] = []
 
 const tagsViewStore = useTagsViewStore()
 
@@ -88,14 +90,14 @@ const toLastView = () => {
     push(latestView)
   } else {
     if (
-      unref(currentRoute).path === permissionStore.getMenuTabRouters[0].path ||
-      unref(currentRoute).path === permissionStore.getMenuTabRouters[0].redirect
+      unref(currentRoute).path === tagsView[0].path ||
+      unref(currentRoute).path === tagsView[0].redirect
     ) {
       addTags()
       return
     }
     // You can set another route
-    push(permissionStore.getMenuTabRouters[0].path)
+    push(tagsView[0].path)
   }
 }
 

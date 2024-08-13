@@ -1,29 +1,22 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { useRouter } from 'vue-router'
-import { useAppStore } from 'stores/modules/app'
-import { useUserStore } from 'stores/modules/user'
-import { usePermissionStore } from 'stores/modules/permission'
+import { useAppStore } from '~/stores/app-store'
+import { useUserStore } from '~/stores/user-store'
 
 import ThemeToogle from 'components/ThemeToogle.vue'
 import LanguageSelector from 'components/LanguageSelector.vue'
 import ItemList from 'components/ItemList.vue'
 
-import { api } from '~/boot/axios'
-
-const { currentRoute } = useRouter()
+const { currentRoute, replace } = useRouter()
 
 const appStore = useAppStore()
 const userStore = useUserStore()
-const permissionStore = usePermissionStore()
 
-const privileges = computed(() => permissionStore.getPrivileges)
+const privileges = computed(() => userStore.privileges)
 
 function signOut() {
-  api.post("/logout").then(() => {
-    userStore.clear()
-    permissionStore.clear()
-  });
+  userStore.logout().then(() => replace('/login'))
 }
 </script>
 
@@ -42,7 +35,7 @@ function signOut() {
           <ElDropdown trigger="click">
             <ElSpace>
               <ElAvatar :size="28" src="#" />
-              <span class="text-white">{{ userStore.getUser?.username }}</span>
+              <span class="text-white">{{ userStore.user?.username }}</span>
             </ElSpace>
             <template #dropdown>
               <ElDropdownMenu>
