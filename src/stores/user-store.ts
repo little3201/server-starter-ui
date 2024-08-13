@@ -14,7 +14,7 @@ export const useUserStore = defineStore('user', {
     user: null as User | null,
     access_token: null as string | null,
     privileges: [] as Privilege[],
-    routers: [] as RouteRecordRaw[]
+    routes: [] as RouteRecordRaw[]
   }),
   actions: {
     async logout() {
@@ -43,8 +43,8 @@ export const useUserStore = defineStore('user', {
         })
     },
 
-    updateRouters(routers: RouteRecordRaw[]) {
-      this.routers = routers
+    updateRoutes(routes: RouteRecordRaw[]) {
+      this.routes = routes
     }
   },
   persist: {

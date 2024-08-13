@@ -25,12 +25,12 @@ router.beforeEach(async (to, from, next) => {
       next({ path: '/' })
     } else {
       // 获取权限，注册路由表
-      if (to.path !== '/' && !userStore.routers.length) {
-        const routers = generateRoutes(userStore.privileges)
+      if (to.path !== '/' && !userStore.routes.length) {
+        const routes = generateRoutes(userStore.privileges)
 
         // 动态添加可访问路由表
-        userStore.updateRouters(routers)
-        routers.forEach((route) => {
+        userStore.updateRoutes(routes)
+        routes.forEach((route) => {
           router.addRoute(route as RouteRecordRaw)
         })
         // 捕获所有未匹配的路径，放在配置的末尾

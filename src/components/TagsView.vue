@@ -20,7 +20,7 @@ const { closeAll, closeLeft, closeRight, closeOther, closeCurrent, refreshPage }
 
 const userStore = useUserStore()
 
-const routers = computed(() => generateRoutes(userStore.privileges))
+const routes = computed(() => generateRoutes(userStore.privileges))
 const tagsView: RouteRecordRaw[] = []
 
 const tagsViewStore = useTagsViewStore()
@@ -55,7 +55,7 @@ const filterAffixTags = (routes: RouteRecordRaw[], parentPath = '') => {
 
 // 初始化tag
 const initTags = () => {
-  affixTagArr.value = filterAffixTags(unref(routers))
+  affixTagArr.value = filterAffixTags(unref(routes))
   for (const tag of unref(affixTagArr)) {
     // Must have tag name
     if (tag.name) {
