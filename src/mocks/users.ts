@@ -9,6 +9,7 @@ for (let i = 1; i < 28; i++) {
     username: 'username' + i,
     email: 'lastname_' + i + '@test.com',
     role: i,
+    accountNonLocked: i % 2 > 0,
     enabled: i % 2 > 0
   }
   datas.push(data)

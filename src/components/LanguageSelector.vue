@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { localeMap } from '~/boot/i18n'
+import { localeOptions } from '~/i18n'
 import { useLocaleStore } from '~/stores/locale-store'
 
 // 多语言相关
@@ -31,11 +31,11 @@ const setLang = (lang: string) => {
 
 <template>
   <ElDropdown trigger="click" @command="setLang">
-    <div class="i-ph:translate cursor-pointer w-6 h-6 text-white" />
+    <div class="i-mdi:language cursor-pointer w-6 h-6 text-white" />
     <template #dropdown>
       <ElDropdownMenu>
-        <ElDropdownItem v-for="item in localeMap" :key="item.lang" :command="item.lang">
-          {{ item.name }}
+        <ElDropdownItem v-for="item in localeOptions" :key="item.value" :command="item.value">
+          {{ item.label }}
         </ElDropdownItem>
       </ElDropdownMenu>
     </template>

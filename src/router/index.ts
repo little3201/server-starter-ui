@@ -23,11 +23,10 @@ router.beforeEach(async (to, from, next) => {
       next({ path: '/' })
     } else {
       // 获取权限，注册路由表
-      if (!userStore.routes.length) {
+      if (!to.name || !router.hasRoute(to.name)) {
         const routes = generateRoutes(userStore.privileges as PrivilegeTreeNode[])
 
         // 动态添加可访问路由表
-        userStore.updateRoutes(routes)
         routes.forEach((route) => {
           router.addRoute(route as RouteRecordRaw)
         })
@@ -85,6 +84,7 @@ export const generateRoutes = (routes: PrivilegeTreeNode[]): RouteRecordRaw[] =>
         data.component = comModule
       } else if (component.includes('#')) {
         data.component = component === '#' ? MainLayout : BlankLayout
+        // data.component = BlankLayout
       }
     }
     // recursive child routes

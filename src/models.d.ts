@@ -1,15 +1,19 @@
-export interface User {
+interface AudtiMetadata {
   id?: number
+  lastModifiedDate?: Date
+}
+
+export interface User extends AudtiMetadata {
   username: string
   email: string
   avatar?: string
   role?: number
   organization?: number
+  accountNonLocked: boolean 
   enabled?: boolean
 }
 
-export interface Organization {
-  id?: number
+export interface Organization extends AudtiMetadata {
   name: string
   superiorId?: number
   enabled?: boolean
@@ -23,8 +27,7 @@ export interface TreeNode {
   children?: TreeNode[]
 }
 
-export interface Role {
-  id?: number
+export interface Role extends AudtiMetadata {
   name: string
   privileges: number | undefined
   enabled?: boolean
@@ -41,8 +44,7 @@ export interface PrivilegeTreeNode extends TreeNode {
   children?: PrivilegeTreeNode[]
 }
 
-export interface Privilege {
-  id?: number
+export interface Privilege extends AudtiMetadata {
   name: string
   superiorId?: number
   path: string
@@ -58,8 +60,7 @@ export interface Privilege {
   description?: string
 }
 
-export interface Dictionary {
-  id?: number
+export interface Dictionary extends AudtiMetadata {
   name: string
   superiorId?: number
   order: number
@@ -67,6 +68,16 @@ export interface Dictionary {
   description?: string
   hasChildren?: boolean
   children?: []
+}
+
+
+export interface Region extends AudtiMetadata {
+  name: string
+  superiorId?: number
+  areaCode: number
+  postalCode: number
+  enabled?: boolean
+  description?: string
 }
 
 export interface OperationLog {
@@ -79,7 +90,7 @@ export interface OperationLog {
   ip: string
   location: string
   status: number | null
-  operateTime: string | null
+  operationTime: string | null
 }
 
 export interface AccessLog {
@@ -106,7 +117,7 @@ export interface AuditLog {
   ip: string
   location: string
   status: number | null
-  actionTime: string | null
+  operationTime: string | null
 }
 
 export interface SchedulerLog {

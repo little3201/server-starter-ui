@@ -2,7 +2,6 @@ import { defineStore } from 'pinia'
 import { api } from '~/boot/axios'
 import { retrievePrivilegeTree } from '~/api/privileges'
 import type { Privilege } from '~/models'
-import type { RouteRecordRaw } from 'vue-router'
 
 interface User {
   username: string
@@ -13,8 +12,7 @@ export const useUserStore = defineStore('user', {
   state: () => ({
     user: null as User | null,
     access_token: null as string | null,
-    privileges: [] as Privilege[],
-    routes: [] as RouteRecordRaw[]
+    privileges: [] as Privilege[]
   }),
   actions: {
     async logout() {
@@ -37,10 +35,6 @@ export const useUserStore = defineStore('user', {
       this.$patch({
         privileges: response.data
       })
-    },
-
-    updateRoutes(routes: RouteRecordRaw[]) {
-      this.routes = routes
     }
   },
   persist: {

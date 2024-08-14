@@ -37,6 +37,7 @@ const form = ref<User>({
   username: '',
   email: '',
   role: undefined,
+  accountNonLocked: true,
   organization: undefined
 })
 
@@ -218,6 +219,14 @@ function confirmEvent(id: number) {
     removeHandler(id)
   }
 }
+
+/**
+ * 解锁/上锁
+ * @param row 数据
+ */
+function lockRow(row: User) {
+  row.accountNonLocked = !row.accountNonLocked
+}
 </script>
 
 <template>
@@ -227,7 +236,7 @@ function confirmEvent(id: number) {
         <ElFormItem prop="currentNode">
           <ElInput v-model="currentNode" :placeholder="$t('search')" clearable>
             <template #prefix>
-              <div class="i-ph:magnifying-glass" />
+              <div class="i-mdi:search" />
             </template>
           </ElInput>
         </ElFormItem>
@@ -249,10 +258,10 @@ function confirmEvent(id: number) {
             </ElFormItem>
             <ElFormItem>
               <ElButton type="primary" @click="load">
-                <div class="i-ph:magnifying-glass" />{{ $t('search') }}
+                <div class="i-mdi:search" />{{ $t('search') }}
               </ElButton>
               <ElButton @click="reset">
-                <div class="i-ph:arrow-counter-clockwise" />{{ $t('reset') }}
+                <div class="i-mdi:restore" />{{ $t('reset') }}
               </ElButton>
             </ElFormItem>
           </ElForm>
@@ -262,13 +271,13 @@ function confirmEvent(id: number) {
           <ElRow :gutter="20" justify="space-between" class="mb-4">
             <ElCol :span="16" class="text-left">
               <ElButton type="primary" @click="saveOrUpdate()">
-                <div class="i-ph:plus" />{{ $t('add') }}
+                <div class="i-mdi:plus" />{{ $t('add') }}
               </ElButton>
               <ElButton type="warning" plain @click="dialogVisible = true">
-                <div class="i-ph:file-arrow-up" />{{ $t('import') }}
+                <div class="i-mdi:file-upload-outline" />{{ $t('import') }}
               </ElButton>
               <ElButton type="success" plain>
-                <div class="i-ph:cloud-arrow-down" />{{ $t('export') }}
+                <div class="i-mdi:file-download-outline" />{{ $t('export') }}
               </ElButton>
             </ElCol>
 
@@ -276,23 +285,22 @@ function confirmEvent(id: number) {
               <ElTooltip class="box-item" effect="dark" :content="$t('refresh')" placement="top">
                 <ElButton type="primary" plain circle @click="load">
                   <template #icon>
-                    <div class="i-ph:arrow-clockwise" />
+                    <div class="i-mdi:refresh" />
                   </template>
                 </ElButton>
               </ElTooltip>
 
-              <ElTooltip class="box-item" effect="dark" :content="$t('settings')" placement="top">
+              <ElTooltip class="box-item" effect="dark" :content="$t('column') + $t('settings')" placement="top">
                 <ElButton type="success" plain circle>
                   <template #icon>
-                    <div class="i-ph:text-columns" />
+                    <div class="i-mdi:format-list-bulleted" />
                   </template>
                 </ElButton>
               </ElTooltip>
             </ElCol>
           </ElRow>
 
-          <ElTable v-loading="loading" :data="datas" lazy :load="load" row-key="id" stripe table-layout="auto"
-            >
+          <ElTable v-loading="loading" :data="datas" lazy :load="load" row-key="id" stripe table-layout="auto">
             <ElTableColumn type="selection" width="55" />
             <ElTableColumn type="index" :label="$t('no')" width="55" />
             <ElTableColumn show-overflow-tooltip prop="username" :label="$t('username')">
@@ -304,12 +312,18 @@ function confirmEvent(id: number) {
               </template>
             </ElTableColumn>
             <ElTableColumn show-overflow-tooltip prop="email" :label="$t('email')" />
-            <ElTableColumn show-overflow-tooltip prop="role" :label="$t('role')">
+            <ElTableColumn show-overflow-tooltip prop="role" :label="$t('roles')">
               <template #default="scope">
                 {{ formatRole(scope.row.role) }}
               </template>
             </ElTableColumn>
-            <ElTableColumn prop="enabled" :label="$t('status')">
+            <ElTableColumn prop="accountNonLocked" :label="$t('accountNonLocked')">
+              <template #default="scope">
+                <div :class="scope.row.accountNonLocked ? 'mdi-lock-open-variant-outline' : 'mdi-lock-outline'"
+                  @click="lockRow(scope.row)" />
+              </template>
+            </ElTableColumn>
+            <ElTableColumn prop="enabled" :label="$t('enabled')">
               <template #default="scope">
                 <ElSwitch size="small" v-model="scope.row.enabled"
                   style="--el-switch-on-color: var(--el-color-success);" />
@@ -318,12 +332,12 @@ function confirmEvent(id: number) {
             <ElTableColumn :label="$t('actions')">
               <template #default="scope">
                 <ElButton size="small" type="primary" link @click="saveOrUpdate(scope.row.id)">
-                  <div class="i-ph:pencil-simple-line" />{{ $t('edit') }}
+                  <div class="i-mdi:pencil-outline" />{{ $t('edit') }}
                 </ElButton>
                 <ElPopconfirm :title="$t('removeConfirm')" :width="240" @confirm="confirmEvent(scope.row.id)">
                   <template #reference>
                     <ElButton size="small" type="danger" link>
-                      <div class="i-ph:trash" />{{ $t('remove') }}
+                      <div class="i-mdi:trash-can-outline" />{{ $t('remove') }}
                     </ElButton>
                   </template>
                 </ElPopconfirm>
@@ -336,7 +350,7 @@ function confirmEvent(id: number) {
       </ElSpace>
     </div>
 
-    <Dialog v-model="dialogVisible" :title="$t('user')" width="36%">
+    <Dialog v-model="dialogVisible" :title="$t('users')" width="36%">
       <ElForm ref="formRef" :model="form" :rules="rules" label-position="top">
         <ElRow :gutter="20" class="w-full !mx-0">
           <ElCol :span="12">
@@ -368,10 +382,10 @@ function confirmEvent(id: number) {
       </ElForm>
       <template #footer>
         <ElButton @click="dialogVisible = false">
-          <div class="i-ph:x-circle" />{{ $t('cancle') }}
+          <div class="i-mdi:close" />{{ $t('cancle') }}
         </ElButton>
         <ElButton type="primary" :loading="saveLoading" @click="onSubmit">
-          <div class="i-ph:check-circle" /> {{ $t('commit') }}
+          <div class="i-mdi:check-circle-outline" /> {{ $t('commit') }}
         </ElButton>
       </template>
     </Dialog>

@@ -10,7 +10,7 @@ const datas: Privilege[] = [
     redirect: '/system/users',
     name: 'system',
     order: 1,
-    icon: 'i-ph:gear',
+    icon: 'i-mdi:cog-outline',
     count: 5,
     enabled: true,
     description: 'this is description for this row'
@@ -22,8 +22,19 @@ const datas: Privilege[] = [
     redirect: '/logs/operation',
     name: 'logs',
     order: 2,
-    icon: 'i-ph:files',
+    icon: 'i-mdi:clipboard-list-outline ',
     count: 3,
+    enabled: true,
+    description: 'this is description for this row'
+  },
+  {
+    id: 12,
+    path: '/regions',
+    component: 'pages/regions/Index',
+    name: 'regions',
+    order: 3,
+    icon: 'i-mdi:database-marker-outline',
+    count: 0,
     enabled: true,
     description: 'this is description for this row'
   }
@@ -38,8 +49,8 @@ const subDatas: Privilege[] = [
     name: 'organizations',
     order: 1,
     count: 0,
-    icon: 'i-ph:tree-structure',
     enabled: true,
+    icon: 'i-mdi:account-multiple-plus-outline',
     description: 'this is description for this row'
   },
   {
@@ -50,8 +61,8 @@ const subDatas: Privilege[] = [
     name: 'users',
     order: 2,
     count: 0,
-    icon: 'i-ph:user',
     enabled: true,
+    icon: 'i-mdi:account-outline',
     description: 'this is description for this row'
   },
   {
@@ -62,8 +73,8 @@ const subDatas: Privilege[] = [
     name: 'privileges',
     order: 3,
     count: 0,
-    icon: 'i-ph:lock-key',
     enabled: true,
+    icon: 'i-mdi:shield-key-outline',
     description: 'this is description for this row'
   },
   {
@@ -74,8 +85,8 @@ const subDatas: Privilege[] = [
     name: 'roles',
     order: 4,
     count: 0,
-    icon: 'i-ph:user-circle',
     enabled: true,
+    icon: 'i-mdi:shield-account-outline',
     description: 'this is description for this row'
   },
   {
@@ -86,8 +97,8 @@ const subDatas: Privilege[] = [
     name: 'dictionaries',
     order: 5,
     count: 0,
-    icon: 'i-ph:book',
     enabled: true,
+    icon: 'i-mdi:book-outline',
     description: 'this is description for this row'
   },
   {
@@ -95,11 +106,11 @@ const subDatas: Privilege[] = [
     superiorId: 7,
     path: 'operation',
     component: 'pages/logs/operation/Index',
-    name: 'actionLog',
+    name: 'operationLog',
     order: 1,
     count: 0,
-    icon: 'i-ph:clipboard-text',
     enabled: true,
+    icon: 'i-mdi:clipboard-text-outline',
     description: 'this is description for this row'
   },
   {
@@ -107,11 +118,11 @@ const subDatas: Privilege[] = [
     superiorId: 7,
     path: 'access',
     component: 'pages/logs/access/Index',
-    name: 'accesslog',
+    name: 'accessLog',
     order: 2,
     count: 0,
-    icon: 'i-ph:file-text',
     enabled: true,
+    icon: 'i-mdi:file-document-outline',
     description: 'this is description for this row'
   },
   {
@@ -119,11 +130,11 @@ const subDatas: Privilege[] = [
     superiorId: 7,
     path: 'audit',
     component: 'pages/logs/audit/Index',
-    name: 'auditlog',
+    name: 'auditLog',
     order: 3,
     count: 0,
-    icon: 'i-ph:file-lock',
     enabled: true,
+    icon: 'i-mdi:clipboard-check-outline',
     description: 'this is description for this row'
   },
   {
@@ -131,11 +142,11 @@ const subDatas: Privilege[] = [
     superiorId: 7,
     path: 'scheduler',
     component: 'pages/logs/scheduler/Index',
-    name: 'schedulerlog',
+    name: 'schedulerLog',
     order: 4,
     count: 0,
-    icon: 'i-ph:file-cloud',
     enabled: true,
+    icon: 'i-mdi:calendar-text-outline',
     description: 'this is description for this row'
   }
 ]
@@ -147,42 +158,42 @@ const treeNodes: PrivilegeTreeNode[] = [
     component: '#',
     redirect: '/system/users',
     name: 'system',
-    icon: 'i-ph:gear',
+    icon: 'i-mdi:cog-outline',
     children: [
       {
         id: 2,
         path: 'organizations',
         component: 'pages/system/organizations/Index',
         name: 'organizations',
-        icon: 'i-ph:tree-structure'
+        icon: 'i-mdi:account-multiple-plus-outline'
       },
       {
         id: 3,
         path: 'users',
         component: 'pages/system/users/Index',
         name: 'users',
-        icon: 'i-ph:user'
+        icon: 'i-mdi:account-outline'
       },
       {
         id: 4,
         path: 'privileges',
         component: 'pages/system/privileges/Index',
         name: 'privileges',
-        icon: 'i-ph:lock-key'
+        icon: 'i-mdi:shield-key-outline'
       },
       {
         id: 5,
         path: 'roles',
         component: 'pages/system/roles/Index',
         name: 'roles',
-        icon: 'i-ph:user-circle'
+        icon: 'i-mdi:shield-account-outline'
       },
       {
         id: 6,
         path: 'dictionaries',
         component: 'pages/system/dictionaries/Index',
         name: 'dictionaries',
-        icon: 'i-ph:book'
+        icon: 'i-mdi:book-outline'
       }
     ]
   },
@@ -190,37 +201,55 @@ const treeNodes: PrivilegeTreeNode[] = [
     id: 7,
     path: '/logs',
     component: '#',
-    redirect: '/logs/',
+    redirect: '/logs/operation',
     name: 'logs',
-    icon: 'i-ph:files',
+    icon: 'i-mdi:clipboard-list-outline',
     children: [
       {
         id: 8,
         path: 'operation',
         component: 'pages/logs/operation/Index',
         name: 'operationLog',
-        icon: 'i-ph:clipboard-text'
+        icon: 'i-mdi:clipboard-text-outline'
       },
       {
         id: 9,
         path: 'access',
         component: 'pages/logs/access/Index',
         name: 'accessLog',
-        icon: 'i-ph:file-text'
+        icon: 'i-mdi:file-document-outline'
       },
       {
         id: 10,
         path: 'audit',
         component: 'pages/logs/audit/Index',
         name: 'auditLog',
-        icon: 'i-ph:file-lock'
+        icon: 'i-mdi:clipboard-check-outline'
       },
       {
         id: 11,
         path: 'scheduler',
         component: 'pages/logs/scheduler/Index',
         name: 'schedulerLog',
-        icon: 'i-ph:file-cloud'
+        icon: 'i-mdi:calendar-text-outline'
+      }
+    ]
+  },
+  {
+    id: 12,
+    path: '/regions',
+    component: '#',
+    name: 'regions',
+    redirect: '/regions',
+    icon: 'i-mdi:database-marker-outline',
+    children: [
+      {
+        id: 12,
+        path: '',
+        component: 'pages/regions/Index',
+        name: 'regions-index',
+        icon: 'i-mdi:database-marker-outline',
+        hidden: true
       }
     ]
   }

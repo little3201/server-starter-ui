@@ -2,6 +2,7 @@ import { dictionariesHandlers } from './dictionaries'
 import { commonHandlers } from './common'
 import { organizationsHandlers } from './organizations'
 import { privilegesHandlers } from './privileges'
+import { regionsHandlers } from './regions'
 import { rolesHandlers } from './roles'
 import { usersHandlers } from './users'
 import { operationLogsHandlers } from './operation-logs'
@@ -14,6 +15,7 @@ export const handlers = [
   ...dictionariesHandlers,
   ...organizationsHandlers,
   ...privilegesHandlers,
+  ...regionsHandlers,
   ...rolesHandlers,
   ...usersHandlers,
   ...operationLogsHandlers,

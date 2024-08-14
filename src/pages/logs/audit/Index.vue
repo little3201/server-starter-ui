@@ -29,7 +29,7 @@ const detail = ref<AuditLog>({
   ip: "",
   location: "",
   status: null,
-  actionTime: null
+  operationTime: null
 })
 
 const dialogVisible = ref<boolean>(false)
@@ -104,10 +104,10 @@ function detailHandler(id: number) {
           </ElFormItem>
           <ElFormItem>
             <ElButton type="primary" @click="load">
-              <div class="i-ph:magnifying-glass" />{{ $t('search') }}
+              <div class="i-mdi:search" />{{ $t('search') }}
             </ElButton>
             <ElButton @click="reset">
-              <div class="i-ph:arrow-counter-clockwise" />{{ $t('reset') }}
+              <div class="i-mdi:restore" />{{ $t('reset') }}
             </ElButton>
           </ElFormItem>
         </ElForm>
@@ -117,7 +117,7 @@ function detailHandler(id: number) {
         <ElRow :gutter="20" justify="space-between" class="mb-4">
           <ElCol :span="16" class="text-left">
             <ElButton type="success" plain>
-              <div class="i-ph:cloud-arrow-down" />{{ $t('export') }}
+              <div class="i-mdi:file-download-outline" />{{ $t('export') }}
             </ElButton>
           </ElCol>
 
@@ -125,15 +125,15 @@ function detailHandler(id: number) {
             <ElTooltip class="box-item" effect="dark" :content="$t('refresh')" placement="top">
               <ElButton type="primary" plain circle @click="load">
                 <template #icon>
-                  <div class="i-ph:arrow-clockwise" />
+                  <div class="i-mdi:refresh" />
                 </template>
               </ElButton>
             </ElTooltip>
 
-            <ElTooltip class="box-item" effect="dark" :content="$t('settings')" placement="top">
+            <ElTooltip class="box-item" effect="dark" :content="$t('column') + $t('settings')" placement="top">
               <ElButton type="success" plain circle>
                 <template #icon>
-                  <div class="i-ph:text-columns" />
+                  <div class="i-mdi:format-list-bulleted" />
                 </template>
               </ElButton>
             </ElTooltip>
@@ -154,15 +154,15 @@ function detailHandler(id: number) {
               <ElTag v-else type="danger" effect="light" round>{{ $t('failure') }}</ElTag>
             </template>
           </ElTableColumn>
-          <ElTableColumn prop="actionTime" :label="$t('actionTime')">
+          <ElTableColumn prop="operationTime" :label="$t('operationTime')">
             <template #default="scope">
-              {{ dayjs(scope.row.actionTime).format('YYYY-MM-DD HH:mm:ss') }}
+              {{ dayjs(scope.row.operationTime).format('YYYY-MM-DD HH:mm:ss') }}
             </template>
           </ElTableColumn>
-          <ElTableColumn :label="$t('operation')">
+          <ElTableColumn :label="$t('actions')">
             <template #default="scope">
               <ElButton size="small" type="success" link @click="detailHandler(scope.row.id)">
-                <div class="i-ph:file-text" />{{ $t('detail') }}
+                <div class="i-mdi:file-document-outline" />{{ $t('detail') }}
               </ElButton>
             </template>
           </ElTableColumn>
@@ -181,11 +181,11 @@ function detailHandler(id: number) {
         <ElDescriptionsItem :label="$t('location')">{{ detail.location }}</ElDescriptionsItem>
         <ElDescriptionsItem :label="$t('newValue')">{{ detail.newValue }}</ElDescriptionsItem>
         <ElDescriptionsItem :label="$t('operator')">{{ detail.operator }}</ElDescriptionsItem>
-        <ElDescriptionsItem :label="$t('status')">
+        <ElDescriptionsItem :label="$t('enabled')">
           <ElTag v-if="detail.status === 1" type="success" effect="light" round>{{ $t('success') }}</ElTag>
           <ElTag v-else type="danger" effect="light" round>{{ $t('failure') }}</ElTag>
         </ElDescriptionsItem>
-        <ElDescriptionsItem :label="$t('actionTime')">{{ dayjs(detail.actionTime).format('YYYY-MM-DD HH:mm:ss') }}
+        <ElDescriptionsItem :label="$t('operationTime')">{{ dayjs(detail.operationTime).format('YYYY-MM-DD HH:mm:ss') }}
         </ElDescriptionsItem>
       </ElDescriptions>
     </Dialog>

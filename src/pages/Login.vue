@@ -63,7 +63,6 @@ function signIn(username: string, password: string) {
   userStore.login(username, password).then(() => {
     // 生成路由
     const routes = generateRoutes(userStore.privileges)
-    userStore.updateRoutes(routes)
 
     routes.forEach((route) => {
       router.addRoute(route)
@@ -105,8 +104,10 @@ function show() {
         </div>
 
         <div class="inline-flex justify-end items-center space-x-4">
+          <!-- language -->
+          <LanguageSelector />
+          <!-- theme -->
           <ThemeToogle />
-          <LanguageSelector class=" dark:text-white" />
         </div>
       </div>
     </ElHeader>
@@ -148,7 +149,7 @@ function show() {
                     <ElFormItem prop="username">
                       <ElInput size="large" :disable="loading" v-model="form.username" :placeholder="$t('username')">
                         <template #prefix>
-                          <div class="i-ph:user" />
+                          <div class="i-mdi:account-outline" />
                         </template>
                       </ElInput>
                     </ElFormItem>
@@ -160,7 +161,7 @@ function show() {
                       <ElInput size="large" :disable="loading" type="password" v-model="form.password"
                         :placeholder="$t('password')" show-password>
                         <template #prefix>
-                          <div class="i-ph:key" />
+                          <div class="i-mdi:key-outline" />
                         </template>
                       </ElInput>
                     </ElFormItem>

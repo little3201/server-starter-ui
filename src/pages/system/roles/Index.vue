@@ -54,7 +54,7 @@ const dataPrivilege = ref<number>(1)
 function loadPrivilegeTree() {
   privilegeTreeLoading.value = true
 
-  const username = userStore.getUser?.username as string
+  const username = userStore.user?.username as string
   retrievePrivilegeTree(username).then(res => {
     privilegeTree.value = res.data
   }).finally(() => privilegeTreeLoading.value = false)
@@ -199,10 +199,10 @@ function handleCurrentChange(row: Role | undefined) {
           </ElFormItem>
           <ElFormItem>
             <ElButton type="primary" @click="load">
-              <div class="i-ph:magnifying-glass" />{{ $t('search') }}
+              <div class="i-mdi:search" />{{ $t('search') }}
             </ElButton>
             <ElButton @click="reset">
-              <div class="i-ph:arrow-counter-clockwise" />{{ $t('reset') }}
+              <div class="i-mdi:restore" />{{ $t('reset') }}
             </ElButton>
           </ElFormItem>
         </ElForm>
@@ -214,16 +214,16 @@ function handleCurrentChange(row: Role | undefined) {
             <ElRow :gutter="20" justify="space-between" class="mb-4">
               <ElCol :span="16" class="text-left">
                 <ElButton type="primary" @click="saveOrUpdate()">
-                  <div class="i-ph:plus" />{{ $t('add') }}
+                  <div class="i-mdi:plus" />{{ $t('add') }}
                 </ElButton>
                 <ElButton type="danger" plain>
-                  <div class="i-ph:trash" />{{ $t('remove') }}
+                  <div class="i-mdi:trash-can-outline" />{{ $t('remove') }}
                 </ElButton>
                 <ElButton type="warning" plain @click="dialogVisible = true">
-                  <div class="i-ph:file-arrow-up" />{{ $t('import') }}
+                  <div class="i-mdi:file-upload-outline" />{{ $t('import') }}
                 </ElButton>
                 <ElButton type="success" plain>
-                  <div class="i-ph:cloud-arrow-down" />{{ $t('export') }}
+                  <div class="i-mdi:file-download-outline" />{{ $t('export') }}
                 </ElButton>
               </ElCol>
 
@@ -231,15 +231,15 @@ function handleCurrentChange(row: Role | undefined) {
                 <ElTooltip class="box-item" effect="dark" :content="$t('refresh')" placement="top">
                   <ElButton type="primary" plain circle @click="load">
                     <template #icon>
-                      <div class="i-ph:arrow-clockwise" />
+                      <div class="i-mdi:refresh" />
                     </template>
                   </ElButton>
                 </ElTooltip>
 
-                <ElTooltip class="box-item" effect="dark" :content="$t('settings')" placement="top">
+                <ElTooltip class="box-item" effect="dark" :content="$t('column') + $t('settings')" placement="top">
                   <ElButton type="success" plain circle>
                     <template #icon>
-                      <div class="i-ph:text-columns" />
+                      <div class="i-mdi:format-list-bulleted" />
                     </template>
                   </ElButton>
                 </ElTooltip>
@@ -251,7 +251,7 @@ function handleCurrentChange(row: Role | undefined) {
               <ElTableColumn type="selection" width="55" />
               <ElTableColumn type="index" :label="$t('no')" width="55" />
               <ElTableColumn prop="name" :label="$t('name')" />
-              <ElTableColumn prop="enabled" :label="$t('status')">
+              <ElTableColumn prop="enabled" :label="$t('enabled')">
                 <template #default="scope">
                   <ElSwitch size="small" v-model="scope.row.enabled"
                     style="--el-switch-on-color: var(--el-color-success);" />
@@ -261,12 +261,12 @@ function handleCurrentChange(row: Role | undefined) {
               <ElTableColumn :label="$t('actions')">
                 <template #default="scope">
                   <ElButton size="small" type="primary" link @click="saveOrUpdate(scope.row.id)">
-                    <div class="i-ph:pencil-simple-line" />{{ $t('edit') }}
+                    <div class="i-mdi:pencil-outline" />{{ $t('edit') }}
                   </ElButton>
                   <ElPopconfirm :title="$t('removeConfirm')" :width="240" @confirm="confirmEvent(scope.row.id)">
                     <template #reference>
                       <ElButton size="small" type="danger" link>
-                        <div class="i-ph:trash" />{{ $t('remove') }}
+                        <div class="i-mdi:trash-can-outline" />{{ $t('remove') }}
                       </ElButton>
                     </template>
                   </ElPopconfirm>
@@ -280,7 +280,7 @@ function handleCurrentChange(row: Role | undefined) {
         <ElCol :span="8">
           <ElCard shadow="never" class="h-full">
             <ElTabs stretch>
-              <ElTabPane :label="$t('actionPrivilege')" class="w-full">
+              <ElTabPane :label="$t('actions') + $t('privileges')" class="w-full">
                 <ElTree ref="treeEl" v-loading="privilegeTreeLoading" :data="privilegeTree"
                   :expand-on-click-node="false" node-key="id" :props="{ label: 'name' }" show-checkbox
                   @check-change="handlePrivilegeCheckChange" :default-checked-keys="rolePrivileges">
@@ -292,7 +292,7 @@ function handleCurrentChange(row: Role | undefined) {
                   </template>
                 </ElTree>
               </ElTabPane>
-              <ElTabPane :label="$t('dataPrivilege')" class="w-full">
+              <ElTabPane :label="$t('data') + $t('privileges')" class="w-full">
                 <ElSelect v-model="dataPrivilege" class="mb-3">
                   <ElOption :value="0" label="全部" />
                   <ElOption :value="1" label="本部门" />
@@ -311,7 +311,7 @@ function handleCurrentChange(row: Role | undefined) {
       </ElRow>
     </ElSpace>
 
-    <Dialog v-model="dialogVisible" :title="$t('role')" width="25%">
+    <Dialog v-model="dialogVisible" :title="$t('roles')" width="25%">
       <ElForm ref="formRef" :model="form" :rules="rules" label-position="top">
         <ElRow :gutter="20" class="w-full !mx-0">
           <ElCol>
@@ -330,10 +330,10 @@ function handleCurrentChange(row: Role | undefined) {
       </ElForm>
       <template #footer>
         <ElButton @click="dialogVisible = false">
-          <div class="i-ph:x-circle" />{{ $t('cancle') }}
+          <div class="i-mdi:close" />{{ $t('cancle') }}
         </ElButton>
         <ElButton type="primary" :loading="saveLoading" @click="onSubmit">
-          <div class="i-ph:check-circle" /> {{ $t('commit') }}
+          <div class="i-mdi:check-circle-outline" /> {{ $t('commit') }}
         </ElButton>
       </template>
     </Dialog>

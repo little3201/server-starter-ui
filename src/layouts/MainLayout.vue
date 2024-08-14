@@ -30,8 +30,10 @@ function signOut() {
         </div>
 
         <div class="inline-flex justify-end items-center space-x-4">
-          <ThemeToogle />
+          <!-- language -->
           <LanguageSelector />
+          <!-- theme -->
+          <ThemeToogle />
           <ElDropdown trigger="click">
             <ElSpace>
               <ElAvatar :size="28" :src="userStore.user?.avatar" />
@@ -40,10 +42,10 @@ function signOut() {
             <template #dropdown>
               <ElDropdownMenu>
                 <ElDropdownItem>
-                  <div class="i-ph:user-gear mr-2 " />{{ $t('profile') }}
+                  <div class="i-mdi:account-settings-outline mr-2 " />{{ $t('profile') }}
                 </ElDropdownItem>
                 <ElDropdownItem divided @click="signOut">
-                  <div class="i-ph:sign-out mr-2 " />{{ $t('signout') }}
+                  <div class="i-mdi:logout mr-2 " />{{ $t('signout') }}
                 </ElDropdownItem>
               </ElDropdownMenu>
             </template>
@@ -56,7 +58,7 @@ function signOut() {
         <ElScrollbar>
           <ElMenu router unique-opened :default-active="currentRoute.fullPath">
             <ElMenuItem :index="'/'">
-              <div class="i-ph:house mr-2" />{{ $t('home') }}
+              <div class="i-mdi:home-outline mr-2" />{{ $t('home') }}
             </ElMenuItem>
             <ItemList :items="privileges" />
           </ElMenu>

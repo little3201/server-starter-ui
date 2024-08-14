@@ -119,10 +119,10 @@ function confirmEvent(id: number) {
           </ElFormItem>
           <ElFormItem>
             <ElButton type="primary" @click="load">
-              <div class="i-ph:magnifying-glass" />{{ $t('search') }}
+              <div class="i-mdi:search" />{{ $t('search') }}
             </ElButton>
             <ElButton @click="reset">
-              <div class="i-ph:arrow-counter-clockwise" />{{ $t('reset') }}
+              <div class="i-mdi:restore" />{{ $t('reset') }}
             </ElButton>
           </ElFormItem>
         </ElForm>
@@ -132,10 +132,10 @@ function confirmEvent(id: number) {
         <ElRow :gutter="20" justify="space-between" class="mb-4">
           <ElCol :span="16" class="text-left">
             <ElButton type="danger" plain>
-              <div class="i-ph:trash" />{{ $t('clear') }}
+              <div class="i-mdi:trash-can-outline" />{{ $t('clear') }}
             </ElButton>
             <ElButton type="success" plain>
-              <div class="i-ph:cloud-arrow-down" />{{ $t('export') }}
+              <div class="i-mdi:file-download-outline" />{{ $t('export') }}
             </ElButton>
           </ElCol>
 
@@ -143,15 +143,15 @@ function confirmEvent(id: number) {
             <ElTooltip class="box-item" effect="dark" :content="$t('refresh')" placement="top">
               <ElButton type="primary" plain circle @click="load">
                 <template #icon>
-                  <div class="i-ph:arrow-clockwise" />
+                  <div class="i-mdi:refresh" />
                 </template>
               </ElButton>
             </ElTooltip>
 
-            <ElTooltip class="box-item" effect="dark" :content="$t('settings')" placement="top">
+            <ElTooltip class="box-item" effect="dark" :content="$t('column') + $t('settings')" placement="top">
               <ElButton type="success" plain circle>
                 <template #icon>
-                  <div class="i-ph:text-columns" />
+                  <div class="i-mdi:format-list-bulleted" />
                 </template>
               </ElButton>
             </ElTooltip>
@@ -184,12 +184,12 @@ function confirmEvent(id: number) {
           <ElTableColumn :label="$t('actions')" width="160">
             <template #default="scope">
               <ElButton size="small" type="success" link @click="detailHandler(scope.row.id)">
-                <div class="i-ph:file-text" />{{ $t('detail') }}
+                <div class="i-mdi:file-document-outline" />{{ $t('detail') }}
               </ElButton>
               <ElPopconfirm :title="$t('removeConfirm')" :width="240" @confirm="confirmEvent(scope.row.id)">
                 <template #reference>
                   <ElButton size="small" type="danger" link>
-                    <div class="i-ph:trash" />{{ $t('remove') }}
+                    <div class="i-mdi:trash-can-outline" />{{ $t('remove') }}
                   </ElButton>
                 </template>
               </ElPopconfirm>
@@ -212,7 +212,7 @@ function confirmEvent(id: number) {
         </ElDescriptionsItem>
         <ElDescriptionsItem :label="$t('endTime')">{{ dayjs(detail.endTime).format('YYYY-MM-DD HH:mm:ss') }}
         </ElDescriptionsItem>
-        <ElDescriptionsItem :label="$t('status')">
+        <ElDescriptionsItem :label="$t('enabled')">
           <ElTag v-if="detail.status === 1" type="success" effect="light" round>{{ $t('success') }}</ElTag>
           <ElTag v-else type="danger" effect="light" round>{{ $t('failure') }}</ElTag>
         </ElDescriptionsItem>

@@ -2,13 +2,11 @@
 import { ref, reactive, onMounted } from 'vue'
 import type { FormInstance, FormRules } from 'element-plus'
 import Dialog from 'components/Dialog.vue'
-import { retrieveDictionaries, fetchDictionary } from '~/api/dictionaries'
-import type { Dictionary } from '~/models'
-import SubPage from './SubPage.vue'
-
+import { retrieveRegions, fetchRegion } from '~/api/regions'
+import type { Region } from '~/models'
 
 const loading = ref<boolean>(false)
-const datas = ref<Array<Dictionary>>([])
+const datas = ref<Array<Region>>([])
 const pagination = reactive({
   page: 1,
   size: 10,
@@ -23,10 +21,11 @@ const searchForm = ref({
 })
 
 const formRef = ref<FormInstance>()
-const form = ref<Dictionary>({
+const form = ref<Region>({
   name: '',
-  order: 1,
-  children: [],
+  areaCode: 0,
+  postalCode: 0,
+  description: ''
 })
 
 const rules = reactive<FormRules<typeof form>>({
@@ -34,6 +33,8 @@ const rules = reactive<FormRules<typeof form>>({
     { required: true, trigger: 'blur' }
   ]
 })
+
+const dataPrivilege = ref<number>(1)
 
 /**
  * 分页变化
@@ -51,7 +52,7 @@ function pageChange(currentPage: number, pageSize: number) {
  */
 function load() {
   loading.value = true
-  retrieveDictionaries(pagination.page, pagination.size, searchForm.value).then(res => {
+  retrieveRegions(pagination.page, pagination.size, searchForm.value).then(res => {
     datas.value = res.data.content
     pagination.total = res.data.totalElements
   }).finally(() => loading.value = false)
@@ -87,7 +88,7 @@ function saveOrUpdate(id?: number) {
  * @param id 主键
  */
 function loadOne(id: number) {
-  fetchDictionary(id).then(res => {
+  fetchRegion(id).then(res => {
     form.value = res.data
   })
 }
@@ -107,6 +108,25 @@ function onSubmit() {
     }
   })
 }
+
+/**
+ * 删除
+ * @param id 主键
+ */
+function removeHandler(id: number) {
+  datas.value = datas.value.filter(item => item.id !== id)
+}
+
+/**
+ * 确认
+ * @param id 主键
+ */
+function confirmEvent(id: number) {
+  if (id) {
+    removeHandler(id)
+  }
+}
+
 </script>
 
 <template>
@@ -131,6 +151,12 @@ function onSubmit() {
       <ElCard shadow="never">
         <ElRow :gutter="20" justify="space-between" class="mb-4">
           <ElCol :span="16" class="text-left">
+            <ElButton type="primary" @click="saveOrUpdate()">
+              <div class="i-mdi:plus" />{{ $t('add') }}
+            </ElButton>
+            <ElButton type="danger" plain>
+              <div class="i-mdi:trash-can-outline" />{{ $t('remove') }}
+            </ElButton>
             <ElButton type="warning" plain @click="dialogVisible = true">
               <div class="i-mdi:file-upload-outline" />{{ $t('import') }}
             </ElButton>
@@ -158,27 +184,32 @@ function onSubmit() {
           </ElCol>
         </ElRow>
 
-        <ElTable v-loading="loading" :data="datas" lazy :load="load" row-key="id" stripe table-layout="auto">
+        <ElTable v-loading="loading" :data="datas" lazy :load="load" row-key="id" stripe table-layout="auto"
+          highlight-current-row>
           <ElTableColumn type="selection" width="55" />
-          <ElTableColumn type="expand">
-            <template #default="props">
-              <SubPage :superior-id="props.row.id" :title="props.row.name" />
-            </template>
-          </ElTableColumn>
+          <ElTableColumn type="index" :label="$t('no')" width="55" />
           <ElTableColumn prop="name" :label="$t('name')" />
+          <ElTableColumn prop="areaCode" :label="$t('areaCode')" />
+          <ElTableColumn prop="postalCode" :label="$t('postalCode')" />
           <ElTableColumn prop="enabled" :label="$t('enabled')">
             <template #default="scope">
               <ElSwitch size="small" v-model="scope.row.enabled"
                 style="--el-switch-on-color: var(--el-color-success);" />
             </template>
           </ElTableColumn>
-          <ElTableColumn prop="order" :label="$t('order')" />
           <ElTableColumn show-overflow-tooltip prop="description" :label="$t('description')" />
           <ElTableColumn :label="$t('actions')">
             <template #default="scope">
               <ElButton size="small" type="primary" link @click="saveOrUpdate(scope.row.id)">
                 <div class="i-mdi:pencil-outline" />{{ $t('edit') }}
               </ElButton>
+              <ElPopconfirm :title="$t('removeConfirm')" :width="240" @confirm="confirmEvent(scope.row.id)">
+                <template #reference>
+                  <ElButton size="small" type="danger" link>
+                    <div class="i-mdi:trash-can-outline" />{{ $t('remove') }}
+                  </ElButton>
+                </template>
+              </ElPopconfirm>
             </template>
           </ElTableColumn>
         </ElTable>
@@ -187,17 +218,12 @@ function onSubmit() {
       </ElCard>
     </ElSpace>
 
-    <Dialog v-model="dialogVisible" :title="$t('dictionaries')" width="25%">
+    <Dialog v-model="dialogVisible" :title="$t('regions')" width="25%">
       <ElForm ref="formRef" :model="form" :rules="rules" label-position="top">
         <ElRow :gutter="20" class="w-full !mx-0">
-          <ElCol :span="12">
+          <ElCol>
             <ElFormItem :label="$t('name')" prop="name">
               <ElInput v-model="form.name" :placeholder="$t('inputText') + $t('name')" />
-            </ElFormItem>
-          </ElCol>
-          <ElCol :span="12">
-            <ElFormItem :label="$t('order')" prop="order">
-              <ElInputNumber v-model="form.order" :placeholder="$t('inputText') + $t('order')" />
             </ElFormItem>
           </ElCol>
         </ElRow>

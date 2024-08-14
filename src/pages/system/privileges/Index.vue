@@ -35,10 +35,10 @@ const icons = ref([
   "database",
   "flask",
   "notepad",
-  "file-arrow-up",
+  "file-upload",
   "file-cloud",
   "file-lock",
-  "file-text",
+  "file-document-outline",
   "clipboard-text",
   "files"
 ]
@@ -185,10 +185,10 @@ function expandChange(row: Privilege, expanded: boolean) {
           </ElFormItem>
           <ElFormItem>
             <ElButton type="primary" @click="load">
-              <div class="i-ph:magnifying-glass" />{{ $t('search') }}
+              <div class="i-mdi:search" />{{ $t('search') }}
             </ElButton>
             <ElButton @click="reset">
-              <div class="i-ph:arrow-counter-clockwise" />{{ $t('reset') }}
+              <div class="i-mdi:restore" />{{ $t('reset') }}
             </ElButton>
           </ElFormItem>
         </ElForm>
@@ -198,25 +198,25 @@ function expandChange(row: Privilege, expanded: boolean) {
         <ElRow :gutter="20" justify="space-between" class="mb-4">
           <ElCol :span="16" class="text-left">
             <ElButton type="warning" plain @click="dialogVisible = true">
-              <div class="i-ph:file-arrow-up" />{{ $t('import') }}
+              <div class="i-mdi:file-upload-outline" />{{ $t('import') }}
             </ElButton>
             <ElButton type="success" plain>
-              <div class="i-ph:cloud-arrow-down" />{{ $t('export') }}
+              <div class="i-mdi:file-download-outline" />{{ $t('export') }}
             </ElButton>
           </ElCol>
           <ElCol :span="8" class="text-right">
             <ElTooltip class="box-item" effect="dark" :content="$t('refresh')" placement="top">
               <ElButton type="primary" plain circle @click="load">
                 <template #icon>
-                  <div class="i-ph:arrow-clockwise" />
+                  <div class="i-mdi:refresh" />
                 </template>
               </ElButton>
             </ElTooltip>
 
-            <ElTooltip class="box-item" effect="dark" :content="$t('settings')" placement="top">
+            <ElTooltip class="box-item" effect="dark" :content="$t('column') + $t('settings')" placement="top">
               <ElButton type="success" plain circle>
                 <template #icon>
-                  <div class="i-ph:text-columns" />
+                  <div class="i-mdi:format-list-bulleted" />
                 </template>
               </ElButton>
             </ElTooltip>
@@ -235,7 +235,7 @@ function expandChange(row: Privilege, expanded: boolean) {
           <ElTableColumn prop="path" :label="$t('path')" />
           <ElTableColumn prop="component" :label="$t('component')" />
           <ElTableColumn prop="order" :label="$t('order')" />
-          <ElTableColumn prop="enabled" :label="$t('status')">
+          <ElTableColumn prop="enabled" :label="$t('enabled')">
             <template #default="scope">
               <ElSwitch size="small" v-model="scope.row.enabled"
                 style="--el-switch-on-color: var(--el-color-success);" />
@@ -245,7 +245,7 @@ function expandChange(row: Privilege, expanded: boolean) {
           <ElTableColumn :label="$t('actions')">
             <template #default="scope">
               <ElButton size="small" type="primary" link @click="saveOrUpdate(scope.row.id)">
-                <div class="i-ph:pencil-simple-line" />{{ $t('edit') }}
+                <div class="i-mdi:pencil-outline" />{{ $t('edit') }}
               </ElButton>
             </template>
           </ElTableColumn>
@@ -298,7 +298,7 @@ function expandChange(row: Privilege, expanded: boolean) {
                 <div class="flex flex-wrap max-h-48 overflow-y-scroll mt-4">
                   <div v-for="(icon, index) in filterIcons" :key="index" @click="form.icon = ('ph:' + icon)" :class="['inline-flex items-center cursor-pointer w-1/3 h-8 hover:text-[var(--el-color-primary)]',
                     { 'text-[var(--el-color-primary)': form.icon === ('ph:' + icon) }]">
-                    <div :class="['w-5 h-5', 'i-ph:' + icon]" />
+                    <div :class="['w-5 h-5', 'i-mdi:' + icon]" />
                     <span class="ml-2 text-base">{{ icon }}</span>
                   </div>
                 </div>
@@ -330,10 +330,10 @@ function expandChange(row: Privilege, expanded: boolean) {
       </ElForm>
       <template #footer>
         <ElButton @click="dialogVisible = false">
-          <div class="i-ph:x-circle" />{{ $t('cancle') }}
+          <div class="i-mdi:close" />{{ $t('cancle') }}
         </ElButton>
         <ElButton type="primary" :loading="saveLoading" @click="onSubmit">
-          <div class="i-ph:check-circle" /> {{ $t('commit') }}
+          <div class="i-mdi:check-circle-outline" /> {{ $t('commit') }}
         </ElButton>
       </template>
     </Dialog>
