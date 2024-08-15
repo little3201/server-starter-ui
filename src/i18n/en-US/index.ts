@@ -23,7 +23,7 @@ export default {
   lastname: 'Last Name',
   fullname: 'Full Name',
   email: 'Email',
-  accountNonLocked: 'Account Locked',
+  accountNonLocked: 'Locked',
   accountExpiresAt: 'User Expires At',
   credentialsExpiresAt: 'Credentials Expires At',
   component: 'Conponent',
@@ -87,6 +87,8 @@ export default {
 
   inputText: 'Please input ',
   searchText: 'Please select ',
+  lengthRange: 'The length must between {min} and {max}',
+  removeConfirm: 'Are you sure to delete this?',
 
   welcome: 'Hi! Welcome Back.',
   subtitle: 'Please sign in to continue exploring.',

@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref, reactive, onMounted } from 'vue'
 import type { FormInstance, FormRules } from 'element-plus'
+import draggable from 'vuedraggable'
 import Dialog from 'components/Dialog.vue'
 import { retrieveDictionaries, fetchDictionary } from '~/api/dictionaries'
 import type { Dictionary } from '~/models'
@@ -14,6 +15,11 @@ const pagination = reactive({
   size: 10,
   total: 0
 })
+
+const checkAll = ref<boolean>(true)
+const isIndeterminate = ref<boolean>(false)
+const checkedColumns = ref<Array<string>>(['name', 'enabled', 'description'])
+const columns = ref<Array<string>>(['name', 'enabled', 'description'])
 
 const saveLoading = ref<boolean>(false)
 const dialogVisible = ref<boolean>(false)
@@ -107,6 +113,25 @@ function onSubmit() {
     }
   })
 }
+
+/**
+ * 全选操作
+ * @param val 是否全选
+ */
+function handleCheckAllChange(val: boolean) {
+  checkedColumns.value = val ? columns.value : []
+  isIndeterminate.value = false
+}
+
+/**
+ * 选中操作
+ * @param value 选中的值
+ */
+function handleCheckedChange(value: string[]) {
+  const checkedCount = value.length
+  checkAll.value = checkedCount === columns.value.length
+  isIndeterminate.value = checkedCount > 0 && checkedCount < columns.value.length
+}
 </script>
 
 <template>
@@ -142,18 +167,40 @@ function onSubmit() {
           <ElCol :span="8" class="text-right">
             <ElTooltip class="box-item" effect="dark" :content="$t('refresh')" placement="top">
               <ElButton type="primary" plain circle @click="load">
-                <template #icon>
-                  <div class="i-mdi:refresh" />
-                </template>
+                <div class="i-mdi:refresh" />
               </ElButton>
             </ElTooltip>
 
-            <ElTooltip class="box-item" effect="dark" :content="$t('column') + $t('settings')" placement="top">
-              <ElButton type="success" plain circle>
-                <template #icon>
-                  <div class="i-mdi:format-list-bulleted" />
-                </template>
-              </ElButton>
+            <ElTooltip :content="$t('column') + $t('settings')" placement="top">
+              <span class="inline-block ml-3 h-8">
+                <ElPopover :width="200" trigger="click">
+                  <template #reference>
+                    <ElButton type="success" plain circle>
+                      <div class="i-mdi:format-list-bulleted" />
+                    </ElButton>
+                  </template>
+                  <div>
+                    <ElCheckbox v-model="checkAll" :indeterminate="isIndeterminate" @change="handleCheckAllChange">
+                      全选
+                    </ElCheckbox>
+                    <ElDivider />
+                    <ElCheckboxGroup v-model="checkedColumns" @change="handleCheckedChange">
+                      <draggable v-model="columns" item-key="simple">
+                        <template #item="{ element }">
+                          <div class="flex items-center space-x-2">
+                            <div class="i-mdi:drag w-4 h-4 hover:cursor-move" />
+                            <ElCheckbox :label="element" :value="element" :disabled="element === columns[0]">
+                              <div class="inline-flex items-center space-x-4">
+                                {{ $t(element) }}
+                              </div>
+                            </ElCheckbox>
+                          </div>
+                        </template>
+                      </draggable>
+                    </ElCheckboxGroup>
+                  </div>
+                </ElPopover>
+              </span>
             </ElTooltip>
           </ElCol>
         </ElRow>

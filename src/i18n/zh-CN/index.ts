@@ -23,7 +23,7 @@ export default {
   lastname: '名字',
   fullname: '姓名',
   email: '邮箱',
-  accountNonLocked: '账号锁状态',
+  accountNonLocked: '锁状态',
   accountExpiresAt: '账号失效时间',
   credentialsExpiresAt: '密码失效时间',
   component: '组件',
@@ -87,6 +87,8 @@ export default {
 
   inputText: '請輸入',
   searchText: '請選擇',
+  lengthRange: '长度在 {min} 到 {max} 个字符',
+  removeConfirm: '是否确定要删除这条数据？',
 
   welcome: '嗨！欢迎回来',
   subtitle: '请填写您的账号和密码，让我们继续探索',

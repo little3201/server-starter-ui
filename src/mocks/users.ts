@@ -7,6 +7,7 @@ for (let i = 1; i < 28; i++) {
   const data: User = {
     id: i,
     username: 'username' + i,
+    avatar: '/vite.svg',
     email: 'lastname_' + i + '@test.com',
     role: i,
     accountNonLocked: i % 2 > 0,

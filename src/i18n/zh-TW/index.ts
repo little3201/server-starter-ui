@@ -23,7 +23,7 @@ export default {
   lastname: '名字',
   fullname: '姓名',
   email: '郵箱',
-  accountNonLocked: '賬號鎖狀態',
+  accountNonLocked: '鎖狀態',
   accountExpiresAt: '賬號失效時間',
   credentialsExpiresAt: '密碼失效時間',
   component: '元件',
@@ -88,6 +88,8 @@ export default {
 
   inputText: '请输入',
   searchText: '请选择',
+  lengthRange: '長度在 {min} 到 {max} 個字元',
+  removeConfirm: '是否確定要刪除這條數據？',
 
   welcome: '嗨！歡迎回來',
   subtitle: '請填寫您的帳號和密碼，讓我們繼續探索',

@@ -30,11 +30,12 @@ const datas: Privilege[] = [
   {
     id: 12,
     path: '/regions',
-    component: 'pages/regions/Index',
+    component: '#',
     name: 'regions',
+    redirect: '/regions',
     order: 3,
     icon: 'i-mdi:database-marker-outline',
-    count: 0,
+    count: 1,
     enabled: true,
     description: 'this is description for this row'
   }
@@ -148,6 +149,19 @@ const subDatas: Privilege[] = [
     enabled: true,
     icon: 'i-mdi:calendar-text-outline',
     description: 'this is description for this row'
+  },
+  {
+    id: 13,
+    superiorId: 12,
+    path: '',
+    name: 'regions-index',
+    component: 'pages/regions/Index',
+    order: 4,
+    count: 0,
+    enabled: true,
+    icon: 'i-mdi:database-marker-outline',
+    hidden: true,
+    description: 'this is description for this row'
   }
 ]
 
@@ -244,7 +258,7 @@ const treeNodes: PrivilegeTreeNode[] = [
     icon: 'i-mdi:database-marker-outline',
     children: [
       {
-        id: 12,
+        id: 13,
         path: '',
         component: 'pages/regions/Index',
         name: 'regions-index',

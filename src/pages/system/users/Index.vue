@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref, reactive, onMounted, watch } from 'vue'
 import type { FormInstance, FormRules } from 'element-plus'
+import draggable from 'vuedraggable'
 import Dialog from 'components/Dialog.vue'
 import { retrieveOrganizationTree } from '~/api/organizations'
 import { retrieveUsers, fetchUser } from '~/api/users'
@@ -14,6 +15,11 @@ const pagination = reactive({
   size: 10,
   total: 0
 })
+
+const checkAll = ref<boolean>(true)
+const isIndeterminate = ref<boolean>(false)
+const checkedColumns = ref<Array<string>>(['name', 'enabled', 'description'])
+const columns = ref<Array<string>>(['name', 'enabled', 'description'])
 
 const treeEl = ref()
 const treeLoading = ref<boolean>(false)
@@ -227,6 +233,25 @@ function confirmEvent(id: number) {
 function lockRow(row: User) {
   row.accountNonLocked = !row.accountNonLocked
 }
+
+/**
+ * 全选操作
+ * @param val 是否全选
+ */
+function handleCheckAllChange(val: boolean) {
+  checkedColumns.value = val ? columns.value : []
+  isIndeterminate.value = false
+}
+
+/**
+ * 选中操作
+ * @param value 选中的值
+ */
+function handleCheckedChange(value: string[]) {
+  const checkedCount = value.length
+  checkAll.value = checkedCount === columns.value.length
+  isIndeterminate.value = checkedCount > 0 && checkedCount < columns.value.length
+}
 </script>
 
 <template>
@@ -282,20 +307,42 @@ function lockRow(row: User) {
             </ElCol>
 
             <ElCol :span="8" class="text-right">
-              <ElTooltip class="box-item" effect="dark" :content="$t('refresh')" placement="top">
+              <ElTooltip effect="dark" :content="$t('refresh')" placement="top">
                 <ElButton type="primary" plain circle @click="load">
-                  <template #icon>
-                    <div class="i-mdi:refresh" />
-                  </template>
+                  <div class="i-mdi:refresh" />
                 </ElButton>
               </ElTooltip>
 
-              <ElTooltip class="box-item" effect="dark" :content="$t('column') + $t('settings')" placement="top">
-                <ElButton type="success" plain circle>
-                  <template #icon>
-                    <div class="i-mdi:format-list-bulleted" />
-                  </template>
-                </ElButton>
+              <ElTooltip :content="$t('column') + $t('settings')" placement="top">
+                <span class="inline-block ml-3 h-8">
+                  <ElPopover :width="200" trigger="click">
+                    <template #reference>
+                      <ElButton type="success" plain circle>
+                        <div class="i-mdi:format-list-bulleted" />
+                      </ElButton>
+                    </template>
+                    <div>
+                      <ElCheckbox v-model="checkAll" :indeterminate="isIndeterminate" @change="handleCheckAllChange">
+                        全选
+                      </ElCheckbox>
+                      <ElDivider />
+                      <ElCheckboxGroup v-model="checkedColumns" @change="handleCheckedChange">
+                        <draggable v-model="columns" item-key="simple">
+                          <template #item="{ element }">
+                            <div class="flex items-center space-x-2">
+                              <div class="i-mdi:drag w-4 h-4 hover:cursor-move" />
+                              <ElCheckbox :label="element" :value="element" :disabled="element === columns[0]">
+                                <div class="inline-flex items-center space-x-4">
+                                  {{ $t(element) }}
+                                </div>
+                              </ElCheckbox>
+                            </div>
+                          </template>
+                        </draggable>
+                      </ElCheckboxGroup>
+                    </div>
+                  </ElPopover>
+                </span>
               </ElTooltip>
             </ElCol>
           </ElRow>
@@ -305,13 +352,13 @@ function lockRow(row: User) {
             <ElTableColumn type="index" :label="$t('no')" width="55" />
             <ElTableColumn show-overflow-tooltip prop="username" :label="$t('username')">
               <template #default="scope">
-                <div style="display: flex; align-items: center">
-                  <ElAvatar :size="28" src="#" />
+                <div class="flex items-center">
+                  <ElAvatar :size="24" :src="scope.row.avatar" class=" flex-shrink-0" />
                   <span style="margin-left: 10px">{{ scope.row.username }}</span>
                 </div>
               </template>
             </ElTableColumn>
-            <ElTableColumn show-overflow-tooltip prop="email" :label="$t('email')" />
+            <ElTableColumn prop="email" :label="$t('email')" />
             <ElTableColumn show-overflow-tooltip prop="role" :label="$t('roles')">
               <template #default="scope">
                 {{ formatRole(scope.row.role) }}
@@ -319,8 +366,15 @@ function lockRow(row: User) {
             </ElTableColumn>
             <ElTableColumn prop="accountNonLocked" :label="$t('accountNonLocked')">
               <template #default="scope">
-                <div :class="scope.row.accountNonLocked ? 'mdi-lock-open-variant-outline' : 'mdi-lock-outline'"
+                <div
+                  :class="['cursor-pointer', scope.row.accountNonLocked ? 'i-mdi:lock-open-variant-outline text-[var(--el-color-success)]' : 'i-mdi:lock-outline text-[var(--el-color-warning)]']"
                   @click="lockRow(scope.row)" />
+                <!-- <el-button v-if="scope.row.accountNonLocked" plain type="success" circle @click="lockRow(scope.row)">
+                  <div class="i-mdi:lock-open-variant-outline" />
+                </el-button>
+                <el-button v-else type="warning" plain circle @click="lockRow(scope.row)">
+                  <div class="i-mdi:lock-outline" />
+                </el-button> -->
               </template>
             </ElTableColumn>
             <ElTableColumn prop="enabled" :label="$t('enabled')">

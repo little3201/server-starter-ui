@@ -17,8 +17,8 @@ const pagination = reactive({
 
 const checkAll = ref<boolean>(true)
 const isIndeterminate = ref<boolean>(false)
-const checkedColumns = ref<Array<string>>(['name', 'status', 'description'])
-const columns = ref<Array<string>>(['name', 'status', 'description'])
+const checkedColumns = ref<Array<string>>(['name', 'enabled', 'description'])
+const columns = ref<Array<string>>(['name', 'enabled', 'description'])
 
 const saveLoading = ref<boolean>(false)
 const dialogVisible = ref<boolean>(false)
@@ -196,9 +196,7 @@ function handleCheckedChange(value: string[]) {
           <ElCol :span="8" class="text-right">
             <ElTooltip :content="$t('refresh')" placement="top">
               <ElButton type="primary" plain circle @click="load">
-                <template #icon>
-                  <div class="i-mdi:refresh w-5 h-5" />
-                </template>
+                <div class="i-mdi:refresh" />
               </ElButton>
             </ElTooltip>
 
@@ -207,9 +205,7 @@ function handleCheckedChange(value: string[]) {
                 <ElPopover :width="200" trigger="click">
                   <template #reference>
                     <ElButton type="success" plain circle>
-                      <template #icon>
-                        <div class="i-mdi:format-list-bulleted w-5 h-5" />
-                      </template>
+                      <div class="i-mdi:format-list-bulleted" />
                     </ElButton>
                   </template>
                   <div>
@@ -238,8 +234,7 @@ function handleCheckedChange(value: string[]) {
           </ElCol>
         </ElRow>
 
-        <ElTable v-loading="loading" :data="datas" lazy :load="load" row-key="id" stripe table-layout="auto"
-          >
+        <ElTable v-loading="loading" :data="datas" lazy :load="load" row-key="id" stripe table-layout="auto">
           <ElTableColumn type="selection" width="55" />
           <ElTableColumn prop="name" :label="$t('name')" />
           <ElTableColumn prop="enabled" :label="$t('enabled')">
@@ -254,7 +249,8 @@ function handleCheckedChange(value: string[]) {
               <ElButton size="small" type="primary" link @click="saveOrUpdate(scope.row.id)">
                 <div class="i-mdi:pencil-outline" />{{ $t('edit') }}
               </ElButton>
-              <ElPopconfirm v-if="!scope.row.hasChildren" :title="$t('removeConfirm')" :width="240" @confirm="confirmEvent(scope.row.id)">
+              <ElPopconfirm v-if="!scope.row.hasChildren" :title="$t('removeConfirm')" :width="240"
+                @confirm="confirmEvent(scope.row.id)">
                 <template #reference>
                   <ElButton size="small" type="danger" link>
                     <div class="i-mdi:trash-can-outline" />{{ $t('remove') }}
