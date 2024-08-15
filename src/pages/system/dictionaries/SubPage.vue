@@ -109,12 +109,12 @@ function confirmEvent(id: number) {
       </ElCol>
       <ElCol :span="12" class="text-right">
         <ElButton type="primary" @click="saveOrUpdate()">
-          <div class="i-ph:plus" />{{ $t('add') }}
+          <div class="i-mdi:plus" />{{ $t('add') }}
         </ElButton>
         <ElTooltip class="box-item" effect="dark" :content="$t('refresh')" placement="top">
           <ElButton type="primary" plain circle @click="load">
             <template #icon>
-              <div class="i-ph:arrow-clockwise" />
+              <div class="i-mdi:refresh" />
             </template>
           </ElButton>
         </ElTooltip>
@@ -124,7 +124,7 @@ function confirmEvent(id: number) {
     <ElTable v-loading="loading" :data="datas" lazy :load="load" title="sss" row-key="id" stripe table-layout="auto">
       <ElTableColumn type="selection" width="55" />
       <ElTableColumn prop="name" :label="$t('name')" />
-      <ElTableColumn prop="enabled" :label="$t('status')">
+      <ElTableColumn prop="enabled" :label="$t('enabled')">
         <template #default="scope">
           <ElSwitch size="small" v-model="scope.row.enabled" style="--el-switch-on-color: var(--el-color-success);" />
         </template>
@@ -134,12 +134,12 @@ function confirmEvent(id: number) {
       <ElTableColumn :label="$t('actions')">
         <template #default="scope">
           <ElButton size="small" type="primary" link @click="saveOrUpdate(scope.row.id)">
-            <div class="i-ph:pencil-simple-line" />{{ $t('edit') }}
+            <div class="i-mdi:pencil-outline" />{{ $t('edit') }}
           </ElButton>
           <ElPopconfirm :title="$t('removeConfirm')" :width="240" @confirm="confirmEvent(scope.row.id)">
             <template #reference>
               <ElButton size="small" type="danger" link>
-                <div class="i-ph:trash" />{{ $t('remove') }}
+                <div class="i-mdi:trash-can-outline" />{{ $t('remove') }}
               </ElButton>
             </template>
           </ElPopconfirm>
@@ -172,10 +172,10 @@ function confirmEvent(id: number) {
     </ElForm>
     <template #footer>
       <ElButton @click="dialogVisible = false">
-        <div class="i-ph:x-circle" />{{ $t('cancle') }}
+        <div class="i-mdi:close" />{{ $t('cancle') }}
       </ElButton>
       <ElButton type="primary" :loading="saveLoading" @click="onSubmit">
-        <div class="i-ph:check-circle" /> {{ $t('commit') }}
+        <div class="i-mdi:check-circle-outline" /> {{ $t('commit') }}
       </ElButton>
     </template>
   </Dialog>

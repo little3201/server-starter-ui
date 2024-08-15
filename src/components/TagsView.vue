@@ -270,14 +270,14 @@ watch(
 <template>
   <div class="flex w-full relative">
     <span class="w-35px h-35px flex items-center justify-center cursor-pointer" @click="move(-200)">
-      <div class="i-ph:chevron-left " />
+      <div class="i-mdi:chevron-left " />
     </span>
     <div class="overflow-hidden flex-1">
       <ElScrollbar ref="scrollbarRef" class="h-full" @scroll="scroll">
         <div class="flex h-full">
           <ContextMenu :ref="itemRefs.set" :schema="[
             {
-              icon: 'i-ph:sync-outlined',
+              icon: 'i-mdi:refresh-outlined',
               label: $t('reload'),
               disabled: selectedTag?.fullPath !== item.fullPath,
               command: () => {
@@ -285,7 +285,7 @@ watch(
               }
             },
             {
-              icon: 'i-ph:close-outlined',
+              icon: 'i-mdi:close-outlined',
               label: $t('closeTab'),
               disabled: !!visitedViews?.length && (selectedTag?.meta.affix ? true : false),
               command: () => {
@@ -294,7 +294,7 @@ watch(
             },
             {
               divided: true,
-              icon: 'i-ph:vertical-right-outlined',
+              icon: 'i-mdi:vertical-right-outlined',
               label: $t('closeTheLeftTab'),
               disabled:
                 !!visitedViews?.length &&
@@ -305,7 +305,7 @@ watch(
               }
             },
             {
-              icon: 'i-ph:vertical-left-outlined',
+              icon: 'i-mdi:vertical-left-outlined',
               label: $t('closeTheRightTab'),
               disabled:
                 !!visitedViews?.length &&
@@ -317,7 +317,7 @@ watch(
             },
             {
               divided: true,
-              icon: 'i-ph:tag-outlined',
+              icon: 'i-mdi:tag-outlined',
               label: $t('closeOther'),
               disabled: selectedTag?.fullPath !== item.fullPath,
               command: () => {
@@ -325,7 +325,7 @@ watch(
               }
             },
             {
-              icon: 'i-ph:line-outlined',
+              icon: 'i-mdi:line-outlined',
               label: $t('closeAll'),
               command: () => {
                 closeAllTags()
@@ -339,9 +339,9 @@ watch(
             <div>
               <RouterLink :ref="tagLinksRefs.set" :to="{ ...item }" custom v-slot="{ navigate }">
                 <div @click="navigate" class="h-full flex justify-center items-center whitespace-nowrap pl-15px">
-                  <div :class="['i-ph:arrow-left mr-1 ', item?.matched?.[1]?.meta?.icon || item?.meta?.icon]" />
+                  <div :class="['i-mdi:arrow-left mr-1 ', item?.matched?.[1]?.meta?.icon || item?.meta?.icon]" />
                   {{ $t(item?.meta?.title as string) }}
-                  <div @click.prevent.stop="closeSelectedTag(item)" class="i-ph:x-circle mr-1 " />
+                  <div @click.prevent.stop="closeSelectedTag(item)" class="i-mdi:close mr-1 " />
                 </div>
               </RouterLink>
             </div>
@@ -352,23 +352,23 @@ watch(
     <span
       class="w-[var(--tags-view-height)] h-[var(--tags-view-height)] flex items-center justify-center cursor-pointer"
       @click="move(200)">
-      <div class="i-ph:chevron-right mr-1 " />
+      <div class="i-mdi:chevron-right mr-1 " />
     </span>
     <span
       class="w-[var(--tags-view-height)] h-[var(--tags-view-height)] flex items-center justify-center cursor-pointer"
       @click="refreshSelectedTag(selectedTag)">
-      <div class="i-ph:reload mr-1 " />
+      <div class="i-mdi:reload mr-1 " />
     </span>
     <ContextMenu trigger="click" :schema="[
       {
-        icon: 'i-ph:sync-outlined',
+        icon: 'i-mdi:refresh-outlined',
         label: $t('reload'),
         command: () => {
           refreshSelectedTag(selectedTag)
         }
       },
       {
-        icon: 'i-ph:x-circle',
+        icon: 'i-mdi:close',
         label: $t('closeTab'),
         disabled: !!(visitedViews?.length ?? 0) && (selectedTag?.meta.affix ? true : false),
         command: () => {
@@ -377,7 +377,7 @@ watch(
       },
       {
         divided: true,
-        icon: 'i-ph:vertical-right-outlined',
+        icon: 'i-mdi:vertical-right-outlined',
         label: $t('closeTheLeftTab'),
         disabled: !!visitedViews?.length && selectedTag?.fullPath === visitedViews[0].fullPath,
         command: () => {
@@ -385,7 +385,7 @@ watch(
         }
       },
       {
-        icon: 'i-ph:vertical-left-outlined',
+        icon: 'i-mdi:vertical-left-outlined',
         label: $t('closeTheRightTab'),
         disabled:
           !!visitedViews?.length &&
@@ -396,14 +396,14 @@ watch(
       },
       {
         divided: true,
-        icon: 'i-ph:tag-outlined',
+        icon: 'i-mdi:tag-outlined',
         label: $t('closeOther'),
         command: () => {
           closeOthersTags()
         }
       },
       {
-        icon: 'i-ph:line-outlined',
+        icon: 'i-mdi:line-outlined',
         label: $t('closeAll'),
         command: () => {
           closeAllTags()
@@ -411,7 +411,7 @@ watch(
       }
     ]">
       <span class="w-35px h-35px flex items-center justify-center cursor-pointer block">
-        <div class="i-ph:settings mr-1 " />
+        <div class="i-mdi:settings mr-1 " />
       </span>
     </ContextMenu>
   </div>

@@ -1,18 +1,23 @@
 <script setup lang="ts">
 import { ref, onMounted, reactive } from 'vue'
 import { dayjs } from 'element-plus'
+import draggable from 'vuedraggable'
 import { retrieveOperationLogs, fetchOperationLog } from '~/api/operation-logs'
 import type { OperationLog } from '~/models'
 
 
+const loading = ref<boolean>(false)
+const datas = ref<Array<OperationLog>>([])
 const pagination = reactive({
   page: 1,
   size: 10,
   total: 0
 })
 
-const loading = ref<boolean>(false)
-const datas = ref<Array<OperationLog>>([])
+const checkAll = ref<boolean>(true)
+const isIndeterminate = ref<boolean>(false)
+const checkedColumns = ref<Array<string>>(['name', 'status', 'description'])
+const columns = ref<Array<string>>(['name', 'status', 'description'])
 
 const searchForm = ref({
   module: null,
@@ -30,7 +35,7 @@ const detail = ref<OperationLog>({
   ip: "",
   location: "",
   status: null,
-  operateTime: null
+  operationTime: null
 })
 
 const dialogVisible = ref<boolean>(false)
@@ -107,6 +112,24 @@ function confirmEvent(id: number) {
   }
 }
 
+/**
+ * 全选操作
+ * @param val 是否全选
+ */
+function handleCheckAllChange(val: boolean) {
+  checkedColumns.value = val ? columns.value : []
+  isIndeterminate.value = false
+}
+
+/**
+ * 选中操作
+ * @param value 选中的值
+ */
+function handleCheckedChange(value: string[]) {
+  const checkedCount = value.length
+  checkAll.value = checkedCount === columns.value.length
+  isIndeterminate.value = checkedCount > 0 && checkedCount < columns.value.length
+}
 </script>
 
 <template>
@@ -122,10 +145,10 @@ function confirmEvent(id: number) {
           </ElFormItem>
           <ElFormItem>
             <ElButton type="primary" @click="load">
-              <div class="i-ph:magnifying-glass" />{{ $t('search') }}
+              <div class="i-mdi:search" />{{ $t('search') }}
             </ElButton>
             <ElButton @click="reset">
-              <div class="i-ph:arrow-counter-clockwise" />{{ $t('reset') }}
+              <div class="i-mdi:restore" />{{ $t('reset') }}
             </ElButton>
           </ElFormItem>
         </ElForm>
@@ -135,28 +158,50 @@ function confirmEvent(id: number) {
         <ElRow :gutter="20" justify="space-between" class="mb-4">
           <ElCol :span="16" class="text-left">
             <ElButton type="danger" plain>
-              <div class="i-ph:trash" />{{ $t('clear') }}
+              <div class="i-mdi:trash-can-outline" />{{ $t('clear') }}
             </ElButton>
             <ElButton type="success" plain>
-              <div class="i-ph:cloud-arrow-down" />{{ $t('export') }}
+              <div class="i-mdi:file-download-outline" />{{ $t('export') }}
             </ElButton>
           </ElCol>
 
           <ElCol :span="8" class="text-right">
             <ElTooltip class="box-item" effect="dark" :content="$t('refresh')" placement="top">
               <ElButton type="primary" plain circle @click="load">
-                <template #icon>
-                  <div class="i-ph:arrow-clockwise" />
-                </template>
+                <div class="i-mdi:refresh" />
               </ElButton>
             </ElTooltip>
 
-            <ElTooltip class="box-item" effect="dark" :content="$t('settings')" placement="top">
-              <ElButton type="success" plain circle>
-                <template #icon>
-                  <div class="i-ph:text-columns" />
-                </template>
-              </ElButton>
+            <ElTooltip :content="$t('column') + $t('settings')" placement="top">
+              <span class="inline-block ml-3 h-8">
+                <ElPopover :width="200" trigger="click">
+                  <template #reference>
+                    <ElButton type="success" plain circle>
+                      <div class="i-mdi:format-list-bulleted" />
+                    </ElButton>
+                  </template>
+                  <div>
+                    <ElCheckbox v-model="checkAll" :indeterminate="isIndeterminate" @change="handleCheckAllChange">
+                      全选
+                    </ElCheckbox>
+                    <ElDivider />
+                    <ElCheckboxGroup v-model="checkedColumns" @change="handleCheckedChange">
+                      <draggable v-model="columns" item-key="simple">
+                        <template #item="{ element }">
+                          <div class="flex items-center space-x-2">
+                            <div class="i-mdi:drag w-4 h-4 hover:cursor-move" />
+                            <ElCheckbox :label="element" :value="element" :disabled="element === columns[0]">
+                              <div class="inline-flex items-center space-x-4">
+                                {{ $t(element) }}
+                              </div>
+                            </ElCheckbox>
+                          </div>
+                        </template>
+                      </draggable>
+                    </ElCheckboxGroup>
+                  </div>
+                </ElPopover>
+              </span>
             </ElTooltip>
           </ElCol>
         </ElRow>
@@ -177,20 +222,20 @@ function confirmEvent(id: number) {
               <ElTag v-else type="danger" effect="light" round>{{ $t('failure') }}</ElTag>
             </template>
           </ElTableColumn>
-          <ElTableColumn prop="operateTime" :label="$t('operateTime')">
+          <ElTableColumn prop="operationTime" :label="$t('operationTime')">
             <template #default="scope">
-              {{ dayjs(scope.row.operateTime).format('YYYY-MM-DD HH:mm:ss') }}
+              {{ dayjs(scope.row.operationTime).format('YYYY-MM-DD HH:mm:ss') }}
             </template>
           </ElTableColumn>
           <ElTableColumn :label="$t('actions')" width="160">
             <template #default="scope">
               <ElButton size="small" type="success" link @click="detailHandler(scope.row.id)">
-                <div class="i-ph:file-text" />{{ $t('detail') }}
+                <div class="i-mdi:file-document-outline" />{{ $t('detail') }}
               </ElButton>
               <ElPopconfirm :title="$t('removeConfirm')" :width="240" @confirm="confirmEvent(scope.row.id)">
                 <template #reference>
                   <ElButton size="small" type="danger" link>
-                    <div class="i-ph:trash" />{{ $t('remove') }}
+                    <div class="i-mdi:trash-can-outline" />{{ $t('remove') }}
                   </ElButton>
                 </template>
               </ElPopconfirm>
@@ -212,11 +257,11 @@ function confirmEvent(id: number) {
         <ElDescriptionsItem :label="$t('ip')">{{ detail.ip }}</ElDescriptionsItem>
         <ElDescriptionsItem :label="$t('location')">{{ detail.location }}</ElDescriptionsItem>
         <ElDescriptionsItem :label="$t('operator')">{{ detail.operator }}</ElDescriptionsItem>
-        <ElDescriptionsItem :label="$t('status')">
+        <ElDescriptionsItem :label="$t('enabled')">
           <ElTag v-if="detail.status === 1" type="success" effect="light" round>{{ $t('success') }}</ElTag>
           <ElTag v-else type="danger" effect="light" round>{{ $t('failure') }}</ElTag>
         </ElDescriptionsItem>
-        <ElDescriptionsItem :label="$t('operateTime')">{{ dayjs(detail.operateTime).format('YYYY-MM-DD HH:mm:ss') }}
+        <ElDescriptionsItem :label="$t('operationTime')">{{ dayjs(detail.operationTime).format('YYYY-MM-DD HH:mm:ss') }}
         </ElDescriptionsItem>
       </ElDescriptions>
     </Dialog>

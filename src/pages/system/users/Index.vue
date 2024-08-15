@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref, reactive, onMounted, watch } from 'vue'
 import type { FormInstance, FormRules } from 'element-plus'
+import draggable from 'vuedraggable'
 import Dialog from 'components/Dialog.vue'
 import { retrieveOrganizationTree } from '~/api/organizations'
 import { retrieveUsers, fetchUser } from '~/api/users'
@@ -14,6 +15,11 @@ const pagination = reactive({
   size: 10,
   total: 0
 })
+
+const checkAll = ref<boolean>(true)
+const isIndeterminate = ref<boolean>(false)
+const checkedColumns = ref<Array<string>>(['name', 'enabled', 'description'])
+const columns = ref<Array<string>>(['name', 'enabled', 'description'])
 
 const treeEl = ref()
 const treeLoading = ref<boolean>(false)
@@ -37,6 +43,7 @@ const form = ref<User>({
   username: '',
   email: '',
   role: undefined,
+  accountNonLocked: true,
   organization: undefined
 })
 
@@ -218,6 +225,33 @@ function confirmEvent(id: number) {
     removeHandler(id)
   }
 }
+
+/**
+ * 解锁/上锁
+ * @param row 数据
+ */
+function lockRow(row: User) {
+  row.accountNonLocked = !row.accountNonLocked
+}
+
+/**
+ * 全选操作
+ * @param val 是否全选
+ */
+function handleCheckAllChange(val: boolean) {
+  checkedColumns.value = val ? columns.value : []
+  isIndeterminate.value = false
+}
+
+/**
+ * 选中操作
+ * @param value 选中的值
+ */
+function handleCheckedChange(value: string[]) {
+  const checkedCount = value.length
+  checkAll.value = checkedCount === columns.value.length
+  isIndeterminate.value = checkedCount > 0 && checkedCount < columns.value.length
+}
 </script>
 
 <template>
@@ -227,7 +261,7 @@ function confirmEvent(id: number) {
         <ElFormItem prop="currentNode">
           <ElInput v-model="currentNode" :placeholder="$t('search')" clearable>
             <template #prefix>
-              <div class="i-ph:magnifying-glass" />
+              <div class="i-mdi:search" />
             </template>
           </ElInput>
         </ElFormItem>
@@ -249,10 +283,10 @@ function confirmEvent(id: number) {
             </ElFormItem>
             <ElFormItem>
               <ElButton type="primary" @click="load">
-                <div class="i-ph:magnifying-glass" />{{ $t('search') }}
+                <div class="i-mdi:search" />{{ $t('search') }}
               </ElButton>
               <ElButton @click="reset">
-                <div class="i-ph:arrow-counter-clockwise" />{{ $t('reset') }}
+                <div class="i-mdi:restore" />{{ $t('reset') }}
               </ElButton>
             </ElFormItem>
           </ElForm>
@@ -262,54 +296,88 @@ function confirmEvent(id: number) {
           <ElRow :gutter="20" justify="space-between" class="mb-4">
             <ElCol :span="16" class="text-left">
               <ElButton type="primary" @click="saveOrUpdate()">
-                <div class="i-ph:plus" />{{ $t('add') }}
+                <div class="i-mdi:plus" />{{ $t('add') }}
               </ElButton>
               <ElButton type="warning" plain @click="dialogVisible = true">
-                <div class="i-ph:file-arrow-up" />{{ $t('import') }}
+                <div class="i-mdi:file-upload-outline" />{{ $t('import') }}
               </ElButton>
               <ElButton type="success" plain>
-                <div class="i-ph:cloud-arrow-down" />{{ $t('export') }}
+                <div class="i-mdi:file-download-outline" />{{ $t('export') }}
               </ElButton>
             </ElCol>
 
             <ElCol :span="8" class="text-right">
-              <ElTooltip class="box-item" effect="dark" :content="$t('refresh')" placement="top">
+              <ElTooltip effect="dark" :content="$t('refresh')" placement="top">
                 <ElButton type="primary" plain circle @click="load">
-                  <template #icon>
-                    <div class="i-ph:arrow-clockwise" />
-                  </template>
+                  <div class="i-mdi:refresh" />
                 </ElButton>
               </ElTooltip>
 
-              <ElTooltip class="box-item" effect="dark" :content="$t('settings')" placement="top">
-                <ElButton type="success" plain circle>
-                  <template #icon>
-                    <div class="i-ph:text-columns" />
-                  </template>
-                </ElButton>
+              <ElTooltip :content="$t('column') + $t('settings')" placement="top">
+                <span class="inline-block ml-3 h-8">
+                  <ElPopover :width="200" trigger="click">
+                    <template #reference>
+                      <ElButton type="success" plain circle>
+                        <div class="i-mdi:format-list-bulleted" />
+                      </ElButton>
+                    </template>
+                    <div>
+                      <ElCheckbox v-model="checkAll" :indeterminate="isIndeterminate" @change="handleCheckAllChange">
+                        全选
+                      </ElCheckbox>
+                      <ElDivider />
+                      <ElCheckboxGroup v-model="checkedColumns" @change="handleCheckedChange">
+                        <draggable v-model="columns" item-key="simple">
+                          <template #item="{ element }">
+                            <div class="flex items-center space-x-2">
+                              <div class="i-mdi:drag w-4 h-4 hover:cursor-move" />
+                              <ElCheckbox :label="element" :value="element" :disabled="element === columns[0]">
+                                <div class="inline-flex items-center space-x-4">
+                                  {{ $t(element) }}
+                                </div>
+                              </ElCheckbox>
+                            </div>
+                          </template>
+                        </draggable>
+                      </ElCheckboxGroup>
+                    </div>
+                  </ElPopover>
+                </span>
               </ElTooltip>
             </ElCol>
           </ElRow>
 
-          <ElTable v-loading="loading" :data="datas" lazy :load="load" row-key="id" stripe table-layout="auto"
-            >
+          <ElTable v-loading="loading" :data="datas" lazy :load="load" row-key="id" stripe table-layout="auto">
             <ElTableColumn type="selection" width="55" />
             <ElTableColumn type="index" :label="$t('no')" width="55" />
             <ElTableColumn show-overflow-tooltip prop="username" :label="$t('username')">
               <template #default="scope">
-                <div style="display: flex; align-items: center">
-                  <ElAvatar :size="28" src="#" />
+                <div class="flex items-center">
+                  <ElAvatar :size="24" :src="scope.row.avatar" class=" flex-shrink-0" />
                   <span style="margin-left: 10px">{{ scope.row.username }}</span>
                 </div>
               </template>
             </ElTableColumn>
-            <ElTableColumn show-overflow-tooltip prop="email" :label="$t('email')" />
-            <ElTableColumn show-overflow-tooltip prop="role" :label="$t('role')">
+            <ElTableColumn prop="email" :label="$t('email')" />
+            <ElTableColumn show-overflow-tooltip prop="role" :label="$t('roles')">
               <template #default="scope">
                 {{ formatRole(scope.row.role) }}
               </template>
             </ElTableColumn>
-            <ElTableColumn prop="enabled" :label="$t('status')">
+            <ElTableColumn prop="accountNonLocked" :label="$t('accountNonLocked')">
+              <template #default="scope">
+                <div
+                  :class="['cursor-pointer', scope.row.accountNonLocked ? 'i-mdi:lock-open-variant-outline text-[var(--el-color-success)]' : 'i-mdi:lock-outline text-[var(--el-color-warning)]']"
+                  @click="lockRow(scope.row)" />
+                <!-- <el-button v-if="scope.row.accountNonLocked" plain type="success" circle @click="lockRow(scope.row)">
+                  <div class="i-mdi:lock-open-variant-outline" />
+                </el-button>
+                <el-button v-else type="warning" plain circle @click="lockRow(scope.row)">
+                  <div class="i-mdi:lock-outline" />
+                </el-button> -->
+              </template>
+            </ElTableColumn>
+            <ElTableColumn prop="enabled" :label="$t('enabled')">
               <template #default="scope">
                 <ElSwitch size="small" v-model="scope.row.enabled"
                   style="--el-switch-on-color: var(--el-color-success);" />
@@ -318,12 +386,12 @@ function confirmEvent(id: number) {
             <ElTableColumn :label="$t('actions')">
               <template #default="scope">
                 <ElButton size="small" type="primary" link @click="saveOrUpdate(scope.row.id)">
-                  <div class="i-ph:pencil-simple-line" />{{ $t('edit') }}
+                  <div class="i-mdi:pencil-outline" />{{ $t('edit') }}
                 </ElButton>
                 <ElPopconfirm :title="$t('removeConfirm')" :width="240" @confirm="confirmEvent(scope.row.id)">
                   <template #reference>
                     <ElButton size="small" type="danger" link>
-                      <div class="i-ph:trash" />{{ $t('remove') }}
+                      <div class="i-mdi:trash-can-outline" />{{ $t('remove') }}
                     </ElButton>
                   </template>
                 </ElPopconfirm>
@@ -336,7 +404,7 @@ function confirmEvent(id: number) {
       </ElSpace>
     </div>
 
-    <Dialog v-model="dialogVisible" :title="$t('user')" width="36%">
+    <Dialog v-model="dialogVisible" :title="$t('users')" width="36%">
       <ElForm ref="formRef" :model="form" :rules="rules" label-position="top">
         <ElRow :gutter="20" class="w-full !mx-0">
           <ElCol :span="12">
@@ -368,10 +436,10 @@ function confirmEvent(id: number) {
       </ElForm>
       <template #footer>
         <ElButton @click="dialogVisible = false">
-          <div class="i-ph:x-circle" />{{ $t('cancle') }}
+          <div class="i-mdi:close" />{{ $t('cancle') }}
         </ElButton>
         <ElButton type="primary" :loading="saveLoading" @click="onSubmit">
-          <div class="i-ph:check-circle" /> {{ $t('commit') }}
+          <div class="i-mdi:check-circle-outline" /> {{ $t('commit') }}
         </ElButton>
       </template>
     </Dialog>

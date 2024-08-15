@@ -12,7 +12,7 @@ const datas: AuditLog[] = [
     ip: "192.168.0.1",
     location: "New York",
     status: 1,
-    actionTime: "2024-07-01T00:00:00"
+    operationTime: "2024-07-01T00:00:00"
   },
   {
     id: 2,
@@ -24,7 +24,7 @@ const datas: AuditLog[] = [
     ip: "192.168.0.2",
     location: "London",
     status: 1,
-    actionTime: "2024-07-01T00:00:00"
+    operationTime: "2024-07-01T00:00:00"
   },
   {
     id: 3,
@@ -36,7 +36,7 @@ const datas: AuditLog[] = [
     ip: "192.168.0.3",
     location: "San Francisco",
     status: 1,
-    actionTime: "2024-07-01T00:00:00"
+    operationTime: "2024-07-01T00:00:00"
   },
   {
     id: 4,
@@ -48,7 +48,7 @@ const datas: AuditLog[] = [
     ip: "192.168.0.4",
     location: "Berlin",
     status: 0,
-    actionTime: "2024-07-01T00:00:00"
+    operationTime: "2024-07-01T00:00:00"
   },
   {
     id: 5,
@@ -60,7 +60,7 @@ const datas: AuditLog[] = [
     ip: "192.168.0.5",
     location: "Paris",
     status: 1,
-    actionTime: "2024-07-01T00:00:00"
+    operationTime: "2024-07-01T00:00:00"
   },
   {
     id: 6,
@@ -72,7 +72,7 @@ const datas: AuditLog[] = [
     ip: "192.168.0.6",
     location: "Tokyo",
     status: 1,
-    actionTime: "2024-07-01T00:00:00"
+    operationTime: "2024-07-01T00:00:00"
   },
   {
     id: 7,
@@ -84,7 +84,7 @@ const datas: AuditLog[] = [
     ip: "192.168.0.1",
     location: "New York",
     status: 1,
-    actionTime: "2024-07-01T00:00:00"
+    operationTime: "2024-07-01T00:00:00"
   },
   {
     id: 8,
@@ -96,7 +96,7 @@ const datas: AuditLog[] = [
     ip: "192.168.0.2",
     location: "London",
     status: 1,
-    actionTime: "2024-07-01T00:00:00"
+    operationTime: "2024-07-01T00:00:00"
   },
   {
     id: 9,
@@ -108,7 +108,7 @@ const datas: AuditLog[] = [
     ip: "192.168.0.3",
     location: "San Francisco",
     status: 1,
-    actionTime: "2024-07-01T00:00:00"
+    operationTime: "2024-07-01T00:00:00"
   },
   {
     id: 10,
@@ -120,7 +120,7 @@ const datas: AuditLog[] = [
     ip: "192.168.0.4",
     location: "Berlin",
     status: 1,
-    actionTime: "2024-07-01T00:00:00"
+    operationTime: "2024-07-01T00:00:00"
   },
   {
     id: 11,
@@ -132,7 +132,7 @@ const datas: AuditLog[] = [
     ip: "192.168.0.4",
     location: "Berlin",
     status: 1,
-    actionTime: "2024-07-01T00:00:00"
+    operationTime: "2024-07-01T00:00:00"
   }
 ]
 

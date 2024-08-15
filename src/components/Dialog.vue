@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed, useAttrs, ref, unref, useSlots } from 'vue'
 import { isNumber } from '~/utils'
+import { Close } from '@element-plus/icons-vue'
 
 const slots = useSlots()
 
@@ -51,9 +52,9 @@ const dialogStyle = computed(() => {
         </slot>
         <div class="inline-flex justify-between items-center space-x-4">
           <div
-            :class="[isFullscreen ? 'i-ph:corners-in' : 'i-ph:corners-out', 'cursor-pointer hover:text-[var(--el-color-primary)]']"
+            :class="[isFullscreen ? 'i-mdi:arrow-collapse' : 'i-mdi:arrow-expand', 'cursor-pointer hover:text-[var(--el-color-primary)]']"
             @click="toggleFull" />
-          <div class="i-ph:x cursor-pointer hover:text-[var(--el-color-primary)]" @click="close" />
+          <div class="i-mdi:close cursor-pointer hover:text-[var(--el-color-primary)]" @click="close" />
         </div>
       </div>
     </template>

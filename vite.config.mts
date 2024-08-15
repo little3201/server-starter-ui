@@ -49,7 +49,7 @@ export default defineConfig({
       },
       presets: [
         presetUno({
-          attributifyPseudo: true,
+          preflight: false,
         }),
         presetAttributify(),
         presetIcons({
