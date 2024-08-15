@@ -4,26 +4,26 @@ import type { Region } from '~/models'
 const datas: Region[] = []
 const subDatas: Region[] = []
 
-for (let i = 0; i < 34; i++) {
+for (let i = 1; i < 34; i++) {
   const data: Region = {
     id: i,
     name: 'region_' + i,
     areaCode: (11 + i) * 10000,
     postalCode: (11 + i),
+    count: i - 1,
     enabled: i % 3 > 0,
-    description: 'This is region description about xxx',
-    lastModifiedDate: new Date()
+    description: 'This is region description about xxx'
   }
   for (let j = 0; j < i; j++) {
     const subData: Region = {
-      id: j,
+      id: 100 + j,
       name: 'region_' + i + '_' + j,
       superiorId: i,
       areaCode: data.areaCode + j,
       postalCode: data.postalCode + j,
+      count: 0,
       enabled: j % 2 > 0,
-      description: 'This is region description about xxx',
-      lastModifiedDate: new Date()
+      description: 'This is region description about xxx'
     }
     subDatas.push(subData)
   }
@@ -31,81 +31,29 @@ for (let i = 0; i < 34; i++) {
 }
 
 export const regionsHandlers = [
-  http.get('/api/regions/:id/subset', ({ params, request }) => {
-    const superiorId = params.id
-
-    const url = new URL(request.url)
-    const page = url.searchParams.get('page')
-    const size = url.searchParams.get('size')
-
-    // sort and filter
-    const sortBy = url.searchParams.get('sortBy') as never
-    if (sortBy) {
-      datas.sort((a: Region, b: Region) => {
-        if (a[sortBy] > b[sortBy]) {
-          return 1
-        }
-        if (a[sortBy] < b[sortBy]) {
-          return -1
-        }
-        return 0
-      })
-    }
-    let data = {
-    }
-
-    const filter = url.searchParams.get('filter')
-    if (filter) {
-      const result = subDatas.filter(item => item.superiorId === Number(superiorId)).filter(item => item.name.includes(filter)).slice(Number(page) * Number(size), (Number(page) + 1) * Number(size))
-      data = {
-        content: result,
-        totalElements: result.length
+  http.get('/api/regions/:id/subset', ({ params }) => {
+    const { id } = params
+    return HttpResponse.json(subDatas.filter(item => item.superiorId === Number(id)))
+  }),
+  http.get('/api/regions/:id', ({ params }) => {
+    const { id } = params
+    if (id) {
+      let res = datas.filter(item => item.id === Number(id))[0]
+      if (!res) {
+        res = subDatas.filter(item => item.id === Number(id))[0]
       }
-      return HttpResponse.json(data)
+      return HttpResponse.json(res)
+    } else {
+      return HttpResponse.json(null)
     }
-    // Construct a JSON response with the list of all Dictionarys
-    // as the response body.
-    data = {
-      content: Array.from(subDatas.filter(item => item.superiorId === Number(superiorId)).slice(Number(page) * Number(size), (Number(page) + 1) * Number(size))),
-      totalElements: datas.length
-    }
-
-    return HttpResponse.json(data)
   }),
   http.get('/api/regions', ({ request }) => {
     const url = new URL(request.url)
     const page = url.searchParams.get('page')
     const size = url.searchParams.get('size')
-
-    // sort and filter
-    const sortBy = url.searchParams.get('sortBy') as never
-    if (sortBy) {
-      datas.sort((a: Region, b: Region) => {
-        if (a[sortBy] > b[sortBy]) {
-          return 1
-        }
-        if (a[sortBy] < b[sortBy]) {
-          return -1
-        }
-        return 0
-      })
-    }
-
-    let data = {
-    }
-
-    const filter = url.searchParams.get('filter')
-    if (filter) {
-      const result = datas.filter(item => item.name.includes(filter)).slice(Number(page) * Number(size), (Number(page) + 1) * Number(size))
-      data = {
-        content: result,
-        totalElements: result.length
-      }
-      return HttpResponse.json(data)
-    }
-    // Construct a JSON response with the list of all Dictionarys
+    // Construct a JSON response with the list of all privilege
     // as the response body.
-    data = {
+    const data = {
       content: Array.from(datas.slice(Number(page) * Number(size), (Number(page) + 1) * Number(size))),
       totalElements: datas.length
     }

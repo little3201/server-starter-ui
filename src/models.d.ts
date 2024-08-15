@@ -17,6 +17,7 @@ export interface Organization extends AudtiMetadata {
   name: string
   superiorId?: number
   enabled?: boolean
+  count?: number
   description?: string
   hasChildren?: boolean
 }
@@ -54,7 +55,7 @@ export interface Privilege extends AudtiMetadata {
   icon: string
   hidden?: boolean
   actions?: string[]
-  count: number
+  count?: number
   hasChildren?: boolean
   enabled?: boolean
   description?: string
@@ -66,6 +67,7 @@ export interface Dictionary extends AudtiMetadata {
   order: number
   enabled?: boolean
   description?: string
+  count?: number
   hasChildren?: boolean
   children?: []
 }
@@ -76,6 +78,8 @@ export interface Region extends AudtiMetadata {
   superiorId?: number
   areaCode: number
   postalCode: number
+  count?: number
+  hasChildren?: boolean
   enabled?: boolean
   description?: string
 }

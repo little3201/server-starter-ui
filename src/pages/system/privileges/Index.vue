@@ -3,7 +3,7 @@ import { ref, reactive, onMounted, computed } from 'vue'
 import type { FormInstance, FormRules } from 'element-plus'
 import draggable from 'vuedraggable'
 import Dialog from 'components/Dialog.vue'
-import { retrievePrivileges, retrievePrivilegesSubset, fetchPrivilege } from '~/api/privileges'
+import { retrievePrivileges, retrievePrivilegeSubset, fetchPrivilege } from '~/api/privileges'
 import type { Privilege } from '~/models'
 
 const loading = ref<boolean>(false)
@@ -61,7 +61,6 @@ const form = ref<Privilege>({
   component: '',
   redirect: '',
   icon: '',
-  count: 0,
   actions: [],
   description: ''
 })
@@ -89,20 +88,17 @@ function pageChange(currentPage: number, pageSize: number) {
 /**
  * 加载列表
  */
-function load(
-  row?: Privilege,
-  treeNode?: unknown,
-  resolve?: (date: Privilege[]) => void) {
+function load(row?: Privilege, treeNode?: unknown, resolve?: (date: Privilege[]) => void) {
   loading.value = true
   if (row && row.id && resolve) {
-    retrievePrivilegesSubset(row.id).then(res => {
+    retrievePrivilegeSubset(row.id).then(res => {
       resolve(res.data)
     }).finally(() => loading.value = false)
   } else {
     retrievePrivileges(pagination.page, pagination.size, searchForm.value).then(res => {
       let list = res.data.content
       list.forEach((element: Privilege) => {
-        element.hasChildren = element.count > 0
+        element.hasChildren = element.count && element.count > 0 ? true : false
       })
       datas.value = list
       pagination.total = res.data.totalElements

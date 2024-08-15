@@ -3,7 +3,7 @@ import { ref, reactive, onMounted } from 'vue'
 import type { FormInstance, FormRules } from 'element-plus'
 import draggable from 'vuedraggable'
 import Dialog from 'components/Dialog.vue'
-import { retrieveRegions, fetchRegion } from '~/api/regions'
+import { retrieveRegions, retrieveRegionSubset, fetchRegion } from '~/api/regions'
 import type { Region } from '~/models'
 
 const loading = ref<boolean>(false)
@@ -54,12 +54,22 @@ function pageChange(currentPage: number, pageSize: number) {
 /**
  * 加载列表
  */
-function load() {
+function load(row?: Region, treeNode?: unknown, resolve?: (date: Region[]) => void) {
   loading.value = true
-  retrieveRegions(pagination.page, pagination.size, searchForm.value).then(res => {
-    datas.value = res.data.content
-    pagination.total = res.data.totalElements
-  }).finally(() => loading.value = false)
+  if (row && row.id && resolve) {
+    retrieveRegionSubset(row.id).then(res => {
+      resolve(res.data)
+    }).finally(() => loading.value = false)
+  } else {
+    retrieveRegions(pagination.page, pagination.size, searchForm.value).then(res => {
+      let list = res.data.content
+      list.forEach((element: Region) => {
+        element.hasChildren = element.count && element.count > 0 ? true : false
+      })
+      datas.value = list
+      pagination.total = res.data.totalElements
+    }).finally(() => loading.value = false)
+  }
 }
 
 /**
@@ -231,7 +241,6 @@ function handleCheckedChange(value: string[]) {
         <ElTable v-loading="loading" :data="datas" lazy :load="load" row-key="id" stripe table-layout="auto"
           highlight-current-row>
           <ElTableColumn type="selection" width="55" />
-          <ElTableColumn type="index" :label="$t('no')" width="55" />
           <ElTableColumn prop="name" :label="$t('name')" />
           <ElTableColumn prop="areaCode" :label="$t('areaCode')" />
           <ElTableColumn prop="postalCode" :label="$t('postalCode')" />
