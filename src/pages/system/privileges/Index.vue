@@ -3,8 +3,8 @@ import { ref, reactive, onMounted, computed } from 'vue'
 import type { FormInstance, FormRules } from 'element-plus'
 import draggable from 'vuedraggable'
 import Dialog from 'components/Dialog.vue'
-import { retrievePrivileges, retrievePrivilegeSubset, fetchPrivilege } from '~/api/privileges'
-import type { Privilege } from '~/models'
+import { retrievePrivileges, retrievePrivilegeSubset, fetchPrivilege } from 'src/api/privileges'
+import type { Privilege } from 'src/models'
 
 const loading = ref<boolean>(false)
 const datas = ref<Array<Privilege>>([])
@@ -126,7 +126,7 @@ onMounted(() => {
  * 弹出框
  * @param id 主键
  */
-function saveOrUpdate(id?: number) {
+function editRow(id?: number) {
   if (id) {
     loadOne(id)
   }
@@ -289,7 +289,7 @@ function handleCheckedChange(value: string[]) {
           <ElTableColumn show-overflow-tooltip prop="description" :label="$t('description')" />
           <ElTableColumn :label="$t('actions')">
             <template #default="scope">
-              <ElButton size="small" type="primary" link @click="saveOrUpdate(scope.row.id)">
+              <ElButton size="small" type="primary" link @click="editRow(scope.row.id)">
                 <div class="i-mdi:pencil-outline" />{{ $t('edit') }}
               </ElButton>
             </template>
@@ -375,10 +375,10 @@ function handleCheckedChange(value: string[]) {
       </ElForm>
       <template #footer>
         <ElButton @click="dialogVisible = false">
-          <div class="i-mdi:close" />{{ $t('cancle') }}
+          <div class="i-mdi:close" />{{ $t('cancel') }}
         </ElButton>
         <ElButton type="primary" :loading="saveLoading" @click="onSubmit">
-          <div class="i-mdi:check-circle-outline" /> {{ $t('commit') }}
+          <div class="i-mdi:check-circle-outline" /> {{ $t('submit') }}
         </ElButton>
       </template>
     </Dialog>

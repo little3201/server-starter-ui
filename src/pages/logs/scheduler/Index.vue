@@ -2,8 +2,8 @@
 import { ref, onMounted, reactive } from 'vue'
 import { dayjs } from 'element-plus'
 import draggable from 'vuedraggable'
-import { retrieveSchedulerLogs, fetchSchedulerLog } from '~/api/scheduler-logs'
-import type { SchedulerLog } from '~/models'
+import { retrieveSchedulerLogs, fetchSchedulerLog } from 'src/api/scheduler-logs'
+import type { SchedulerLog } from 'src/models'
 
 
 const loading = ref<boolean>(false)
@@ -87,7 +87,7 @@ onMounted(() => {
  * 详情
  * @param id 主键
  */
-function detailHandler(id: number) {
+function showRow(id: number) {
   dialogVisible.value = true
   loadOne(id)
 }
@@ -229,7 +229,7 @@ function handleCheckedChange(value: string[]) {
           </ElTableColumn>
           <ElTableColumn :label="$t('actions')" width="160">
             <template #default="scope">
-              <ElButton size="small" type="success" link @click="detailHandler(scope.row.id)">
+              <ElButton size="small" type="success" link @click="showRow(scope.row.id)">
                 <div class="i-mdi:file-document-outline" />{{ $t('detail') }}
               </ElButton>
               <ElPopconfirm :title="$t('removeConfirm')" :width="240" @confirm="confirmEvent(scope.row.id)">

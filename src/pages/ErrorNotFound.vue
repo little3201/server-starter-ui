@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import pageError from '~/assets/svgs/404.svg'
-import networkError from '~/assets/svgs/500.svg'
-import noPermission from '~/assets/svgs/403.svg'
+import pageError from 'assets/svgs/404.svg'
+import networkError from 'assets/svgs/500.svg'
+import noPermission from 'assets/svgs/403.svg'
 import { useRouter } from 'vue-router'
 
 interface ErrorMap {

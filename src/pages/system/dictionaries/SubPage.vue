@@ -2,8 +2,8 @@
 import { ref, reactive, onMounted } from 'vue'
 import type { FormInstance, FormRules } from 'element-plus'
 import Dialog from 'components/Dialog.vue'
-import { retrieveDictionarySubset, fetchDictionary } from '~/api/dictionaries'
-import type { Dictionary } from '~/models'
+import { retrieveDictionarySubset, fetchDictionary } from 'src/api/dictionaries'
+import type { Dictionary } from 'src/models'
 
 const props = defineProps<{
   superiorId: number,
@@ -48,7 +48,7 @@ onMounted(() => {
  * 弹出框
  * @param id 主键
  */
-function saveOrUpdate(id?: number) {
+function editRow(id?: number) {
   if (id) {
     loadOne(id)
   }
@@ -108,7 +108,7 @@ function confirmEvent(id: number) {
         <span class="text-xl">{{ title }}</span>
       </ElCol>
       <ElCol :span="12" class="text-right">
-        <ElButton type="primary" @click="saveOrUpdate()">
+        <ElButton type="primary" @click="editRow()">
           <div class="i-mdi:plus" />{{ $t('add') }}
         </ElButton>
         <ElTooltip class="box-item" effect="dark" :content="$t('refresh')" placement="top">
@@ -133,7 +133,7 @@ function confirmEvent(id: number) {
       <ElTableColumn show-overflow-tooltip prop="description" :label="$t('description')" />
       <ElTableColumn :label="$t('actions')">
         <template #default="scope">
-          <ElButton size="small" type="primary" link @click="saveOrUpdate(scope.row.id)">
+          <ElButton size="small" type="primary" link @click="editRow(scope.row.id)">
             <div class="i-mdi:pencil-outline" />{{ $t('edit') }}
           </ElButton>
           <ElPopconfirm :title="$t('removeConfirm')" :width="240" @confirm="confirmEvent(scope.row.id)">
@@ -172,10 +172,10 @@ function confirmEvent(id: number) {
     </ElForm>
     <template #footer>
       <ElButton @click="dialogVisible = false">
-        <div class="i-mdi:close" />{{ $t('cancle') }}
+        <div class="i-mdi:close" />{{ $t('cancel') }}
       </ElButton>
       <ElButton type="primary" :loading="saveLoading" @click="onSubmit">
-        <div class="i-mdi:check-circle-outline" /> {{ $t('commit') }}
+        <div class="i-mdi:check-circle-outline" /> {{ $t('submit') }}
       </ElButton>
     </template>
   </Dialog>

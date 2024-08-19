@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import type { PrivilegeTreeNode } from '~/models'
-import { pathResolve } from '~/utils'
+import type { PrivilegeTreeNode } from 'src/models'
+import { pathResolve } from 'src/utils'
 
 withDefaults(defineProps<{
   items: PrivilegeTreeNode[]

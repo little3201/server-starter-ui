@@ -1,22 +1,22 @@
 import { createApp } from "vue"
 import App from "./App.vue"
 
-import "~/styles/index.scss"
+import "src/css/index.scss"
 import 'virtual:uno.css'
 import 'animate.css'
 
 // If you want to use ElMessage, import it.
 import "element-plus/theme-chalk/src/message.scss"
 
-import pinia from '~/stores'
-import router from '~/router'
-import { i18n } from '~/boot/i18n'
+import pinia from './stores'
+import router from './router'
+import { i18n } from 'boot/i18n'
 
 async function prepareApp() {
   if (
     process.env.NODE_ENV !== 'production'
   ) {
-    const { worker } = await import('~/boot/msw-browser')
+    const { worker } = await import('boot/msw-browser')
     return worker.start()
   }
 

@@ -1,4 +1,4 @@
-import { api } from '~/boot/axios'
+import { api } from 'boot/axios'
 
 export const retrieveOrganizations = (page: number, size: number, params?: object) => {
   return api.get('/organizations', { params: { page: page - 1, size: size, ...params } })

@@ -15,15 +15,19 @@ import {
 export default defineConfig({
   resolve: {
     alias: {
-      '~': path.resolve(__dirname, 'src'),
+      'src': path.resolve(__dirname, 'src'),
       'components': path.resolve(__dirname, 'src/components'),
+      'layouts': path.resolve(__dirname, 'src/layouts'),
+      'pages': path.resolve(__dirname, 'src/pages'),
+      'assets': path.resolve(__dirname, 'src/assets'),
+      'boot': path.resolve(__dirname, 'src/boot'),
       'stores': path.resolve(__dirname, 'src/stores')
     },
   },
   css: {
     preprocessorOptions: {
       scss: {
-        additionalData: `@use "~/styles/element/index.scss" as *;`,
+        additionalData: `@use "src/css/element/index.scss" as *;`,
       },
     },
   },

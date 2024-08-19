@@ -5,12 +5,12 @@ import type { RouteLocationNormalizedLoaded, RouterLinkProps, RouteRecordRaw } f
 import { cloneDeep } from 'lodash-es'
 import { useTemplateRefsList } from '@vueuse/core'
 import { ElScrollbar } from 'element-plus'
-import { useUserStore } from '~/stores/user-store'
-import { useTagsViewStore } from '~/stores/tags-store'
-import { useScrollTo } from '~/hooks/event/useScrollTo'
-import { useTagsView } from '~/hooks/web/useTagsView'
-import { pathResolve } from '~/utils'
-import { generateRoutes } from '~/router'
+import { useUserStore } from 'stores/user-store'
+import { useTagsViewStore } from 'stores/tags-store'
+import { useScrollTo } from 'src/hooks/event/useScrollTo'
+import { useTagsView } from 'src/hooks/web/useTagsView'
+import { pathResolve } from 'src/utils'
+import { generateRoutes } from 'src/router'
 import ContextMenu from 'components/ContextMenu.vue'
 
 

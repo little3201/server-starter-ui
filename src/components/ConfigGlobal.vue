@@ -3,7 +3,7 @@ import { computed } from 'vue'
 import zhCn from 'element-plus/es/locale/lang/zh-cn'
 import zhTw from 'element-plus/es/locale/lang/zh-tw'
 import en from 'element-plus/es/locale/lang/en'
-import { useLocaleStore } from '~/stores/locale-store'
+import { useLocaleStore } from 'stores/locale-store'
 
 // 多语言相关
 const localStore = useLocaleStore()

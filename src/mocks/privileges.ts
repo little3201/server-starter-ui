@@ -1,5 +1,5 @@
 import { http, HttpResponse } from 'msw'
-import type { Privilege, PrivilegeTreeNode } from '~/models'
+import type { Privilege, PrivilegeTreeNode } from 'src/models'
 
 
 const datas: Privilege[] = [

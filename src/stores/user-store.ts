@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia'
-import { api } from '~/boot/axios'
-import { retrievePrivilegeTree } from '~/api/privileges'
-import type { Privilege } from '~/models'
+import { api } from 'boot/axios'
+import { retrievePrivilegeTree } from 'src/api/privileges'
+import type { Privilege } from 'src/models'
 
 interface User {
   username: string

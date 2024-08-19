@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { ref, onMounted, reactive } from 'vue'
 import draggable from 'vuedraggable'
-import { retrieveAccessLogs, fetchAccessLog } from '~/api/access-logs'
-import type { AccessLog } from '~/models'
+import { retrieveAccessLogs, fetchAccessLog } from 'src/api/access-logs'
+import type { AccessLog } from 'src/models'
 
 
 const loading = ref<boolean>(false)
@@ -90,7 +90,7 @@ onMounted(() => {
  * 详情
  * @param id 主键
  */
-function detailHandler(id: number) {
+function showRow(id: number) {
   dialogVisible.value = true
   loadOne(id)
 }
@@ -227,7 +227,7 @@ function handleCheckedChange(value: string[]) {
           <ElTableColumn show-overflow-tooltip prop="responseMessage" :label="$t('responseMessage')" />
           <ElTableColumn :label="$t('actions')" width="160">
             <template #default="scope">
-              <ElButton size="small" type="success" link @click="detailHandler(scope.row.id)">
+              <ElButton size="small" type="success" link @click="showRow(scope.row.id)">
                 <div class="i-mdi:file-document-outline" />{{ $t('detail') }}
               </ElButton>
               <ElPopconfirm :title="$t('removeConfirm')" :width="240" @confirm="confirmEvent(scope.row.id)">

@@ -1,4 +1,4 @@
-import { api } from '~/boot/axios'
+import { api } from 'boot/axios'
 
 export const retrieveRoles = (page?: number, size?: number, params?: object) => {
   if (page && size) {

@@ -10,7 +10,7 @@ const isDark = ref(appStore.isDark)
 
 const themeChange = (val: string | number | boolean) => {
   if (typeof val == 'boolean') {
-    appStore.setIsDark(val)
+    appStore.setDark(val)
   }
 }
 </script>

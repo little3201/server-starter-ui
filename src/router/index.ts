@@ -2,8 +2,8 @@ import { createRouter, createWebHistory } from 'vue-router'
 import type { RouteRecordRaw } from 'vue-router'
 import { constantRouterMap } from './routes'
 import ProgressBar from "@badrap/bar-of-progress"
-import { useUserStore } from '~/stores/user-store'
-import type { PrivilegeTreeNode } from '~/models'
+import { useUserStore } from 'stores/user-store'
+import type { PrivilegeTreeNode } from 'src/models'
 
 const progress = new ProgressBar({ color: '#1677ff' })
 
@@ -34,7 +34,7 @@ router.beforeEach(async (to, from, next) => {
         router.addRoute({
           path: '/:cacheAll(.*)*',
           name: 'ErrorNotFound',
-          component: () => import('~/pages/ErrorNotFound.vue')
+          component: () => import('pages/ErrorNotFound.vue')
         })
 
         const redirectPath = from.query.redirect || to.path
@@ -61,8 +61,8 @@ router.afterEach((to) => {
 
 
 // 生成路由
-const MainLayout = () => import('~/layouts/MainLayout.vue')
-const BlankLayout = () => import('~/layouts/BlankLayout.vue')
+const MainLayout = () => import('layouts/MainLayout.vue')
+const BlankLayout = () => import('layouts/BlankLayout.vue')
 
 const modules = import.meta.glob('../pages/**/*.{vue,tsx}')
 

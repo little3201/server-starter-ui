@@ -1,5 +1,5 @@
 import { http, HttpResponse } from 'msw'
-import type { Role } from '~/models'
+import type { Role } from 'src/models'
 
 const datas: Role[] = []
 const rolePrivileges: number[] = [

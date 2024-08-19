@@ -1,5 +1,5 @@
 import type { RouteRecordRaw } from 'vue-router'
-import MainLayout from '~/layouts/MainLayout.vue'
+import MainLayout from 'layouts/MainLayout.vue'
 
 export const constantRouterMap: RouteRecordRaw[] = [
   {
@@ -11,13 +11,13 @@ export const constantRouterMap: RouteRecordRaw[] = [
       {
         path: '',
         name: 'home-index',
-        component: () => import('~/pages/Index.vue')
+        component: () => import('pages/Index.vue')
       },
     ]
   },
   {
     path: '/login',
     name: 'Login',
-    component: () => import('~/pages/Login.vue')
+    component: () => import('pages/Login.vue')
   }
 ]

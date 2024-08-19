@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import { computed, ref, unref, watch, onMounted, onBeforeUnmount, onActivated } from 'vue'
 import { debounce } from 'lodash-es'
-import echarts from '~/boot/echarts'
+import echarts from 'boot/echarts'
 import type { EChartsOption } from 'echarts'
 import { useAppStore } from 'stores/app-store'
-import { isString } from '~/utils'
+import { isString } from 'src/utils'
 
 
 const appStore = useAppStore()
@@ -18,17 +18,17 @@ const props = withDefaults(defineProps<{
   height: '500px'
 })
 
-const isDark = computed(() => appStore.getIsDark)
+const isDark = computed(() => appStore.isDark)
 
 const theme = computed(() => {
-  const echartTheme: boolean | string = unref(isDark) ? true : 'auto'
+  const echartTheme: boolean | string = isDark.value ? true : 'auto'
 
   return echartTheme
 })
 
 const options = computed(() => {
   return Object.assign({}, props.options, {
-    darkMode: unref(theme)
+    darkMode: theme.value
   })
 })
 

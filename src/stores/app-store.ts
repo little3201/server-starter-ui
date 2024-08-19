@@ -8,7 +8,7 @@ export const useAppStore = defineStore('app', {
     isDark: useDark()
   }),
   actions: {
-    setIsDark(isDark: boolean) {
+    setDark(isDark: boolean) {
       this.isDark = isDark
       if (this.isDark) {
         document.documentElement.classList.add('dark')

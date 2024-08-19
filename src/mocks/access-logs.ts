@@ -1,5 +1,5 @@
 import { http, HttpResponse } from 'msw'
-import type { AccessLog } from '~/models'
+import type { AccessLog } from 'src/models'
 
 const datas: AccessLog[] = [
   {

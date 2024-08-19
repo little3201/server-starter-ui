@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { computed, useAttrs, ref, unref, useSlots } from 'vue'
-import { isNumber } from '~/utils'
-import { Close } from '@element-plus/icons-vue'
+import { isNumber } from 'src/utils'
 
 const slots = useSlots()
 

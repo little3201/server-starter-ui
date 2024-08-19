@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { localeOptions } from '~/i18n'
-import { useLocaleStore } from '~/stores/locale-store'
+import { localeOptions } from 'src/i18n'
+import { useLocaleStore } from 'stores/locale-store'
 
 // 多语言相关
 

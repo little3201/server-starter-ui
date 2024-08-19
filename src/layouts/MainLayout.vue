@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { useRouter } from 'vue-router'
-import { useAppStore } from '~/stores/app-store'
-import { useUserStore } from '~/stores/user-store'
+import { useAppStore } from 'stores/app-store'
+import { useUserStore } from 'stores/user-store'
 
 import ThemeToogle from 'components/ThemeToogle.vue'
 import LanguageSelector from 'components/LanguageSelector.vue'
