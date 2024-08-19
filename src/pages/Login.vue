@@ -113,8 +113,8 @@ function show() {
     </ElHeader>
     <ElMain class="items-center justify-center z-10 ">
       <ElCard class="w-2/3" style="height: 70vh;border-radius: 1.5rem;" body-class="flex items-center !p-0 h-full">
-        <section class="h-full w-1/2 bg-white dark:bg-black flex-col items-center">
-          <section class="inline-flex flex-grow items-center justify-center h-full">
+        <div class="h-full w-1/2 bg-white dark:bg-black flex-col items-center">
+          <div class="inline-flex flex-grow items-center justify-center h-full">
             <Transition appear enter-active-class="animate__animated animate__slideInLeft"
               leave-active-class="animate__animated animate__slideOutLeft">
               <div class="inline-flex flex-col justify-center items-center" style="margin-top: -40px">
@@ -129,9 +129,9 @@ function show() {
                 </div>
               </div>
             </Transition>
-          </section>
-        </section>
-        <section class="flex flex-row items-center w-1/2 h-full  bg-[#e3f4fa] dark:bg-black">
+          </div>
+        </div>
+        <div class="flex flex-row items-center w-1/2 h-full  bg-[#e3f4fa] dark:bg-black">
           <Transition appear enter-active-class="animate__animated animate__slideInRight"
             leave-active-class="animate__animated animate__slideOutRight">
             <div class="flex flex-col w-full h-full space-y-2xl justify-center items-center">
@@ -182,7 +182,7 @@ function show() {
               </ElForm>
             </div>
           </Transition>
-        </section>
+        </div>
       </ElCard>
     </ElMain>
     <ElFooter class="z-10" height="50px">
