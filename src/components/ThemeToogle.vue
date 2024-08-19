@@ -6,7 +6,7 @@ import { Sunny, Moon } from '@element-plus/icons-vue'
 const appStore = useAppStore()
 
 // 初始化获取是否是暗黑主题
-const isDark = ref(appStore.getIsDark)
+const isDark = ref(appStore.isDark)
 
 const themeChange = (val: string | number | boolean) => {
   if (typeof val == 'boolean') {

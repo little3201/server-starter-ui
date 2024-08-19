@@ -4,7 +4,7 @@ export const retrievePrivileges = (page: number, size: number, params?: object) 
   return api.get('/privileges', { params: { page: page - 1, size: size, ...params } })
 }
 
-export const retrievePrivilegesSubset = (id: number) => {
+export const retrievePrivilegeSubset = (id: number) => {
   return api.get(`/privileges/${id}/subset`)
 }
 

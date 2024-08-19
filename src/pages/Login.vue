@@ -86,7 +86,7 @@ function show() {
 </script>
 
 <template>
-  <ElContainer class="h-screen relative overflow-hidden bg-[#e3f4fa] dark:bg-black">
+  <ElContainer class="h-screen relative overflow-hidden bg-[#e3f4fa] dark:bg-[var(--el-bg-color-page)]">
     <figure class="absolute bg-primary-gradient rounded-full"
       style="height: 31em; width: 31em;  top: -14em; right: -12em; " />
     <figure class="absolute bg-success-gradient rounded-full"
@@ -100,7 +100,7 @@ function show() {
       <div class="inline-flex flex-grow justify-between">
         <div class="inline-flex items-center">
           <img src="/vite.svg" alt="" class="w-12 h-12 mr-3" />
-          <span class="text-20px font-bold">{{ appStore.getTitle }}</span>
+          <span class="text-20px font-bold">{{ appStore.title }}</span>
         </div>
 
         <div class="inline-flex justify-end items-center space-x-4">
@@ -112,11 +112,9 @@ function show() {
       </div>
     </ElHeader>
     <ElMain class="items-center justify-center z-10 ">
-      <section
-        class="inline-flex justify-center items-center shadow-2xl dark:shadow-[#ffffff38] overflow-hidden rounded-3xl w-2/3 border-solid border-1 border-[#ffffff38]"
-        style="height: 70vh;">
-        <section class="h-full w-1/2 bg-white dark:bg-black flex-col items-center">
-          <section class="inline-flex flex-grow items-center justify-center h-full">
+      <ElCard class="w-2/3" style="height: 70vh;border-radius: 1.5rem;" body-class="flex items-center !p-0 h-full">
+        <div class="h-full w-1/2 bg-white dark:bg-black flex-col items-center">
+          <div class="inline-flex flex-grow items-center justify-center h-full">
             <Transition appear enter-active-class="animate__animated animate__slideInLeft"
               leave-active-class="animate__animated animate__slideOutLeft">
               <div class="inline-flex flex-col justify-center items-center" style="margin-top: -40px">
@@ -131,9 +129,9 @@ function show() {
                 </div>
               </div>
             </Transition>
-          </section>
-        </section>
-        <section class="flex flex-row items-center w-1/2 h-full  bg-[#e3f4fa] dark:bg-black">
+          </div>
+        </div>
+        <div class="flex flex-row items-center w-1/2 h-full  bg-[#e3f4fa] dark:bg-black">
           <Transition appear enter-active-class="animate__animated animate__slideInRight"
             leave-active-class="animate__animated animate__slideOutRight">
             <div class="flex flex-col w-full h-full space-y-2xl justify-center items-center">
@@ -184,8 +182,8 @@ function show() {
               </ElForm>
             </div>
           </Transition>
-        </section>
-      </section>
+        </div>
+      </ElCard>
     </ElMain>
     <ElFooter class="z-10" height="50px">
       <p class="text-sm text-center">&copy; {{ new Date().getFullYear() }}

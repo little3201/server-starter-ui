@@ -26,7 +26,7 @@ function signOut() {
       <div class="inline-flex flex-grow justify-between">
         <div class="inline-flex items-center">
           <img src="/vite.svg" alt="" class="w-8 h-8 mr-3" />
-          <span class="text-20px font-bold text-white">{{ appStore.getTitle }}</span>
+          <span class="text-20px font-bold text-white">{{ appStore.title }}</span>
         </div>
 
         <div class="inline-flex justify-end items-center space-x-4">

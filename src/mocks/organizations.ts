@@ -9,17 +9,17 @@ for (let i = 1; i < 28; i++) {
     id: i,
     name: 'organization_' + i,
     enabled: i % 3 > 0,
-    description: '这是描述内容，请参考嘻嘻嘻嘻嘻嘻嘻嘻',
-    hasChildren: i > 2 && i % 3 > 0
+    count: i - 1,
+    description: '这是描述内容，请参考嘻嘻嘻嘻嘻嘻嘻嘻'
   }
   for (let j = 1; j < i; j++) {
     const subData: Organization = {
       id: 100 + i,
       name: 'organization_' + i + '_' + j,
       superiorId: i,
+      count: 0,
       enabled: j % 2 > 0,
-      description: 'description',
-      hasChildren: false
+      description: 'description'
     }
     subDatas.push(subData)
   }

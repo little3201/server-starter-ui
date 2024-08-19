@@ -5,6 +5,7 @@ import draggable from 'vuedraggable'
 import Dialog from 'components/Dialog.vue'
 import { retrieveOrganizations, retrieveOrganizationSubset, fetchOrganization } from '~/api/organizations'
 import type { Organization } from '~/models'
+import { fa } from 'element-plus/es/locale'
 
 
 const loading = ref<boolean>(false)
@@ -62,7 +63,11 @@ function load(row?: Organization, treeNode?: unknown, resolve?: (data: Organizat
     }).finally(() => loading.value = false)
   } else {
     retrieveOrganizations(pagination.page, pagination.size, searchForm.value).then(res => {
-      datas.value = res.data.content
+      let list = res.data.content
+      list.forEach((element: Organization) => {
+        element.hasChildren = element.count && element.count > 0 ? true : false
+      })
+      datas.value = list
       pagination.total = res.data.totalElements
     }).finally(() => loading.value = false)
   }
