@@ -1,5 +1,5 @@
 import { http, HttpResponse } from 'msw'
-import type { Region } from '~/models'
+import type { Region } from 'src/models'
 
 const datas: Region[] = []
 const subDatas: Region[] = []

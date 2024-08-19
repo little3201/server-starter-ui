@@ -2,8 +2,8 @@
 import { ref, onMounted, reactive } from 'vue'
 import { dayjs } from 'element-plus'
 import draggable from 'vuedraggable'
-import { retrieveAuditLogs, fetchAuditLog } from '~/api/audit-logs'
-import type { AuditLog } from '~/models'
+import { retrieveAuditLogs, fetchAuditLog } from 'src/api/audit-logs'
+import type { AuditLog } from 'src/models'
 
 
 
@@ -92,7 +92,7 @@ onMounted(() => {
  * 详情
  * @param id 主键
  */
-function detailHandler(id: number) {
+function showRow(id: number) {
   dialogVisible.value = true
   loadOne(id)
 }
@@ -209,7 +209,7 @@ function handleCheckedChange(value: string[]) {
           </ElTableColumn>
           <ElTableColumn :label="$t('actions')">
             <template #default="scope">
-              <ElButton size="small" type="success" link @click="detailHandler(scope.row.id)">
+              <ElButton size="small" type="success" link @click="showRow(scope.row.id)">
                 <div class="i-mdi:file-document-outline" />{{ $t('detail') }}
               </ElButton>
             </template>

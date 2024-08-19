@@ -1,5 +1,5 @@
 import { http, HttpResponse } from 'msw'
-import type { Dictionary } from '~/models'
+import type { Dictionary } from 'src/models'
 
 const datas: Dictionary[] = []
 const subDatas: Dictionary[] = []

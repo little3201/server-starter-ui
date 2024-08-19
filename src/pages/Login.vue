@@ -6,9 +6,9 @@ import { useI18n } from 'vue-i18n'
 import { ElFormItem, type FormInstance, type FormRules } from 'element-plus'
 import ThemeToogle from 'components/ThemeToogle.vue'
 import LanguageSelector from 'components/LanguageSelector.vue'
-import { useAppStore } from '~/stores/app-store'
-import { useUserStore } from '~/stores/user-store'
-import { generateRoutes } from '~/router'
+import { useAppStore } from 'stores/app-store'
+import { useUserStore } from 'stores/user-store'
+import { generateRoutes } from 'src/router'
 
 
 const { t } = useI18n()

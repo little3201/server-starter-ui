@@ -3,10 +3,10 @@ import { ref, reactive, onMounted, watch } from 'vue'
 import type { FormInstance, FormRules } from 'element-plus'
 import draggable from 'vuedraggable'
 import Dialog from 'components/Dialog.vue'
-import { retrieveOrganizationTree } from '~/api/organizations'
-import { retrieveUsers, fetchUser } from '~/api/users'
-import { retrieveRoles } from '~/api/roles'
-import type { TreeNode, User, Role } from '~/models'
+import { retrieveOrganizationTree } from 'src/api/organizations'
+import { retrieveUsers, fetchUser } from 'src/api/users'
+import { retrieveRoles } from 'src/api/roles'
+import type { TreeNode, User, Role } from 'src/models'
 
 const loading = ref<boolean>(false)
 const datas = ref<Array<User>>([])
@@ -175,7 +175,7 @@ watch(
  * 弹出框
  * @param id 主键
  */
-function saveOrUpdate(id?: number) {
+function editRow(id?: number) {
   if (id) {
     loadOne(id)
   }
@@ -295,7 +295,7 @@ function handleCheckedChange(value: string[]) {
         <ElCard shadow="never">
           <ElRow :gutter="20" justify="space-between" class="mb-4">
             <ElCol :span="16" class="text-left">
-              <ElButton type="primary" @click="saveOrUpdate()">
+              <ElButton type="primary" @click="editRow()">
                 <div class="i-mdi:plus" />{{ $t('add') }}
               </ElButton>
               <ElButton type="warning" plain @click="dialogVisible = true">
@@ -369,12 +369,6 @@ function handleCheckedChange(value: string[]) {
                 <div
                   :class="['cursor-pointer', scope.row.accountNonLocked ? 'i-mdi:lock-open-variant-outline text-[var(--el-color-success)]' : 'i-mdi:lock-outline text-[var(--el-color-warning)]']"
                   @click="lockRow(scope.row)" />
-                <!-- <el-button v-if="scope.row.accountNonLocked" plain type="success" circle @click="lockRow(scope.row)">
-                  <div class="i-mdi:lock-open-variant-outline" />
-                </el-button>
-                <el-button v-else type="warning" plain circle @click="lockRow(scope.row)">
-                  <div class="i-mdi:lock-outline" />
-                </el-button> -->
               </template>
             </ElTableColumn>
             <ElTableColumn prop="enabled" :label="$t('enabled')">
@@ -385,7 +379,7 @@ function handleCheckedChange(value: string[]) {
             </ElTableColumn>
             <ElTableColumn :label="$t('actions')">
               <template #default="scope">
-                <ElButton size="small" type="primary" link @click="saveOrUpdate(scope.row.id)">
+                <ElButton size="small" type="primary" link @click="editRow(scope.row.id)">
                   <div class="i-mdi:pencil-outline" />{{ $t('edit') }}
                 </ElButton>
                 <ElPopconfirm :title="$t('removeConfirm')" :width="240" @confirm="confirmEvent(scope.row.id)">
@@ -436,10 +430,10 @@ function handleCheckedChange(value: string[]) {
       </ElForm>
       <template #footer>
         <ElButton @click="dialogVisible = false">
-          <div class="i-mdi:close" />{{ $t('cancle') }}
+          <div class="i-mdi:close" />{{ $t('cancel') }}
         </ElButton>
         <ElButton type="primary" :loading="saveLoading" @click="onSubmit">
-          <div class="i-mdi:check-circle-outline" /> {{ $t('commit') }}
+          <div class="i-mdi:check-circle-outline" /> {{ $t('submit') }}
         </ElButton>
       </template>
     </Dialog>

@@ -1,5 +1,5 @@
 import { http, HttpResponse } from 'msw'
-import type { Organization, TreeNode } from '~/models'
+import type { Organization, TreeNode } from 'src/models'
 
 const datas: Organization[] = []
 const subDatas: Organization[] = []

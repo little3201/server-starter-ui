@@ -1,5 +1,5 @@
 import { http, HttpResponse } from 'msw'
-import type { SchedulerLog } from '~/models'
+import type { SchedulerLog } from 'src/models'
 
 const datas: SchedulerLog[] = [
   {

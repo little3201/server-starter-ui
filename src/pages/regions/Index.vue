@@ -3,8 +3,8 @@ import { ref, reactive, onMounted } from 'vue'
 import type { FormInstance, FormRules } from 'element-plus'
 import draggable from 'vuedraggable'
 import Dialog from 'components/Dialog.vue'
-import { retrieveRegions, retrieveRegionSubset, fetchRegion } from '~/api/regions'
-import type { Region } from '~/models'
+import { retrieveRegions, retrieveRegionSubset, fetchRegion } from 'src/api/regions'
+import type { Region } from 'src/models'
 
 const loading = ref<boolean>(false)
 const datas = ref<Array<Region>>([])
@@ -90,7 +90,7 @@ onMounted(() => {
  * 弹出框
  * @param id 主键
  */
-function saveOrUpdate(id?: number) {
+function editRow(id?: number) {
   if (id) {
     loadOne(id)
   }
@@ -183,7 +183,7 @@ function handleCheckedChange(value: string[]) {
       <ElCard shadow="never">
         <ElRow :gutter="20" justify="space-between" class="mb-4">
           <ElCol :span="16" class="text-left">
-            <ElButton type="primary" @click="saveOrUpdate()">
+            <ElButton type="primary" @click="editRow()">
               <div class="i-mdi:plus" />{{ $t('add') }}
             </ElButton>
             <ElButton type="danger" plain>
@@ -253,7 +253,7 @@ function handleCheckedChange(value: string[]) {
           <ElTableColumn show-overflow-tooltip prop="description" :label="$t('description')" />
           <ElTableColumn :label="$t('actions')">
             <template #default="scope">
-              <ElButton size="small" type="primary" link @click="saveOrUpdate(scope.row.id)">
+              <ElButton size="small" type="primary" link @click="editRow(scope.row.id)">
                 <div class="i-mdi:pencil-outline" />{{ $t('edit') }}
               </ElButton>
               <ElPopconfirm :title="$t('removeConfirm')" :width="240" @confirm="confirmEvent(scope.row.id)">
@@ -290,10 +290,10 @@ function handleCheckedChange(value: string[]) {
       </ElForm>
       <template #footer>
         <ElButton @click="dialogVisible = false">
-          <div class="i-mdi:close" />{{ $t('cancle') }}
+          <div class="i-mdi:close" />{{ $t('cancel') }}
         </ElButton>
         <ElButton type="primary" :loading="saveLoading" @click="onSubmit">
-          <div class="i-mdi:check-circle-outline" /> {{ $t('commit') }}
+          <div class="i-mdi:check-circle-outline" /> {{ $t('submit') }}
         </ElButton>
       </template>
     </Dialog>
