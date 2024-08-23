@@ -34,7 +34,7 @@ export const usersHandlers = [
     // as the response body.
     let data = {}
     if (organizationId) {
-      if (Number(organizationId) == 1) {
+      if (Number(organizationId) === 1) {
         data = {
           content: Array.from(datas.slice((Number(page) - 1) * Number(size), Number(page) * Number(size))),
           totalElements: datas.length
@@ -51,7 +51,6 @@ export const usersHandlers = [
         totalElements: datas.length
       }
     }
-
 
     return HttpResponse.json(data)
   }),

@@ -11,7 +11,7 @@ for (let i = 1; i < 28; i++) {
     order: i,
     count: i - 1,
     description: 'this is description for this row',
-    enabled: i % 3 > 0,
+    enabled: i % 3 > 0
   }
   for (let j = 1; j < i; j++) {
     const subData: Dictionary = {

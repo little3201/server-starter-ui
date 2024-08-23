@@ -92,7 +92,7 @@ export default {
   networkError: 'Network Error',
   noPermission: 'Permission Denied',
   goHome: 'Go Home',
-  
+
   welcome: 'Hi! Welcome Back.',
   subtitle: 'Please sign in to continue exploring.',
   rememberMe: 'Remember me ?'

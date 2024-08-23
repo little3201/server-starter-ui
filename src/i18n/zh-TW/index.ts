@@ -91,7 +91,7 @@ export default {
   networkError: '網絡錯誤',
   noPermission: '無訪問權限',
   goHome: '返回首頁',
-  
+
   welcome: '嗨！歡迎回來',
   subtitle: '請填寫您的帳號和密碼，讓我們繼續探索',
   rememberMe: '記住我 ？'

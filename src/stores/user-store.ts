@@ -17,7 +17,7 @@ export const useUserStore = defineStore('user', {
   actions: {
     async logout() {
       await api.post('/logout')
-      document.cookie = `logged_in=; max-age=0;`
+      document.cookie = 'logged_in=; max-age=0;'
       this.$reset()
     },
 

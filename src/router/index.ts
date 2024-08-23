@@ -1,7 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import type { RouteRecordRaw } from 'vue-router'
 import { constantRouterMap } from './routes'
-import ProgressBar from "@badrap/bar-of-progress"
+import ProgressBar from '@badrap/bar-of-progress'
 import { useUserStore } from 'stores/user-store'
 import type { PrivilegeTreeNode } from 'src/models'
 
@@ -17,8 +17,8 @@ router.beforeEach(async (to, from, next) => {
   progress.start()
   const userStore = useUserStore()
   // 判断是否登录
-  const access_token = userStore.access_token
-  if (access_token && access_token.length > 0) {
+  const accessToken = userStore.access_token
+  if (accessToken && accessToken.length > 0) {
     if (to.path === '/login') {
       next({ path: '/' })
     } else {
@@ -46,7 +46,7 @@ router.beforeEach(async (to, from, next) => {
       }
     }
   } else {
-    if (to.path == '/login') {
+    if (to.path === '/login') {
       next()
     } else {
       // 重定向到登录页
@@ -55,10 +55,9 @@ router.beforeEach(async (to, from, next) => {
   }
 })
 
-router.afterEach((to) => {
+router.afterEach(() => {
   progress.finish()
 })
-
 
 // 生成路由
 const MainLayout = () => import('layouts/MainLayout.vue')

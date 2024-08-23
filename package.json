@@ -23,10 +23,17 @@
     "vue-router": "^4.3.2"
   },
   "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^8.2.0",
+    "@typescript-eslint/parser": "^8.2.0",
     "@vitejs/plugin-vue": "^5.0.4",
     "autoprefixer": "^10.4.19",
     "echarts": "^5.5.1",
-    "eslint": "^9.9.0",
+    "eslint": "^8.57.0",
+    "eslint-config-standard": "^17.1.0",
+    "eslint-plugin-import": "^2.29.1",
+    "eslint-plugin-n": "^16.6.2",
+    "eslint-plugin-promise": "^6.1.1",
+    "eslint-plugin-vue": "^9.27.0",
     "lodash-es": "^4.17.21",
     "msw": "^2.3.0",
     "pinia-plugin-persistedstate": "^3.2.1",

@@ -1,7 +1,6 @@
 import { http, HttpResponse } from 'msw'
 import type { Privilege, PrivilegeTreeNode } from 'src/models'
 
-
 const datas: Privilege[] = [
   {
     id: 1,
@@ -272,7 +271,7 @@ const treeNodes: PrivilegeTreeNode[] = [
 export const privilegesHandlers = [
   http.get('/api/privileges/:username/tree', ({ params }) => {
     const { username } = params
-    console.log("username: ", username)
+    console.log('username: ', username)
     return HttpResponse.json(treeNodes)
   }),
   http.get('/api/privileges/:id/subset', ({ params }) => {

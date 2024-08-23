@@ -5,7 +5,7 @@ import { messages } from 'src/i18n'
 export const i18n = createI18n({
   legacy: false,
   locale: getLang() || 'zh-CN',
-  messages: messages,
+  messages
 }) as I18n
 
 function getLang() {
