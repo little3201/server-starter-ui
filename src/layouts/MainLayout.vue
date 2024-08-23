@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed } from 'vue'
+import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAppStore } from 'stores/app-store'
 import { useUserStore } from 'stores/user-store'
@@ -13,6 +13,7 @@ const { currentRoute, replace } = useRouter()
 const appStore = useAppStore()
 const userStore = useUserStore()
 
+const isCollapse = ref<boolean>(false)
 const essentialLinks = computed(() => userStore.privileges)
 
 function signOut() {
@@ -27,6 +28,8 @@ function signOut() {
         <div class="inline-flex items-center">
           <ElImage src="/vite.svg" alt="avatar" class="w-8 h-8" />
           <span class="ml-3 text-20px font-bold text-white">{{ appStore.title }}</span>
+
+          <div class="i-mdi:menu w-6 h-6 ml-8 text-white cursor-pointer" @clikc="isCollapse = !isCollapse" />
         </div>
 
         <div class="inline-flex justify-end items-center space-x-4">
@@ -34,7 +37,7 @@ function signOut() {
           <LanguageSelector />
           <!-- theme -->
           <ThemeToogle />
-          
+
           <ElDropdown trigger="click" class="cursor-pointer">
             <ElSpace>
               <ElAvatar alt="avatar" :size="28" :src="userStore.user?.avatar" />
@@ -57,7 +60,7 @@ function signOut() {
     <ElContainer>
       <ElAside width="200px">
         <ElScrollbar>
-          <ElMenu router unique-opened :default-active="currentRoute.fullPath">
+          <ElMenu :collapse="isCollapse" router unique-opened :default-active="currentRoute.fullPath">
             <ElMenuItem :index="'/'">
               <div class="i-mdi:home-outline mr-2" />{{ $t('home') }}
             </ElMenuItem>

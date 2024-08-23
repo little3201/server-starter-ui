@@ -4,7 +4,7 @@ import type { FormInstance, FormRules } from 'element-plus'
 import draggable from 'vuedraggable'
 import Dialog from 'components/Dialog.vue'
 import { useUserStore } from 'stores/user-store'
-import { retrieveRoles, retrieveRolePrivileges, retrieveRoleDepartments, fetchRole } from 'src/api/roles'
+import { retrieveRoles, retrieveRolePrivileges, retrieveRoleOrganizations, fetchRole } from 'src/api/roles'
 import { retrievePrivilegeTree } from 'src/api/privileges'
 import { retrieveOrganizationTree } from 'src/api/organizations'
 import type { Role, TreeNode } from 'src/models'
@@ -185,7 +185,7 @@ function handleDepartmentCheckChange() { }
  */
 function handleCurrentChange(row: Role | undefined) {
   if (row && row.id) {
-    Promise.all([retrieveRolePrivileges(row.id), retrieveRoleDepartments(row.id)])
+    Promise.all([retrieveRolePrivileges(row.id), retrieveRoleOrganizations(row.id)])
       .then(([rpRes, rdRes]) => {
         rolePrivileges.value = rpRes.data
         roleDepartments.value = rdRes.data

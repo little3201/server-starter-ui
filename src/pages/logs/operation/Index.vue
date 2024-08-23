@@ -35,7 +35,7 @@ const detail = ref<OperationLog>({
   ip: "",
   location: "",
   status: null,
-  operationTime: null
+  operatedTime: null
 })
 
 const dialogVisible = ref<boolean>(false)
@@ -222,9 +222,9 @@ function handleCheckedChange(value: string[]) {
               <ElTag v-else type="danger" effect="light" round>{{ $t('failure') }}</ElTag>
             </template>
           </ElTableColumn>
-          <ElTableColumn prop="operationTime" :label="$t('operationTime')">
+          <ElTableColumn prop="operatedTime" :label="$t('operatedTime')">
             <template #default="scope">
-              {{ dayjs(scope.row.operationTime).format('YYYY-MM-DD HH:mm:ss') }}
+              {{ dayjs(scope.row.operatedTime).format('YYYY-MM-DD HH:mm:ss') }}
             </template>
           </ElTableColumn>
           <ElTableColumn :label="$t('actions')" width="160">
@@ -261,7 +261,7 @@ function handleCheckedChange(value: string[]) {
           <ElTag v-if="detail.status === 1" type="success" effect="light" round>{{ $t('success') }}</ElTag>
           <ElTag v-else type="danger" effect="light" round>{{ $t('failure') }}</ElTag>
         </ElDescriptionsItem>
-        <ElDescriptionsItem :label="$t('operationTime')">{{ dayjs(detail.operationTime).format('YYYY-MM-DD HH:mm:ss') }}
+        <ElDescriptionsItem :label="$t('operatedTime')">{{ dayjs(detail.operatedTime).format('YYYY-MM-DD HH:mm:ss') }}
         </ElDescriptionsItem>
       </ElDescriptions>
     </Dialog>
