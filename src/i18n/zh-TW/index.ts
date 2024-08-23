@@ -38,7 +38,6 @@ export default {
   params: '參數',
   operator: '操作人',
   operation: '操作',
-  time: '時間',
   status: '状态',
   operatedTime: '操作時間',
   responseTime: '響應時間',
@@ -67,6 +66,7 @@ export default {
   remove: '刪除',
   refresh: '刷新',
   reset: '重置',
+  clear: '清空',
 
   home: '首頁',
   system: '系統管理',

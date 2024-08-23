@@ -67,6 +67,7 @@ export default {
   remove: 'Remove',
   refresh: 'Refresh',
   reset: 'Reset',
+  clear: 'Clear',
 
   home: 'Home',
   system: 'System',
