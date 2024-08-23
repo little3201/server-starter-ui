@@ -9,7 +9,9 @@ export interface User extends AudtiMetadata {
   avatar?: string
   role?: number
   organization?: number
-  accountNonLocked: boolean 
+  accountNonLocked?: boolean
+  accountExpiresAt?: Date
+  credentialsExpiresAt?: Date
   enabled?: boolean
 }
 
@@ -22,27 +24,11 @@ export interface Organization extends AudtiMetadata {
   hasChildren?: boolean
 }
 
-export interface TreeNode {
-  id?: number
-  name: string
-  children?: TreeNode[]
-}
-
 export interface Role extends AudtiMetadata {
   name: string
   privileges: number | undefined
   enabled?: boolean
   description?: string
-}
-
-export interface PrivilegeTreeNode extends TreeNode {
-  path: string
-  component: string
-  redirect?: string
-  icon: string
-  hidden?: boolean
-  actions?: string[]
-  children?: PrivilegeTreeNode[]
 }
 
 export interface Privilege extends AudtiMetadata {
@@ -69,9 +55,7 @@ export interface Dictionary extends AudtiMetadata {
   description?: string
   count?: number
   hasChildren?: boolean
-  children?: []
 }
-
 
 export interface Region extends AudtiMetadata {
   name: string
@@ -82,6 +66,22 @@ export interface Region extends AudtiMetadata {
   hasChildren?: boolean
   enabled?: boolean
   description?: string
+}
+
+export interface TreeNode {
+  id?: number
+  name: string
+  children?: TreeNode[]
+}
+
+export interface PrivilegeTreeNode extends TreeNode {
+  path: string
+  component: string
+  redirect?: string
+  icon: string
+  hidden?: boolean
+  actions?: string[]
+  children?: PrivilegeTreeNode[]
 }
 
 export interface OperationLog {

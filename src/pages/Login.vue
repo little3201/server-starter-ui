@@ -86,7 +86,7 @@ function show() {
 </script>
 
 <template>
-  <ElContainer class="h-screen relative overflow-hidden">
+  <ElContainer class="h-screen relative overflow-hidden bg-[#e3f4fa] dark:bg-[var(--el-bg-color-page)]">
     <figure class="absolute bg-primary-gradient rounded-full"
       style="height: 31em; width: 31em;  top: -14em; right: -12em; " />
     <figure class="absolute bg-success-gradient rounded-full"
@@ -103,7 +103,7 @@ function show() {
           <span class="ml-3 text-20px font-bold">{{ appStore.title }}</span>
         </div>
 
-        <div class="inline-flex justify-end items-center space-x-4">
+        <div class="inline-flex justify-end items-center ">
           <!-- language -->
           <LanguageSelector />
           <!-- theme -->

@@ -31,8 +31,7 @@ const searchForm = ref({
 const formRef = ref<FormInstance>()
 const form = ref<Dictionary>({
   name: '',
-  order: 1,
-  children: [],
+  order: 1
 })
 
 const rules = reactive<FormRules<typeof form>>({
@@ -135,135 +134,132 @@ function handleCheckedChange(value: string[]) {
 </script>
 
 <template>
-  <div>
-    <ElSpace size="large" fill>
-      <ElCard shadow="never" class="search">
-        <ElForm inline :model="searchForm" @submit.prevent>
-          <ElFormItem :label="$t('name')" prop="name">
-            <ElInput v-model="searchForm.name" :placeholder="$t('inputText') + $t('name')" />
-          </ElFormItem>
-          <ElFormItem>
-            <ElButton type="primary" @click="load">
-              <div class="i-mdi:search" />{{ $t('search') }}
-            </ElButton>
-            <ElButton @click="reset">
-              <div class="i-mdi:restore" />{{ $t('reset') }}
-            </ElButton>
-          </ElFormItem>
-        </ElForm>
-      </ElCard>
-
-      <ElCard shadow="never">
-        <ElRow :gutter="20" justify="space-between" class="mb-4">
-          <ElCol :span="16" class="text-left">
-            <ElButton type="warning" plain @click="dialogVisible = true">
-              <div class="i-mdi:file-upload-outline" />{{ $t('import') }}
-            </ElButton>
-            <ElButton type="success" plain>
-              <div class="i-mdi:file-download-outline" />{{ $t('export') }}
-            </ElButton>
-          </ElCol>
-
-          <ElCol :span="8" class="text-right">
-            <ElTooltip class="box-item" effect="dark" :content="$t('refresh')" placement="top">
-              <ElButton type="primary" plain circle @click="load">
-                <div class="i-mdi:refresh" />
-              </ElButton>
-            </ElTooltip>
-
-            <ElTooltip :content="$t('column') + $t('settings')" placement="top">
-              <span class="inline-block ml-3 h-8">
-                <ElPopover :width="200" trigger="click">
-                  <template #reference>
-                    <ElButton type="success" plain circle>
-                      <div class="i-mdi:format-list-bulleted" />
-                    </ElButton>
-                  </template>
-                  <div>
-                    <ElCheckbox v-model="checkAll" :indeterminate="isIndeterminate" @change="handleCheckAllChange">
-                      全选
-                    </ElCheckbox>
-                    <ElDivider />
-                    <ElCheckboxGroup v-model="checkedColumns" @change="handleCheckedChange">
-                      <draggable v-model="columns" item-key="simple">
-                        <template #item="{ element }">
-                          <div class="flex items-center space-x-2">
-                            <div class="i-mdi:drag w-4 h-4 hover:cursor-move" />
-                            <ElCheckbox :label="element" :value="element" :disabled="element === columns[0]">
-                              <div class="inline-flex items-center space-x-4">
-                                {{ $t(element) }}
-                              </div>
-                            </ElCheckbox>
-                          </div>
-                        </template>
-                      </draggable>
-                    </ElCheckboxGroup>
-                  </div>
-                </ElPopover>
-              </span>
-            </ElTooltip>
-          </ElCol>
-        </ElRow>
-
-        <ElTable v-loading="loading" :data="datas" lazy :load="load" row-key="id" stripe table-layout="auto">
-          <ElTableColumn type="selection" width="55" />
-          <ElTableColumn type="expand">
-            <template #default="props">
-              <SubPage :superior-id="props.row.id" :title="props.row.name" />
-            </template>
-          </ElTableColumn>
-          <ElTableColumn prop="name" :label="$t('name')" />
-          <ElTableColumn prop="enabled" :label="$t('enabled')">
-            <template #default="scope">
-              <ElSwitch size="small" v-model="scope.row.enabled"
-                style="--el-switch-on-color: var(--el-color-success);" />
-            </template>
-          </ElTableColumn>
-          <ElTableColumn prop="order" :label="$t('order')" />
-          <ElTableColumn show-overflow-tooltip prop="description" :label="$t('description')" />
-          <ElTableColumn :label="$t('actions')">
-            <template #default="scope">
-              <ElButton size="small" type="primary" link @click="editRow(scope.row.id)">
-                <div class="i-mdi:pencil-outline" />{{ $t('edit') }}
-              </ElButton>
-            </template>
-          </ElTableColumn>
-        </ElTable>
-        <ElPagination layout="prev, pager, next, sizes, jumper, ->, total" @change="pageChange"
-          :total="pagination.total" />
-      </ElCard>
-    </ElSpace>
-
-    <Dialog v-model="dialogVisible" :title="$t('dictionaries')" width="25%">
-      <ElForm ref="formRef" :model="form" :rules="rules" label-position="top">
-        <ElRow :gutter="20" class="w-full !mx-0">
-          <ElCol :span="12">
-            <ElFormItem :label="$t('name')" prop="name">
-              <ElInput v-model="form.name" :placeholder="$t('inputText') + $t('name')" />
-            </ElFormItem>
-          </ElCol>
-          <ElCol :span="12">
-            <ElFormItem :label="$t('order')" prop="order">
-              <ElInputNumber v-model="form.order" :placeholder="$t('inputText') + $t('order')" />
-            </ElFormItem>
-          </ElCol>
-        </ElRow>
-        <ElRow :gutter="20" class="w-full !mx-0">
-          <ElCol>
-            <ElFormItem :label="$t('description')" prop="description">
-              <ElInput v-model="form.description" type="textarea" :placeholder="$t('inputText') + $t('description')" />
-            </ElFormItem>
-          </ElCol>
-        </ElRow>
+  <ElSpace size="large" fill>
+    <ElCard shadow="never" class="search">
+      <ElForm inline :model="searchForm" @submit.prevent>
+        <ElFormItem :label="$t('name')" prop="name">
+          <ElInput v-model="searchForm.name" :placeholder="$t('inputText') + $t('name')" />
+        </ElFormItem>
+        <ElFormItem>
+          <ElButton type="primary" @click="load">
+            <div class="i-mdi:search" />{{ $t('search') }}
+          </ElButton>
+          <ElButton @click="reset">
+            <div class="i-mdi:restore" />{{ $t('reset') }}
+          </ElButton>
+        </ElFormItem>
       </ElForm>
-      <template #footer>
-        <ElButton @click="dialogVisible = false">
-          <div class="i-mdi:close" />{{ $t('cancel') }}
-        </ElButton>
-        <ElButton type="primary" :loading="saveLoading" @click="onSubmit">
-          <div class="i-mdi:check-circle-outline" /> {{ $t('submit') }}
-        </ElButton>
-      </template>
-    </Dialog>
-  </div>
+    </ElCard>
+
+    <ElCard shadow="never">
+      <ElRow :gutter="20" justify="space-between" class="mb-4">
+        <ElCol :span="16" class="text-left">
+          <ElButton type="warning" plain @click="dialogVisible = true">
+            <div class="i-mdi:file-upload-outline" />{{ $t('import') }}
+          </ElButton>
+          <ElButton type="success" plain>
+            <div class="i-mdi:file-download-outline" />{{ $t('export') }}
+          </ElButton>
+        </ElCol>
+
+        <ElCol :span="8" class="text-right">
+          <ElTooltip class="box-item" effect="dark" :content="$t('refresh')" placement="top">
+            <ElButton type="primary" plain circle @click="load">
+              <div class="i-mdi:refresh" />
+            </ElButton>
+          </ElTooltip>
+
+          <ElTooltip :content="$t('column') + $t('settings')" placement="top">
+            <span class="inline-block ml-3 h-8">
+              <ElPopover :width="200" trigger="click">
+                <template #reference>
+                  <ElButton type="success" plain circle>
+                    <div class="i-mdi:format-list-bulleted" />
+                  </ElButton>
+                </template>
+                <div>
+                  <ElCheckbox v-model="checkAll" :indeterminate="isIndeterminate" @change="handleCheckAllChange">
+                    全选
+                  </ElCheckbox>
+                  <ElDivider />
+                  <ElCheckboxGroup v-model="checkedColumns" @change="handleCheckedChange">
+                    <draggable v-model="columns" item-key="simple">
+                      <template #item="{ element }">
+                        <div class="flex items-center space-x-2">
+                          <div class="i-mdi:drag w-4 h-4 hover:cursor-move" />
+                          <ElCheckbox :label="element" :value="element" :disabled="element === columns[0]">
+                            <div class="inline-flex items-center space-x-4">
+                              {{ $t(element) }}
+                            </div>
+                          </ElCheckbox>
+                        </div>
+                      </template>
+                    </draggable>
+                  </ElCheckboxGroup>
+                </div>
+              </ElPopover>
+            </span>
+          </ElTooltip>
+        </ElCol>
+      </ElRow>
+
+      <ElTable v-loading="loading" :data="datas" lazy :load="load" row-key="id" stripe table-layout="auto">
+        <ElTableColumn type="selection" width="55" />
+        <ElTableColumn type="expand">
+          <template #default="props">
+            <SubPage :superior-id="props.row.id" :title="props.row.name" />
+          </template>
+        </ElTableColumn>
+        <ElTableColumn prop="name" :label="$t('name')" />
+        <ElTableColumn prop="enabled" :label="$t('enabled')">
+          <template #default="scope">
+            <ElSwitch size="small" v-model="scope.row.enabled" style="--el-switch-on-color: var(--el-color-success);" />
+          </template>
+        </ElTableColumn>
+        <ElTableColumn prop="order" :label="$t('order')" />
+        <ElTableColumn show-overflow-tooltip prop="description" :label="$t('description')" />
+        <ElTableColumn :label="$t('actions')">
+          <template #default="scope">
+            <ElButton size="small" type="primary" link @click="editRow(scope.row.id)">
+              <div class="i-mdi:pencil-outline" />{{ $t('edit') }}
+            </ElButton>
+          </template>
+        </ElTableColumn>
+      </ElTable>
+      <ElPagination layout="prev, pager, next, sizes, jumper, ->, total" @change="pageChange"
+        :total="pagination.total" />
+    </ElCard>
+  </ElSpace>
+
+  <Dialog v-model="dialogVisible" :title="$t('dictionaries')" width="25%">
+    <ElForm ref="formRef" :model="form" :rules="rules" label-position="top">
+      <ElRow :gutter="20" class="w-full !mx-0">
+        <ElCol :span="12">
+          <ElFormItem :label="$t('name')" prop="name">
+            <ElInput v-model="form.name" :placeholder="$t('inputText') + $t('name')" />
+          </ElFormItem>
+        </ElCol>
+        <ElCol :span="12">
+          <ElFormItem :label="$t('order')" prop="order">
+            <ElInputNumber v-model="form.order" :placeholder="$t('inputText') + $t('order')" />
+          </ElFormItem>
+        </ElCol>
+      </ElRow>
+      <ElRow :gutter="20" class="w-full !mx-0">
+        <ElCol>
+          <ElFormItem :label="$t('description')" prop="description">
+            <ElInput v-model="form.description" type="textarea" :placeholder="$t('inputText') + $t('description')" />
+          </ElFormItem>
+        </ElCol>
+      </ElRow>
+    </ElForm>
+    <template #footer>
+      <ElButton @click="dialogVisible = false">
+        <div class="i-mdi:close" />{{ $t('cancel') }}
+      </ElButton>
+      <ElButton type="primary" :loading="saveLoading" @click="onSubmit">
+        <div class="i-mdi:check-circle-outline" /> {{ $t('submit') }}
+      </ElButton>
+    </template>
+  </Dialog>
 </template>

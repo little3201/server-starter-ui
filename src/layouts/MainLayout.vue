@@ -34,9 +34,10 @@ function signOut() {
           <LanguageSelector />
           <!-- theme -->
           <ThemeToogle />
-          <ElDropdown trigger="click">
+          
+          <ElDropdown trigger="click" class="cursor-pointer">
             <ElSpace>
-              <ElAvatar :size="28" :src="userStore.user?.avatar" />
+              <ElAvatar alt="avatar" :size="28" :src="userStore.user?.avatar" />
               <span class="text-white">{{ userStore.user?.username }}</span>
             </ElSpace>
             <template #dropdown>
