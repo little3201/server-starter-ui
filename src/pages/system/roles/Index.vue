@@ -90,7 +90,7 @@ function pageChange(currentPage: number, pageSize: number) {
 /**
  * 加载列表
  */
-function load() {
+async function load() {
   loading.value = true
   retrieveRoles(pagination.page, pagination.size, searchForm.value).then(res => {
     datas.value = res.data.content
@@ -129,7 +129,7 @@ function editRow(id?: number) {
  * 加载
  * @param id 主键
  */
-function loadOne(id: number) {
+async function loadOne(id: number) {
   fetchRole(id).then(res => {
     form.value = res.data
   })

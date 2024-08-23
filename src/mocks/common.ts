@@ -6,7 +6,7 @@ export const commonHandlers = [
 
     const username = req.get('username')
 
-    return HttpResponse.json({ user: { username: username, avatar: 'src/assets/images/avatar.jpg' }, access_token: "eyJhsdf3SFgasd4asdf" }, {
+    return HttpResponse.json({ user: { username: username, avatar: '/src/assets/images/avatar.jpg' }, access_token: "eyJhsdf3SFgasd4asdf" }, {
       headers: {
         'Set-Cookie': 'logged_in=yes'
       }

@@ -52,7 +52,7 @@ function pageChange(currentPage: number, pageSize: number) {
 /**
  * 加载列表
  */
-function load() {
+async function load() {
   retrieveOperationLogs(pagination.page, pagination.size).then(res => {
     datas.value = res.data.content
     pagination.total = res.data.totalElements
@@ -63,7 +63,7 @@ function load() {
  * 加载
  * @param id 主键
  */
-function loadOne(id: number) {
+async function loadOne(id: number) {
   detailLoading.value = true
   fetchOperationLog(id).then(res => {
     detail.value = res.data

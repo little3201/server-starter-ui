@@ -137,7 +137,7 @@ function editRow(id?: number) {
  * 加载
  * @param id 主键
  */
-function loadOne(id: number) {
+async function loadOne(id: number) {
   fetchPrivilege(id).then(res => {
     form.value = res.data
     oldComponent.value = res.data.component

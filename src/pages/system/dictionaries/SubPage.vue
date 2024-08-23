@@ -20,8 +20,7 @@ const formRef = ref<FormInstance>()
 const form = ref<Dictionary>({
   name: '',
   superiorId: props.superiorId,
-  order: 1,
-  children: [],
+  order: 1
 })
 
 const rules = reactive<FormRules<typeof form>>({
@@ -33,7 +32,7 @@ const rules = reactive<FormRules<typeof form>>({
 /**
  * 加载列表
  */
-function load() {
+async function load() {
   loading.value = true
   retrieveDictionarySubset(props.superiorId).then(res => {
     datas.value = res.data
@@ -59,7 +58,7 @@ function editRow(id?: number) {
  * 加载
  * @param id 主键
  */
-function loadOne(id: number) {
+async function loadOne(id: number) {
   fetchDictionary(id).then(res => {
     form.value = res.data
   })

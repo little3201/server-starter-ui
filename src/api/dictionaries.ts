@@ -1,7 +1,7 @@
 import { api } from 'boot/axios'
 
 export const retrieveDictionaries = (page: number, size: number, params?: object) => {
-  return api.get('/dictionaries', { params: { page: page - 1, size: size, ...params } })
+  return api.get('/dictionaries', { params: { page: page, size: size, ...params } })
 }
 
 export const retrieveDictionarySubset = (id: number) => {

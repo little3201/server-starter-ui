@@ -7,8 +7,8 @@ for (let i = 1; i < 28; i++) {
   const data: User = {
     id: i,
     username: 'username' + i,
-    avatar: '/vite.svg',
-    email: 'lastname_' + i + '@test.com',
+    avatar: '/src/assets/images/avatar.jpg',
+    email: 'username' + i + '@test.com',
     role: i,
     accountNonLocked: i % 2 > 0,
     enabled: i % 2 > 0
@@ -29,25 +29,25 @@ export const usersHandlers = [
     const url = new URL(request.url)
     const page = url.searchParams.get('page')
     const size = url.searchParams.get('size')
-    const deapartmentId = url.searchParams.get('organizationId')
+    const organizationId = url.searchParams.get('organizationId')
     // Construct a JSON response with the list of all User
     // as the response body.
     let data = {}
-    if (deapartmentId) {
-      if (Number(deapartmentId) == 1) {
+    if (organizationId) {
+      if (Number(organizationId) == 1) {
         data = {
-          content: Array.from(datas.slice(Number(page) * Number(size), (Number(page) + 1) * Number(size))),
+          content: Array.from(datas.slice((Number(page) - 1) * Number(size), Number(page) * Number(size))),
           totalElements: datas.length
         }
       } else {
         data = {
-          content: Array.from(datas.slice(0, Number(deapartmentId))),
+          content: Array.from(datas.slice(0, Number(organizationId))),
           totalElements: datas.length
         }
       }
     } else {
       data = {
-        content: Array.from(datas.slice(Number(page) * Number(size), (Number(page) + 1) * Number(size))),
+        content: Array.from(datas.slice(Number(page) * Number(size), Number(page) * Number(size))),
         totalElements: datas.length
       }
     }

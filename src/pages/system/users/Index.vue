@@ -125,7 +125,7 @@ function fetchRoles() {
 /**
  * 加载列表
  */
-function load() {
+async function load() {
   loading.value = true
   retrieveUsers(pagination.page, pagination.size, currentNodeKey.value, searchForm.value).then(res => {
     datas.value = res.data.content
@@ -186,7 +186,7 @@ function editRow(id?: number) {
  * 加载
  * @param id 主键
  */
-function loadOne(id: number) {
+async function loadOne(id: number) {
   fetchUser(id).then(res => {
     form.value = res.data
   })
@@ -352,7 +352,7 @@ function handleCheckedChange(value: string[]) {
           <ElTableColumn show-overflow-tooltip prop="username" :label="$t('username')">
             <template #default="scope">
               <div class="flex items-center">
-                <ElAvatar :size="24" :src="scope.row.avatar" class=" flex-shrink-0" />
+                <ElAvatar :size="24" :src="scope.row.avatar" class="flex-shrink-0" />
                 <span style="margin-left: 10px">{{ scope.row.username }}</span>
               </div>
             </template>

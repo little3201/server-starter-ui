@@ -101,7 +101,7 @@ function editRow(id?: number) {
  * 加载
  * @param id 主键
  */
-function loadOne(id: number) {
+async function loadOne(id: number) {
   fetchRegion(id).then(res => {
     form.value = res.data
   })
