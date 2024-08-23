@@ -2,7 +2,7 @@
 import { ref, reactive } from 'vue'
 import { dayjs } from 'element-plus'
 import type { EChartsOption } from 'echarts'
-import Echart from 'components/Echart.vue'
+import Chart from 'components/Chart.vue'
 import { lineOptions } from 'src/mocks/echarts-data'
 
 const value = ref(new Date())
@@ -13,7 +13,7 @@ let lineOptionsData = reactive<EChartsOption>(lineOptions) as EChartsOption
 <template>
   <ElSpace direction="vertical" fill size="large">
     <ElCard shadow="never">
-      <Echart :options="lineOptionsData" :height="400" />
+      <Chart :options="lineOptionsData" :height="400" />
     </ElCard>
     <ElCard shadow="never">
       <ElCalendar v-model="value">

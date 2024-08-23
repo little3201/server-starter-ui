@@ -86,7 +86,7 @@ function show() {
 </script>
 
 <template>
-  <ElContainer class="h-screen relative overflow-hidden bg-[#e3f4fa] dark:bg-[var(--el-bg-color-page)]">
+  <ElContainer class="h-screen relative overflow-hidden">
     <figure class="absolute bg-primary-gradient rounded-full"
       style="height: 31em; width: 31em;  top: -14em; right: -12em; " />
     <figure class="absolute bg-success-gradient rounded-full"
@@ -99,8 +99,8 @@ function show() {
     <ElHeader class="flex flex-nowrap items-center z-10" height="50px">
       <div class="inline-flex flex-grow justify-between">
         <div class="inline-flex items-center">
-          <img src="/vite.svg" alt="" class="w-12 h-12 mr-3" />
-          <span class="text-20px font-bold">{{ appStore.title }}</span>
+          <ElImage src="/vite.svg" alt="" class="w-12 h-12" />
+          <span class="ml-3 text-20px font-bold">{{ appStore.title }}</span>
         </div>
 
         <div class="inline-flex justify-end items-center space-x-4">
@@ -111,7 +111,7 @@ function show() {
         </div>
       </div>
     </ElHeader>
-    <ElMain class="items-center justify-center z-10 ">
+    <ElMain class="items-center justify-center z-10">
       <ElCard class="w-2/3" style="height: 70vh;border-radius: 1.5rem;" body-class="flex items-center !p-0 h-full">
         <div class="h-full w-1/2 bg-white dark:bg-black flex-col items-center">
           <div class="inline-flex flex-grow items-center justify-center h-full">
@@ -136,7 +136,7 @@ function show() {
             leave-active-class="animate__animated animate__slideOutRight">
             <div class="flex flex-col w-full h-full space-y-2xl justify-center items-center">
               <div class="text-center">
-                <img src="/vite.svg" alt="" class="w-24 h-24" />
+                <ElImage src="/vite.svg" alt="" class="w-24 h-24" />
               </div>
               <div class="text-lg font-bold text-center mb-xs">
                 {{ $t('signinTo') }}

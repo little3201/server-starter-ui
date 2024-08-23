@@ -85,10 +85,15 @@ export default {
   auditLog: '审计日志',
   schedulerLog: '调度日志',
 
-  inputText: '請輸入',
-  searchText: '請選擇',
+  inputText: '请输入',
+  searchText: '请选择',
   lengthRange: '长度在 {min} 到 {max} 个字符',
   removeConfirm: '是否确定要删除这条数据？',
+
+  pageError: '未找到相关页面',
+  networkError: '网络错误',
+  noPermission: '无访问权限',
+  goHome: '返回首页',
 
   welcome: '嗨！欢迎回来',
   subtitle: '请填写您的账号和密码，让我们继续探索',

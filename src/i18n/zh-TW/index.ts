@@ -54,7 +54,6 @@ export default {
   success: '成功',
   failure: '失敗',
   column: '列',
-
   areaCode: '區號',
   postalCode: '郵編',
   enabled: '是否啟用',
@@ -86,11 +85,16 @@ export default {
   auditLog: '審計日誌',
   schedulerLog: '調度日誌',
 
-  inputText: '请输入',
-  searchText: '请选择',
+  inputText: '請輸入',
+  searchText: '請選擇',
   lengthRange: '長度在 {min} 到 {max} 個字元',
   removeConfirm: '是否確定要刪除這條數據？',
 
+  pageError: '未找到相關頁面',
+  networkError: '網絡錯誤',
+  noPermission: '無訪問權限',
+  goHome: '返回首頁',
+  
   welcome: '嗨！歡迎回來',
   subtitle: '請填寫您的帳號和密碼，讓我們繼續探索',
   rememberMe: '記住我 ？'

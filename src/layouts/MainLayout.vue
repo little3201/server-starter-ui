@@ -6,14 +6,14 @@ import { useUserStore } from 'stores/user-store'
 
 import ThemeToogle from 'components/ThemeToogle.vue'
 import LanguageSelector from 'components/LanguageSelector.vue'
-import ItemList from 'components/ItemList.vue'
+import EssentialList from 'components/EssentialList.vue'
 
 const { currentRoute, replace } = useRouter()
 
 const appStore = useAppStore()
 const userStore = useUserStore()
 
-const privileges = computed(() => userStore.privileges)
+const essentialLinks = computed(() => userStore.privileges)
 
 function signOut() {
   userStore.logout().then(() => replace('/login'))
@@ -25,8 +25,8 @@ function signOut() {
     <ElHeader class="flex flex-nowrap bg-[var(--el-color-primary)] z-10" height="50px">
       <div class="inline-flex flex-grow justify-between">
         <div class="inline-flex items-center">
-          <img src="/vite.svg" alt="" class="w-8 h-8 mr-3" />
-          <span class="text-20px font-bold text-white">{{ appStore.title }}</span>
+          <ElImage src="/vite.svg" alt="avatar" class="w-8 h-8" />
+          <span class="ml-3 text-20px font-bold text-white">{{ appStore.title }}</span>
         </div>
 
         <div class="inline-flex justify-end items-center space-x-4">
@@ -60,7 +60,7 @@ function signOut() {
             <ElMenuItem :index="'/'">
               <div class="i-mdi:home-outline mr-2" />{{ $t('home') }}
             </ElMenuItem>
-            <ItemList :items="privileges" />
+            <EssentialList :essentialLinks="essentialLinks" />
           </ElMenu>
         </ElScrollbar>
       </ElAside>
