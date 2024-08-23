@@ -8,14 +8,23 @@ const api: AxiosInstance = axios.create({
   timeout: 10000
 })
 
-api.interceptors.request.use((config: InternalAxiosRequestConfig) => {
-  const controller = new AbortController()
-  const url = config.url || ''
-  config.signal = controller.signal
-  abortControllerMap.set(url, controller)
-  defaultRequestInterceptors(config)
-  return config
-})
+// 请求拦截器
+api.interceptors.request.use(
+  (config: InternalAxiosRequestConfig) => {
+    // 创建 AbortController 实例
+    const controller = new AbortController()
+    // 将 signal 添加到请求配置中
+    const url = config.url || ''
+    config.signal = controller.signal
+    abortControllerMap.set(url, controller)
+    defaultRequestInterceptors(config)
+    return config
+  },
+  (error: AxiosError) => {
+    ElMessage.error({ message: error.message, grouping: true })
+    return Promise.reject(error)
+  }
+)
 
 api.interceptors.response.use(
   (res: AxiosResponse) => {

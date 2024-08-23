@@ -13,6 +13,6 @@ const locale = computed(() => (localStore.lang === 'zh-CN' ? zhCn : localStore.l
 
 <template>
   <ElConfigProvider :locale="locale" :message="{ max: 1 }">
-    <slot></slot>
+    <slot />
   </ElConfigProvider>
 </template>
