@@ -1,6 +1,4 @@
 /dist
 /node_modules
-.eslintrc.js
 env.d.ts
-global.d.ts
-vite.config.mts
+components.d.ts

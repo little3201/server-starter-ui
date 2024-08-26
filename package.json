@@ -7,7 +7,9 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "typecheck": "vue-tsc --noEmit"
+    "typecheck": "vue-tsc --noEmit",
+    "lint": "eslint --ext .ts,.js,.vue,.json,.md .",
+    "lint:fix": "yarn lint -- --fix"
   },
   "dependencies": {
     "@badrap/bar-of-progress": "^0.2.2",
@@ -15,6 +17,7 @@
     "@vueuse/core": "^10.9.0",
     "animate.css": "^4.1.1",
     "axios": "^1.7.2",
+    "echarts": "^5.5.1",
     "element-plus": "^2.8.0",
     "lottie-web": "^5.12.2",
     "pinia": "^2.1.7",
@@ -23,11 +26,12 @@
     "vue-router": "^4.3.2"
   },
   "devDependencies": {
+    "@types/node": "^22.5.0",
     "@typescript-eslint/eslint-plugin": "^8.2.0",
     "@typescript-eslint/parser": "^8.2.0",
     "@vitejs/plugin-vue": "^5.0.4",
+    "@vue/shared": "^3.4.38",
     "autoprefixer": "^10.4.19",
-    "echarts": "^5.5.1",
     "eslint": "^8.57.0",
     "eslint-config-standard": "^17.1.0",
     "eslint-plugin-import": "^2.29.1",
@@ -52,5 +56,6 @@
     "workerDirectory": [
       "public"
     ]
-  }
+  },
+  "packageManager": "yarn@4.4.1"
 }
