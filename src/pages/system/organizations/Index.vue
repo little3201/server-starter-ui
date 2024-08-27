@@ -289,7 +289,7 @@ function handleCheckedChange(value: string[]) {
         <div class="i-material-symbols:close" />{{ $t('cancel') }}
       </ElButton>
       <ElButton type="primary" :loading="saveLoading" @click="onSubmit">
-        <div class="i-material-symbols:check-circle-outline-outline" /> {{ $t('submit') }}
+        <div class="i-material-symbols:check-circle-outline-rounded" /> {{ $t('submit') }}
       </ElButton>
     </template>
   </Dialog>
