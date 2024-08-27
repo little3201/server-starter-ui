@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { useAppStore } from 'stores/app-store'
-import { Sunny, Moon } from '@element-plus/icons-vue'
 
 const appStore = useAppStore()
 
@@ -16,7 +15,14 @@ const themeChange = (val: string | number | boolean) => {
 </script>
 
 <template>
-  <ElSwitch v-model="isDark" inline-prompt
-    style="--el-switch-on-color: var(--el-color-info-light-3); --el-switch-off-color: var(--el-color-primary-light-3)"
-    :active-icon="Moon" :inactive-icon="Sunny" @change="themeChange" />
+  <ElSwitch v-model="isDark"
+    style="--el-switch-on-color: var(--el-border-color); --el-switch-off-color: var(--el-color-primary-light-3);"
+    @change="themeChange">
+    <template #active-action>
+      <div class="i-material-symbols:dark-mode-outline-rounded ma-[3px]" />
+    </template>
+    <template #inactive-action>
+      <div class="i-material-symbols:light-mode-outline-rounded ma-[3px]" />
+    </template>
+  </ElSwitch>
 </template>
