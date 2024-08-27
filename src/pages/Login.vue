@@ -103,7 +103,7 @@ function show() {
           <span class="ml-3 text-20px font-bold">{{ appStore.title }}</span>
         </div>
 
-        <div class="inline-flex justify-end items-center ">
+        <div class="inline-flex justify-end items-center space-x-4">
           <!-- language -->
           <LanguageSelector />
           <!-- theme -->
