@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { useAppStore } from 'stores/app-store'
+import { Sunny, Moon } from '@element-plus/icons-vue'
 
 const appStore = useAppStore()
 
@@ -17,12 +18,5 @@ const themeChange = (val: string | number | boolean) => {
 <template>
   <ElSwitch v-model="isDark" inline-prompt
     style="--el-switch-on-color: var(--el-color-info-light-3); --el-switch-off-color: var(--el-color-primary-light-3)"
-    @change="themeChange">
-    <template #active-action>
-      <div class="i-mdi:white-balance-sunny" />
-    </template>
-    <template #inactive-action>
-      <div class="i-mdi:weather-night" />
-    </template>
-  </ElSwitch>
+    :active-icon="Moon" :inactive-icon="Sunny" @change="themeChange" />
 </template>

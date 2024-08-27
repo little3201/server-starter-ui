@@ -31,7 +31,7 @@ const setLang = (lang: string) => {
 
 <template>
   <ElDropdown trigger="click" @command="setLang">
-    <div class="i-mdi:language cursor-pointer w-6 h-6 text-white" />
+    <div class="i-material-symbols:translate cursor-pointer w-6 h-6 text-white" />
     <template #dropdown>
       <ElDropdownMenu>
         <ElDropdownItem v-for="item in localeOptions" :key="item.value" :command="item.value">

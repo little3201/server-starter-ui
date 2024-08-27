@@ -108,12 +108,12 @@ function confirmEvent(id: number) {
       </ElCol>
       <ElCol :span="12" class="text-right">
         <ElButton type="primary" @click="editRow()">
-          <div class="i-mdi:plus" />{{ $t('add') }}
+          <div class="i-material-symbols:add-rounded" />{{ $t('add') }}
         </ElButton>
         <ElTooltip class="box-item" effect="dark" :content="$t('refresh')" placement="top">
           <ElButton type="primary" plain circle @click="load">
             <template #icon>
-              <div class="i-mdi:refresh" />
+              <div class="i-material-symbols:refresh-rounded" />
             </template>
           </ElButton>
         </ElTooltip>
@@ -133,12 +133,12 @@ function confirmEvent(id: number) {
       <ElTableColumn :label="$t('actions')">
         <template #default="scope">
           <ElButton size="small" type="primary" link @click="editRow(scope.row.id)">
-            <div class="i-mdi:pencil-outline" />{{ $t('edit') }}
+            <div class="i-material-symbols:edit-outline-rounded" />{{ $t('edit') }}
           </ElButton>
           <ElPopconfirm :title="$t('removeConfirm')" :width="240" @confirm="confirmEvent(scope.row.id)">
             <template #reference>
               <ElButton size="small" type="danger" link>
-                <div class="i-mdi:trash-can-outline" />{{ $t('remove') }}
+                <div class="i-material-symbols:delete-outline-rounded" />{{ $t('remove') }}
               </ElButton>
             </template>
           </ElPopconfirm>
@@ -171,10 +171,10 @@ function confirmEvent(id: number) {
     </ElForm>
     <template #footer>
       <ElButton @click="dialogVisible = false">
-        <div class="i-mdi:close" />{{ $t('cancel') }}
+        <div class="i-material-symbols:close" />{{ $t('cancel') }}
       </ElButton>
       <ElButton type="primary" :loading="saveLoading" @click="onSubmit">
-        <div class="i-mdi:check-circle-outline" /> {{ $t('submit') }}
+        <div class="i-material-symbols:check-circle-outline" /> {{ $t('submit') }}
       </ElButton>
     </template>
   </Dialog>

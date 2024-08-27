@@ -270,14 +270,14 @@ watch(
 <template>
   <div class="flex w-full relative">
     <span class="w-35px h-35px flex items-center justify-center cursor-pointer" @click="move(-200)">
-      <div class="i-mdi:chevron-left " />
+      <div class="i-material-symbols:chevron-left " />
     </span>
     <div class="overflow-hidden flex-1">
       <ElScrollbar ref="scrollbarRef" class="h-full" @scroll="scroll">
         <div class="flex h-full">
           <ContextMenu :ref="itemRefs.set" :schema="[
             {
-              icon: 'i-mdi:refresh-outlined',
+              icon: 'i-material-symbols:refresh-rounded-outlined',
               label: $t('reload'),
               disabled: selectedTag?.fullPath !== item.fullPath,
               command: () => {
@@ -285,7 +285,7 @@ watch(
               }
             },
             {
-              icon: 'i-mdi:close-outlined',
+              icon: 'i-material-symbols:close-outlined',
               label: $t('closeTab'),
               disabled: !!visitedViews?.length && (selectedTag?.meta.affix ? true : false),
               command: () => {
@@ -294,7 +294,7 @@ watch(
             },
             {
               divided: true,
-              icon: 'i-mdi:vertical-right-outlined',
+              icon: 'i-material-symbols:vertical-right-outlined',
               label: $t('closeTheLeftTab'),
               disabled:
                 !!visitedViews?.length &&
@@ -305,7 +305,7 @@ watch(
               }
             },
             {
-              icon: 'i-mdi:vertical-left-outlined',
+              icon: 'i-material-symbols:vertical-left-outlined',
               label: $t('closeTheRightTab'),
               disabled:
                 !!visitedViews?.length &&
@@ -317,7 +317,7 @@ watch(
             },
             {
               divided: true,
-              icon: 'i-mdi:tag-outlined',
+              icon: 'i-material-symbols:tag-outlined',
               label: $t('closeOther'),
               disabled: selectedTag?.fullPath !== item.fullPath,
               command: () => {
@@ -325,7 +325,7 @@ watch(
               }
             },
             {
-              icon: 'i-mdi:line-outlined',
+              icon: 'i-material-symbols:line-outlined',
               label: $t('closeAll'),
               command: () => {
                 closeAllTags()
@@ -339,9 +339,9 @@ watch(
             <div>
               <RouterLink :ref="tagLinksRefs.set" :to="{ ...item }" custom v-slot="{ navigate }">
                 <div @click="navigate" class="h-full flex justify-center items-center whitespace-nowrap pl-15px">
-                  <div :class="['i-mdi:arrow-left mr-1 ', item?.matched?.[1]?.meta?.icon || item?.meta?.icon]" />
+                  <div :class="['i-material-symbols:arrow-left mr-1 ', item?.matched?.[1]?.meta?.icon || item?.meta?.icon]" />
                   {{ $t(item?.meta?.title as string) }}
-                  <div @click.prevent.stop="closeSelectedTag(item)" class="i-mdi:close mr-1 " />
+                  <div @click.prevent.stop="closeSelectedTag(item)" class="i-material-symbols:close mr-1 " />
                 </div>
               </RouterLink>
             </div>
@@ -352,23 +352,23 @@ watch(
     <span
       class="w-[var(--tags-view-height)] h-[var(--tags-view-height)] flex items-center justify-center cursor-pointer"
       @click="move(200)">
-      <div class="i-mdi:chevron-right mr-1 " />
+      <div class="i-material-symbols:chevron-right mr-1 " />
     </span>
     <span
       class="w-[var(--tags-view-height)] h-[var(--tags-view-height)] flex items-center justify-center cursor-pointer"
       @click="refreshSelectedTag(selectedTag)">
-      <div class="i-mdi:reload mr-1 " />
+      <div class="i-material-symbols:reload mr-1 " />
     </span>
     <ContextMenu trigger="click" :schema="[
       {
-        icon: 'i-mdi:refresh-outlined',
+        icon: 'i-material-symbols:refresh-rounded-outlined',
         label: $t('reload'),
         command: () => {
           refreshSelectedTag(selectedTag)
         }
       },
       {
-        icon: 'i-mdi:close',
+        icon: 'i-material-symbols:close',
         label: $t('closeTab'),
         disabled: !!(visitedViews?.length ?? 0) && (selectedTag?.meta.affix ? true : false),
         command: () => {
@@ -377,7 +377,7 @@ watch(
       },
       {
         divided: true,
-        icon: 'i-mdi:vertical-right-outlined',
+        icon: 'i-material-symbols:vertical-right-outlined',
         label: $t('closeTheLeftTab'),
         disabled: !!visitedViews?.length && selectedTag?.fullPath === visitedViews[0].fullPath,
         command: () => {
@@ -385,7 +385,7 @@ watch(
         }
       },
       {
-        icon: 'i-mdi:vertical-left-outlined',
+        icon: 'i-material-symbols:vertical-left-outlined',
         label: $t('closeTheRightTab'),
         disabled:
           !!visitedViews?.length &&
@@ -396,14 +396,14 @@ watch(
       },
       {
         divided: true,
-        icon: 'i-mdi:tag-outlined',
+        icon: 'i-material-symbols:tag-outlined',
         label: $t('closeOther'),
         command: () => {
           closeOthersTags()
         }
       },
       {
-        icon: 'i-mdi:line-outlined',
+        icon: 'i-material-symbols:line-outlined',
         label: $t('closeAll'),
         command: () => {
           closeAllTags()
@@ -411,7 +411,7 @@ watch(
       }
     ]">
       <span class="w-35px h-35px flex items-center justify-center cursor-pointer block">
-        <div class="i-mdi:settings mr-1 " />
+        <div class="i-material-symbols:settings mr-1 " />
       </span>
     </ContextMenu>
   </div>

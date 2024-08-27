@@ -147,7 +147,7 @@ function show() {
                     <ElFormItem prop="username">
                       <ElInput size="large" :disable="loading" v-model="form.username" :placeholder="$t('username')">
                         <template #prefix>
-                          <div class="i-mdi:account-outline" />
+                          <div class="i-material-symbols:person-outline-rounded" />
                         </template>
                       </ElInput>
                     </ElFormItem>
@@ -159,7 +159,7 @@ function show() {
                       <ElInput size="large" :disable="loading" type="password" v-model="form.password"
                         :placeholder="$t('password')" show-password>
                         <template #prefix>
-                          <div class="i-mdi:key-outline" />
+                          <div class="i-material-symbols:key-vertical-outline-rounded" />
                         </template>
                       </ElInput>
                     </ElFormItem>
