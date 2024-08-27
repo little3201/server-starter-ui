@@ -37,7 +37,7 @@ defineExpose({
       <ElDropdownMenu>
         <ElDropdownItem v-for="(item, index) in schema" :key="`dropdown${index}`" :divided="item.divided"
           :disabled="item.disabled" :command="item">
-          <div :class="'i-mdi:' + item.icon" /> {{ item.label }}
+          <div :class="'i-material-symbols:' + item.icon" /> {{ item.label }}
         </ElDropdownItem>
       </ElDropdownMenu>
     </template>

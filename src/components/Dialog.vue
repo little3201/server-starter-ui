@@ -51,9 +51,10 @@ const dialogStyle = computed(() => {
         </slot>
         <div class="inline-flex justify-between items-center space-x-4">
           <div
-            :class="[isFullscreen ? 'i-mdi:arrow-collapse' : 'i-mdi:arrow-expand', 'cursor-pointer hover:text-[var(--el-color-primary)]']"
+            :class="[isFullscreen ? 'i-material-symbols:fullscreen-exit-rounded' : 'i-material-symbols:fullscreen-rounded', 'cursor-pointer hover:text-[var(--el-color-primary)]']"
             @click="toggleFull" />
-          <div class="i-mdi:close cursor-pointer hover:text-[var(--el-color-primary)]" @click="close" />
+          <div class="i-material-symbols:close-rounded cursor-pointer hover:text-[var(--el-color-primary)]"
+            @click="close" />
         </div>
       </div>
     </template>

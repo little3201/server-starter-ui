@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, reactive, onMounted, computed } from 'vue'
+import { ref, reactive, onMounted } from 'vue'
 import type { FormInstance, FormRules } from 'element-plus'
 import draggable from 'vuedraggable'
 import Dialog from 'components/Dialog.vue'
@@ -28,32 +28,10 @@ const searchForm = ref({
   component: null
 })
 
-const iconName = ref('')
-const icons = ref([
-  "gear",
-  "user",
-  "user-circle",
-  "book",
-  "lock-key",
-  "key",
-  "tree-structure",
-  "test-tube",
-  "database",
-  "flask",
-  "notepad",
-  "file-upload",
-  "file-cloud",
-  "file-lock",
-  "file-document-outline",
-  "clipboard-text",
-  "files"
-]
-)
-const filterIcons = computed(() => icons.value.filter(item => item.includes(iconName.value)))
-
 const formRef = ref<FormInstance>()
 
 const oldComponent = ref<string>('#')
+
 const form = ref<Privilege>({
   name: '',
   path: '',
@@ -137,7 +115,7 @@ function editRow(id?: number) {
  * 加载
  * @param id 主键
  */
-function loadOne(id: number) {
+async function loadOne(id: number) {
   fetchPrivilege(id).then(res => {
     form.value = res.data
     oldComponent.value = res.data.component
@@ -205,10 +183,10 @@ function handleCheckedChange(value: string[]) {
         </ElFormItem>
         <ElFormItem>
           <ElButton type="primary" @click="load">
-            <div class="i-mdi:search" />{{ $t('search') }}
+            <div class="i-material-symbols:search-rounded" />{{ $t('search') }}
           </ElButton>
           <ElButton @click="reset">
-            <div class="i-mdi:restore" />{{ $t('reset') }}
+            <div class="i-material-symbols:replay-rounded" />{{ $t('reset') }}
           </ElButton>
         </ElFormItem>
       </ElForm>
@@ -218,16 +196,16 @@ function handleCheckedChange(value: string[]) {
       <ElRow :gutter="20" justify="space-between" class="mb-4">
         <ElCol :span="16" class="text-left">
           <ElButton type="warning" plain @click="dialogVisible = true">
-            <div class="i-mdi:file-upload-outline" />{{ $t('import') }}
+            <div class="i-material-symbols:upload-file-outline-rounded" />{{ $t('import') }}
           </ElButton>
           <ElButton type="success" plain>
-            <div class="i-mdi:file-download-outline" />{{ $t('export') }}
+            <div class="i-material-symbols:file-save-outline-rounded" />{{ $t('export') }}
           </ElButton>
         </ElCol>
         <ElCol :span="8" class="text-right">
           <ElTooltip class="box-item" effect="dark" :content="$t('refresh')" placement="top">
             <ElButton type="primary" plain circle @click="load">
-              <div class="i-mdi:refresh" />
+              <div class="i-material-symbols:refresh-rounded" />
             </ElButton>
           </ElTooltip>
 
@@ -236,7 +214,7 @@ function handleCheckedChange(value: string[]) {
               <ElPopover :width="200" trigger="click">
                 <template #reference>
                   <ElButton type="success" plain circle>
-                    <div class="i-mdi:format-list-bulleted" />
+                    <div class="i-material-symbols:format-list-bulleted" />
                   </ElButton>
                 </template>
                 <div>
@@ -248,7 +226,7 @@ function handleCheckedChange(value: string[]) {
                     <draggable v-model="columns" item-key="simple">
                       <template #item="{ element }">
                         <div class="flex items-center space-x-2">
-                          <div class="i-mdi:drag w-4 h-4 hover:cursor-move" />
+                          <div class="i-material-symbols:drag w-4 h-4 hover:cursor-move" />
                           <ElCheckbox :label="element" :value="element" :disabled="element === columns[0]">
                             <div class="inline-flex items-center space-x-4">
                               {{ $t(element) }}
@@ -288,7 +266,7 @@ function handleCheckedChange(value: string[]) {
         <ElTableColumn :label="$t('actions')">
           <template #default="scope">
             <ElButton size="small" type="primary" link @click="editRow(scope.row.id)">
-              <div class="i-mdi:pencil-outline" />{{ $t('edit') }}
+              <div class="i-material-symbols:edit-outline-rounded" />{{ $t('edit') }}
             </ElButton>
           </template>
         </ElTableColumn>
@@ -303,7 +281,11 @@ function handleCheckedChange(value: string[]) {
       <ElRow :gutter="20" class="w-full !mx-0">
         <ElCol :span="12">
           <ElFormItem :label="$t('name')" prop="name">
-            <ElInput v-model="form.name" :placeholder="$t('inputText') + $t('name')" disabled />
+            <ElInput v-model="form.name" :placeholder="$t('inputText') + $t('name')" disabled>
+              <template #prefix>
+                <div :class="form.icon" />
+              </template>
+            </ElInput>
           </ElFormItem>
         </ElCol>
         <ElCol :span="12">
@@ -321,31 +303,6 @@ function handleCheckedChange(value: string[]) {
         <ElCol :span="12">
           <ElFormItem :label="$t('order')" prop="order">
             <ElInputNumber v-model="form.order" :placeholder="$t('inputText') + $t('order')" />
-          </ElFormItem>
-        </ElCol>
-      </ElRow>
-      <ElRow :gutter="20" class="w-full !mx-0">
-        <ElCol>
-          <ElFormItem :label="$t('icon')" prop="meta.icon">
-            <!-- width 相对body设置, popover默认设置了 position: absolute -->
-            <ElPopover trigger="click" width="36%">
-              <template #reference>
-                <ElInput v-model="form.icon" :placeholder="$t('inputText') + $t('icon')">
-                  <template #prefix>
-                    <div :class="form.icon" />
-                  </template>
-                </ElInput>
-              </template>
-              <ElInput v-model="iconName" :placeholder="$t('inputText') + $t('icon')">
-              </ElInput>
-              <div class="flex flex-wrap max-h-48 overflow-y-scroll mt-4">
-                <div v-for="(icon, index) in filterIcons" :key="index" @click="form.icon = ('ph:' + icon)" :class="['inline-flex items-center cursor-pointer w-1/3 h-8 hover:text-[var(--el-color-primary)]',
-                  { 'text-[var(--el-color-primary)': form.icon === ('ph:' + icon) }]">
-                  <div :class="['w-5 h-5', 'i-mdi:' + icon]" />
-                  <span class="ml-2 text-base">{{ icon }}</span>
-                </div>
-              </div>
-            </ElPopover>
           </ElFormItem>
         </ElCol>
       </ElRow>
@@ -373,10 +330,10 @@ function handleCheckedChange(value: string[]) {
     </ElForm>
     <template #footer>
       <ElButton @click="dialogVisible = false">
-        <div class="i-mdi:close" />{{ $t('cancel') }}
+        <div class="i-material-symbols:close" />{{ $t('cancel') }}
       </ElButton>
       <ElButton type="primary" :loading="saveLoading" @click="onSubmit">
-        <div class="i-mdi:check-circle-outline" /> {{ $t('submit') }}
+        <div class="i-material-symbols:check-circle-outline-rounded" /> {{ $t('submit') }}
       </ElButton>
     </template>
   </Dialog>

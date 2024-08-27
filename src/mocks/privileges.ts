@@ -1,7 +1,6 @@
 import { http, HttpResponse } from 'msw'
 import type { Privilege, PrivilegeTreeNode } from 'src/models'
 
-
 const datas: Privilege[] = [
   {
     id: 1,
@@ -10,7 +9,7 @@ const datas: Privilege[] = [
     redirect: '/system/users',
     name: 'system',
     order: 1,
-    icon: 'i-mdi:cog-outline',
+    icon: 'i-material-symbols:settings-outline-rounded',
     count: 5,
     enabled: true,
     description: 'this is description for this row'
@@ -22,7 +21,7 @@ const datas: Privilege[] = [
     redirect: '/logs/operation',
     name: 'logs',
     order: 2,
-    icon: 'i-mdi:clipboard-list-outline ',
+    icon: 'i-material-symbols:lab-profile-outline-rounded ',
     count: 3,
     enabled: true,
     description: 'this is description for this row'
@@ -34,7 +33,7 @@ const datas: Privilege[] = [
     name: 'regions',
     redirect: '/regions',
     order: 3,
-    icon: 'i-mdi:database-marker-outline',
+    icon: 'i-material-symbols:location-on-outline-rounded',
     count: 1,
     enabled: true,
     description: 'this is description for this row'
@@ -51,7 +50,7 @@ const subDatas: Privilege[] = [
     order: 1,
     count: 0,
     enabled: true,
-    icon: 'i-mdi:account-multiple-plus-outline',
+    icon: 'i-material-symbols:account-tree-outline-rounded',
     description: 'this is description for this row'
   },
   {
@@ -63,7 +62,7 @@ const subDatas: Privilege[] = [
     order: 2,
     count: 0,
     enabled: true,
-    icon: 'i-mdi:account-outline',
+    icon: 'i-material-symbols:person-outline-rounded',
     description: 'this is description for this row'
   },
   {
@@ -75,7 +74,7 @@ const subDatas: Privilege[] = [
     order: 3,
     count: 0,
     enabled: true,
-    icon: 'i-mdi:shield-key-outline',
+    icon: 'i-material-symbols:admin-panel-settings-outline-rounded',
     description: 'this is description for this row'
   },
   {
@@ -87,7 +86,7 @@ const subDatas: Privilege[] = [
     order: 4,
     count: 0,
     enabled: true,
-    icon: 'i-mdi:shield-account-outline',
+    icon: 'i-material-symbols:shield-person-outline-rounded',
     description: 'this is description for this row'
   },
   {
@@ -99,7 +98,7 @@ const subDatas: Privilege[] = [
     order: 5,
     count: 0,
     enabled: true,
-    icon: 'i-mdi:book-outline',
+    icon: 'i-material-symbols:book-3-outline-rounded',
     description: 'this is description for this row'
   },
   {
@@ -111,7 +110,7 @@ const subDatas: Privilege[] = [
     order: 1,
     count: 0,
     enabled: true,
-    icon: 'i-mdi:clipboard-text-outline',
+    icon: 'i-material-symbols:clinical-notes-outline-rounded',
     description: 'this is description for this row'
   },
   {
@@ -123,7 +122,7 @@ const subDatas: Privilege[] = [
     order: 2,
     count: 0,
     enabled: true,
-    icon: 'i-mdi:file-document-outline',
+    icon: 'i-material-symbols:sticky-note-2-outline-rounded',
     description: 'this is description for this row'
   },
   {
@@ -135,7 +134,7 @@ const subDatas: Privilege[] = [
     order: 3,
     count: 0,
     enabled: true,
-    icon: 'i-mdi:clipboard-check-outline',
+    icon: 'i-material-symbols:note-alt-outline-rounded',
     description: 'this is description for this row'
   },
   {
@@ -147,7 +146,7 @@ const subDatas: Privilege[] = [
     order: 4,
     count: 0,
     enabled: true,
-    icon: 'i-mdi:calendar-text-outline',
+    icon: 'i-material-symbols:event-note-outline-rounded',
     description: 'this is description for this row'
   },
   {
@@ -159,7 +158,7 @@ const subDatas: Privilege[] = [
     order: 4,
     count: 0,
     enabled: true,
-    icon: 'i-mdi:database-marker-outline',
+    icon: 'i-material-symbols:location-on-outline-rounded',
     hidden: true,
     description: 'this is description for this row'
   }
@@ -172,42 +171,42 @@ const treeNodes: PrivilegeTreeNode[] = [
     component: '#',
     redirect: '/system/users',
     name: 'system',
-    icon: 'i-mdi:cog-outline',
+    icon: 'i-material-symbols:settings-outline-rounded',
     children: [
       {
         id: 2,
         path: 'organizations',
         component: 'pages/system/organizations/Index',
         name: 'organizations',
-        icon: 'i-mdi:account-multiple-plus-outline'
+        icon: 'i-material-symbols:account-tree-outline-rounded'
       },
       {
         id: 3,
         path: 'users',
         component: 'pages/system/users/Index',
         name: 'users',
-        icon: 'i-mdi:account-outline'
+        icon: 'i-material-symbols:person-outline-rounded'
       },
       {
         id: 4,
         path: 'privileges',
         component: 'pages/system/privileges/Index',
         name: 'privileges',
-        icon: 'i-mdi:shield-key-outline'
+        icon: 'i-material-symbols:admin-panel-settings-outline-rounded'
       },
       {
         id: 5,
         path: 'roles',
         component: 'pages/system/roles/Index',
         name: 'roles',
-        icon: 'i-mdi:shield-account-outline'
+        icon: 'i-material-symbols:shield-person-outline-rounded'
       },
       {
         id: 6,
         path: 'dictionaries',
         component: 'pages/system/dictionaries/Index',
         name: 'dictionaries',
-        icon: 'i-mdi:book-outline'
+        icon: 'i-material-symbols:book-3-outline-rounded'
       }
     ]
   },
@@ -217,35 +216,35 @@ const treeNodes: PrivilegeTreeNode[] = [
     component: '#',
     redirect: '/logs/operation',
     name: 'logs',
-    icon: 'i-mdi:clipboard-list-outline',
+    icon: 'i-material-symbols:lab-profile-outline-rounded',
     children: [
       {
         id: 8,
         path: 'operation',
         component: 'pages/logs/operation/Index',
         name: 'operationLog',
-        icon: 'i-mdi:clipboard-text-outline'
+        icon: 'i-material-symbols:clinical-notes-outline-rounded'
       },
       {
         id: 9,
         path: 'access',
         component: 'pages/logs/access/Index',
         name: 'accessLog',
-        icon: 'i-mdi:file-document-outline'
+        icon: 'i-material-symbols:sticky-note-2-outline-rounded'
       },
       {
         id: 10,
         path: 'audit',
         component: 'pages/logs/audit/Index',
         name: 'auditLog',
-        icon: 'i-mdi:clipboard-check-outline'
+        icon: 'i-material-symbols:note-alt-outline-rounded'
       },
       {
         id: 11,
         path: 'scheduler',
         component: 'pages/logs/scheduler/Index',
         name: 'schedulerLog',
-        icon: 'i-mdi:calendar-text-outline'
+        icon: 'i-material-symbols:event-note-outline-rounded'
       }
     ]
   },
@@ -255,14 +254,14 @@ const treeNodes: PrivilegeTreeNode[] = [
     component: '#',
     name: 'regions',
     redirect: '/regions',
-    icon: 'i-mdi:database-marker-outline',
+    icon: 'i-material-symbols:location-on-outline-rounded',
     children: [
       {
         id: 13,
         path: '',
         component: 'pages/regions/Index',
         name: 'regions-index',
-        icon: 'i-mdi:database-marker-outline',
+        icon: 'i-material-symbols:location-on-outline-rounded',
         hidden: true
       }
     ]
@@ -272,7 +271,7 @@ const treeNodes: PrivilegeTreeNode[] = [
 export const privilegesHandlers = [
   http.get('/api/privileges/:username/tree', ({ params }) => {
     const { username } = params
-    console.log("username: ", username)
+    console.log('username: ', username)
     return HttpResponse.json(treeNodes)
   }),
   http.get('/api/privileges/:id/subset', ({ params }) => {
@@ -298,7 +297,7 @@ export const privilegesHandlers = [
     // Construct a JSON response with the list of all privilege
     // as the response body.
     const data = {
-      content: Array.from(datas.slice(Number(page) * Number(size), (Number(page) + 1) * Number(size))),
+      content: Array.from(datas.slice((Number(page) - 1) * Number(size), Number(page) * Number(size))),
       totalElements: datas.length
     }
 

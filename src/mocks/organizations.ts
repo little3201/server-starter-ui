@@ -80,7 +80,7 @@ export const organizationsHandlers = [
     // Construct a JSON response with the list of all Organization
     // as the response body.
     const data = {
-      content: Array.from(datas.slice(Number(page) * Number(size), (Number(page) + 1) * Number(size))),
+      content: Array.from(datas.slice((Number(page) - 1) * Number(size), Number(page) * Number(size))),
       totalElements: datas.length
     }
 

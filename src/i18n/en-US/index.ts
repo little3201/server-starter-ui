@@ -19,9 +19,6 @@ export default {
   lastModifiedDate: 'Last Modified Date',
   username: 'Username',
   password: 'Password',
-  firstname: 'First Name',
-  lastname: 'Last Name',
-  fullname: 'Full Name',
   email: 'Email',
   accountNonLocked: 'Locked',
   accountExpiresAt: 'User Expires At',
@@ -40,8 +37,8 @@ export default {
   api: 'API',
   params: 'Params',
   operator: 'Operator',
-  operation: 'Operation Time',
-  operationTime: 'Operation',
+  operation: 'Operated Time',
+  operatedTime: 'Operation',
   Time: 'Time',
   status: 'Status',
   responseTime: 'Response Time',
@@ -70,6 +67,7 @@ export default {
   remove: 'Remove',
   refresh: 'Refresh',
   reset: 'Reset',
+  clear: 'Clear',
 
   home: 'Home',
   system: 'System',
@@ -94,7 +92,7 @@ export default {
   networkError: 'Network Error',
   noPermission: 'Permission Denied',
   goHome: 'Go Home',
-  
+
   welcome: 'Hi! Welcome Back.',
   subtitle: 'Please sign in to continue exploring.',
   rememberMe: 'Remember me ?'

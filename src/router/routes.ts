@@ -12,7 +12,7 @@ export const constantRouterMap: RouteRecordRaw[] = [
         path: '',
         name: 'home-index',
         component: () => import('pages/Index.vue')
-      },
+      }
     ]
   },
   {

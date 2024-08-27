@@ -71,8 +71,9 @@ export const useTagsViewStore = defineStore('tagsView', {
         const name = item.name as string
         cacheMap.add(name)
       }
-      if (Array.from(this.cachedViews).sort().toString() === Array.from(cacheMap).sort().toString())
+      if (Array.from(this.cachedViews).sort().toString() === Array.from(cacheMap).sort().toString()) {
         return
+      }
       this.cachedViews = cacheMap
     },
     // 删除某个

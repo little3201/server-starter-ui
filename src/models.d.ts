@@ -94,7 +94,7 @@ export interface OperationLog {
   ip: string
   location: string
   status: number | null
-  operationTime: string | null
+  operatedTime: string | null
 }
 
 export interface AccessLog {
@@ -121,7 +121,7 @@ export interface AuditLog {
   ip: string
   location: string
   status: number | null
-  operationTime: string | null
+  operatedTime: string | null
 }
 
 export interface SchedulerLog {

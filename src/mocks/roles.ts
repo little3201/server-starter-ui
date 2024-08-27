@@ -49,7 +49,7 @@ export const rolesHandlers = [
       // Construct a JSON response with the list of all Role
       // as the response body.
       const data = {
-        content: Array.from(datas.slice(Number(page) * Number(size), (Number(page) + 1) * Number(size))),
+        content: Array.from(datas.slice((Number(page) - 1) * Number(size), Number(page) * Number(size))),
         totalElements: datas.length
       }
       return HttpResponse.json(data)

@@ -36,7 +36,7 @@ const detail = ref<AuditLog>({
   ip: "",
   location: "",
   status: null,
-  operationTime: null
+  operatedTime: null
 })
 
 const dialogVisible = ref<boolean>(false)
@@ -54,7 +54,7 @@ function pageChange(currentPage: number, pageSize: number) {
 /**
  * 加载列表
  */
-function load() {
+async function load() {
   loading.value = true
   retrieveAuditLogs(pagination.page, pagination.size).then(res => {
     datas.value = res.data.content
@@ -66,7 +66,7 @@ function load() {
  * 加载
  * @param id 主键
  */
-function loadOne(id: number) {
+async function loadOne(id: number) {
   detailLoading.value = true
   fetchAuditLog(id).then(res => {
     detail.value = res.data
@@ -130,10 +130,10 @@ function handleCheckedChange(value: string[]) {
           </ElFormItem>
           <ElFormItem>
             <ElButton type="primary" @click="load">
-              <div class="i-mdi:search" />{{ $t('search') }}
+              <div class="i-material-symbols:search-rounded" />{{ $t('search') }}
             </ElButton>
             <ElButton @click="reset">
-              <div class="i-mdi:restore" />{{ $t('reset') }}
+              <div class="i-material-symbols:replay-rounded" />{{ $t('reset') }}
             </ElButton>
           </ElFormItem>
         </ElForm>
@@ -143,14 +143,14 @@ function handleCheckedChange(value: string[]) {
         <ElRow :gutter="20" justify="space-between" class="mb-4">
           <ElCol :span="16" class="text-left">
             <ElButton type="success" plain>
-              <div class="i-mdi:file-download-outline" />{{ $t('export') }}
+              <div class="i-material-symbols:file-save-outline-rounded" />{{ $t('export') }}
             </ElButton>
           </ElCol>
 
           <ElCol :span="8" class="text-right">
             <ElTooltip class="box-item" effect="dark" :content="$t('refresh')" placement="top">
               <ElButton type="primary" plain circle @click="load">
-                <div class="i-mdi:refresh" />
+                <div class="i-material-symbols:refresh-rounded" />
               </ElButton>
             </ElTooltip>
 
@@ -159,7 +159,7 @@ function handleCheckedChange(value: string[]) {
                 <ElPopover :width="200" trigger="click">
                   <template #reference>
                     <ElButton type="success" plain circle>
-                      <div class="i-mdi:format-list-bulleted" />
+                      <div class="i-material-symbols:format-list-bulleted" />
                     </ElButton>
                   </template>
                   <div>
@@ -171,7 +171,7 @@ function handleCheckedChange(value: string[]) {
                       <draggable v-model="columns" item-key="simple">
                         <template #item="{ element }">
                           <div class="flex items-center space-x-2">
-                            <div class="i-mdi:drag w-4 h-4 hover:cursor-move" />
+                            <div class="i-material-symbols:drag-indicator w-4 h-4 hover:cursor-move" />
                             <ElCheckbox :label="element" :value="element" :disabled="element === columns[0]">
                               <div class="inline-flex items-center space-x-4">
                                 {{ $t(element) }}
@@ -202,15 +202,15 @@ function handleCheckedChange(value: string[]) {
               <ElTag v-else type="danger" effect="light" round>{{ $t('failure') }}</ElTag>
             </template>
           </ElTableColumn>
-          <ElTableColumn prop="operationTime" :label="$t('operationTime')">
+          <ElTableColumn prop="operatedTime" :label="$t('operatedTime')">
             <template #default="scope">
-              {{ dayjs(scope.row.operationTime).format('YYYY-MM-DD HH:mm:ss') }}
+              {{ dayjs(scope.row.operatedTime).format('YYYY-MM-DD HH:mm:ss') }}
             </template>
           </ElTableColumn>
           <ElTableColumn :label="$t('actions')">
             <template #default="scope">
               <ElButton size="small" type="success" link @click="showRow(scope.row.id)">
-                <div class="i-mdi:file-document-outline" />{{ $t('detail') }}
+                <div class="i-material-symbols:sticky-note-outline-rounded" />{{ $t('detail') }}
               </ElButton>
             </template>
           </ElTableColumn>
@@ -233,7 +233,7 @@ function handleCheckedChange(value: string[]) {
           <ElTag v-if="detail.status === 1" type="success" effect="light" round>{{ $t('success') }}</ElTag>
           <ElTag v-else type="danger" effect="light" round>{{ $t('failure') }}</ElTag>
         </ElDescriptionsItem>
-        <ElDescriptionsItem :label="$t('operationTime')">{{ dayjs(detail.operationTime).format('YYYY-MM-DD HH:mm:ss') }}
+        <ElDescriptionsItem :label="$t('operatedTime')">{{ dayjs(detail.operatedTime).format('YYYY-MM-DD HH:mm:ss') }}
         </ElDescriptionsItem>
       </ElDescriptions>
     </Dialog>

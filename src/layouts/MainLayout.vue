@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed } from 'vue'
+import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAppStore } from 'stores/app-store'
 import { useUserStore } from 'stores/user-store'
@@ -13,6 +13,7 @@ const { currentRoute, replace } = useRouter()
 const appStore = useAppStore()
 const userStore = useUserStore()
 
+const collapse = ref<boolean>(false)
 const essentialLinks = computed(() => userStore.privileges)
 
 function signOut() {
@@ -27,6 +28,8 @@ function signOut() {
         <div class="inline-flex items-center">
           <ElImage src="/vite.svg" alt="avatar" class="w-8 h-8" />
           <span class="ml-3 text-20px font-bold text-white">{{ appStore.title }}</span>
+
+          <div class="i-material-symbols:menu w-6 h-6 ml-8 text-white cursor-pointer" @clikc="collapse = !collapse" />
         </div>
 
         <div class="inline-flex justify-end items-center space-x-4">
@@ -34,7 +37,7 @@ function signOut() {
           <LanguageSelector />
           <!-- theme -->
           <ThemeToogle />
-          
+
           <ElDropdown trigger="click" class="cursor-pointer">
             <ElSpace>
               <ElAvatar alt="avatar" :size="28" :src="userStore.user?.avatar" />
@@ -43,10 +46,10 @@ function signOut() {
             <template #dropdown>
               <ElDropdownMenu>
                 <ElDropdownItem>
-                  <div class="i-mdi:account-settings-outline mr-2 " />{{ $t('profile') }}
+                  <div class="i-material-symbols:manage-accounts-outline-rounded mr-2 " />{{ $t('profile') }}
                 </ElDropdownItem>
                 <ElDropdownItem divided @click="signOut">
-                  <div class="i-mdi:logout mr-2 " />{{ $t('signout') }}
+                  <div class="i-material-symbols:logout-rounded mr-2 " />{{ $t('signout') }}
                 </ElDropdownItem>
               </ElDropdownMenu>
             </template>
@@ -57,9 +60,9 @@ function signOut() {
     <ElContainer>
       <ElAside width="200px">
         <ElScrollbar>
-          <ElMenu router unique-opened :default-active="currentRoute.fullPath">
+          <ElMenu :collapse="collapse" router unique-opened :default-active="currentRoute.fullPath">
             <ElMenuItem :index="'/'">
-              <div class="i-mdi:home-outline mr-2" />{{ $t('home') }}
+              <div class="i-material-symbols:home-outline-rounded mr-2" />{{ $t('home') }}
             </ElMenuItem>
             <EssentialList :essentialLinks="essentialLinks" />
           </ElMenu>
