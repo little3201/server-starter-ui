@@ -8,10 +8,12 @@ const props = withDefaults(defineProps<{
   modelValue: boolean
   title: string
   maxHeight?: string | number
+  fullscreen?: boolean
 }>(), {
   modelValue: false,
   title: 'Dialog',
-  maxHeight: undefined
+  maxHeight: undefined,
+  fullscreen: false
 })
 
 const getBindValue = computed(() => {
@@ -42,20 +44,15 @@ const dialogStyle = computed(() => {
 </script>
 
 <template>
-  <ElDialog v-bind="getBindValue" :fullscreen="isFullscreen" align-center destroy-on-close lock-scroll draggable
-    append-to-body :close-on-click-modal="false" :show-close="false">
+  <ElDialog v-bind="getBindValue" align-center destroy-on-close lock-scroll draggable append-to-body
+    :close-on-click-modal="false" :show-close="false">
     <template #header="{ close, titleId, titleClass }">
       <div class="flex justify-between items-center">
         <slot name="title">
           <span :id="titleId" :class="titleClass">{{ title }}</span>
         </slot>
-        <div class="inline-flex justify-between items-center space-x-4">
-          <div
-            :class="[isFullscreen ? 'i-material-symbols:fullscreen-exit-rounded' : 'i-material-symbols:fullscreen-rounded', 'cursor-pointer hover:text-[var(--el-color-primary)]']"
-            @click="toggleFull" />
-          <div class="i-material-symbols:close-rounded cursor-pointer hover:text-[var(--el-color-primary)]"
-            @click="close" />
-        </div>
+        <div class="i-material-symbols:close-rounded cursor-pointer hover:text-[var(--el-color-primary)]"
+          @click="close" />
       </div>
     </template>
 

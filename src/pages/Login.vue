@@ -173,7 +173,7 @@ function show() {
                     </ElFormItem>
                     <ElFormItem>
                       <ElButton size="large" type="primary" :loading="loading" @click="onSubmit(formRef)" class="w-full"
-                        title="signin_submit">
+                        title="signin" native-type="submit">
                         {{ $t('signin') }}
                       </ElButton>
                     </ElFormItem>

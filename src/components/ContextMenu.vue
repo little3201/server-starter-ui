@@ -1,13 +1,13 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import { ElDropdown, ElDropdownMenu, ElDropdownItem } from 'element-plus'
+import type { ElDropdown } from 'element-plus'
 import type { RouteLocationNormalizedLoaded } from 'vue-router'
 
 const emit = defineEmits(['visibleChange'])
 
 const props = withDefaults(defineProps<{
   schema: ContextMenuSchema[]
-  trigger: 'click' | 'hover' | 'focus' | 'contextmenu'
+  trigger: 'hover' | 'click' | 'contextmenu'
   tagItem?: RouteLocationNormalizedLoaded
 }>(), {
   trigger: 'contextmenu'
@@ -35,9 +35,9 @@ defineExpose({
     <slot></slot>
     <template #dropdown>
       <ElDropdownMenu>
-        <ElDropdownItem v-for="(item, index) in schema" :key="`dropdown${index}`" :divided="item.divided"
-          :disabled="item.disabled" :command="item">
-          <div :class="'i-material-symbols:' + item.icon" /> {{ item.label }}
+        <ElDropdownItem v-for="(item, index) in schema" :key="index" :divided="item.divided" :disabled="item.disabled"
+          :command="item">
+          <div :class="[item.icon, 'mr-1']" /> {{ item.label }}
         </ElDropdownItem>
       </ElDropdownMenu>
     </template>

@@ -245,7 +245,6 @@ function handleCheckedChange(value: string[]) {
       </ElCard>
     </ElSpace>
 
-
     <Dialog v-model="dialogVisible" :title="$t('detail')">
       <ElDescriptions v-loading="detailLoading">
         <ElDescriptionsItem :label="$t('api')">{{ detail.api }}</ElDescriptionsItem>

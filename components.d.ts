@@ -60,6 +60,8 @@ declare module 'vue' {
     LanguageSelector: typeof import('./src/components/LanguageSelector.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
+    TabList: typeof import('./src/components/TabList.vue')['default']
+    TagList: typeof import('./src/components/TagList.vue')['default']
     TagsView: typeof import('./src/components/TagsView.vue')['default']
     ThemeToogle: typeof import('./src/components/ThemeToogle.vue')['default']
   }

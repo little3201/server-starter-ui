@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAppStore } from 'stores/app-store'
 import { useUserStore } from 'stores/user-store'
@@ -13,7 +13,6 @@ const { currentRoute, replace } = useRouter()
 const appStore = useAppStore()
 const userStore = useUserStore()
 
-const collapse = ref<boolean>(false)
 const essentialLinks = computed(() => userStore.privileges)
 
 function signOut() {
@@ -28,8 +27,6 @@ function signOut() {
         <div class="inline-flex items-center">
           <ElImage src="/vite.svg" alt="avatar" class="w-8 h-8" />
           <span class="ml-3 text-20px font-bold text-white">{{ appStore.title }}</span>
-
-          <div class="i-material-symbols:menu w-6 h-6 ml-8 text-white cursor-pointer" @clikc="collapse = !collapse" />
         </div>
 
         <div class="inline-flex justify-end items-center space-x-4">
@@ -60,7 +57,7 @@ function signOut() {
     <ElContainer>
       <ElAside width="200px">
         <ElScrollbar>
-          <ElMenu :collapse="collapse" router unique-opened :default-active="currentRoute.fullPath">
+          <ElMenu router unique-opened :default-active="currentRoute.fullPath">
             <ElMenuItem :index="'/'">
               <div class="i-material-symbols:home-outline-rounded mr-2" />{{ $t('home') }}
             </ElMenuItem>

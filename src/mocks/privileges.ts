@@ -153,7 +153,7 @@ const subDatas: Privilege[] = [
     id: 13,
     superiorId: 12,
     path: '',
-    name: 'regions-index',
+    name: 'regions',
     component: 'pages/regions/Index',
     order: 4,
     count: 0,
@@ -260,7 +260,7 @@ const treeNodes: PrivilegeTreeNode[] = [
         id: 13,
         path: '',
         component: 'pages/regions/Index',
-        name: 'regions-index',
+        name: 'regions',
         icon: 'i-material-symbols:location-on-outline-rounded',
         hidden: true
       }
