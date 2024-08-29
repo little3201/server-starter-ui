@@ -84,8 +84,7 @@ export interface PrivilegeTreeNode extends TreeNode {
   children?: PrivilegeTreeNode[]
 }
 
-export interface OperationLog {
-  id?: number
+export interface OperationLog extends AudtiMetadata {
   module: string
   method: string
   operator: string
@@ -97,8 +96,7 @@ export interface OperationLog {
   operatedTime: string | null
 }
 
-export interface AccessLog {
-  id?: number
+export interface AccessLog extends AudtiMetadata {
   api: string
   method: string
   operator: string
@@ -111,8 +109,7 @@ export interface AccessLog {
   responseMessage: string | null
 }
 
-export interface AuditLog {
-  id?: number
+export interface AuditLog extends AudtiMetadata {
   operator: string
   operation: string
   resource: string
@@ -124,8 +121,7 @@ export interface AuditLog {
   operatedTime: string | null
 }
 
-export interface SchedulerLog {
-  id?: number
+export interface SchedulerLog extends AudtiMetadata {
   name: string
   method: string
   params: string
