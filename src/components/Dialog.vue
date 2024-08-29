@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, useAttrs, ref, unref, useSlots } from 'vue'
+import { computed, useAttrs, ref, useSlots } from 'vue'
 import { isNumber } from 'src/utils'
 
 const slots = useSlots()
@@ -8,12 +8,10 @@ const props = withDefaults(defineProps<{
   modelValue: boolean
   title: string
   maxHeight?: string | number
-  fullscreen?: boolean
 }>(), {
   modelValue: false,
   title: 'Dialog',
-  maxHeight: undefined,
-  fullscreen: false
+  maxHeight: undefined
 })
 
 const getBindValue = computed(() => {
@@ -28,17 +26,11 @@ const getBindValue = computed(() => {
   return obj
 })
 
-const isFullscreen = ref(false)
-
-const toggleFull = () => {
-  isFullscreen.value = !unref(isFullscreen)
-}
-
 const dialogHeight = ref(isNumber(props.maxHeight) ? `${props.maxHeight}px` : props.maxHeight)
 
 const dialogStyle = computed(() => {
   return {
-    height: unref(dialogHeight)
+    height: dialogHeight.value
   }
 })
 </script>
