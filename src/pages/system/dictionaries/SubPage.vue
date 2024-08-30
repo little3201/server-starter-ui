@@ -84,7 +84,7 @@ function onSubmit() {
  * 删除
  * @param id 主键
  */
-function removeHandler(id: number) {
+function removeRow(id: number) {
   datas.value = datas.value.filter(item => item.id !== id)
 }
 
@@ -94,7 +94,7 @@ function removeHandler(id: number) {
  */
 function confirmEvent(id: number) {
   if (id) {
-    removeHandler(id)
+    removeRow(id)
   }
 }
 

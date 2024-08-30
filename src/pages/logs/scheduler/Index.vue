@@ -2,8 +2,10 @@
 import { ref, onMounted, reactive } from 'vue'
 import { dayjs } from 'element-plus'
 import draggable from 'vuedraggable'
+import Dialog from 'components/Dialog.vue'
 import { retrieveSchedulerLogs, fetchSchedulerLog } from 'src/api/scheduler-logs'
 import type { SchedulerLog } from 'src/models'
+import { formatDuration } from 'src/utils'
 
 
 const loading = ref<boolean>(false)
@@ -31,8 +33,7 @@ const detail = ref<SchedulerLog>({
   method: "",
   params: "",
   cronExpression: "",
-  startTime: "",
-  endTime: "",
+  executedTime: 0,
   status: null
 })
 
@@ -96,7 +97,7 @@ function showRow(id: number) {
  * 删除
  * @param id 主键
  */
-function removeHandler(id: number) {
+function removeRow(id: number) {
   datas.value = datas.value.filter(item => item.id !== id)
 }
 
@@ -106,7 +107,7 @@ function removeHandler(id: number) {
  */
 function confirmEvent(id: number) {
   if (id) {
-    removeHandler(id)
+    removeRow(id)
   }
 }
 
@@ -217,14 +218,9 @@ function handleCheckedChange(value: string[]) {
               <ElTag v-else type="danger" effect="light" round>{{ $t('failure') }}</ElTag>
             </template>
           </ElTableColumn>
-          <ElTableColumn prop="startTime" :label="$t('startTime')">
+          <ElTableColumn prop="executedTime" :label="$t('executedTime')">
             <template #default="scope">
-              {{ dayjs(scope.row.startTime).format('YYYY-MM-DD HH:mm:ss') }}
-            </template>
-          </ElTableColumn>
-          <ElTableColumn prop="endTime" :label="$t('endTime')">
-            <template #default="scope">
-              {{ dayjs(scope.row.endTime).format('YYYY-MM-DD HH:mm:ss') }}
+              {{ formatDuration(scope.row.executedTime) }}
             </template>
           </ElTableColumn>
           <ElTableColumn :label="$t('actions')" width="160">
@@ -254,9 +250,9 @@ function handleCheckedChange(value: string[]) {
         <ElDescriptionsItem :label="$t('method')">{{ detail.method }}</ElDescriptionsItem>
         <ElDescriptionsItem :label="$t('params')">{{ detail.params }}</ElDescriptionsItem>
         <ElDescriptionsItem :label="$t('cronExpression')">{{ detail.cronExpression }}</ElDescriptionsItem>
-        <ElDescriptionsItem :label="$t('startTime')">{{ dayjs(detail.startTime).format('YYYY-MM-DD HH:mm:ss') }}
+        <ElDescriptionsItem :label="$t('startTime')">{{ detail.executedTime }}
         </ElDescriptionsItem>
-        <ElDescriptionsItem :label="$t('endTime')">{{ dayjs(detail.endTime).format('YYYY-MM-DD HH:mm:ss') }}
+        <ElDescriptionsItem :label="$t('endTime')">{{ dayjs(detail.lastModifiedDate).format('YYYY-MM-DD HH:mm:ss') }}
         </ElDescriptionsItem>
         <ElDescriptionsItem :label="$t('enabled')">
           <ElTag v-if="detail.status === 1" type="success" effect="light" round>{{ $t('success') }}</ElTag>

@@ -257,8 +257,16 @@ function handleCheckedChange(value: string[]) {
         </ElTableColumn>
         <ElTableColumn prop="path" :label="$t('path')" />
         <ElTableColumn prop="component" :label="$t('component')" />
-        <ElTableColumn prop="redirect" :label="$t('redirect')" />
-        <ElTableColumn prop="hidden" :label="$t('hidden')" />
+        <ElTableColumn prop="redirect" :label="$t('redirect')">
+          <template #default="scope">
+            {{ scope.row.redirect ? scope.row.redirect : '-' }}
+          </template>
+        </ElTableColumn>
+        <ElTableColumn prop="hidden" :label="$t('hidden')">
+          <template #default="scope">
+            <ElSwitch size="small" v-model="scope.row.hidden" />
+          </template>
+        </ElTableColumn>
         <ElTableColumn prop="order" :label="$t('order')" />
         <ElTableColumn prop="enabled" :label="$t('enabled')">
           <template #default="scope">

@@ -8,8 +8,7 @@ const datas: SchedulerLog[] = [
     method: 'backupDatabase',
     params: '()',
     cronExpression: '0 0 * * *',
-    startTime: '2024-06-19T00:00:00',
-    endTime: '2024-06-19T00:30:00',
+    executedTime: 12,
     status: 1
   },
   {
@@ -18,8 +17,7 @@ const datas: SchedulerLog[] = [
     method: 'generateDailyReport',
     params: '()',
     cronExpression: '0 6 * * *',
-    startTime: '2024-06-19T06:00:00',
-    endTime: '2024-06-19T06:15:00',
+    executedTime: 5,
     status: 1
   },
   {
@@ -28,8 +26,7 @@ const datas: SchedulerLog[] = [
     method: 'synchronizeData',
     params: '()',
     cronExpression: '0 */2 * * *',
-    startTime: '2024-06-19T02:00:00',
-    endTime: '2024-06-19T02:10:00',
+    executedTime: 6,
     status: 1
   },
   {
@@ -38,8 +35,7 @@ const datas: SchedulerLog[] = [
     method: 'clearTempFiles',
     params: '()',
     cronExpression: '0 3 * * *',
-    startTime: '2024-06-19T03:00:00',
-    endTime: '2024-06-19T03:05:00',
+    executedTime: 323,
     status: 1
   },
   {
@@ -48,8 +44,7 @@ const datas: SchedulerLog[] = [
     method: 'sendPendingEmails',
     params: '()',
     cronExpression: '0 4 * * *',
-    startTime: '2024-06-19T04:00:00',
-    endTime: '2024-06-19T04:20:00',
+    executedTime: 33,
     status: 0
   },
   {
@@ -58,8 +53,7 @@ const datas: SchedulerLog[] = [
     method: 'updateStatistics',
     params: '()',
     cronExpression: '0 1 * * *',
-    startTime: '2024-06-19T01:00:00',
-    endTime: '2024-06-19T01:10:00',
+    executedTime: 2,
     status: 1
   },
   {
@@ -68,8 +62,7 @@ const datas: SchedulerLog[] = [
     method: 'reindexSearchEngine',
     params: '()',
     cronExpression: '0 2 * * *',
-    startTime: '2024-06-19T02:00:00',
-    endTime: '2024-06-19T02:30:00',
+    executedTime: 323,
     status: 1
   },
   {
@@ -78,8 +71,7 @@ const datas: SchedulerLog[] = [
     method: 'archiveOldLogs',
     params: '()',
     cronExpression: '0 5 * * *',
-    startTime: '2024-06-19T05:00:00',
-    endTime: '2024-06-19T05:45:00',
+    executedTime: 23,
     status: 1
   },
   {
@@ -88,8 +80,7 @@ const datas: SchedulerLog[] = [
     method: 'refreshApplicationCache',
     params: '()',
     cronExpression: '*/30 * * * *',
-    startTime: '2024-06-19T00:30:00',
-    endTime: '2024-06-19T00:35:00',
+    executedTime: 2345,
     status: 1
   },
   {
@@ -98,8 +89,7 @@ const datas: SchedulerLog[] = [
     method: 'generateMonthlyInvoices',
     params: '()',
     cronExpression: '0 0 1 * *',
-    startTime: '2024-07-01T00:00:00',
-    endTime: '2024-07-01T01:00:00',
+    executedTime: 125,
     status: 1
   },
   {
@@ -108,11 +98,11 @@ const datas: SchedulerLog[] = [
     method: 'generateMonthlyInvoices',
     params: '()',
     cronExpression: '0 0 1 * *',
-    startTime: '2024-07-01T00:00:00',
-    endTime: '2024-07-01T01:00:00',
+    executedTime: 125,
     status: 1
   }
 ]
+
 
 export const schedulerLogsHandlers = [
   http.get('/api/scheduler-logs/:id', ({ params }) => {

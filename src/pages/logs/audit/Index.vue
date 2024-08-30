@@ -2,6 +2,7 @@
 import { ref, onMounted, reactive } from 'vue'
 import { dayjs } from 'element-plus'
 import draggable from 'vuedraggable'
+import Dialog from 'components/Dialog.vue'
 import { retrieveAuditLogs, fetchAuditLog } from 'src/api/audit-logs'
 import type { AuditLog } from 'src/models'
 

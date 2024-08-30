@@ -126,7 +126,12 @@ export interface SchedulerLog extends AudtiMetadata {
   method: string
   params: string
   cronExpression: string
-  startTime: string
-  endTime: string
+  executedTime: number
   status: number | null
+}
+
+export interface File extends AudtiMetadata {
+  name: string
+  type: string
+  size: number
 }

@@ -1,13 +1,14 @@
 <script setup lang="ts">
-import { ref, reactive, onMounted } from 'vue'
-import type { FormInstance, FormRules } from 'element-plus'
+import { ref, onMounted, reactive } from 'vue'
 import draggable from 'vuedraggable'
 import Dialog from 'components/Dialog.vue'
-import { retrieveRegions, retrieveRegionSubset, fetchRegion } from 'src/api/regions'
-import type { Region } from 'src/models'
+import { retrieveFiles, fetchFile } from 'src/api/files'
+import type { File } from 'src/models'
+import { formatFileSize } from 'src/utils'
+
 
 const loading = ref<boolean>(false)
-const datas = ref<Array<Region>>([])
+const datas = ref<Array<File>>([])
 const pagination = reactive({
   page: 1,
   size: 10,
@@ -16,34 +17,19 @@ const pagination = reactive({
 
 const checkAll = ref<boolean>(true)
 const isIndeterminate = ref<boolean>(false)
-const checkedColumns = ref<Array<string>>(['name', 'enabled', 'description'])
-const columns = ref<Array<string>>(['name', 'enabled', 'description'])
+const checkedColumns = ref<Array<string>>(['name', 'type', 'size'])
+const columns = ref<Array<string>>(['name', 'type', 'size'])
 
-const saveLoading = ref<boolean>(false)
+const uploadLoading = ref<boolean>(false)
 const dialogVisible = ref<boolean>(false)
 
 const searchForm = ref({
   name: null
 })
 
-const formRef = ref<FormInstance>()
-const form = ref<Region>({
-  name: '',
-  areaCode: 0,
-  postalCode: 0,
-  description: ''
-})
-
-const rules = reactive<FormRules<typeof form>>({
-  name: [
-    { required: true, trigger: 'blur' }
-  ]
-})
-
 /**
  * 分页变化
- * @param currentPage 当前页码
- * @param pageSize 分页大小
+ * @param value 当前页码
  */
 function pageChange(currentPage: number, pageSize: number) {
   pagination.page = currentPage
@@ -54,26 +40,12 @@ function pageChange(currentPage: number, pageSize: number) {
 /**
  * 加载列表
  */
-function load(row?: Region, treeNode?: unknown, resolve?: (date: Region[]) => void) {
+async function load() {
   loading.value = true
-  if (row && row.id && resolve) {
-    retrieveRegionSubset(row.id, pagination.page, pagination.size).then(res => {
-      let list = res.data.content
-      list.forEach((element: Region) => {
-        element.hasChildren = element.count && element.count > 0 ? true : false
-      })
-      resolve(list)
-    }).finally(() => loading.value = false)
-  } else {
-    retrieveRegions(pagination.page, pagination.size, searchForm.value).then(res => {
-      let list = res.data.content
-      list.forEach((element: Region) => {
-        element.hasChildren = element.count && element.count > 0 ? true : false
-      })
-      datas.value = list
-      pagination.total = res.data.totalElements
-    }).finally(() => loading.value = false)
-  }
+  retrieveFiles(pagination.page, pagination.size).then(res => {
+    datas.value = res.data.content
+    pagination.total = res.data.totalElements
+  }).finally(() => loading.value = false)
 }
 
 /**
@@ -91,40 +63,27 @@ onMounted(() => {
 })
 
 /**
- * 弹出框
- * @param id 主键
+ * 上传
  */
-function editRow(id?: number) {
-  if (id) {
-    loadOne(id)
-  }
+function uploadRow() {
   dialogVisible.value = true
 }
 
 /**
- * 加载
+ * 下载
  * @param id 主键
  */
-async function loadOne(id: number) {
-  fetchRegion(id).then(res => {
-    form.value = res.data
+function downloadRow(id: number) {
+  fetchFile(id).then(res => {
+    res.data
   })
 }
 
 /**
- * 表单提交
+ * 提交
  */
 function onSubmit() {
-  let formEl = formRef.value
-  if (!formEl) return
-
-  formEl.validate((valid, fields) => {
-    if (valid) {
-      saveLoading.value = true
-    } else {
-      console.log('error submit!', fields)
-    }
-  })
+  uploadLoading.value = true
 }
 
 /**
@@ -169,7 +128,7 @@ function handleCheckedChange(value: string[]) {
   <div>
     <ElSpace size="large" fill>
       <ElCard shadow="never" class="search">
-        <ElForm inline :model="searchForm" @submit.prevent>
+        <ElForm inline :model="searchForm">
           <ElFormItem :label="$t('name')" prop="name">
             <ElInput v-model="searchForm.name" :placeholder="$t('inputText') + $t('name')" />
           </ElFormItem>
@@ -187,17 +146,8 @@ function handleCheckedChange(value: string[]) {
       <ElCard shadow="never">
         <ElRow :gutter="20" justify="space-between" class="mb-4">
           <ElCol :span="16" class="text-left">
-            <ElButton type="primary" @click="editRow()">
-              <div class="i-material-symbols:add-rounded" />{{ $t('add') }}
-            </ElButton>
-            <ElButton type="danger" plain>
-              <div class="i-material-symbols:delete-outline-rounded" />{{ $t('remove') }}
-            </ElButton>
-            <ElButton type="warning" plain @click="dialogVisible = true">
-              <div class="i-material-symbols:upload-file-outline-rounded" />{{ $t('import') }}
-            </ElButton>
-            <ElButton type="success" plain>
-              <div class="i-material-symbols:file-save-outline-rounded" />{{ $t('export') }}
+            <ElButton type="primary" plain @click="uploadRow">
+              <div class="i-material-symbols:upload" />{{ $t('upload') }}
             </ElButton>
           </ElCol>
 
@@ -242,23 +192,20 @@ function handleCheckedChange(value: string[]) {
           </ElCol>
         </ElRow>
 
-        <ElTable v-loading="loading" :data="datas" lazy :load="load" row-key="id" stripe table-layout="auto"
-          highlight-current-row>
+        <ElTable v-loading="loading" :data="datas" lazy :load="load" row-key="id" stripe table-layout="auto">
           <ElTableColumn type="selection" width="55" />
+          <ElTableColumn type="index" :label="$t('no')" width="55" />
           <ElTableColumn prop="name" :label="$t('name')" />
-          <ElTableColumn prop="areaCode" :label="$t('areaCode')" />
-          <ElTableColumn prop="postalCode" :label="$t('postalCode')" />
-          <ElTableColumn prop="enabled" :label="$t('enabled')">
+          <ElTableColumn prop="type" :label="$t('type')" />
+          <ElTableColumn prop="size" :label="$t('size')">
             <template #default="scope">
-              <ElSwitch size="small" v-model="scope.row.enabled"
-                style="--el-switch-on-color: var(--el-color-success);" />
+              {{ formatFileSize(scope.row.size) }}
             </template>
           </ElTableColumn>
-          <ElTableColumn show-overflow-tooltip prop="description" :label="$t('description')" />
-          <ElTableColumn :label="$t('actions')">
+          <ElTableColumn :label="$t('actions')" width="160">
             <template #default="scope">
-              <ElButton size="small" type="primary" link @click="editRow(scope.row.id)">
-                <div class="i-material-symbols:edit-outline-rounded" />{{ $t('edit') }}
+              <ElButton size="small" type="success" link @click="downloadRow(scope.row.id)">
+                <div class="i-material-symbols:download" />{{ $t('download') }}
               </ElButton>
               <ElPopconfirm :title="$t('removeConfirm')" :width="240" @confirm="confirmEvent(scope.row.id)">
                 <template #reference>
@@ -275,28 +222,25 @@ function handleCheckedChange(value: string[]) {
       </ElCard>
     </ElSpace>
 
-    <Dialog v-model="dialogVisible" :title="$t('regions')" width="25%">
-      <ElForm ref="formRef" :model="form" :rules="rules" label-position="top">
-        <ElRow :gutter="20" class="w-full !mx-0">
-          <ElCol>
-            <ElFormItem :label="$t('name')" prop="name">
-              <ElInput v-model="form.name" :placeholder="$t('inputText') + $t('name')" />
-            </ElFormItem>
-          </ElCol>
-        </ElRow>
-        <ElRow :gutter="20" class="w-full !mx-0">
-          <ElCol>
-            <ElFormItem :label="$t('description')" prop="description">
-              <ElInput v-model="form.description" type="textarea" :placeholder="$t('inputText') + $t('description')" />
-            </ElFormItem>
-          </ElCol>
-        </ElRow>
-      </ElForm>
+    <Dialog v-model="dialogVisible" :title="$t('upload')" width="35%">
+      <ElUpload ref="upload" :limit="1" drag action="/api/upload">
+        <div class="el-icon--upload inline-flex justify-center">
+          <div class="i-material-symbols:cloud-arrow-up " />
+        </div>
+        <div class="el-upload__text">
+          Drop file here or <em>click to upload</em>
+        </div>
+        <template #tip>
+          <div class="el-upload__tip">
+            file with a size less than 50mb
+          </div>
+        </template>
+      </ElUpload>
       <template #footer>
         <ElButton @click="dialogVisible = false">
           <div class="i-material-symbols:close" />{{ $t('cancel') }}
         </ElButton>
-        <ElButton type="primary" :loading="saveLoading" @click="onSubmit">
+        <ElButton type="primary" :loading="uploadLoading" @click="onSubmit">
           <div class="i-material-symbols:check-circle-outline-rounded" /> {{ $t('submit') }}
         </ElButton>
       </template>

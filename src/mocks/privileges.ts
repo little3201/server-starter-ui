@@ -37,6 +37,18 @@ const datas: Privilege[] = [
     count: 1,
     enabled: true,
     description: 'this is description for this row'
+  },
+  {
+    id: 14,
+    path: '/files',
+    component: '#',
+    name: 'files',
+    redirect: '/files',
+    order: 3,
+    icon: 'i-material-symbols:folder-open-outline-rounded',
+    count: 1,
+    enabled: true,
+    description: 'this is description for this row'
   }
 ]
 
@@ -155,10 +167,23 @@ const subDatas: Privilege[] = [
     path: '',
     name: 'regions',
     component: 'pages/regions/Index',
-    order: 4,
+    order: 1,
     count: 0,
     enabled: true,
     icon: 'i-material-symbols:location-on-outline-rounded',
+    hidden: true,
+    description: 'this is description for this row'
+  },
+  {
+    id: 15,
+    superiorId: 14,
+    path: '',
+    name: 'files',
+    component: 'pages/files/Index',
+    order: 1,
+    count: 0,
+    enabled: true,
+    icon: 'i-material-symbols:folder-open-outline-rounded',
     hidden: true,
     description: 'this is description for this row'
   }
@@ -262,6 +287,24 @@ const treeNodes: PrivilegeTreeNode[] = [
         component: 'pages/regions/Index',
         name: 'regions',
         icon: 'i-material-symbols:location-on-outline-rounded',
+        hidden: true
+      }
+    ]
+  },
+  {
+    id: 14,
+    path: '/files',
+    component: '#',
+    name: 'files',
+    redirect: '/files',
+    icon: 'i-material-symbols:folder-open-outline-rounded',
+    children: [
+      {
+        id: 15,
+        path: '',
+        component: 'pages/files/Index',
+        name: 'files',
+        icon: 'i-material-symbols:folder-open-outline-rounded',
         hidden: true
       }
     ]

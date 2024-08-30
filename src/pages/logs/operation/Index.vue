@@ -2,6 +2,7 @@
 import { ref, onMounted, reactive } from 'vue'
 import { dayjs } from 'element-plus'
 import draggable from 'vuedraggable'
+import Dialog from 'components/Dialog.vue'
 import { retrieveOperationLogs, fetchOperationLog } from 'src/api/operation-logs'
 import type { OperationLog } from 'src/models'
 
@@ -98,7 +99,7 @@ function showRow(id: number) {
  * 删除
  * @param id 主键
  */
-function removeHandler(id: number) {
+function removeRow(id: number) {
   datas.value = datas.value.filter(item => item.id !== id)
 }
 
@@ -108,7 +109,7 @@ function removeHandler(id: number) {
  */
 function confirmEvent(id: number) {
   if (id) {
-    removeHandler(id)
+    removeRow(id)
   }
 }
 

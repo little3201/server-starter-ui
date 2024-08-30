@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref, onMounted, reactive } from 'vue'
 import draggable from 'vuedraggable'
+import Dialog from 'components/Dialog.vue'
 import { retrieveAccessLogs, fetchAccessLog } from 'src/api/access-logs'
 import type { AccessLog } from 'src/models'
 
@@ -99,7 +100,7 @@ function showRow(id: number) {
  * 删除
  * @param id 主键
  */
-function removeHandler(id: number) {
+function removeRow(id: number) {
   datas.value = datas.value.filter(item => item.id !== id)
 }
 
@@ -109,7 +110,7 @@ function removeHandler(id: number) {
  */
 function confirmEvent(id: number) {
   if (id) {
-    removeHandler(id)
+    removeRow(id)
   }
 }
 
