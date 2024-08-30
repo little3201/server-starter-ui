@@ -58,7 +58,11 @@ function load(row?: Organization, treeNode?: unknown, resolve?: (data: Organizat
   loading.value = true
   if (row && row.id && resolve) {
     retrieveOrganizationSubset(row.id).then(res => {
-      resolve(res.data)
+      let list = res.data.content
+      list.forEach((element: Organization) => {
+        element.hasChildren = element.count && element.count > 0 ? true : false
+      })
+      resolve(list)
     }).finally(() => loading.value = false)
   } else {
     retrieveOrganizations(pagination.page, pagination.size, searchForm.value).then(res => {

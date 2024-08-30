@@ -58,7 +58,11 @@ function load(row?: Region, treeNode?: unknown, resolve?: (date: Region[]) => vo
   loading.value = true
   if (row && row.id && resolve) {
     retrieveRegionSubset(row.id, pagination.page, pagination.size).then(res => {
-      resolve(res.data)
+      let list = res.data.content
+      list.forEach((element: Region) => {
+        element.hasChildren = element.count && element.count > 0 ? true : false
+      })
+      resolve(list)
     }).finally(() => loading.value = false)
   } else {
     retrieveRegions(pagination.page, pagination.size, searchForm.value).then(res => {

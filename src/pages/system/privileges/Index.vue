@@ -63,18 +63,21 @@ function pageChange(currentPage: number, pageSize: number) {
   load()
 }
 
-/**
- * 加载列表
- */
 function load(row?: Privilege, treeNode?: unknown, resolve?: (date: Privilege[]) => void) {
   loading.value = true
   if (row && row.id && resolve) {
     retrievePrivilegeSubset(row.id).then(res => {
-      resolve(res.data)
+      let list = res.data
+      // 处理字节点
+      list.forEach((element: Privilege) => {
+        element.hasChildren = element.count && element.count > 0 ? true : false
+      })
+      resolve(list)
     }).finally(() => loading.value = false)
   } else {
     retrievePrivileges(pagination.page, pagination.size, searchForm.value).then(res => {
       let list = res.data.content
+      // 处理字节点
       list.forEach((element: Privilege) => {
         element.hasChildren = element.count && element.count > 0 ? true : false
       })
