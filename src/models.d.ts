@@ -135,3 +135,24 @@ export interface File extends AudtiMetadata {
   type: string
   size: number
 }
+
+export interface Table extends AudtiMetadata {
+  name: string
+  comment: string
+  description: string
+}
+
+export interface Column extends AudtiMetadata {
+  name: string
+  type: string
+  length: number
+  nullable: boolean
+  unique: boolean
+  comment: string
+  description: string
+}
+
+export interface Code extends AudtiMetadata {
+  name: string
+  content: string
+}

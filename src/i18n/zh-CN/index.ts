@@ -73,6 +73,7 @@ export default {
   clear: '清空',
   upload: '上传',
   download: '下载',
+  config: '配置',
 
   home: '首页',
   system: '系统管理',

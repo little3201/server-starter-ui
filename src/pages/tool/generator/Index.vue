@@ -3,11 +3,14 @@ import { ref, reactive, onMounted } from 'vue'
 import type { FormInstance, FormRules } from 'element-plus'
 import draggable from 'vuedraggable'
 import Dialog from 'components/Dialog.vue'
-import { retrievePrivileges, retrievePrivilegeSubset, fetchPrivilege } from 'src/api/privileges'
-import type { Privilege } from 'src/models'
+import Preview from './preview.vue'
+import { retrieveTables, retrieveTableColumns, retrieveTableCodes, fetchTable } from 'src/api/tables'
+import type { Table, Column, Code } from 'src/models'
 
 const loading = ref<boolean>(false)
-const datas = ref<Array<Privilege>>([])
+const datas = ref<Array<Table>>([])
+const columnDatas = ref<Array<Column>>([])
+const codeDatas = ref<Array<Code>>([])
 const pagination = reactive({
   page: 1,
   size: 10,
@@ -16,41 +19,48 @@ const pagination = reactive({
 
 const checkAll = ref<boolean>(true)
 const isIndeterminate = ref<boolean>(false)
-const checkedColumns = ref<Array<string>>(['name', 'enabled', 'description'])
-const columns = ref<Array<string>>(['name', 'enabled', 'description'])
+const checkedColumns = ref<Array<string>>(['name', 'description'])
+const columns = ref<Array<string>>(['name', 'description'])
 
 const saveLoading = ref<boolean>(false)
 const dialogVisible = ref<boolean>(false)
 
+const configLoading = ref<boolean>(false)
+const configDialogVisible = ref<boolean>(false)
+
+const previewDialogVisible = ref<boolean>(false)
+
 const searchForm = ref({
-  name: null,
-  path: null,
-  component: null
+  name: null
 })
 
 const formRef = ref<FormInstance>()
-
-const oldComponent = ref<string>('#')
-
-const form = ref<Privilege>({
+const form = ref<Table>({
   name: '',
-  path: '',
-  order: 1,
-  component: '',
-  redirect: '',
-  icon: '',
-  actions: [],
+  comment: '',
   description: ''
 })
 
 const rules = reactive<FormRules<typeof form>>({
   name: [
     { required: true, trigger: 'blur' }
-  ],
-  path: [
-    { required: true, trigger: 'blur' }
   ]
 })
+
+const fieldTypeOptions = [
+  { label: 'String', value: 1 },
+  { label: 'Integer', value: 2 },
+  { label: 'Long', value: 3 },
+  { label: 'Double', value: 4 },
+  { label: 'LocaleDate', value: 5 },
+  { label: 'LocaleDateTime', value: 6 }
+]
+
+const showTypeOptions = [
+  { label: '文本框', value: 1 },
+  { label: '下拉框', value: 2 },
+  { label: '文本域', value: 3 }
+]
 
 /**
  * 分页变化
@@ -63,28 +73,15 @@ function pageChange(currentPage: number, pageSize: number) {
   load()
 }
 
-function load(row?: Privilege, treeNode?: unknown, resolve?: (date: Privilege[]) => void) {
+/**
+ * 加载列表
+ */
+async function load() {
   loading.value = true
-  if (row && row.id && resolve) {
-    retrievePrivilegeSubset(row.id).then(res => {
-      let list = res.data
-      // 处理字节点
-      list.forEach((element: Privilege) => {
-        element.hasChildren = element.count && element.count > 0 ? true : false
-      })
-      resolve(list)
-    }).finally(() => loading.value = false)
-  } else {
-    retrievePrivileges(pagination.page, pagination.size, searchForm.value).then(res => {
-      let list = res.data.content
-      // 处理字节点
-      list.forEach((element: Privilege) => {
-        element.hasChildren = element.count && element.count > 0 ? true : false
-      })
-      datas.value = list
-      pagination.total = res.data.totalElements
-    }).finally(() => loading.value = false)
-  }
+  retrieveTables(pagination.page, pagination.size, searchForm.value).then(res => {
+    datas.value = res.data.content
+    pagination.total = res.data.totalElements
+  }).finally(() => loading.value = false)
 }
 
 /**
@@ -92,9 +89,7 @@ function load(row?: Privilege, treeNode?: unknown, resolve?: (date: Privilege[])
  */
 function reset() {
   searchForm.value = {
-    name: null,
-    path: null,
-    component: null
+    name: null
   }
   load()
 }
@@ -102,6 +97,28 @@ function reset() {
 onMounted(() => {
   load()
 })
+
+/**
+ * config
+ * @param id 主键
+ */
+function configRow(id: number) {
+  configDialogVisible.value = true
+  retrieveTableColumns(id).then(res => {
+    columnDatas.value = res.data
+  })
+}
+
+/**
+ * preview
+ * @param id 主键
+ */
+function previewRow(id: number) {
+  previewDialogVisible.value = true
+  retrieveTableCodes(id).then(res => {
+    codeDatas.value = res.data
+  })
+}
 
 /**
  * 弹出框
@@ -119,9 +136,8 @@ function editRow(id?: number) {
  * @param id 主键
  */
 async function loadOne(id: number) {
-  fetchPrivilege(id).then(res => {
+  fetchTable(id).then(res => {
     form.value = res.data
-    oldComponent.value = res.data.component
   })
 }
 
@@ -142,13 +158,21 @@ function onSubmit() {
 }
 
 /**
- * expand 回调
- * @param row 数据行
- * @param expanded 是否展开
+ * 删除
+ * @param id 主键
  */
-function expandChange(row: Privilege, expanded: boolean) {
-  console.log("row: ", row)
-  console.log("expanded: ", expanded)
+function removeRow(id: number) {
+  datas.value = datas.value.filter(item => item.id !== id)
+}
+
+/**
+ * 确认
+ * @param id 主键
+ */
+function confirmEvent(id: number) {
+  if (id) {
+    removeRow(id)
+  }
 }
 
 /**
@@ -174,15 +198,9 @@ function handleCheckedChange(value: string[]) {
 <template>
   <ElSpace size="large" fill>
     <ElCard shadow="never" class="search">
-      <ElForm inline :model="searchForm">
+      <ElForm inline :model="searchForm" @submit.prevent>
         <ElFormItem :label="$t('name')" prop="name">
           <ElInput v-model="searchForm.name" :placeholder="$t('inputText') + $t('name')" />
-        </ElFormItem>
-        <ElFormItem :label="$t('path')" prop="path">
-          <ElInput v-model="searchForm.path" :placeholder="$t('inputText') + $t('path')" />
-        </ElFormItem>
-        <ElFormItem :label="$t('component')" prop="component">
-          <ElInput v-model="searchForm.component" :placeholder="$t('inputText') + $t('component')" />
         </ElFormItem>
         <ElFormItem>
           <ElButton type="primary" @click="load">
@@ -198,6 +216,12 @@ function handleCheckedChange(value: string[]) {
     <ElCard shadow="never">
       <ElRow :gutter="20" justify="space-between" class="mb-4">
         <ElCol :span="16" class="text-left">
+          <ElButton type="primary" @click="editRow()">
+            <div class="i-material-symbols:add-rounded" />{{ $t('add') }}
+          </ElButton>
+          <ElButton type="danger" plain>
+            <div class="i-material-symbols:delete-outline-rounded" />{{ $t('remove') }}
+          </ElButton>
           <ElButton type="warning" plain @click="dialogVisible = true">
             <div class="i-material-symbols:upload-file-outline-rounded" />{{ $t('import') }}
           </ElButton>
@@ -205,6 +229,7 @@ function handleCheckedChange(value: string[]) {
             <div class="i-material-symbols:file-save-outline-rounded" />{{ $t('export') }}
           </ElButton>
         </ElCol>
+
         <ElCol :span="8" class="text-right">
           <ElTooltip class="box-item" effect="dark" :content="$t('refresh')" placement="top">
             <ElButton type="primary" plain circle @click="load">
@@ -229,7 +254,7 @@ function handleCheckedChange(value: string[]) {
                     <draggable v-model="columns" item-key="simple">
                       <template #item="{ element }">
                         <div class="flex items-center space-x-2">
-                          <div class="i-material-symbols:drag w-4 h-4 hover:cursor-move" />
+                          <div class="i-material-symbols:drag-indicator w-4 h-4 hover:cursor-move" />
                           <ElCheckbox :label="element" :value="element" :disabled="element === columns[0]">
                             <div class="inline-flex items-center space-x-4">
                               {{ $t(element) }}
@@ -246,39 +271,30 @@ function handleCheckedChange(value: string[]) {
         </ElCol>
       </ElRow>
 
-      <ElTable v-loading="loading" :data="datas" lazy :load="load" row-key="id" stripe table-layout="auto"
-        @expand-change="expandChange">
+      <ElTable v-loading="loading" :data="datas" lazy :load="load" row-key="id" stripe table-layout="auto">
         <ElTableColumn type="selection" width="55" />
-        <ElTableColumn prop="name" :label="$t('name')" class-name="name-cell">
-          <template #default="scope">
-            <div :class="scope.row.icon" class="inline-block mr-2" />
-            {{ $t(scope.row.name) }}
-          </template>
-        </ElTableColumn>
-        <ElTableColumn prop="path" :label="$t('path')" />
-        <ElTableColumn prop="component" :label="$t('component')" />
-        <ElTableColumn prop="redirect" :label="$t('redirect')">
-          <template #default="scope">
-            {{ scope.row.redirect ? scope.row.redirect : '-' }}
-          </template>
-        </ElTableColumn>
-        <ElTableColumn prop="hidden" :label="$t('hidden')">
-          <template #default="scope">
-            <ElCheckbox v-model="scope.row.hidden" />
-          </template>
-        </ElTableColumn>
-        <ElTableColumn prop="order" :label="$t('order')" />
-        <ElTableColumn prop="enabled" :label="$t('enabled')">
-          <template #default="scope">
-            <ElSwitch size="small" v-model="scope.row.enabled" style="--el-switch-on-color: var(--el-color-success);" />
-          </template>
-        </ElTableColumn>
+        <ElTableColumn type="index" :label="$t('no')" width="55" />
+        <ElTableColumn prop="name" :label="$t('name')" />
+        <ElTableColumn prop="comment" :label="$t('comment')" />
         <ElTableColumn show-overflow-tooltip prop="description" :label="$t('description')" />
         <ElTableColumn :label="$t('actions')">
           <template #default="scope">
             <ElButton size="small" type="primary" link @click="editRow(scope.row.id)">
               <div class="i-material-symbols:edit-outline-rounded" />{{ $t('edit') }}
             </ElButton>
+            <ElButton size="small" type="primary" link @click="configRow(scope.row.id)">
+              <div class="i-material-symbols:rule-settings-rounded" />{{ $t('config') }}
+            </ElButton>
+            <ElButton size="small" type="primary" link @click="previewRow(scope.row.id)">
+              <div class="i-material-symbols:visibility-outline-rounded" />{{ $t('preview') }}
+            </ElButton>
+            <ElPopconfirm :title="$t('removeConfirm')" :width="240" @confirm="confirmEvent(scope.row.id)">
+              <template #reference>
+                <ElButton size="small" type="danger" link>
+                  <div class="i-material-symbols:delete-outline-rounded" />{{ $t('remove') }}
+                </ElButton>
+              </template>
+            </ElPopconfirm>
           </template>
         </ElTableColumn>
       </ElTable>
@@ -287,54 +303,25 @@ function handleCheckedChange(value: string[]) {
     </ElCard>
   </ElSpace>
 
-  <Dialog v-model="dialogVisible" :title="$t('privileges')" width="36%">
+  <!-- add or edit -->
+  <Dialog v-model="dialogVisible" :title="$t('generator')" width="35%">
     <ElForm ref="formRef" :model="form" :rules="rules" label-position="top">
       <ElRow :gutter="20" class="w-full !mx-0">
         <ElCol :span="12">
           <ElFormItem :label="$t('name')" prop="name">
-            <ElInput v-model="form.name" :placeholder="$t('inputText') + $t('name')" disabled>
-              <template #prefix>
-                <div :class="form.icon" />
-              </template>
-            </ElInput>
+            <ElInput v-model="form.name" :placeholder="$t('inputText') + $t('name')" />
           </ElFormItem>
         </ElCol>
         <ElCol :span="12">
-          <ElFormItem :label="$t('path')" prop="path">
-            <ElInput v-model="form.path" :placeholder="$t('inputText') + $t('path')" disabled />
-          </ElFormItem>
-        </ElCol>
-      </ElRow>
-      <ElRow :gutter="20" class="w-full !mx-0">
-        <ElCol :span="12">
-          <ElFormItem :label="$t('component')" prop="component">
-            <ElInput v-model="form.component" :placeholder="$t('inputText') + $t('component')" disabled />
-          </ElFormItem>
-        </ElCol>
-        <ElCol :span="12">
-          <ElFormItem :label="$t('order')" prop="order">
-            <ElInputNumber v-model="form.order" :placeholder="$t('inputText') + $t('order')" />
-          </ElFormItem>
-        </ElCol>
-      </ElRow>
-      <ElRow :gutter="20" class="w-full !mx-0">
-        <ElCol>
-          <ElFormItem :label="$t('actions')" prop="meta.actions">
-            <!-- width 相对body设置, popover默认设置了 position: absolute -->
-            <ElSelect multiple v-model="form.actions" :placeholder="$t('selectText') + $t('actions')">
-              <ElOption value="add">{{ $t('add') }}</ElOption>
-              <ElOption value="edit">{{ $t('edit') }}</ElOption>
-              <ElOption value="remove">{{ $t('remove') }}</ElOption>
-              <ElOption value="import">{{ $t('import') }}</ElOption>
-              <ElOption value="export">{{ $t('export') }}</ElOption>
-            </ElSelect>
+          <ElFormItem :label="$t('comment')" prop="comment">
+            <ElInput v-model="form.comment" :placeholder="$t('inputText') + $t('comment')" />
           </ElFormItem>
         </ElCol>
       </ElRow>
       <ElRow :gutter="20" class="w-full !mx-0">
         <ElCol>
           <ElFormItem :label="$t('description')" prop="description">
-            <ElInput v-model="form.description" type="textarea" :placeholder="$t('description')" />
+            <ElInput v-model="form.description" type="textarea" :placeholder="$t('inputText') + $t('description')" />
           </ElFormItem>
         </ElCol>
       </ElRow>
@@ -348,13 +335,58 @@ function handleCheckedChange(value: string[]) {
       </ElButton>
     </template>
   </Dialog>
-</template>
 
-<style lang="scss">
-.name-cell {
-  .cell {
-    display: inline-flex;
-    align-items: center;
-  }
-}
-</style>
+  <!-- config -->
+  <Dialog v-model="configDialogVisible" :title="$t('config')" width="85%" :max-height="600">
+    <ElTable v-loading="configLoading" :data="columnDatas" row-key="id" stripe table-layout="auto">
+      <ElTableColumn type="selection" width="55" />
+      <ElTableColumn type="index" :label="$t('no')" width="55" />
+      <ElTableColumn prop="name" :label="$t('name')" />
+      <ElTableColumn prop="type" :label="$t('type')" />
+      <ElTableColumn prop="length" :label="$t('length')" />
+      <ElTableColumn prop="fieldType" :label="$t('fieldType')">
+        <template #default="scope">
+          <el-select v-model="scope.row.fieldType">
+            <el-option v-for="item in fieldTypeOptions" :key="item.value" :label="item.label" :value="item.value" />
+          </el-select>
+        </template>
+      </ElTableColumn>
+      <ElTableColumn prop="nullable" :label="$t('nullable')">
+        <template #default="scope">
+          <ElCheckbox v-model="scope.row.nullable" />
+        </template>
+      </ElTableColumn>
+      <ElTableColumn prop="unique" :label="$t('unique')">
+        <template #default="scope">
+          <ElCheckbox v-model="scope.row.unique" />
+        </template>
+      </ElTableColumn>
+      <ElTableColumn prop="showType" :label="$t('showType')">
+        <template #default="scope">
+          <el-select v-model="scope.row.showType">
+            <el-option v-for="item in showTypeOptions" :key="item.value" :label="item.label" :value="item.value" />
+          </el-select>
+        </template>
+      </ElTableColumn>
+      <ElTableColumn prop="comment" :label="$t('comment')" />
+      <ElTableColumn prop="queryable" :label="$t('queryable')">
+        <template #default="scope">
+          <ElCheckbox v-model="scope.row.queryable" />
+        </template>
+      </ElTableColumn>
+    </ElTable>
+    <template #footer>
+      <ElButton @click="configDialogVisible = false">
+        <div class="i-material-symbols:close" />{{ $t('cancel') }}
+      </ElButton>
+      <ElButton type="primary" :loading="configLoading" @click="onSubmit">
+        <div class="i-material-symbols:check-circle-outline-rounded" /> {{ $t('submit') }}
+      </ElButton>
+    </template>
+  </Dialog>
+
+  <!-- preview -->
+  <Dialog v-model="previewDialogVisible" :title="$t('config')" width="85%" :max-height="600">
+    <Preview :codes="codeDatas" />
+  </Dialog>
+</template>
