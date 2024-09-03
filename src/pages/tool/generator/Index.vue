@@ -3,7 +3,7 @@ import { ref, reactive, onMounted } from 'vue'
 import type { FormInstance, FormRules } from 'element-plus'
 import draggable from 'vuedraggable'
 import Dialog from 'components/Dialog.vue'
-import Preview from './preview.vue'
+import hljs from 'boot/hljs'
 import { retrieveTables, retrieveTableColumns, retrieveTableCodes, fetchTable } from 'src/api/tables'
 import type { Table, Column, Code } from 'src/models'
 
@@ -337,7 +337,7 @@ function handleCheckedChange(value: string[]) {
   </Dialog>
 
   <!-- config -->
-  <Dialog v-model="configDialogVisible" :title="$t('config')" width="85%" :max-height="600">
+  <Dialog v-model="configDialogVisible" :title="$t('config')" width="85%" :max-height="600" :show-full-screen="true">
     <ElTable v-loading="configLoading" :data="columnDatas" row-key="id" stripe table-layout="auto">
       <ElTableColumn type="selection" width="55" />
       <ElTableColumn type="index" :label="$t('no')" width="55" />
@@ -386,7 +386,13 @@ function handleCheckedChange(value: string[]) {
   </Dialog>
 
   <!-- preview -->
-  <Dialog v-model="previewDialogVisible" :title="$t('config')" width="85%" :max-height="600">
-    <Preview :codes="codeDatas" />
+  <Dialog v-model="previewDialogVisible" :title="$t('preview')" width="85%" :max-height="600" :show-full-screen="true">
+    <ElTabs stretch>
+      <ElTabPane v-for="code in codeDatas" :key="code.name" :label="code.name" class="w-full">
+        <div id="preview">
+          <pre><code class="hljs" v-html="hljs.highlightAuto(code.content).value"></code></pre>
+        </div>
+      </ElTabPane>
+    </ElTabs>
   </Dialog>
 </template>
