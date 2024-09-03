@@ -39,13 +39,13 @@ const dialogHeight = ref(isNumber(props.maxHeight) ? `${props.maxHeight}px` : pr
 const dialogStyle = computed(() => {
   let innerHeight = slots.footer ? 120 : 72
   return {
-    height: fullScreen.value ? `${document.body.clientHeight - innerHeight}px` : dialogHeight.value
+    height: fullScreen.value ? `${document.documentElement.offsetHeight - innerHeight}px` : dialogHeight.value
   }
 })
 </script>
 
 <template>
-  <ElDialog v-bind="getBindValue" :fullscreen="isFullscreen" align-center destroy-on-close lock-scroll draggable
+  <ElDialog v-bind="getBindValue" :fullscreen="fullScreen" align-center destroy-on-close lock-scroll draggable
     append-to-body :close-on-click-modal="false" :show-close="false">
     <template #header="{ close, titleId, titleClass }">
       <div class="flex justify-between items-center">
