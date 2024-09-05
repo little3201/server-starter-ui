@@ -51,7 +51,7 @@ export const regionsHandlers = [
     const url = new URL(request.url)
     const page = url.searchParams.get('page')
     const size = url.searchParams.get('size')
-    // Construct a JSON response with the list of all privilege
+    // Construct a JSON response with the list of all Row
     // as the response body.
     const data = {
       content: Array.from(datas.slice((Number(page) - 1) * Number(size), Number(page) * Number(size))),
@@ -64,11 +64,11 @@ export const regionsHandlers = [
     // Read the intercepted request body as JSON.
     const newData = await request.json() as Region
 
-    // Push the new Dictionary to the map of all Dictionarys.
+    // Push the new Row to the map of all Row.
     datas.push(newData)
 
     // Don't forget to declare a semantic "201 Created"
-    // response and send back the newly created Dictionary!
+    // response and send back the newly created Row!
     return HttpResponse.json(newData, { status: 201 })
   }),
   http.delete('/api/regions/:id', ({ params }) => {
@@ -80,15 +80,15 @@ export const regionsHandlers = [
     const deletedData = datas.filter(item => item.id === Number(id))
 
     // Respond with a "404 Not Found" response if the given
-    // Dictionary ID does not exist.
+    // Row ID does not exist.
     if (!deletedData) {
       return new HttpResponse(null, { status: 404 })
     }
 
-    // Delete the Dictionary from the "allDictionarys" map.
+    // Delete the Dictionary from the "allRow" map.
     datas.pop()
 
-    // Respond with a "200 OK" response and the deleted Dictionary.
+    // Respond with a "200 OK" response and the deleted Row.
     return HttpResponse.json(deletedData)
   })
 ]

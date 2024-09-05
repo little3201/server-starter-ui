@@ -141,7 +141,7 @@ function formatRole(value: number) {
   if (roles && roles.length > 0) {
     return roles[0].name
   }
-  return ""
+  return ''
 }
 
 /**
@@ -272,7 +272,7 @@ function handleCheckedChange(value: string[]) {
     </ElCard>
 
     <ElSpace fill direction="vertical" class="flex-1" size="large">
-      <ElCard shadow="never" class="search">
+      <ElCard shadow="never">
         <ElForm inline :model="searchForm">
           <ElFormItem :label="$t('username')" prop="username">
             <ElInput v-model="searchForm.username" :placeholder="$t('inputText') + $t('username')" />

@@ -156,3 +156,10 @@ export interface Code extends AudtiMetadata {
   name: string
   content: string
 }
+
+export interface Script extends AudtiMetadata {
+  name: string
+  icon: string
+  version: string
+  description: string
+}

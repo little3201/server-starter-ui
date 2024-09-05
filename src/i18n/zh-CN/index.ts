@@ -74,6 +74,7 @@ export default {
   upload: '上传',
   download: '下载',
   config: '配置',
+  preview: '预览',
 
   home: '首页',
   system: '系统管理',
@@ -89,6 +90,9 @@ export default {
   auditLog: '审计日志',
   schedulerLog: '调度日志',
   files: '文件管理',
+  tools: '开发工具',
+  generator: '代码生成',
+  deploy: '部署脚本',
 
   inputText: '请输入',
   searchText: '请选择',

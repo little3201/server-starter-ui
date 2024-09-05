@@ -74,6 +74,8 @@ export default {
   clear: 'Clear',
   upload: 'Upload',
   download: 'Download',
+  config: 'Config',
+  preview: 'Preview',
 
   home: 'Home',
   system: 'System',
@@ -89,6 +91,9 @@ export default {
   auditLog: 'Audit Log',
   schedulerLog: 'Scheduler Log',
   files: 'Files',
+  tools: 'Development Tools',
+  generator: 'Generator',
+  deploy: 'Deploy',
 
   inputText: 'Please input ',
   searchText: 'Please select ',

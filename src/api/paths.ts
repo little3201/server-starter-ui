@@ -27,4 +27,5 @@ export const SERVER_URL = {
   COMMENT: SERVER_PRE.ASSETS.concat('/comments'), // 评论
   FILE: SERVER_PRE.ASSETS.concat('/files'), // 文件
   TABLE: SERVER_PRE.ASSETS.concat('/tables'), // 表
+  SCRIPT: SERVER_PRE.ASSETS.concat('/scripts'), // 脚本
 }

@@ -127,7 +127,7 @@ function handleCheckedChange(value: string[]) {
 <template>
   <div>
     <ElSpace size="large" fill>
-      <ElCard shadow="never" class="search">
+      <ElCard shadow="never">
         <ElForm inline :model="searchForm">
           <ElFormItem :label="$t('name')" prop="name">
             <ElInput v-model="searchForm.name" :placeholder="$t('inputText') + $t('name')" />

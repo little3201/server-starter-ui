@@ -73,6 +73,8 @@ export default {
   clear: '清空',
   upload: '上傳',
   download: '下載',
+  config: '配置',
+  preveiw: '預覽',
 
   home: '首頁',
   system: '系統管理',
@@ -88,6 +90,9 @@ export default {
   auditLog: '審計日誌',
   schedulerLog: '調度日誌',
   files: '文檔管理',
+  tools: '開發工具',
+  generator: '代碼生成',
+  deploy: '部署腳本',
 
   inputText: '請輸入',
   searchText: '請選擇',
