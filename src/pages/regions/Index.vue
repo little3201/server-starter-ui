@@ -54,7 +54,7 @@ function pageChange(currentPage: number, pageSize: number) {
 /**
  * 加载列表
  */
-function load(row?: Region, treeNode?: unknown, resolve?: (date: Region[]) => void) {
+async function load(row?: Region, treeNode?: unknown, resolve?: (date: Region[]) => void) {
   loading.value = true
   if (row && row.id && resolve) {
     retrieveRegionSubset(row.id, pagination.page, pagination.size).then(res => {

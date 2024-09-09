@@ -57,7 +57,7 @@ const dataPrivilege = ref<number>(1)
 /**
  * 权限树
  */
-function loadPrivilegeTree() {
+async function loadPrivilegeTree() {
   privilegeTreeLoading.value = true
 
   const username = userStore.user?.username as string
@@ -69,7 +69,7 @@ function loadPrivilegeTree() {
 /**
  * 组织树
  */
-function loadDepartmentTree() {
+async function loadOrganizationTree() {
   organizationTreeLoading.value = true
   retrieveOrganizationTree().then(res => {
     organizationTree.value = res.data
@@ -111,7 +111,7 @@ function reset() {
 onMounted(() => {
   load()
   loadPrivilegeTree()
-  loadDepartmentTree()
+  loadOrganizationTree()
 })
 
 /**

@@ -63,7 +63,7 @@ function pageChange(currentPage: number, pageSize: number) {
   load()
 }
 
-function load(row?: Privilege, treeNode?: unknown, resolve?: (date: Privilege[]) => void) {
+async function load(row?: Privilege, treeNode?: unknown, resolve?: (date: Privilege[]) => void) {
   loading.value = true
   if (row && row.id && resolve) {
     retrievePrivilegeSubset(row.id).then(res => {

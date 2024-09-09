@@ -85,8 +85,6 @@ function handleCheckAllChange(val: boolean) {
  */
 function handleCheckedChange(value: string[]) {
 }
-
-const activeNames = ref(['1'])
 </script>
 
 <template>

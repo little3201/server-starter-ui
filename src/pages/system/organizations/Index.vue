@@ -54,7 +54,7 @@ function pageChange(currentPage: number, pageSize: number) {
 /**
  * 加载列表
  */
-function load(row?: Organization, treeNode?: unknown, resolve?: (data: Organization[]) => void) {
+async function load(row?: Organization, treeNode?: unknown, resolve?: (data: Organization[]) => void) {
   loading.value = true
   if (row && row.id && resolve) {
     retrieveOrganizationSubset(row.id).then(res => {
