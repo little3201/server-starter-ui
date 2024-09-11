@@ -96,7 +96,7 @@ export default {
   deploy: 'Deploy',
 
   inputText: 'Please input ',
-  searchText: 'Please select ',
+  selectText: 'Please select ',
   lengthRange: 'The length must between {min} and {max}',
   removeConfirm: 'Are you sure to delete this?',
 

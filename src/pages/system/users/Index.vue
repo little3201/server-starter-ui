@@ -28,7 +28,7 @@ const currentNode = ref('')
 
 const organizationTree = ref<TreeNode[]>([])
 const organizationsOptions = ref<TreeNode[]>([])
-const rolesOptions = ref<Role[]>([])
+const roles = ref<Role[]>([])
 
 const saveLoading = ref<boolean>(false)
 const dialogVisible = ref<boolean>(false)
@@ -118,7 +118,7 @@ function fetchOrganizations() {
  */
 function fetchRoles() {
   retrieveRoles().then(res => {
-    rolesOptions.value = res.data
+    roles.value = res.data
   })
 }
 
@@ -137,9 +137,9 @@ async function load() {
  * 角色显示格式化
  */
 function formatRole(value: number) {
-  const roles = rolesOptions.value.filter(item => item.id === value)
-  if (roles && roles.length > 0) {
-    return roles[0].name
+  const filtered = roles.value.filter(item => item.id === value)
+  if (filtered && filtered.length > 0) {
+    return filtered[0].name
   }
   return ''
 }
@@ -417,7 +417,7 @@ function handleCheckedChange(value: string[]) {
         <ElCol :span="12">
           <ElFormItem :label="$t('role')" prop="role">
             <ElSelect v-model="form.role" :placeholder="$t('selectText') + $t('role')">
-              <ElOption v-for="item in rolesOptions" :key="item.id" :label="item.name" :value="item.id" />
+              <ElOption v-for="item in roles" :key="item.id" :label="item.name" :value="item.id" />
             </ElSelect>
           </ElFormItem>
         </ElCol>

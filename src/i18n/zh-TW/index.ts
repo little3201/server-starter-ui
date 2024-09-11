@@ -95,7 +95,7 @@ export default {
   deploy: '部署腳本',
 
   inputText: '請輸入',
-  searchText: '請選擇',
+  selectText: '請選擇',
   lengthRange: '長度在 {min} 到 {max} 個字元',
   removeConfirm: '是否確定要刪除這條數據？',
 
