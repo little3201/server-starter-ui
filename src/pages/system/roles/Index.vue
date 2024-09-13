@@ -40,11 +40,12 @@ const searchForm = ref({
 })
 
 const formRef = ref<FormInstance>()
-const form = ref<Role>({
+const initialValues: Role = {
   name: '',
   privileges: undefined,
   description: ''
-})
+}
+const form = ref<Role>({ ...initialValues })
 
 const rules = reactive<FormRules<typeof form>>({
   name: [
@@ -119,6 +120,7 @@ onMounted(() => {
  * @param id 主键
  */
 function editRow(id?: number) {
+  form.value = { ...initialValues }
   if (id) {
     loadOne(id)
   }

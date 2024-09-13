@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import { ref, reactive, onMounted } from 'vue'
+import { ref, reactive, onMounted, watch } from 'vue'
 import type { FormInstance, FormRules } from 'element-plus'
 import draggable from 'vuedraggable'
 import Dialog from 'components/Dialog.vue'
-import { retrieveOrganizations, retrieveOrganizationSubset, fetchOrganization } from 'src/api/organizations'
-import type { Organization } from 'src/models'
+import { retrieveOrganizations, retrieveOrganizationTree, fetchOrganization } from 'src/api/organizations'
+import type { Organization, TreeNode } from 'src/models'
 
 
 const loading = ref<boolean>(false)
@@ -20,6 +20,12 @@ const isIndeterminate = ref<boolean>(false)
 const checkedColumns = ref<Array<string>>(['name', 'enabled', 'description'])
 const columns = ref<Array<string>>(['name', 'enabled', 'description'])
 
+const treeEl = ref()
+const treeLoading = ref<boolean>(false)
+const currentNodeKey = ref<number>()
+const currentNode = ref('')
+
+const organizationTree = ref<TreeNode[]>([])
 const saveLoading = ref<boolean>(false)
 const dialogVisible = ref<boolean>(false)
 
@@ -28,17 +34,56 @@ const searchForm = ref({
 })
 
 const formRef = ref<FormInstance>()
-const form = ref<Organization>({
+const initialValues: Organization = {
   name: '',
   enabled: true,
   description: ''
-})
+}
+const form = ref<Organization>({ ...initialValues })
 
 const rules = reactive<FormRules<typeof form>>({
   name: [
     { required: true, trigger: 'blur' }
   ]
 })
+
+/**
+ * tree过滤
+ */
+const filterNode = (value: string, data: TreeNode) => {
+  if (!value) return true
+  return data.name.includes(value)
+}
+
+/**
+ * node 变化
+ * @param data node节点
+ */
+function currentChange(data: TreeNode) {
+  if (currentNodeKey.value === data.id) {
+    return
+  }
+  currentNodeKey.value = data.id
+  pagination.page = 1
+  form.value.superiorId = currentNodeKey.value
+  load()
+}
+
+/**
+ * 加载tree
+ */
+async function loadTree() {
+  treeLoading.value = true
+  retrieveOrganizationTree().then(res => {
+    organizationTree.value = res.data
+    currentNodeKey.value =
+      (res.data[0] && res.data[0]?.id) || ''
+
+    treeEl.value.setCurrentKey(currentNodeKey.value)
+
+    load()
+  }).finally(() => treeLoading.value = false)
+}
 
 /**
  * 分页变化
@@ -54,26 +99,12 @@ function pageChange(currentPage: number, pageSize: number) {
 /**
  * 加载列表
  */
-async function load(row?: Organization, treeNode?: unknown, resolve?: (data: Organization[]) => void) {
+async function load() {
   loading.value = true
-  if (row && row.id && resolve) {
-    retrieveOrganizationSubset(row.id).then(res => {
-      let list = res.data.content
-      list.forEach((element: Organization) => {
-        element.hasChildren = element.count && element.count > 0 ? true : false
-      })
-      resolve(list)
-    }).finally(() => loading.value = false)
-  } else {
-    retrieveOrganizations(pagination.page, pagination.size, searchForm.value).then(res => {
-      let list = res.data.content
-      list.forEach((element: Organization) => {
-        element.hasChildren = element.count && element.count > 0 ? true : false
-      })
-      datas.value = list
-      pagination.total = res.data.totalElements
-    }).finally(() => loading.value = false)
-  }
+  retrieveOrganizations(pagination.page, pagination.size, currentNodeKey.value, searchForm.value).then(res => {
+    datas.value = res.data.content
+    pagination.total = res.data.totalElements
+  }).finally(() => loading.value = false)
 }
 
 /**
@@ -86,8 +117,18 @@ function reset() {
   load()
 }
 
+/**
+ * 监听tree
+ */
+watch(
+  () => currentNode.value,
+  (val) => {
+    treeEl.value.filter(val)
+  }
+)
+
 onMounted(() => {
-  load()
+  loadTree()
 })
 
 /**
@@ -95,6 +136,7 @@ onMounted(() => {
  * @param id 主键
  */
 function editRow(id?: number) {
+  form.value = { ...initialValues }
   if (id) {
     loadOne(id)
   }
@@ -166,110 +208,130 @@ function handleCheckedChange(value: string[]) {
 </script>
 
 <template>
-  <ElSpace size="large" fill>
-    <ElCard shadow="never">
-      <ElForm inline :model="searchForm" @submit.prevent>
-        <ElFormItem :label="$t('name')" prop="name">
-          <ElInput v-model="searchForm.name" :placeholder="$t('inputText') + $t('name')" />
-        </ElFormItem>
-        <ElFormItem>
-          <ElButton type="primary" @click="load">
-            <div class="i-material-symbols:search-rounded" />{{ $t('search') }}
-          </ElButton>
-          <ElButton @click="reset">
-            <div class="i-material-symbols:replay-rounded" />{{ $t('reset') }}
-          </ElButton>
-        </ElFormItem>
-      </ElForm>
+  <div class="flex justify-between space-x-4">
+    <ElCard class="w-64 flex-shrink-0" shadow="never">
+      <ElFormItem prop="currentNode">
+        <ElInput v-model="currentNode" :placeholder="$t('search')" clearable>
+          <template #prefix>
+            <div class="i-material-symbols:search-rounded" />
+          </template>
+        </ElInput>
+      </ElFormItem>
+      <ElDivider />
+      <ElTree ref="treeEl" v-loading="treeLoading" :data="organizationTree" default-expand-all
+        :expand-on-click-node="false" node-key="id" :current-node-key="currentNodeKey" :props="{ label: 'name' }"
+        :filter-node-method="filterNode" @current-change="currentChange">
+      </ElTree>
     </ElCard>
 
-    <ElCard shadow="never">
-      <ElRow :gutter="20" justify="space-between" class="mb-4">
-        <ElCol :span="16" class="text-left">
-          <ElButton type="primary" @click="editRow()">
-            <div class="i-material-symbols:add-rounded" />{{ $t('add') }}
-          </ElButton>
-          <ElButton type="danger" plain>
-            <div class="i-material-symbols:delete-outline-rounded" />{{ $t('remove') }}
-          </ElButton>
-          <ElButton type="warning" plain @click="dialogVisible = true">
-            <div class="i-material-symbols:upload-file-outline-rounded" />{{ $t('import') }}
-          </ElButton>
-          <ElButton type="success" plain>
-            <div class="i-material-symbols:file-save-outline-rounded" />{{ $t('export') }}
-          </ElButton>
-        </ElCol>
+    <div class="w-full">
+      <ElSpace size="large" fill>
+        <ElCard shadow="never">
+          <ElForm inline :model="searchForm" @submit.prevent>
+            <ElFormItem :label="$t('name')" prop="name">
+              <ElInput v-model="searchForm.name" :placeholder="$t('inputText') + $t('name')" />
+            </ElFormItem>
+            <ElFormItem>
+              <ElButton type="primary" @click="load">
+                <div class="i-material-symbols:search-rounded" />{{ $t('search') }}
+              </ElButton>
+              <ElButton @click="reset">
+                <div class="i-material-symbols:replay-rounded" />{{ $t('reset') }}
+              </ElButton>
+            </ElFormItem>
+          </ElForm>
+        </ElCard>
 
-        <ElCol :span="8" class="text-right">
-          <ElTooltip :content="$t('refresh')" placement="top">
-            <ElButton type="primary" plain circle @click="load">
-              <div class="i-material-symbols:refresh-rounded" />
-            </ElButton>
-          </ElTooltip>
+        <ElCard shadow="never">
+          <ElRow :gutter="20" justify="space-between" class="mb-4">
+            <ElCol :span="16" class="text-left">
+              <ElButton type="primary" @click="editRow()">
+                <div class="i-material-symbols:add-rounded" />{{ $t('add') }}
+              </ElButton>
+              <ElButton type="danger" plain>
+                <div class="i-material-symbols:delete-outline-rounded" />{{ $t('remove') }}
+              </ElButton>
+              <ElButton type="warning" plain @click="dialogVisible = true">
+                <div class="i-material-symbols:upload-file-outline-rounded" />{{ $t('import') }}
+              </ElButton>
+              <ElButton type="success" plain>
+                <div class="i-material-symbols:file-save-outline-rounded" />{{ $t('export') }}
+              </ElButton>
+            </ElCol>
 
-          <ElTooltip :content="$t('column') + $t('settings')" placement="top">
-            <span class="inline-block ml-3 h-8">
-              <ElPopover :width="200" trigger="click">
-                <template #reference>
-                  <ElButton type="success" plain circle>
-                    <div class="i-material-symbols:format-list-bulleted" />
-                  </ElButton>
-                </template>
-                <div>
-                  <ElCheckbox v-model="checkAll" :indeterminate="isIndeterminate" @change="handleCheckAllChange">
-                    全选
-                  </ElCheckbox>
-                  <ElDivider />
-                  <ElCheckboxGroup v-model="checkedColumns" @change="handleCheckedChange">
-                    <draggable v-model="columns" item-key="simple">
-                      <template #item="{ element }">
-                        <div class="flex items-center space-x-2">
-                          <div class="i-material-symbols:drag-indicator w-4 h-4 hover:cursor-move" />
-                          <ElCheckbox :label="element" :value="element" :disabled="element === columns[0]">
-                            <div class="inline-flex items-center space-x-4">
-                              {{ $t(element) }}
-                            </div>
-                          </ElCheckbox>
-                        </div>
-                      </template>
-                    </draggable>
-                  </ElCheckboxGroup>
-                </div>
-              </ElPopover>
-            </span>
-          </ElTooltip>
-        </ElCol>
-      </ElRow>
-
-      <ElTable v-loading="loading" :data="datas" lazy :load="load" row-key="id" stripe table-layout="auto">
-        <ElTableColumn type="selection" width="55" />
-        <ElTableColumn prop="name" :label="$t('name')" />
-        <ElTableColumn prop="enabled" :label="$t('enabled')">
-          <template #default="scope">
-            <ElSwitch size="small" v-model="scope.row.enabled" style="--el-switch-on-color: var(--el-color-success);" />
-          </template>
-        </ElTableColumn>
-        <ElTableColumn show-overflow-tooltip prop="description" :label="$t('description')" />
-        <ElTableColumn :label="$t('actions')">
-          <template #default="scope">
-            <ElButton size="small" type="primary" link @click="editRow(scope.row.id)">
-              <div class="i-material-symbols:edit-outline-rounded" />{{ $t('edit') }}
-            </ElButton>
-            <ElPopconfirm v-if="!scope.row.hasChildren" :title="$t('removeConfirm')" :width="240"
-              @confirm="confirmEvent(scope.row.id)">
-              <template #reference>
-                <ElButton size="small" type="danger" link>
-                  <div class="i-material-symbols:delete-outline-rounded" />{{ $t('remove') }}
+            <ElCol :span="8" class="text-right">
+              <ElTooltip :content="$t('refresh')" placement="top">
+                <ElButton type="primary" plain circle @click="load">
+                  <div class="i-material-symbols:refresh-rounded" />
                 </ElButton>
+              </ElTooltip>
+
+              <ElTooltip :content="$t('column') + $t('settings')" placement="top">
+                <span class="inline-block ml-3 h-8">
+                  <ElPopover :width="200" trigger="click">
+                    <template #reference>
+                      <ElButton type="success" plain circle>
+                        <div class="i-material-symbols:format-list-bulleted" />
+                      </ElButton>
+                    </template>
+                    <div>
+                      <ElCheckbox v-model="checkAll" :indeterminate="isIndeterminate" @change="handleCheckAllChange">
+                        全选
+                      </ElCheckbox>
+                      <ElDivider />
+                      <ElCheckboxGroup v-model="checkedColumns" @change="handleCheckedChange">
+                        <draggable v-model="columns" item-key="simple">
+                          <template #item="{ element }">
+                            <div class="flex items-center space-x-2">
+                              <div class="i-material-symbols:drag-indicator w-4 h-4 hover:cursor-move" />
+                              <ElCheckbox :label="element" :value="element" :disabled="element === columns[0]">
+                                <div class="inline-flex items-center space-x-4">
+                                  {{ $t(element) }}
+                                </div>
+                              </ElCheckbox>
+                            </div>
+                          </template>
+                        </draggable>
+                      </ElCheckboxGroup>
+                    </div>
+                  </ElPopover>
+                </span>
+              </ElTooltip>
+            </ElCol>
+          </ElRow>
+
+          <ElTable v-loading="loading" :data="datas" lazy :load="load" row-key="id" stripe table-layout="auto">
+            <ElTableColumn type="selection" width="55" />
+            <ElTableColumn prop="name" :label="$t('name')" />
+            <ElTableColumn prop="enabled" :label="$t('enabled')">
+              <template #default="scope">
+                <ElSwitch size="small" v-model="scope.row.enabled"
+                  style="--el-switch-on-color: var(--el-color-success);" />
               </template>
-            </ElPopconfirm>
-          </template>
-        </ElTableColumn>
-      </ElTable>
-      <ElPagination layout="prev, pager, next, sizes, jumper, ->, total" @change="pageChange"
-        :total="pagination.total" />
-    </ElCard>
-  </ElSpace>
+            </ElTableColumn>
+            <ElTableColumn show-overflow-tooltip prop="description" :label="$t('description')" />
+            <ElTableColumn :label="$t('actions')">
+              <template #default="scope">
+                <ElButton size="small" type="primary" link @click="editRow(scope.row.id)">
+                  <div class="i-material-symbols:edit-outline-rounded" />{{ $t('edit') }}
+                </ElButton>
+                <ElPopconfirm v-if="!scope.row.hasChildren" :title="$t('removeConfirm')" :width="240"
+                  @confirm="confirmEvent(scope.row.id)">
+                  <template #reference>
+                    <ElButton size="small" type="danger" link>
+                      <div class="i-material-symbols:delete-outline-rounded" />{{ $t('remove') }}
+                    </ElButton>
+                  </template>
+                </ElPopconfirm>
+              </template>
+            </ElTableColumn>
+          </ElTable>
+          <ElPagination layout="prev, pager, next, sizes, jumper, ->, total" @change="pageChange"
+            :total="pagination.total" />
+        </ElCard>
+      </ElSpace>
+    </div>
+  </div>
 
   <Dialog v-model="dialogVisible" :title="$t('organizations')" width="25%">
     <ElForm ref="formRef" :model="form" :rules="rules" label-position="top">

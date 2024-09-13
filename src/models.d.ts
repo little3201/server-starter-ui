@@ -18,10 +18,8 @@ export interface User extends AudtiMetadata {
 export interface Organization extends AudtiMetadata {
   name: string
   superiorId?: number
-  enabled?: boolean
-  count?: number
+  enabled: boolean
   description?: string
-  hasChildren?: boolean
 }
 
 export interface Role extends AudtiMetadata {

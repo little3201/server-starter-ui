@@ -2,8 +2,8 @@
 import { ref, reactive, onMounted } from 'vue'
 import type { FormInstance, FormRules } from 'element-plus'
 import Dialog from 'components/Dialog.vue'
-import { retrieveDictionarySubset, fetchDictionary } from 'src/api/dictionaries'
-import type { Dictionary } from 'src/models'
+import { retrieveRegionSubset, fetchRegion } from 'src/api/regions'
+import type { Region } from 'src/models'
 
 const props = defineProps<{
   superiorId: number,
@@ -11,18 +11,25 @@ const props = defineProps<{
 }>()
 
 const loading = ref<boolean>(false)
-const datas = ref<Array<Dictionary>>([])
+const datas = ref<Array<Region>>([])
+const pagination = reactive({
+  page: 1,
+  size: 10,
+  total: 0
+})
 
 const saveLoading = ref<boolean>(false)
 const dialogVisible = ref<boolean>(false)
 
 const formRef = ref<FormInstance>()
-const initialValues: Dictionary = {
+const initialValues: Region = {
   name: '',
   superiorId: props.superiorId,
-  order: 1
+  areaCode: 0,
+  postalCode: 0,
+  description: ''
 }
-const form = ref<Dictionary>({ ...initialValues })
+const form = ref<Region>({ ...initialValues })
 
 const rules = reactive<FormRules<typeof form>>({
   name: [
@@ -31,13 +38,32 @@ const rules = reactive<FormRules<typeof form>>({
 })
 
 /**
+ * 分页变化
+ * @param currentPage 当前页码
+ * @param pageSize 分页大小
+ */
+function pageChange(currentPage: number, pageSize: number) {
+  pagination.page = currentPage
+  pagination.size = pageSize
+  load()
+}
+
+/**
  * 加载列表
  */
 async function load() {
   loading.value = true
-  retrieveDictionarySubset(props.superiorId).then(res => {
-    datas.value = res.data
+  retrieveRegionSubset(props.superiorId, pagination.page, pagination.size).then(res => {
+    let list = res.data.content
+    list.forEach((element: Region) => {
+      if (element.count && element.count > 0) {
+        element.hasChildren = true
+      }
+    })
+    datas.value = list
+    pagination.total = res.data.totalElements
   }).finally(() => loading.value = false)
+
 }
 
 onMounted(() => {
@@ -61,7 +87,7 @@ function editRow(id?: number) {
  * @param id 主键
  */
 async function loadOne(id: number) {
-  fetchDictionary(id).then(res => {
+  fetchRegion(id).then(res => {
     form.value = res.data
   })
 }
@@ -99,7 +125,6 @@ function confirmEvent(id: number) {
     removeRow(id)
   }
 }
-
 </script>
 
 <template>
@@ -122,13 +147,19 @@ function confirmEvent(id: number) {
 
     <ElTable v-loading="loading" :data="datas" lazy :load="load" row-key="id" stripe table-layout="auto">
       <ElTableColumn type="selection" width="55" />
+      <ElTableColumn type="expand">
+        <template #default="props">
+          <SubPage :superior-id="props.row.id" :title="props.row.name" />
+        </template>
+      </ElTableColumn>
       <ElTableColumn prop="name" :label="$t('name')" />
+      <ElTableColumn prop="areaCode" :label="$t('areaCode')" />
+      <ElTableColumn prop="postalCode" :label="$t('postalCode')" />
       <ElTableColumn prop="enabled" :label="$t('enabled')">
         <template #default="scope">
           <ElSwitch size="small" v-model="scope.row.enabled" style="--el-switch-on-color: var(--el-color-success);" />
         </template>
       </ElTableColumn>
-      <ElTableColumn prop="order" :label="$t('order')" />
       <ElTableColumn show-overflow-tooltip prop="description" :label="$t('description')" />
       <ElTableColumn :label="$t('actions')">
         <template #default="scope">
@@ -145,19 +176,15 @@ function confirmEvent(id: number) {
         </template>
       </ElTableColumn>
     </ElTable>
+    <ElPagination layout="prev, pager, next, sizes, jumper, ->, total" @change="pageChange" :total="pagination.total" />
   </ElCard>
 
-  <Dialog v-model="dialogVisible" :title="$t('dictionary')" width="36%">
+  <Dialog v-model="dialogVisible" :title="$t('regions')" width="25%">
     <ElForm ref="formRef" :model="form" :rules="rules" label-position="top">
       <ElRow :gutter="20" class="w-full !mx-0">
-        <ElCol :span="12">
+        <ElCol>
           <ElFormItem :label="$t('name')" prop="name">
             <ElInput v-model="form.name" :placeholder="$t('inputText') + $t('name')" />
-          </ElFormItem>
-        </ElCol>
-        <ElCol :span="12">
-          <ElFormItem :label="$t('order')" prop="order">
-            <ElInputNumber v-model="form.order" :placeholder="$t('inputText') + $t('order')" />
           </ElFormItem>
         </ElCol>
       </ElRow>

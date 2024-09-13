@@ -39,13 +39,14 @@ const searchForm = ref({
 })
 
 const formRef = ref<FormInstance>()
-const form = ref<User>({
+const initialValues: User = {
   username: '',
   email: '',
   role: null,
   accountNonLocked: true,
   organization: null
-})
+}
+const form = ref<User>({ ...initialValues })
 
 const rules = reactive<FormRules<typeof form>>({
   username: [
@@ -65,6 +66,20 @@ const filterNode = (value: string, data: TreeNode) => {
 }
 
 /**
+ * node 变化
+ * @param data node节点
+ */
+function currentChange(data: TreeNode) {
+  if (currentNodeKey.value === data.id) {
+    return
+  }
+  currentNodeKey.value = data.id
+  pagination.page = 1
+  form.value.organization = currentNodeKey.value
+  load()
+}
+
+/**
  * 加载tree
  */
 async function loadTree() {
@@ -78,20 +93,6 @@ async function loadTree() {
 
     load()
   }).finally(() => treeLoading.value = false)
-}
-
-/**
- * node 变化
- * @param data node节点
- */
-function currentChange(data: TreeNode) {
-  if (currentNodeKey.value === data.id) {
-    return
-  }
-  currentNodeKey.value = data.id
-  pagination.page = 1
-  form.value.organization = currentNodeKey.value
-  load()
 }
 
 /**
@@ -177,6 +178,7 @@ watch(
  * @param id 主键
  */
 function editRow(id?: number) {
+  form.value = { ...initialValues }
   if (id) {
     loadOne(id)
   }

@@ -14,7 +14,7 @@ for (let i = 1; i < 34; i++) {
     enabled: i % 3 > 0,
     description: 'This is region description about xxx'
   }
-  for (let j = 0; j < i; j++) {
+  for (let j = 1; j < i; j++) {
     const subData: Region = {
       id: 100 + j,
       name: 'region_' + i + '_' + j,
@@ -31,9 +31,21 @@ for (let i = 1; i < 34; i++) {
 }
 
 export const regionsHandlers = [
-  http.get('/api/regions/:id/subset', ({ params }) => {
+  http.get('/api/regions/:id/subset', ({ params, request }) => {
     const { id } = params
-    return HttpResponse.json(subDatas.filter(item => item.superiorId === Number(id)))
+
+    const url = new URL(request.url)
+    const page = url.searchParams.get('page')
+    const size = url.searchParams.get('size')
+    // Construct a JSON response with the list of all Row
+    // as the response body.
+    const filtered = subDatas.filter(item => item.superiorId === Number(id))
+    const data = {
+      content: Array.from(filtered.slice((Number(page) - 1) * Number(size), Number(page) * Number(size))),
+      totalElements: filtered.length
+    }
+
+    return HttpResponse.json(data)
   }),
   http.get('/api/regions/:id', ({ params }) => {
     const { id } = params

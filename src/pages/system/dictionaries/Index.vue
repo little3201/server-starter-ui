@@ -3,9 +3,9 @@ import { ref, reactive, onMounted } from 'vue'
 import type { FormInstance, FormRules } from 'element-plus'
 import draggable from 'vuedraggable'
 import Dialog from 'components/Dialog.vue'
+import SubPage from './SubPage.vue'
 import { retrieveDictionaries, fetchDictionary } from 'src/api/dictionaries'
 import type { Dictionary } from 'src/models'
-import SubPage from './SubPage.vue'
 
 
 const loading = ref<boolean>(false)
@@ -29,10 +29,11 @@ const searchForm = ref({
 })
 
 const formRef = ref<FormInstance>()
-const form = ref<Dictionary>({
+const initialValues: Dictionary = {
   name: '',
   order: 1
-})
+}
+const form = ref<Dictionary>({ ...initialValues })
 
 const rules = reactive<FormRules<typeof form>>({
   name: [
@@ -57,7 +58,13 @@ function pageChange(currentPage: number, pageSize: number) {
 async function load() {
   loading.value = true
   retrieveDictionaries(pagination.page, pagination.size, searchForm.value).then(res => {
-    datas.value = res.data.content
+    let list = res.data.content
+    list.forEach((element: Dictionary) => {
+      if (element.count && element.count > 0) {
+        element.hasChildren = true
+      }
+    })
+    datas.value = list
     pagination.total = res.data.totalElements
   }).finally(() => loading.value = false)
 }
@@ -81,6 +88,7 @@ onMounted(() => {
  * @param id 主键
  */
 function editRow(id?: number) {
+  form.value = { ...initialValues }
   if (id) {
     loadOne(id)
   }

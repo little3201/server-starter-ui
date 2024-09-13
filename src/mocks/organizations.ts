@@ -1,30 +1,35 @@
 import { http, HttpResponse } from 'msw'
 import type { Organization, TreeNode } from 'src/models'
 
-const datas: Organization[] = []
-const subDatas: Organization[] = []
-
-for (let i = 1; i < 28; i++) {
-  const data: Organization = {
-    id: i,
-    name: 'organization_' + i,
-    enabled: i % 3 > 0,
-    count: i - 1,
-    description: '这是描述内容，请参考嘻嘻嘻嘻嘻嘻嘻嘻'
+const datas: Organization[] = [
+  {
+    id: 1,
+    name: 'organization_1',
+    enabled: true,
+    description: 'This is region description about xxx'
+  },
+  {
+    id: 2,
+    superiorId: 1,
+    name: 'organization_2',
+    enabled: true,
+    description: 'This is region description about xxx'
+  },
+  {
+    id: 3,
+    superiorId: 1,
+    name: 'organization_3',
+    enabled: true,
+    description: 'This is region description about xxx'
+  },
+  {
+    id: 4,
+    superiorId: 3,
+    name: 'organization_4',
+    enabled: true,
+    description: 'This is region description about xxx'
   }
-  for (let j = 1; j < i; j++) {
-    const subData: Organization = {
-      id: 100 + i,
-      name: 'organization_' + i + '_' + j,
-      superiorId: i,
-      count: 0,
-      enabled: j % 2 > 0,
-      description: 'description'
-    }
-    subDatas.push(subData)
-  }
-  datas.push(data)
-}
+]
 
 const treeNodes: TreeNode[] = [
   {
@@ -61,26 +66,21 @@ export const organizationsHandlers = [
     const { id } = params
     if (id) {
       let array = datas.filter(item => item.id === Number(id))
-      if (array.length === 0) {
-        array = subDatas.filter(item => item.id === Number(id))
-      }
       return HttpResponse.json(array[0])
     } else {
       return HttpResponse.json(null)
     }
   }),
-  http.get('/api/organizations/:id/subset', ({ params }) => {
-    const superiorId = params.id
-    return HttpResponse.json(subDatas.filter(item => item.superiorId === Number(superiorId)))
-  }),
   http.get('/api/organizations', ({ request }) => {
     const url = new URL(request.url)
     const page = url.searchParams.get('page')
     const size = url.searchParams.get('size')
+    const superiorId = url.searchParams.get('superiorId')
     // Construct a JSON response with the list of all Row
     // as the response body.
+    const filtered = datas.filter(item => item.superiorId === Number(superiorId))
     const data = {
-      content: Array.from(datas.slice((Number(page) - 1) * Number(size), Number(page) * Number(size))),
+      content: Array.from(filtered.slice((Number(page) - 1) * Number(size), Number(page) * Number(size))),
       totalElements: datas.length
     }
 

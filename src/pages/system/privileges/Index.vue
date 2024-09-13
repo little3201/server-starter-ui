@@ -28,11 +28,10 @@ const searchForm = ref({
   component: null
 })
 
-const formRef = ref<FormInstance>()
-
 const oldComponent = ref<string>('#')
 
-const form = ref<Privilege>({
+const formRef = ref<FormInstance>()
+const initialValues: Privilege = {
   name: '',
   path: '',
   order: 1,
@@ -41,7 +40,8 @@ const form = ref<Privilege>({
   icon: '',
   actions: [],
   description: ''
-})
+}
+const form = ref<Privilege>({ ...initialValues })
 
 const rules = reactive<FormRules<typeof form>>({
   name: [
@@ -70,7 +70,9 @@ async function load(row?: Privilege, treeNode?: unknown, resolve?: (date: Privil
       let list = res.data
       // 处理字节点
       list.forEach((element: Privilege) => {
-        element.hasChildren = element.count && element.count > 0 ? true : false
+        if (element.count && element.count > 0) {
+          element.hasChildren = true
+        }
       })
       resolve(list)
     }).finally(() => loading.value = false)
@@ -79,7 +81,9 @@ async function load(row?: Privilege, treeNode?: unknown, resolve?: (date: Privil
       let list = res.data.content
       // 处理字节点
       list.forEach((element: Privilege) => {
-        element.hasChildren = element.count && element.count > 0 ? true : false
+        if (element.count && element.count > 0) {
+          element.hasChildren = true
+        }
       })
       datas.value = list
       pagination.total = res.data.totalElements
@@ -108,6 +112,7 @@ onMounted(() => {
  * @param id 主键
  */
 function editRow(id?: number) {
+  form.value = { ...initialValues }
   if (id) {
     loadOne(id)
   }

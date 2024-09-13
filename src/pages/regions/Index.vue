@@ -3,7 +3,8 @@ import { ref, reactive, onMounted } from 'vue'
 import type { FormInstance, FormRules } from 'element-plus'
 import draggable from 'vuedraggable'
 import Dialog from 'components/Dialog.vue'
-import { retrieveRegions, retrieveRegionSubset, fetchRegion } from 'src/api/regions'
+import SubPage from './SubPage.vue'
+import { retrieveRegions, fetchRegion } from 'src/api/regions'
 import type { Region } from 'src/models'
 
 const loading = ref<boolean>(false)
@@ -27,12 +28,13 @@ const searchForm = ref({
 })
 
 const formRef = ref<FormInstance>()
-const form = ref<Region>({
+const initialValues: Region = {
   name: '',
   areaCode: 0,
   postalCode: 0,
   description: ''
-})
+}
+const form = ref<Region>({ ...initialValues })
 
 const rules = reactive<FormRules<typeof form>>({
   name: [
@@ -54,26 +56,18 @@ function pageChange(currentPage: number, pageSize: number) {
 /**
  * 加载列表
  */
-async function load(row?: Region, treeNode?: unknown, resolve?: (date: Region[]) => void) {
+async function load() {
   loading.value = true
-  if (row && row.id && resolve) {
-    retrieveRegionSubset(row.id, pagination.page, pagination.size).then(res => {
-      let list = res.data.content
-      list.forEach((element: Region) => {
-        element.hasChildren = element.count && element.count > 0 ? true : false
-      })
-      resolve(list)
-    }).finally(() => loading.value = false)
-  } else {
-    retrieveRegions(pagination.page, pagination.size, searchForm.value).then(res => {
-      let list = res.data.content
-      list.forEach((element: Region) => {
-        element.hasChildren = element.count && element.count > 0 ? true : false
-      })
-      datas.value = list
-      pagination.total = res.data.totalElements
-    }).finally(() => loading.value = false)
-  }
+  retrieveRegions(pagination.page, pagination.size, searchForm.value).then(res => {
+    let list = res.data.content
+    list.forEach((element: Region) => {
+      if (element.count && element.count > 0) {
+        element.hasChildren = true
+      }
+    })
+    datas.value = list
+    pagination.total = res.data.totalElements
+  }).finally(() => loading.value = false)
 }
 
 /**
@@ -95,6 +89,7 @@ onMounted(() => {
  * @param id 主键
  */
 function editRow(id?: number) {
+  form.value = { ...initialValues }
   if (id) {
     loadOne(id)
   }
@@ -244,6 +239,11 @@ function handleCheckedChange(value: string[]) {
       <ElTable v-loading="loading" :data="datas" lazy :load="load" row-key="id" stripe table-layout="auto"
         highlight-current-row>
         <ElTableColumn type="selection" width="55" />
+        <ElTableColumn type="expand">
+          <template #default="props">
+            <SubPage :superior-id="props.row.id" :title="props.row.name" />
+          </template>
+        </ElTableColumn>
         <ElTableColumn prop="name" :label="$t('name')" />
         <ElTableColumn prop="areaCode" :label="$t('areaCode')" />
         <ElTableColumn prop="postalCode" :label="$t('postalCode')" />

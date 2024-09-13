@@ -1,12 +1,7 @@
 import { api } from 'boot/axios'
 
-export const retrieveOrganizations = (page: number,
-  size: number, params?: object) => {
-  return api.get('/organizations', { params: { page: page, size: size, ...params } })
-}
-
-export const retrieveOrganizationSubset = (id: number) => {
-  return api.get(`/organizations/${id}/subset`)
+export const retrieveOrganizations = (page: number, size: number, superiorId: number | undefined, params?: object) => {
+  return api.get('/organizations', { params: { page: page, size: size, superiorId: superiorId, ...params } })
 }
 
 export const retrieveOrganizationTree = () => {
