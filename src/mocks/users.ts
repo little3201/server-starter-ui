@@ -9,7 +9,8 @@ for (let i = 1; i < 28; i++) {
     username: 'username' + i,
     avatar: '/src/assets/images/avatar.jpg',
     email: 'username' + i + '@test.com',
-    role: i,
+    role: Math.floor((Math.random() * 10)),
+    organization: Math.floor((Math.random() * 10)),
     accountNonLocked: i % 2 > 0,
     enabled: i % 2 > 0
   }
@@ -40,8 +41,9 @@ export const usersHandlers = [
           totalElements: datas.length
         }
       } else {
+        let filtered = datas.filter(item => item.organization === Number(organizationId))
         data = {
-          content: Array.from(datas.slice(0, Number(organizationId))),
+          content: Array.from(filtered.slice((Number(page) - 1) * Number(size), Number(page) * Number(size))),
           totalElements: datas.length
         }
       }

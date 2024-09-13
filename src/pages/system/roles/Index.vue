@@ -339,10 +339,10 @@ function handleCheckedChange(value: string[]) {
             </ElTabPane>
             <ElTabPane :label="$t('data') + $t('privileges')" class="w-full">
               <ElSelect v-model="dataPrivilege" class="mb-3">
-                <ElOption :value="0" label="全部" />
-                <ElOption :value="1" label="本部门" />
-                <ElOption :value="2" label="仅自己" />
-                <ElOption :value="3" label="自定义" />
+                <ElOption :value="0" :label="$t('all')" />
+                <ElOption :value="1" :label="$t('yourself')" />
+                <ElOption :value="2" :label="$t('yourOrganization')" />
+                <ElOption :value="3" :label="$t('custom')" />
               </ElSelect>
               <ElTree v-if="dataPrivilege === 3" ref="treeEl" v-loading="organizationTreeLoading"
                 :data="organizationTree" default-expand-all :expand-on-click-node="false" node-key="id"

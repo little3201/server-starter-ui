@@ -147,7 +147,7 @@ function confirmEvent(id: number) {
     </ElTable>
   </ElCard>
 
-  <Dialog v-model="dialogVisible" :title="$t('dictionary')" width="25%">
+  <Dialog v-model="dialogVisible" :title="$t('dictionary')" width="36%">
     <ElForm ref="formRef" :model="form" :rules="rules" label-position="top">
       <ElRow :gutter="20" class="w-full !mx-0">
         <ElCol :span="12">

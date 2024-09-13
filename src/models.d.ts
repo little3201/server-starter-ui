@@ -7,8 +7,8 @@ export interface User extends AudtiMetadata {
   username: string
   email: string
   avatar?: string
-  role?: number
-  organization?: number
+  role?: number | null
+  organization?: number | null
   accountNonLocked?: boolean
   accountExpiresAt?: Date
   credentialsExpiresAt?: Date

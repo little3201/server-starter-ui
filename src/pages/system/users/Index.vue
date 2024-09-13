@@ -42,9 +42,9 @@ const formRef = ref<FormInstance>()
 const form = ref<User>({
   username: '',
   email: '',
-  role: undefined,
+  role: null,
   accountNonLocked: true,
-  organization: undefined
+  organization: null
 })
 
 const rules = reactive<FormRules<typeof form>>({
@@ -90,6 +90,7 @@ function currentChange(data: TreeNode) {
   }
   currentNodeKey.value = data.id
   pagination.page = 1
+  form.value.organization = currentNodeKey.value
   load()
 }
 
@@ -415,16 +416,10 @@ function handleCheckedChange(value: string[]) {
       </ElRow>
       <ElRow :gutter="20" class="w-full !mx-0">
         <ElCol :span="12">
-          <ElFormItem :label="$t('role')" prop="role">
+          <ElFormItem :label="$t('roles')" prop="role">
             <ElSelect v-model="form.role" :placeholder="$t('selectText') + $t('role')">
               <ElOption v-for="item in roles" :key="item.id" :label="item.name" :value="item.id" />
             </ElSelect>
-          </ElFormItem>
-        </ElCol>
-        <ElCol :span="12">
-          <ElFormItem :label="$t('organization')" prop="organization">
-            <ElTreeSelect v-model="form.organization" :data="organizationsOptions" node-key="id"
-              :props="{ label: 'name' }" check-strictly :render-after-expand="false" />
           </ElFormItem>
         </ElCol>
       </ElRow>
