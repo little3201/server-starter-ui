@@ -62,6 +62,13 @@ export default {
   enabled: 'Enabled',
   hidden: 'Hidden',
   size: 'Size',
+  length: 'Leng',
+  fieldType: 'Field Type',
+  showType: 'Show Type',
+  nullable: 'Nullable',
+  unique: 'Unique',
+  comment: 'Comment',
+  queryable: 'Queryable',
 
   actions: 'Actions ',
   import: 'Import',

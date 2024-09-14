@@ -61,6 +61,13 @@ export default {
   enabled: '是否启用',
   hidden: '是否隐藏',
   size: '大小',
+  length: '长度',
+  fieldType: '属性类型',
+  showType: '显示类型',
+  nullable: '为null',
+  unique: '唯一',
+  comment: '描述',
+  queryable: '查询',
 
   actions: '操作',
   import: '导入',

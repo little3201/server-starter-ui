@@ -57,7 +57,7 @@ const datas: Privilege[] = [
     name: 'tools',
     redirect: '/tools',
     order: 3,
-    icon: 'i-material-symbols:folder-open-outline-rounded',
+    icon: 'i-material-symbols:build-outline-rounded',
     count: 1,
     enabled: true,
     description: 'this is description for this row'
@@ -208,7 +208,7 @@ const subDatas: Privilege[] = [
     order: 1,
     count: 0,
     enabled: true,
-    icon: 'i-material-symbols:folder-open-outline-rounded',
+    icon: 'i-material-symbols:code-rounded',
     description: 'this is description for this row'
   },
   {
@@ -220,7 +220,7 @@ const subDatas: Privilege[] = [
     order: 1,
     count: 0,
     enabled: true,
-    icon: 'i-material-symbols:folder-open-outline-rounded',
+    icon: 'i-material-symbols:terminal-rounded',
     description: 'this is description for this row'
   }
 ]
@@ -351,21 +351,21 @@ const treeNodes: PrivilegeTreeNode[] = [
     component: '#',
     name: 'tools',
     redirect: '/tools/generator',
-    icon: 'i-material-symbols:folder-open-outline-rounded',
+    icon: 'i-material-symbols:build-outline-rounded',
     children: [
       {
         id: 17,
         path: 'generator',
         component: 'pages/tools/generator/Index',
         name: 'generator',
-        icon: 'i-material-symbols:folder-open-outline-rounded'
+        icon: 'i-material-symbols:code-rounded'
       },
       {
         id: 18,
         path: 'deploy',
         component: 'pages/tools/deploy/Index',
         name: 'deploy',
-        icon: 'i-material-symbols:folder-open-outline-rounded'
+        icon: 'i-material-symbols:terminal-rounded'
       }
     ]
   }

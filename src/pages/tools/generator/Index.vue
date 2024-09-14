@@ -10,7 +10,7 @@ import type { Table, Column, Code } from 'src/models'
 const loading = ref<boolean>(false)
 const datas = ref<Array<Table>>([])
 const columnDatas = ref<Array<Column>>([])
-const codeDatas = ref<Array<Code>>([])
+const codes = ref<Array<Code>>([])
 const pagination = reactive({
   page: 1,
   size: 10,
@@ -51,9 +51,12 @@ const fieldTypeOptions = [
   { label: 'String', value: 1 },
   { label: 'Integer', value: 2 },
   { label: 'Long', value: 3 },
-  { label: 'Double', value: 4 },
-  { label: 'LocaleDate', value: 5 },
-  { label: 'LocaleDateTime', value: 6 }
+  { label: 'Float', value: 4 },
+  { label: 'Double', value: 5 },
+  { label: 'LocaleDate', value: 6 },
+  { label: 'LocaleDateTime', value: 7 },
+  { label: 'Text', value: 8 },
+  { label: 'Blob', value: 9 }
 ]
 
 const showTypeOptions = [
@@ -116,7 +119,7 @@ function configRow(id: number) {
 function previewRow(id: number) {
   previewDialogVisible.value = true
   retrieveTableCodes(id).then(res => {
-    codeDatas.value = res.data
+    codes.value = res.data
   })
 }
 
@@ -388,7 +391,7 @@ function handleCheckedChange(value: string[]) {
   <!-- preview -->
   <Dialog v-model="previewDialogVisible" :title="$t('preview')" width="85%" :max-height="600" :show-full-screen="true">
     <ElTabs stretch>
-      <ElTabPane v-for="code in codeDatas" :key="code.name" :label="code.name" class="w-full">
+      <ElTabPane v-for="code in codes" :key="code.name" :label="code.name" class="w-full">
         <div id="preview">
           <pre><code class="hljs" v-html="hljs.highlightAuto(code.content).value"></code></pre>
         </div>
