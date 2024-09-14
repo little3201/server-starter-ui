@@ -249,7 +249,7 @@ function handleCheckedChange(value: string[]) {
       <ElDescriptionsItem :label="$t('method')">{{ detail.method }}</ElDescriptionsItem>
       <ElDescriptionsItem :label="$t('params')">{{ detail.params }}</ElDescriptionsItem>
       <ElDescriptionsItem :label="$t('cronExpression')">{{ detail.cronExpression }}</ElDescriptionsItem>
-      <ElDescriptionsItem :label="$t('startTime')">{{ detail.executedTime }}
+      <ElDescriptionsItem :label="$t('startTime')">{{ formatDuration(detail.executedTime) }}
       </ElDescriptionsItem>
       <ElDescriptionsItem :label="$t('endTime')">{{ dayjs(detail.lastModifiedDate).format('YYYY-MM-DD HH:mm:ss') }}
       </ElDescriptionsItem>

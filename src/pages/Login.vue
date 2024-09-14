@@ -99,7 +99,7 @@ function show() {
     <ElHeader class="flex flex-nowrap items-center z-10" height="50px">
       <div class="inline-flex flex-grow justify-between">
         <div class="inline-flex items-center">
-          <ElImage src="/vite.svg" alt='' class="w-12 h-12" />
+          <ElImage src="/vite.svg" alt="logo" class="w-12 h-12" />
           <span class="ml-3 text-20px font-bold">{{ appStore.title }}</span>
         </div>
 
@@ -136,7 +136,7 @@ function show() {
             leave-active-class="animate__animated animate__slideOutRight">
             <div class="flex flex-col w-full h-full space-y-2xl justify-center items-center">
               <div class="text-center">
-                <ElImage src="/vite.svg" alt='' class="w-24 h-24" />
+                <ElImage src="/vite.svg" alt="logo" class="w-24 h-24" />
               </div>
               <div class="text-lg font-bold text-center mb-xs">
                 {{ $t('signinTo') }}

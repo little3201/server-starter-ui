@@ -18,8 +18,9 @@ export const retrieveDictionaries = (page: number, size: number, params?: object
  * @param id Row ID
  * @returns Subset data
  */
-export const getDictionarySubset = (id: number) =>
-  api.get(`${SERVER_URL.DICTIONARY}/${id}/subset`)
+export const retrieveDictionarySubset = (id: number) => {
+  return api.get(`${SERVER_URL.DICTIONARY}/${id}/subset`)
+}
 
 /**
  * Fetch row tree structure
