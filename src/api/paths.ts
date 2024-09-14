@@ -10,7 +10,7 @@ export const SERVER_URL = {
   USER: SERVER_PRE.HYPERVISOR.concat('/users'), // 用户
   ROLE: SERVER_PRE.HYPERVISOR.concat('/roles'), // 角色
   PRIVILEGE: SERVER_PRE.HYPERVISOR.concat('/privileges'), // 权限
-  GROUP: SERVER_PRE.HYPERVISOR.concat('/groups'), // 分组
+  ORGANIZATION: SERVER_PRE.HYPERVISOR.concat('/organizations'), // 组织
   DICTIONARY: SERVER_PRE.HYPERVISOR.concat('/dictionaries'), // 字典
 
   REGION: SERVER_PRE.HYPERVISOR.concat('/regions'), // 行政区划
