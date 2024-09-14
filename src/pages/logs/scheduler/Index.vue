@@ -27,7 +27,7 @@ const searchForm = ref({
 })
 
 const detailLoading = ref<boolean>(false)
-const detail = ref<SchedulerLog>({
+const row = ref<SchedulerLog>({
   id: undefined,
   name: '',
   method: '',
@@ -65,7 +65,7 @@ async function load() {
 async function loadOne(id: number) {
   detailLoading.value = true
   fetchSchedulerLog(id).then(res => {
-    detail.value = res.data
+    row.value = res.data
   }).finally(() => detailLoading.value = false)
 }
 
@@ -245,16 +245,16 @@ function handleCheckedChange(value: string[]) {
 
   <Dialog v-model="dialogVisible" :title="$t('detail')">
     <ElDescriptions v-loading="detailLoading">
-      <ElDescriptionsItem :label="$t('name')">{{ detail.name }}</ElDescriptionsItem>
-      <ElDescriptionsItem :label="$t('method')">{{ detail.method }}</ElDescriptionsItem>
-      <ElDescriptionsItem :label="$t('params')">{{ detail.params }}</ElDescriptionsItem>
-      <ElDescriptionsItem :label="$t('cronExpression')">{{ detail.cronExpression }}</ElDescriptionsItem>
-      <ElDescriptionsItem :label="$t('startTime')">{{ formatDuration(detail.executedTime) }}
+      <ElDescriptionsItem :label="$t('name')">{{ row.name }}</ElDescriptionsItem>
+      <ElDescriptionsItem :label="$t('method')">{{ row.method }}</ElDescriptionsItem>
+      <ElDescriptionsItem :label="$t('params')">{{ row.params }}</ElDescriptionsItem>
+      <ElDescriptionsItem :label="$t('cronExpression')">{{ row.cronExpression }}</ElDescriptionsItem>
+      <ElDescriptionsItem :label="$t('startTime')">{{ formatDuration(row.executedTime) }}
       </ElDescriptionsItem>
-      <ElDescriptionsItem :label="$t('endTime')">{{ dayjs(detail.lastModifiedDate).format('YYYY-MM-DD HH:mm:ss') }}
+      <ElDescriptionsItem :label="$t('endTime')">{{ dayjs(row.lastModifiedDate).format('YYYY-MM-DD HH:mm:ss') }}
       </ElDescriptionsItem>
       <ElDescriptionsItem :label="$t('enabled')">
-        <ElTag v-if="detail.status === 1" type="success" effect="light" round>{{ $t('success') }}</ElTag>
+        <ElTag v-if="row.status === 1" type="success" effect="light" round>{{ $t('success') }}</ElTag>
         <ElTag v-else type="danger" effect="light" round>{{ $t('failure') }}</ElTag>
       </ElDescriptionsItem>
     </ElDescriptions>

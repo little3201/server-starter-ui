@@ -4,6 +4,7 @@ import draggable from 'vuedraggable'
 import Dialog from 'components/Dialog.vue'
 import { retrieveAccessLogs, fetchAccessLog } from 'src/api/access-logs'
 import type { AccessLog } from 'src/models'
+import { formatDuration } from 'src/utils'
 
 
 const loading = ref<boolean>(false)
@@ -25,7 +26,7 @@ const searchForm = ref({
 })
 
 const detailLoading = ref<boolean>(false)
-const detail = ref<AccessLog>({
+const row = ref<AccessLog>({
   id: undefined,
   operator: '',
   api: '',
@@ -34,7 +35,7 @@ const detail = ref<AccessLog>({
   ip: '',
   location: '',
   status: null,
-  responseTime: null,
+  responseTime: 0,
   responseCode: null,
   responseMessage: ''
 })
@@ -68,7 +69,7 @@ async function load() {
 async function loadOne(id: number) {
   detailLoading.value = true
   fetchAccessLog(id).then(res => {
-    detail.value = res.data
+    row.value = res.data
   }).finally(() => detailLoading.value = false)
 }
 
@@ -222,7 +223,11 @@ function handleCheckedChange(value: string[]) {
             <ElTag v-else type="danger" effect="light" round>{{ $t('failure') }}</ElTag>
           </template>
         </ElTableColumn>
-        <ElTableColumn prop="responseTime" :label="$t('responseTime')" />
+        <ElTableColumn prop="responseTime" :label="$t('responseTime')">
+          <template #default="scope">
+            {{ formatDuration(scope.row.responseTime) }}
+          </template>
+        </ElTableColumn>
         <ElTableColumn prop="responseCode" :label="$t('responseCode')" />
         <ElTableColumn show-overflow-tooltip prop="responseMessage" :label="$t('responseMessage')" />
         <ElTableColumn :label="$t('actions')" width="160">
@@ -247,19 +252,19 @@ function handleCheckedChange(value: string[]) {
 
   <Dialog v-model="dialogVisible" :title="$t('detail')">
     <ElDescriptions v-loading="detailLoading">
-      <ElDescriptionsItem :label="$t('api')">{{ detail.api }}</ElDescriptionsItem>
-      <ElDescriptionsItem :label="$t('params')">{{ detail.params }}</ElDescriptionsItem>
-      <ElDescriptionsItem :label="$t('method')">{{ detail.method }}</ElDescriptionsItem>
-      <ElDescriptionsItem :label="$t('ip')">{{ detail.ip }}</ElDescriptionsItem>
-      <ElDescriptionsItem :label="$t('location')">{{ detail.location }}</ElDescriptionsItem>
-      <ElDescriptionsItem :label="$t('operator')">{{ detail.operator }}</ElDescriptionsItem>
+      <ElDescriptionsItem :label="$t('api')">{{ row.api }}</ElDescriptionsItem>
+      <ElDescriptionsItem :label="$t('params')">{{ row.params }}</ElDescriptionsItem>
+      <ElDescriptionsItem :label="$t('method')">{{ row.method }}</ElDescriptionsItem>
+      <ElDescriptionsItem :label="$t('ip')">{{ row.ip }}</ElDescriptionsItem>
+      <ElDescriptionsItem :label="$t('location')">{{ row.location }}</ElDescriptionsItem>
+      <ElDescriptionsItem :label="$t('operator')">{{ row.operator }}</ElDescriptionsItem>
       <ElDescriptionsItem :label="$t('enabled')">
-        <ElTag v-if="detail.status === 1" type="success" effect="light" round>{{ $t('success') }}</ElTag>
+        <ElTag v-if="row.status === 1" type="success" effect="light" round>{{ $t('success') }}</ElTag>
         <ElTag v-else type="danger" effect="light" round>{{ $t('failure') }}</ElTag>
       </ElDescriptionsItem>
-      <ElDescriptionsItem :label="$t('responseTime')">{{ detail.responseTime }}</ElDescriptionsItem>
-      <ElDescriptionsItem :label="$t('responseCode')">{{ detail.responseCode }}</ElDescriptionsItem>
-      <ElDescriptionsItem :label="$t('responseMessage')">{{ detail.responseMessage }}</ElDescriptionsItem>
+      <ElDescriptionsItem :label="$t('responseTime')">{{ formatDuration(row.responseTime) }}</ElDescriptionsItem>
+      <ElDescriptionsItem :label="$t('responseCode')">{{ row.responseCode }}</ElDescriptionsItem>
+      <ElDescriptionsItem :label="$t('responseMessage')">{{ row.responseMessage }}</ElDescriptionsItem>
     </ElDescriptions>
   </Dialog>
 </template>

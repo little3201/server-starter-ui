@@ -102,7 +102,7 @@ export interface AccessLog extends AudtiMetadata {
   ip: string
   location: string
   status: number | null
-  responseTime: number | null
+  responseTime: number
   responseCode: number | null
   responseMessage: string | null
 }

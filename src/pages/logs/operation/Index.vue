@@ -26,7 +26,7 @@ const searchForm = ref({
 })
 
 const detailLoading = ref<boolean>(false)
-const detail = ref<OperationLog>({
+const row = ref<OperationLog>({
   id: undefined,
   module: '',
   operator: '',
@@ -67,7 +67,7 @@ async function load() {
 async function loadOne(id: number) {
   detailLoading.value = true
   fetchOperationLog(id).then(res => {
-    detail.value = res.data
+    row.value = res.data
   }).finally(() => detailLoading.value = false)
 }
 
@@ -250,18 +250,18 @@ function handleCheckedChange(value: string[]) {
 
   <Dialog v-model="dialogVisible" :title="$t('detail')">
     <ElDescriptions v-loading="detailLoading">
-      <ElDescriptionsItem :label="$t('module')">{{ detail.module }}</ElDescriptionsItem>
-      <ElDescriptionsItem :label="$t('operation')">{{ detail.operation }}</ElDescriptionsItem>
-      <ElDescriptionsItem :label="$t('method')">{{ detail.method }}</ElDescriptionsItem>
-      <ElDescriptionsItem :label="$t('params')">{{ detail.params }}</ElDescriptionsItem>
-      <ElDescriptionsItem :label="$t('ip')">{{ detail.ip }}</ElDescriptionsItem>
-      <ElDescriptionsItem :label="$t('location')">{{ detail.location }}</ElDescriptionsItem>
-      <ElDescriptionsItem :label="$t('operator')">{{ detail.operator }}</ElDescriptionsItem>
+      <ElDescriptionsItem :label="$t('module')">{{ row.module }}</ElDescriptionsItem>
+      <ElDescriptionsItem :label="$t('operation')">{{ row.operation }}</ElDescriptionsItem>
+      <ElDescriptionsItem :label="$t('method')">{{ row.method }}</ElDescriptionsItem>
+      <ElDescriptionsItem :label="$t('params')">{{ row.params }}</ElDescriptionsItem>
+      <ElDescriptionsItem :label="$t('ip')">{{ row.ip }}</ElDescriptionsItem>
+      <ElDescriptionsItem :label="$t('location')">{{ row.location }}</ElDescriptionsItem>
+      <ElDescriptionsItem :label="$t('operator')">{{ row.operator }}</ElDescriptionsItem>
       <ElDescriptionsItem :label="$t('enabled')">
-        <ElTag v-if="detail.status === 1" type="success" effect="light" round>{{ $t('success') }}</ElTag>
+        <ElTag v-if="row.status === 1" type="success" effect="light" round>{{ $t('success') }}</ElTag>
         <ElTag v-else type="danger" effect="light" round>{{ $t('failure') }}</ElTag>
       </ElDescriptionsItem>
-      <ElDescriptionsItem :label="$t('operatedTime')">{{ dayjs(detail.operatedTime).format('YYYY-MM-DD HH:mm:ss') }}
+      <ElDescriptionsItem :label="$t('operatedTime')">{{ dayjs(row.operatedTime).format('YYYY-MM-DD HH:mm:ss') }}
       </ElDescriptionsItem>
     </ElDescriptions>
   </Dialog>
