@@ -34,7 +34,6 @@ const row = ref<AccessLog>({
   params: null,
   ip: '',
   location: '',
-  status: null,
   responseTime: 0,
   responseCode: null,
   responseMessage: ''
@@ -216,11 +215,16 @@ function handleCheckedChange(value: string[]) {
         <ElTableColumn show-overflow-tooltip prop="params" :label="$t('params')" />
         <ElTableColumn prop="operator" :label="$t('operator')" />
         <ElTableColumn prop="ip" :label="$t('ip')" />
-        <ElTableColumn prop="location" :label="$t('location')" />
-        <ElTableColumn prop="status" :label="$t('status')">
+        <ElTableColumn show-overflow-tooltip prop="location" :label="$t('location')" />
+        <ElTableColumn prop="responseCode" :label="$t('responseCode')">
           <template #default="scope">
-            <ElTag v-if="scope.row.status === 1" type="success" effect="light" round>{{ $t('success') }}</ElTag>
-            <ElTag v-else type="danger" effect="light" round>{{ $t('failure') }}</ElTag>
+            <ElTag v-if="scope.row.responseCode >= 200 && scope.row.responseCode < 300" type="success" round>
+              {{ scope.row.responseCode }}
+            </ElTag>
+            <ElTag v-else-if="scope.row.responseCode >= 500" type="warning" round>
+              {{ scope.row.responseCode }}
+            </ElTag>
+            <ElTag v-else type="danger" round>{{ scope.row.responseCode }}</ElTag>
           </template>
         </ElTableColumn>
         <ElTableColumn prop="responseTime" :label="$t('responseTime')">
@@ -228,7 +232,6 @@ function handleCheckedChange(value: string[]) {
             {{ formatDuration(scope.row.responseTime) }}
           </template>
         </ElTableColumn>
-        <ElTableColumn prop="responseCode" :label="$t('responseCode')" />
         <ElTableColumn show-overflow-tooltip prop="responseMessage" :label="$t('responseMessage')" />
         <ElTableColumn :label="$t('actions')" width="160">
           <template #default="scope">
@@ -258,12 +261,16 @@ function handleCheckedChange(value: string[]) {
       <ElDescriptionsItem :label="$t('ip')">{{ row.ip }}</ElDescriptionsItem>
       <ElDescriptionsItem :label="$t('location')">{{ row.location }}</ElDescriptionsItem>
       <ElDescriptionsItem :label="$t('operator')">{{ row.operator }}</ElDescriptionsItem>
-      <ElDescriptionsItem :label="$t('enabled')">
-        <ElTag v-if="row.status === 1" type="success" effect="light" round>{{ $t('success') }}</ElTag>
-        <ElTag v-else type="danger" effect="light" round>{{ $t('failure') }}</ElTag>
+      <ElDescriptionsItem :label="$t('responseCode')">
+        <ElTag v-if="row.responseCode && (row.responseCode >= 200 && row.responseCode < 300)" type="success" round>
+          {{ row.responseCode }}
+        </ElTag>
+        <ElTag v-else-if="row.responseCode && row.responseCode >= 500" type="warning" round>
+          {{ row.responseCode }}
+        </ElTag>
+        <ElTag v-else type="danger" round>{{ row.responseCode }}</ElTag>
       </ElDescriptionsItem>
       <ElDescriptionsItem :label="$t('responseTime')">{{ formatDuration(row.responseTime) }}</ElDescriptionsItem>
-      <ElDescriptionsItem :label="$t('responseCode')">{{ row.responseCode }}</ElDescriptionsItem>
       <ElDescriptionsItem :label="$t('responseMessage')">{{ row.responseMessage }}</ElDescriptionsItem>
     </ElDescriptions>
   </Dialog>

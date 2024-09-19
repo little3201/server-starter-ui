@@ -218,13 +218,13 @@ function handleCheckedChange(value: string[]) {
         <ElTableColumn prop="location" :label="$t('location')" />
         <ElTableColumn prop="status" :label="$t('status')">
           <template #default="scope">
-            <ElTag v-if="scope.row.status === 1" type="success" effect="light" round>{{ $t('success') }}</ElTag>
-            <ElTag v-else type="danger" effect="light" round>{{ $t('failure') }}</ElTag>
+            <ElTag v-if="scope.row.status === 1" type="success" round>{{ $t('success') }}</ElTag>
+            <ElTag v-else type="danger" round>{{ $t('failure') }}</ElTag>
           </template>
         </ElTableColumn>
         <ElTableColumn prop="operatedTime" :label="$t('operatedTime')">
           <template #default="scope">
-            {{ dayjs(scope.row.operatedTime).format('YYYY-MM-DD HH:mm:ss') }}
+            {{ dayjs(scope.row.operatedTime).format('YYYY-MM-DD HH:mm') }}
           </template>
         </ElTableColumn>
         <ElTableColumn :label="$t('actions')" width="160">
@@ -247,7 +247,6 @@ function handleCheckedChange(value: string[]) {
     </ElCard>
   </ElSpace>
 
-
   <Dialog v-model="dialogVisible" :title="$t('detail')">
     <ElDescriptions v-loading="detailLoading">
       <ElDescriptionsItem :label="$t('module')">{{ row.module }}</ElDescriptionsItem>
@@ -257,11 +256,11 @@ function handleCheckedChange(value: string[]) {
       <ElDescriptionsItem :label="$t('ip')">{{ row.ip }}</ElDescriptionsItem>
       <ElDescriptionsItem :label="$t('location')">{{ row.location }}</ElDescriptionsItem>
       <ElDescriptionsItem :label="$t('operator')">{{ row.operator }}</ElDescriptionsItem>
-      <ElDescriptionsItem :label="$t('enabled')">
-        <ElTag v-if="row.status === 1" type="success" effect="light" round>{{ $t('success') }}</ElTag>
-        <ElTag v-else type="danger" effect="light" round>{{ $t('failure') }}</ElTag>
+      <ElDescriptionsItem :label="$t('status')">
+        <ElTag v-if="row.status === 1" type="success" round>{{ $t('success') }}</ElTag>
+        <ElTag v-else type="danger" round>{{ $t('failure') }}</ElTag>
       </ElDescriptionsItem>
-      <ElDescriptionsItem :label="$t('operatedTime')">{{ dayjs(row.operatedTime).format('YYYY-MM-DD HH:mm:ss') }}
+      <ElDescriptionsItem :label="$t('operatedTime')">{{ dayjs(row.operatedTime).format('YYYY-MM-DD HH:mm') }}
       </ElDescriptionsItem>
     </ElDescriptions>
   </Dialog>

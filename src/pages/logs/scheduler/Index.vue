@@ -213,8 +213,8 @@ function handleCheckedChange(value: string[]) {
         <ElTableColumn prop="cronExpression" :label="$t('cronExpression')" />
         <ElTableColumn prop="status" :label="$t('status')">
           <template #default="scope">
-            <ElTag v-if="scope.row.status === 1" type="success" effect="light" round>{{ $t('success') }}</ElTag>
-            <ElTag v-else type="danger" effect="light" round>{{ $t('failure') }}</ElTag>
+            <ElTag v-if="scope.row.status === 1" type="success" round>{{ $t('success') }}</ElTag>
+            <ElTag v-else type="danger" round>{{ $t('failure') }}</ElTag>
           </template>
         </ElTableColumn>
         <ElTableColumn prop="executedTime" :label="$t('executedTime')">
@@ -242,7 +242,6 @@ function handleCheckedChange(value: string[]) {
     </ElCard>
   </ElSpace>
 
-
   <Dialog v-model="dialogVisible" :title="$t('detail')">
     <ElDescriptions v-loading="detailLoading">
       <ElDescriptionsItem :label="$t('name')">{{ row.name }}</ElDescriptionsItem>
@@ -253,9 +252,9 @@ function handleCheckedChange(value: string[]) {
       </ElDescriptionsItem>
       <ElDescriptionsItem :label="$t('endTime')">{{ dayjs(row.lastModifiedDate).format('YYYY-MM-DD HH:mm:ss') }}
       </ElDescriptionsItem>
-      <ElDescriptionsItem :label="$t('enabled')">
-        <ElTag v-if="row.status === 1" type="success" effect="light" round>{{ $t('success') }}</ElTag>
-        <ElTag v-else type="danger" effect="light" round>{{ $t('failure') }}</ElTag>
+      <ElDescriptionsItem :label="$t('status')">
+        <ElTag v-if="row.status === 1" type="success" round>{{ $t('success') }}</ElTag>
+        <ElTag v-else type="danger" round>{{ $t('failure') }}</ElTag>
       </ElDescriptionsItem>
     </ElDescriptions>
   </Dialog>

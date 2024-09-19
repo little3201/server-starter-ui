@@ -197,13 +197,13 @@ function handleCheckedChange(value: string[]) {
         <ElTableColumn prop="location" :label="$t('location')" />
         <ElTableColumn prop="status" :label="$t('status')">
           <template #default="scope">
-            <ElTag v-if="scope.row.status === 1" type="success" effect="light" round>{{ $t('success') }}</ElTag>
-            <ElTag v-else type="danger" effect="light" round>{{ $t('failure') }}</ElTag>
+            <ElTag v-if="scope.row.status === 1" type="success" round>{{ $t('success') }}</ElTag>
+            <ElTag v-else type="danger" round>{{ $t('failure') }}</ElTag>
           </template>
         </ElTableColumn>
         <ElTableColumn prop="operatedTime" :label="$t('operatedTime')">
           <template #default="scope">
-            {{ dayjs(scope.row.operatedTime).format('YYYY-MM-DD HH:mm:ss') }}
+            {{ dayjs(scope.row.operatedTime).format('YYYY-MM-DD HH:mm') }}
           </template>
         </ElTableColumn>
         <ElTableColumn :label="$t('actions')">
@@ -228,11 +228,11 @@ function handleCheckedChange(value: string[]) {
       <ElDescriptionsItem :label="$t('location')">{{ row.location }}</ElDescriptionsItem>
       <ElDescriptionsItem :label="$t('newValue')">{{ row.newValue }}</ElDescriptionsItem>
       <ElDescriptionsItem :label="$t('operator')">{{ row.operator }}</ElDescriptionsItem>
-      <ElDescriptionsItem :label="$t('enabled')">
-        <ElTag v-if="row.status === 1" type="success" effect="light" round>{{ $t('success') }}</ElTag>
-        <ElTag v-else type="danger" effect="light" round>{{ $t('failure') }}</ElTag>
+      <ElDescriptionsItem :label="$t('status')">
+        <ElTag v-if="row.status === 1" type="success" round>{{ $t('success') }}</ElTag>
+        <ElTag v-else type="danger" round>{{ $t('failure') }}</ElTag>
       </ElDescriptionsItem>
-      <ElDescriptionsItem :label="$t('operatedTime')">{{ dayjs(row.operatedTime).format('YYYY-MM-DD HH:mm:ss') }}
+      <ElDescriptionsItem :label="$t('operatedTime')">{{ dayjs(row.operatedTime).format('YYYY-MM-DD HH:mm') }}
       </ElDescriptionsItem>
     </ElDescriptions>
   </Dialog>
