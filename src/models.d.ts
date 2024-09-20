@@ -7,21 +7,19 @@ export interface User extends AudtiMetadata {
   username: string
   email: string
   avatar?: string
-  role?: number
-  organization?: number
+  roleId?: number | null
+  groupId?: number | null
   accountNonLocked?: boolean
   accountExpiresAt?: Date
   credentialsExpiresAt?: Date
   enabled?: boolean
 }
 
-export interface Organization extends AudtiMetadata {
+export interface Group extends AudtiMetadata {
   name: string
   superiorId?: number
-  enabled?: boolean
-  count?: number
+  enabled: boolean
   description?: string
-  hasChildren?: boolean
 }
 
 export interface Role extends AudtiMetadata {
@@ -51,7 +49,7 @@ export interface Dictionary extends AudtiMetadata {
   name: string
   superiorId?: number
   order: number
-  enabled?: boolean
+  enabled: boolean
   description?: string
   count?: number
   hasChildren?: boolean
@@ -60,9 +58,8 @@ export interface Dictionary extends AudtiMetadata {
 export interface Region extends AudtiMetadata {
   name: string
   superiorId?: number
-  areaCode: number
-  postalCode: number
-  count?: number
+  areaCode: number | null
+  postalCode: number | null
   hasChildren?: boolean
   enabled?: boolean
   description?: string
@@ -84,8 +81,7 @@ export interface PrivilegeTreeNode extends TreeNode {
   children?: PrivilegeTreeNode[]
 }
 
-export interface OperationLog {
-  id?: number
+export interface OperationLog extends AudtiMetadata {
   module: string
   method: string
   operator: string
@@ -97,22 +93,19 @@ export interface OperationLog {
   operatedTime: string | null
 }
 
-export interface AccessLog {
-  id?: number
+export interface AccessLog extends AudtiMetadata {
   api: string
   method: string
   operator: string
   params: string | null
   ip: string
   location: string
-  status: number | null
-  responseTime: number | null
+  responseTime: number
   responseCode: number | null
   responseMessage: string | null
 }
 
-export interface AuditLog {
-  id?: number
+export interface AuditLog extends AudtiMetadata {
   operator: string
   operation: string
   resource: string
@@ -124,13 +117,45 @@ export interface AuditLog {
   operatedTime: string | null
 }
 
-export interface SchedulerLog {
-  id?: number
+export interface SchedulerLog extends AudtiMetadata {
   name: string
   method: string
   params: string
   cronExpression: string
-  startTime: string
-  endTime: string
+  executedTime: number
   status: number | null
+}
+
+export interface File extends AudtiMetadata {
+  name: string
+  type: string
+  size: number
+}
+
+export interface Table extends AudtiMetadata {
+  name: string
+  comment: string
+  description: string
+}
+
+export interface Column extends AudtiMetadata {
+  name: string
+  type: string
+  length: number
+  nullable: boolean
+  unique: boolean
+  comment: string
+  description: string
+}
+
+export interface Code extends AudtiMetadata {
+  name: string
+  content: string
+}
+
+export interface Script extends AudtiMetadata {
+  name: string
+  icon: string
+  version: string
+  description: string
 }

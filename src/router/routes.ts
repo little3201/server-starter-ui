@@ -1,7 +1,7 @@
 import type { RouteRecordRaw } from 'vue-router'
 import MainLayout from 'layouts/MainLayout.vue'
 
-export const constantRouterMap: RouteRecordRaw[] = [
+export const constantRouterMap: Array<RouteRecordRaw> = [
   {
     path: '/',
     name: 'home',
@@ -10,7 +10,7 @@ export const constantRouterMap: RouteRecordRaw[] = [
     children: [
       {
         path: '',
-        name: 'home-index',
+        name: 'home',
         component: () => import('pages/Index.vue')
       }
     ]

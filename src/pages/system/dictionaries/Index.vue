@@ -3,9 +3,10 @@ import { ref, reactive, onMounted } from 'vue'
 import type { FormInstance, FormRules } from 'element-plus'
 import draggable from 'vuedraggable'
 import Dialog from 'components/Dialog.vue'
-import { retrieveDictionaries, fetchDictionary } from 'src/api/dictionaries'
-import type { Dictionary } from 'src/models'
 import SubPage from './SubPage.vue'
+import { retrieveDictionaries, fetchDictionary, modifyDictionary } from 'src/api/dictionaries'
+import type { Dictionary } from 'src/models'
+import { max } from 'lodash-es'
 
 
 const loading = ref<boolean>(false)
@@ -29,10 +30,12 @@ const searchForm = ref({
 })
 
 const formRef = ref<FormInstance>()
-const form = ref<Dictionary>({
+const initialValues: Dictionary = {
   name: '',
+  enabled: true,
   order: 1
-})
+}
+const form = ref<Dictionary>({ ...initialValues })
 
 const rules = reactive<FormRules<typeof form>>({
   name: [
@@ -57,7 +60,13 @@ function pageChange(currentPage: number, pageSize: number) {
 async function load() {
   loading.value = true
   retrieveDictionaries(pagination.page, pagination.size, searchForm.value).then(res => {
-    datas.value = res.data.content
+    let list = res.data.content
+    list.forEach((element: Dictionary) => {
+      if (element.count && element.count > 0) {
+        element.hasChildren = true
+      }
+    })
+    datas.value = list
     pagination.total = res.data.totalElements
   }).finally(() => loading.value = false)
 }
@@ -81,6 +90,7 @@ onMounted(() => {
  * @param id 主键
  */
 function editRow(id?: number) {
+  form.value = { ...initialValues }
   if (id) {
     loadOne(id)
   }
@@ -107,8 +117,12 @@ function onSubmit() {
   formEl.validate((valid, fields) => {
     if (valid) {
       saveLoading.value = true
-    } else {
-      console.log('error submit!', fields)
+      if (form.value.id) {
+        modifyDictionary(form.value.id, form.value).then(() => {
+          load()
+          dialogVisible.value = false
+        }).finally(() => saveLoading.value = false)
+      }
     }
   })
 }
@@ -135,7 +149,7 @@ function handleCheckedChange(value: string[]) {
 
 <template>
   <ElSpace size="large" fill>
-    <ElCard shadow="never" class="search">
+    <ElCard shadow="never">
       <ElForm inline :model="searchForm" @submit.prevent>
         <ElFormItem :label="$t('name')" prop="name">
           <ElInput v-model="searchForm.name" :placeholder="$t('inputText') + $t('name')" />
@@ -231,7 +245,7 @@ function handleCheckedChange(value: string[]) {
     </ElCard>
   </ElSpace>
 
-  <Dialog v-model="dialogVisible" :title="$t('dictionaries')" width="25%">
+  <Dialog v-model="dialogVisible" :title="$t('dictionaries')" width="36%">
     <ElForm ref="formRef" :model="form" :rules="rules" label-position="top">
       <ElRow :gutter="20" class="w-full !mx-0">
         <ElCol :span="12">
@@ -241,7 +255,8 @@ function handleCheckedChange(value: string[]) {
         </ElCol>
         <ElCol :span="12">
           <ElFormItem :label="$t('order')" prop="order">
-            <ElInputNumber v-model="form.order" :placeholder="$t('inputText') + $t('order')" />
+            <ElInputNumber v-model="form.order" :placeholder="$t('inputText') + $t('order')" :min="1" :max="299"
+              step-strictly />
           </ElFormItem>
         </ElCol>
       </ElRow>

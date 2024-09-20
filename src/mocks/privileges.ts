@@ -37,6 +37,30 @@ const datas: Privilege[] = [
     count: 1,
     enabled: true,
     description: 'this is description for this row'
+  },
+  {
+    id: 14,
+    path: '/files',
+    component: '#',
+    name: 'files',
+    redirect: '/files',
+    order: 3,
+    icon: 'i-material-symbols:folder-open-outline-rounded',
+    count: 1,
+    enabled: true,
+    description: 'this is description for this row'
+  },
+  {
+    id: 16,
+    path: '/tools',
+    component: '#',
+    name: 'tools',
+    redirect: '/tools',
+    order: 3,
+    icon: 'i-material-symbols:build-outline-rounded',
+    count: 1,
+    enabled: true,
+    description: 'this is description for this row'
   }
 ]
 
@@ -44,9 +68,9 @@ const subDatas: Privilege[] = [
   {
     id: 2,
     superiorId: 1,
-    path: 'organizations',
-    component: 'pages/system/organizations/Index',
-    name: 'organizations',
+    path: 'groups',
+    component: 'pages/system/groups/Index',
+    name: 'groups',
     order: 1,
     count: 0,
     enabled: true,
@@ -153,13 +177,50 @@ const subDatas: Privilege[] = [
     id: 13,
     superiorId: 12,
     path: '',
-    name: 'regions-index',
+    name: 'regions',
     component: 'pages/regions/Index',
-    order: 4,
+    order: 1,
     count: 0,
     enabled: true,
     icon: 'i-material-symbols:location-on-outline-rounded',
     hidden: true,
+    description: 'this is description for this row'
+  },
+  {
+    id: 15,
+    superiorId: 14,
+    path: '',
+    name: 'files',
+    component: 'pages/files/Index',
+    order: 1,
+    count: 0,
+    enabled: true,
+    icon: 'i-material-symbols:folder-open-outline-rounded',
+    hidden: true,
+    description: 'this is description for this row'
+  },
+  {
+    id: 17,
+    superiorId: 16,
+    path: 'generator',
+    name: 'generator',
+    component: 'pages/tool/generator/Index',
+    order: 1,
+    count: 0,
+    enabled: true,
+    icon: 'i-material-symbols:code-rounded',
+    description: 'this is description for this row'
+  },
+  {
+    id: 18,
+    superiorId: 16,
+    path: 'deploy',
+    name: 'deploy',
+    component: 'pages/tool/deploy/Index',
+    order: 1,
+    count: 0,
+    enabled: true,
+    icon: 'i-material-symbols:terminal-rounded',
     description: 'this is description for this row'
   }
 ]
@@ -175,9 +236,9 @@ const treeNodes: PrivilegeTreeNode[] = [
     children: [
       {
         id: 2,
-        path: 'organizations',
-        component: 'pages/system/organizations/Index',
-        name: 'organizations',
+        path: 'groups',
+        component: 'pages/system/groups/Index',
+        name: 'groups',
         icon: 'i-material-symbols:account-tree-outline-rounded'
       },
       {
@@ -260,9 +321,51 @@ const treeNodes: PrivilegeTreeNode[] = [
         id: 13,
         path: '',
         component: 'pages/regions/Index',
-        name: 'regions-index',
+        name: 'regions',
         icon: 'i-material-symbols:location-on-outline-rounded',
         hidden: true
+      }
+    ]
+  },
+  {
+    id: 14,
+    path: '/files',
+    component: '#',
+    name: 'files',
+    redirect: '/files',
+    icon: 'i-material-symbols:folder-open-outline-rounded',
+    children: [
+      {
+        id: 15,
+        path: '',
+        component: 'pages/files/Index',
+        name: 'files',
+        icon: 'i-material-symbols:folder-open-outline-rounded',
+        hidden: true
+      }
+    ]
+  },
+  {
+    id: 16,
+    path: '/tools',
+    component: '#',
+    name: 'tools',
+    redirect: '/tools/generator',
+    icon: 'i-material-symbols:build-outline-rounded',
+    children: [
+      {
+        id: 17,
+        path: 'generator',
+        component: 'pages/tools/generator/Index',
+        name: 'generator',
+        icon: 'i-material-symbols:code-rounded'
+      },
+      {
+        id: 18,
+        path: 'deploy',
+        component: 'pages/tools/deploy/Index',
+        name: 'deploy',
+        icon: 'i-material-symbols:terminal-rounded'
       }
     ]
   }
@@ -294,10 +397,10 @@ export const privilegesHandlers = [
     const url = new URL(request.url)
     const page = url.searchParams.get('page')
     const size = url.searchParams.get('size')
-    // Construct a JSON response with the list of all privilege
+    // Construct a JSON response with the list of all Row
     // as the response body.
     const data = {
-      content: Array.from(datas.slice((Number(page) - 1) * Number(size), Number(page) * Number(size))),
+      content: Array.from(datas.slice(Number(page) * Number(size), (Number(page) + 1) * Number(size))),
       totalElements: datas.length
     }
 
@@ -307,11 +410,11 @@ export const privilegesHandlers = [
     // Read the intercepted request body as JSON.
     const newData = await request.json() as PrivilegeTreeNode
 
-    // Push the new Dictionary to the map of all Dictionarys.
+    // Push the new Row to the map of all Dictionarys.
     treeNodes.push(newData)
 
     // Don't forget to declare a semantic "201 Created"
-    // response and send back the newly created Dictionary!
+    // response and send back the newly created Row!
     return HttpResponse.json(newData, { status: 201 })
   }),
   http.delete('/api/privileges/:id', ({ params }) => {
@@ -319,19 +422,19 @@ export const privilegesHandlers = [
     // argument of the response resolver.
     const { id } = params
 
-    // Let's attempt to grab the Dictionary by its ID.
+    // Let's attempt to grab the Row by its ID.
     const deletedData = treeNodes.filter(item => item.id === Number(id))
 
     // Respond with a "404 Not Found" response if the given
-    // Dictionary ID does not exist.
+    // Row ID does not exist.
     if (!deletedData) {
       return new HttpResponse(null, { status: 404 })
     }
 
-    // Delete the Dictionary from the "allDictionarys" map.
+    // Delete the Row from the "allRow" map.
     treeNodes.pop()
 
-    // Respond with a "200 OK" response and the deleted Dictionary.
+    // Respond with a "200 OK" response and the deleted Row.
     return HttpResponse.json(deletedData)
   })
 ]

@@ -4,9 +4,9 @@ import type { FormInstance, FormRules } from 'element-plus'
 import draggable from 'vuedraggable'
 import Dialog from 'components/Dialog.vue'
 import { useUserStore } from 'stores/user-store'
-import { retrieveRoles, retrieveRolePrivileges, retrieveRoleOrganizations, fetchRole } from 'src/api/roles'
+import { retrieveRoles, retrieveRolePrivileges, retrieveRoleGroups, fetchRole, createRole, modifyRole, removeRole } from 'src/api/roles'
 import { retrievePrivilegeTree } from 'src/api/privileges'
-import { retrieveOrganizationTree } from 'src/api/organizations'
+import { retrieveGroupTree } from 'src/api/groups'
 import type { Role, TreeNode } from 'src/models'
 
 const userStore = useUserStore()
@@ -28,9 +28,9 @@ const privilegeTreeLoading = ref<boolean>(false)
 const privilegeTree = ref<Array<Number>>([])
 const rolePrivileges = ref<Array<TreeNode>>([])
 
-const organizationTreeLoading = ref<boolean>(false)
-const organizationTree = ref<Array<TreeNode>>([])
-const roleDepartments = ref<Array<Number>>([])
+const groupTreeLoading = ref<boolean>(false)
+const groupTree = ref<Array<TreeNode>>([])
+const roleGroups = ref<Array<Number>>([])
 
 const saveLoading = ref<boolean>(false)
 const dialogVisible = ref<boolean>(false)
@@ -40,11 +40,12 @@ const searchForm = ref({
 })
 
 const formRef = ref<FormInstance>()
-const form = ref<Role>({
+const initialValues: Role = {
   name: '',
   privileges: undefined,
   description: ''
-})
+}
+const form = ref<Role>({ ...initialValues })
 
 const rules = reactive<FormRules<typeof form>>({
   name: [
@@ -57,7 +58,7 @@ const dataPrivilege = ref<number>(1)
 /**
  * 权限树
  */
-function loadPrivilegeTree() {
+async function loadPrivilegeTree() {
   privilegeTreeLoading.value = true
 
   const username = userStore.user?.username as string
@@ -69,11 +70,11 @@ function loadPrivilegeTree() {
 /**
  * 组织树
  */
-function loadDepartmentTree() {
-  organizationTreeLoading.value = true
-  retrieveOrganizationTree().then(res => {
-    organizationTree.value = res.data
-  }).finally(() => organizationTreeLoading.value = false)
+async function loadGroupTree() {
+  groupTreeLoading.value = true
+  retrieveGroupTree().then(res => {
+    groupTree.value = res.data
+  }).finally(() => groupTreeLoading.value = false)
 }
 
 /**
@@ -111,7 +112,7 @@ function reset() {
 onMounted(() => {
   load()
   loadPrivilegeTree()
-  loadDepartmentTree()
+  loadGroupTree()
 })
 
 /**
@@ -119,6 +120,7 @@ onMounted(() => {
  * @param id 主键
  */
 function editRow(id?: number) {
+  form.value = { ...initialValues }
   if (id) {
     loadOne(id)
   }
@@ -145,8 +147,17 @@ function onSubmit() {
   formEl.validate((valid, fields) => {
     if (valid) {
       saveLoading.value = true
-    } else {
-      console.log('error submit!', fields)
+      if (form.value.id) {
+        modifyRole(form.value.id, form.value).then(() => {
+          load()
+          dialogVisible.value = false
+        }).finally(() => saveLoading.value = false)
+      } else {
+        createRole(form.value).then(() => {
+          load()
+          dialogVisible.value = false
+        }).finally(() => saveLoading.value = false)
+      }
     }
   })
 }
@@ -155,8 +166,9 @@ function onSubmit() {
  * 删除
  * @param id 主键
  */
-function removeHandler(id: number) {
-  datas.value = datas.value.filter(item => item.id !== id)
+function removeRow(id: number) {
+  removeRole(id)
+    .then(() => load())
 }
 
 /**
@@ -165,19 +177,19 @@ function removeHandler(id: number) {
  */
 function confirmEvent(id: number) {
   if (id) {
-    removeHandler(id)
+    removeRow(id)
   }
 }
 
 /**
- * 权限树操作
+ * privilete tree check
  */
 function handlePrivilegeCheckChange() { }
 
 /**
- * 组织树操作
+ * group tree check
  */
-function handleDepartmentCheckChange() { }
+function handleGroupCheckChange() { }
 
 /**
  * 行选择操作
@@ -185,10 +197,10 @@ function handleDepartmentCheckChange() { }
  */
 function handleCurrentChange(row: Role | undefined) {
   if (row && row.id) {
-    Promise.all([retrieveRolePrivileges(row.id), retrieveRoleOrganizations(row.id)])
-      .then(([rpRes, rdRes]) => {
+    Promise.all([retrieveRolePrivileges(row.id), retrieveRoleGroups(row.id)])
+      .then(([rpRes, rgRes]) => {
         rolePrivileges.value = rpRes.data
-        roleDepartments.value = rdRes.data
+        roleGroups.value = rgRes.data
       })
   }
 }
@@ -215,7 +227,7 @@ function handleCheckedChange(value: string[]) {
 
 <template>
   <ElSpace size="large" fill>
-    <ElCard shadow="never" class="search">
+    <ElCard shadow="never">
       <ElForm inline :model="searchForm" @submit.prevent>
         <ElFormItem :label="$t('name')" prop="name">
           <ElInput v-model="searchForm.name" :placeholder="$t('inputText') + $t('name')" />
@@ -339,15 +351,14 @@ function handleCheckedChange(value: string[]) {
             </ElTabPane>
             <ElTabPane :label="$t('data') + $t('privileges')" class="w-full">
               <ElSelect v-model="dataPrivilege" class="mb-3">
-                <ElOption :value="0" label="全部" />
-                <ElOption :value="1" label="本部门" />
-                <ElOption :value="2" label="仅自己" />
-                <ElOption :value="3" label="自定义" />
+                <ElOption :value="0" :label="$t('all')" />
+                <ElOption :value="1" :label="$t('yourself')" />
+                <ElOption :value="2" :label="$t('yourGroup')" />
+                <ElOption :value="3" :label="$t('custom')" />
               </ElSelect>
-              <ElTree v-if="dataPrivilege === 3" ref="treeEl" v-loading="organizationTreeLoading"
-                :data="organizationTree" default-expand-all :expand-on-click-node="false" node-key="id"
-                :props="{ label: 'name' }" show-checkbox @check-change="handleDepartmentCheckChange"
-                :default-checked-keys="roleDepartments">
+              <ElTree v-if="dataPrivilege === 3" ref="treeEl" v-loading="groupTreeLoading" :data="groupTree"
+                default-expand-all :expand-on-click-node="false" node-key="id" :props="{ label: 'name' }" show-checkbox
+                @check-change="handleGroupCheckChange" :default-checked-keys="roleGroups">
               </ElTree>
             </ElTabPane>
           </ElTabs>

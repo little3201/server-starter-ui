@@ -28,11 +28,10 @@ const searchForm = ref({
   component: null
 })
 
-const formRef = ref<FormInstance>()
-
 const oldComponent = ref<string>('#')
 
-const form = ref<Privilege>({
+const formRef = ref<FormInstance>()
+const initialValues: Privilege = {
   name: '',
   path: '',
   order: 1,
@@ -41,7 +40,8 @@ const form = ref<Privilege>({
   icon: '',
   actions: [],
   description: ''
-})
+}
+const form = ref<Privilege>({ ...initialValues })
 
 const rules = reactive<FormRules<typeof form>>({
   name: [
@@ -63,20 +63,27 @@ function pageChange(currentPage: number, pageSize: number) {
   load()
 }
 
-/**
- * 加载列表
- */
-function load(row?: Privilege, treeNode?: unknown, resolve?: (date: Privilege[]) => void) {
+async function load(row?: Privilege, treeNode?: unknown, resolve?: (date: Privilege[]) => void) {
   loading.value = true
   if (row && row.id && resolve) {
     retrievePrivilegeSubset(row.id).then(res => {
-      resolve(res.data)
+      let list = res.data
+      // 处理字节点
+      list.forEach((element: Privilege) => {
+        if (element.count && element.count > 0) {
+          element.hasChildren = true
+        }
+      })
+      resolve(list)
     }).finally(() => loading.value = false)
   } else {
     retrievePrivileges(pagination.page, pagination.size, searchForm.value).then(res => {
       let list = res.data.content
+      // 处理字节点
       list.forEach((element: Privilege) => {
-        element.hasChildren = element.count && element.count > 0 ? true : false
+        if (element.count && element.count > 0) {
+          element.hasChildren = true
+        }
       })
       datas.value = list
       pagination.total = res.data.totalElements
@@ -105,6 +112,7 @@ onMounted(() => {
  * @param id 主键
  */
 function editRow(id?: number) {
+  form.value = { ...initialValues }
   if (id) {
     loadOne(id)
   }
@@ -170,7 +178,7 @@ function handleCheckedChange(value: string[]) {
 
 <template>
   <ElSpace size="large" fill>
-    <ElCard shadow="never" class="search">
+    <ElCard shadow="never">
       <ElForm inline :model="searchForm">
         <ElFormItem :label="$t('name')" prop="name">
           <ElInput v-model="searchForm.name" :placeholder="$t('inputText') + $t('name')" />
@@ -254,8 +262,16 @@ function handleCheckedChange(value: string[]) {
         </ElTableColumn>
         <ElTableColumn prop="path" :label="$t('path')" />
         <ElTableColumn prop="component" :label="$t('component')" />
-        <ElTableColumn prop="redirect" :label="$t('redirect')" />
-        <ElTableColumn prop="hidden" :label="$t('hidden')" />
+        <ElTableColumn prop="redirect" :label="$t('redirect')">
+          <template #default="scope">
+            {{ scope.row.redirect ? scope.row.redirect : '-' }}
+          </template>
+        </ElTableColumn>
+        <ElTableColumn prop="hidden" :label="$t('hidden')">
+          <template #default="scope">
+            <ElCheckbox v-model="scope.row.hidden" />
+          </template>
+        </ElTableColumn>
         <ElTableColumn prop="order" :label="$t('order')" />
         <ElTableColumn prop="enabled" :label="$t('enabled')">
           <template #default="scope">

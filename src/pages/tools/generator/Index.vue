@@ -3,12 +3,14 @@ import { ref, reactive, onMounted } from 'vue'
 import type { FormInstance, FormRules } from 'element-plus'
 import draggable from 'vuedraggable'
 import Dialog from 'components/Dialog.vue'
-import { retrieveOrganizations, retrieveOrganizationSubset, fetchOrganization } from 'src/api/organizations'
-import type { Organization } from 'src/models'
-
+import hljs from 'boot/hljs'
+import { retrieveTables, retrieveTableColumns, retrieveTableCodes, fetchTable } from 'src/api/tables'
+import type { Table, Column, Code } from 'src/models'
 
 const loading = ref<boolean>(false)
-const datas = ref<Array<Organization>>([])
+const datas = ref<Array<Table>>([])
+const columnDatas = ref<Array<Column>>([])
+const codes = ref<Array<Code>>([])
 const pagination = reactive({
   page: 1,
   size: 10,
@@ -17,20 +19,25 @@ const pagination = reactive({
 
 const checkAll = ref<boolean>(true)
 const isIndeterminate = ref<boolean>(false)
-const checkedColumns = ref<Array<string>>(['name', 'enabled', 'description'])
-const columns = ref<Array<string>>(['name', 'enabled', 'description'])
+const checkedColumns = ref<Array<string>>(['name', 'description'])
+const columns = ref<Array<string>>(['name', 'description'])
 
 const saveLoading = ref<boolean>(false)
 const dialogVisible = ref<boolean>(false)
+
+const configLoading = ref<boolean>(false)
+const configDialogVisible = ref<boolean>(false)
+
+const previewDialogVisible = ref<boolean>(false)
 
 const searchForm = ref({
   name: null
 })
 
 const formRef = ref<FormInstance>()
-const form = ref<Organization>({
+const form = ref<Table>({
   name: '',
-  enabled: true,
+  comment: '',
   description: ''
 })
 
@@ -39,6 +46,24 @@ const rules = reactive<FormRules<typeof form>>({
     { required: true, trigger: 'blur' }
   ]
 })
+
+const fieldTypeOptions = [
+  { label: 'String', value: 1 },
+  { label: 'Integer', value: 2 },
+  { label: 'Long', value: 3 },
+  { label: 'Float', value: 4 },
+  { label: 'Double', value: 5 },
+  { label: 'LocaleDate', value: 6 },
+  { label: 'LocaleDateTime', value: 7 },
+  { label: 'Text', value: 8 },
+  { label: 'Blob', value: 9 }
+]
+
+const showTypeOptions = [
+  { label: '文本框', value: 1 },
+  { label: '下拉框', value: 2 },
+  { label: '文本域', value: 3 }
+]
 
 /**
  * 分页变化
@@ -54,22 +79,12 @@ function pageChange(currentPage: number, pageSize: number) {
 /**
  * 加载列表
  */
-function load(row?: Organization, treeNode?: unknown, resolve?: (data: Organization[]) => void) {
+async function load() {
   loading.value = true
-  if (row && row.id && resolve) {
-    retrieveOrganizationSubset(row.id).then(res => {
-      resolve(res.data)
-    }).finally(() => loading.value = false)
-  } else {
-    retrieveOrganizations(pagination.page, pagination.size, searchForm.value).then(res => {
-      let list = res.data.content
-      list.forEach((element: Organization) => {
-        element.hasChildren = element.count && element.count > 0 ? true : false
-      })
-      datas.value = list
-      pagination.total = res.data.totalElements
-    }).finally(() => loading.value = false)
-  }
+  retrieveTables(pagination.page, pagination.size, searchForm.value).then(res => {
+    datas.value = res.data.content
+    pagination.total = res.data.totalElements
+  }).finally(() => loading.value = false)
 }
 
 /**
@@ -87,6 +102,28 @@ onMounted(() => {
 })
 
 /**
+ * config
+ * @param id 主键
+ */
+function configRow(id: number) {
+  configDialogVisible.value = true
+  retrieveTableColumns(id).then(res => {
+    columnDatas.value = res.data
+  })
+}
+
+/**
+ * preview
+ * @param id 主键
+ */
+function previewRow(id: number) {
+  previewDialogVisible.value = true
+  retrieveTableCodes(id).then(res => {
+    codes.value = res.data
+  })
+}
+
+/**
  * 弹出框
  * @param id 主键
  */
@@ -102,7 +139,7 @@ function editRow(id?: number) {
  * @param id 主键
  */
 async function loadOne(id: number) {
-  fetchOrganization(id).then(res => {
+  fetchTable(id).then(res => {
     form.value = res.data
   })
 }
@@ -127,7 +164,7 @@ function onSubmit() {
  * 删除
  * @param id 主键
  */
-function removeHandler(id: number) {
+function removeRow(id: number) {
   datas.value = datas.value.filter(item => item.id !== id)
 }
 
@@ -137,7 +174,7 @@ function removeHandler(id: number) {
  */
 function confirmEvent(id: number) {
   if (id) {
-    removeHandler(id)
+    removeRow(id)
   }
 }
 
@@ -163,7 +200,7 @@ function handleCheckedChange(value: string[]) {
 
 <template>
   <ElSpace size="large" fill>
-    <ElCard shadow="never" class="search">
+    <ElCard shadow="never">
       <ElForm inline :model="searchForm" @submit.prevent>
         <ElFormItem :label="$t('name')" prop="name">
           <ElInput v-model="searchForm.name" :placeholder="$t('inputText') + $t('name')" />
@@ -197,7 +234,7 @@ function handleCheckedChange(value: string[]) {
         </ElCol>
 
         <ElCol :span="8" class="text-right">
-          <ElTooltip :content="$t('refresh')" placement="top">
+          <ElTooltip class="box-item" effect="dark" :content="$t('refresh')" placement="top">
             <ElButton type="primary" plain circle @click="load">
               <div class="i-material-symbols:refresh-rounded" />
             </ElButton>
@@ -239,20 +276,22 @@ function handleCheckedChange(value: string[]) {
 
       <ElTable v-loading="loading" :data="datas" lazy :load="load" row-key="id" stripe table-layout="auto">
         <ElTableColumn type="selection" width="55" />
+        <ElTableColumn type="index" :label="$t('no')" width="55" />
         <ElTableColumn prop="name" :label="$t('name')" />
-        <ElTableColumn prop="enabled" :label="$t('enabled')">
-          <template #default="scope">
-            <ElSwitch size="small" v-model="scope.row.enabled" style="--el-switch-on-color: var(--el-color-success);" />
-          </template>
-        </ElTableColumn>
+        <ElTableColumn prop="comment" :label="$t('comment')" />
         <ElTableColumn show-overflow-tooltip prop="description" :label="$t('description')" />
         <ElTableColumn :label="$t('actions')">
           <template #default="scope">
             <ElButton size="small" type="primary" link @click="editRow(scope.row.id)">
               <div class="i-material-symbols:edit-outline-rounded" />{{ $t('edit') }}
             </ElButton>
-            <ElPopconfirm v-if="!scope.row.hasChildren" :title="$t('removeConfirm')" :width="240"
-              @confirm="confirmEvent(scope.row.id)">
+            <ElButton size="small" type="primary" link @click="configRow(scope.row.id)">
+              <div class="i-material-symbols:rule-settings-rounded" />{{ $t('config') }}
+            </ElButton>
+            <ElButton size="small" type="primary" link @click="previewRow(scope.row.id)">
+              <div class="i-material-symbols:visibility-outline-rounded" />{{ $t('preview') }}
+            </ElButton>
+            <ElPopconfirm :title="$t('removeConfirm')" :width="240" @confirm="confirmEvent(scope.row.id)">
               <template #reference>
                 <ElButton size="small" type="danger" link>
                   <div class="i-material-symbols:delete-outline-rounded" />{{ $t('remove') }}
@@ -267,12 +306,18 @@ function handleCheckedChange(value: string[]) {
     </ElCard>
   </ElSpace>
 
-  <Dialog v-model="dialogVisible" :title="$t('organizations')" width="25%">
+  <!-- add or edit -->
+  <Dialog v-model="dialogVisible" :title="$t('generator')" width="35%">
     <ElForm ref="formRef" :model="form" :rules="rules" label-position="top">
       <ElRow :gutter="20" class="w-full !mx-0">
-        <ElCol>
+        <ElCol :span="12">
           <ElFormItem :label="$t('name')" prop="name">
             <ElInput v-model="form.name" :placeholder="$t('inputText') + $t('name')" />
+          </ElFormItem>
+        </ElCol>
+        <ElCol :span="12">
+          <ElFormItem :label="$t('comment')" prop="comment">
+            <ElInput v-model="form.comment" :placeholder="$t('inputText') + $t('comment')" />
           </ElFormItem>
         </ElCol>
       </ElRow>
@@ -292,5 +337,65 @@ function handleCheckedChange(value: string[]) {
         <div class="i-material-symbols:check-circle-outline-rounded" /> {{ $t('submit') }}
       </ElButton>
     </template>
+  </Dialog>
+
+  <!-- config -->
+  <Dialog v-model="configDialogVisible" :title="$t('config')" width="85%" :max-height="600" :show-full-screen="true">
+    <ElTable v-loading="configLoading" :data="columnDatas" row-key="id" stripe table-layout="auto">
+      <ElTableColumn type="selection" width="55" />
+      <ElTableColumn type="index" :label="$t('no')" width="55" />
+      <ElTableColumn prop="name" :label="$t('name')" />
+      <ElTableColumn prop="type" :label="$t('type')" />
+      <ElTableColumn prop="length" :label="$t('length')" />
+      <ElTableColumn prop="fieldType" :label="$t('fieldType')">
+        <template #default="scope">
+          <el-select v-model="scope.row.fieldType">
+            <el-option v-for="item in fieldTypeOptions" :key="item.value" :label="item.label" :value="item.value" />
+          </el-select>
+        </template>
+      </ElTableColumn>
+      <ElTableColumn prop="nullable" :label="$t('nullable')">
+        <template #default="scope">
+          <ElCheckbox v-model="scope.row.nullable" />
+        </template>
+      </ElTableColumn>
+      <ElTableColumn prop="unique" :label="$t('unique')">
+        <template #default="scope">
+          <ElCheckbox v-model="scope.row.unique" />
+        </template>
+      </ElTableColumn>
+      <ElTableColumn prop="showType" :label="$t('showType')">
+        <template #default="scope">
+          <el-select v-model="scope.row.showType">
+            <el-option v-for="item in showTypeOptions" :key="item.value" :label="item.label" :value="item.value" />
+          </el-select>
+        </template>
+      </ElTableColumn>
+      <ElTableColumn prop="comment" :label="$t('comment')" />
+      <ElTableColumn prop="queryable" :label="$t('queryable')">
+        <template #default="scope">
+          <ElCheckbox v-model="scope.row.queryable" />
+        </template>
+      </ElTableColumn>
+    </ElTable>
+    <template #footer>
+      <ElButton @click="configDialogVisible = false">
+        <div class="i-material-symbols:close" />{{ $t('cancel') }}
+      </ElButton>
+      <ElButton type="primary" :loading="configLoading" @click="onSubmit">
+        <div class="i-material-symbols:check-circle-outline-rounded" /> {{ $t('submit') }}
+      </ElButton>
+    </template>
+  </Dialog>
+
+  <!-- preview -->
+  <Dialog v-model="previewDialogVisible" :title="$t('preview')" width="85%" :max-height="600" :show-full-screen="true">
+    <ElTabs stretch>
+      <ElTabPane v-for="code in codes" :key="code.name" :label="code.name" class="w-full">
+        <div id="preview">
+          <pre><code class="hljs" v-html="hljs.highlightAuto(code.content).value"></code></pre>
+        </div>
+      </ElTabPane>
+    </ElTabs>
   </Dialog>
 </template>

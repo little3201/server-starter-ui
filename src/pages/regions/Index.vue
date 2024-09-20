@@ -3,7 +3,8 @@ import { ref, reactive, onMounted } from 'vue'
 import type { FormInstance, FormRules } from 'element-plus'
 import draggable from 'vuedraggable'
 import Dialog from 'components/Dialog.vue'
-import { retrieveRegions, retrieveRegionSubset, fetchRegion } from 'src/api/regions'
+import SubPage from './SubPage.vue'
+import { retrieveRegions, fetchRegion, createRegion, modifyRegion, removeRegion } from 'src/api/regions'
 import type { Region } from 'src/models'
 
 const loading = ref<boolean>(false)
@@ -27,12 +28,13 @@ const searchForm = ref({
 })
 
 const formRef = ref<FormInstance>()
-const form = ref<Region>({
+const initialValues: Region = {
   name: '',
-  areaCode: 0,
-  postalCode: 0,
+  areaCode: null,
+  postalCode: null,
   description: ''
-})
+}
+const form = ref<Region>({ ...initialValues })
 
 const rules = reactive<FormRules<typeof form>>({
   name: [
@@ -54,22 +56,12 @@ function pageChange(currentPage: number, pageSize: number) {
 /**
  * 加载列表
  */
-function load(row?: Region, treeNode?: unknown, resolve?: (date: Region[]) => void) {
+async function load() {
   loading.value = true
-  if (row && row.id && resolve) {
-    retrieveRegionSubset(row.id, pagination.page, pagination.size).then(res => {
-      resolve(res.data)
-    }).finally(() => loading.value = false)
-  } else {
-    retrieveRegions(pagination.page, pagination.size, searchForm.value).then(res => {
-      let list = res.data.content
-      list.forEach((element: Region) => {
-        element.hasChildren = element.count && element.count > 0 ? true : false
-      })
-      datas.value = list
-      pagination.total = res.data.totalElements
-    }).finally(() => loading.value = false)
-  }
+  retrieveRegions(pagination.page, pagination.size, searchForm.value).then(res => {
+    datas.value = res.data.content
+    pagination.total = res.data.totalElements
+  }).finally(() => loading.value = false)
 }
 
 /**
@@ -91,6 +83,7 @@ onMounted(() => {
  * @param id 主键
  */
 function editRow(id?: number) {
+  form.value = { ...initialValues }
   if (id) {
     loadOne(id)
   }
@@ -117,8 +110,17 @@ function onSubmit() {
   formEl.validate((valid, fields) => {
     if (valid) {
       saveLoading.value = true
-    } else {
-      console.log('error submit!', fields)
+      if (form.value.id) {
+        modifyRegion(form.value.id, form.value).then(() => {
+          load()
+          dialogVisible.value = false
+        }).finally(() => saveLoading.value = false)
+      } else {
+        createRegion(form.value).then(() => {
+          load()
+          dialogVisible.value = false
+        }).finally(() => saveLoading.value = false)
+      }
     }
   })
 }
@@ -127,8 +129,8 @@ function onSubmit() {
  * 删除
  * @param id 主键
  */
-function removeHandler(id: number) {
-  datas.value = datas.value.filter(item => item.id !== id)
+function removeRow(id: number) {
+  removeRegion(id).then(() => load())
 }
 
 /**
@@ -137,7 +139,7 @@ function removeHandler(id: number) {
  */
 function confirmEvent(id: number) {
   if (id) {
-    removeHandler(id)
+    removeRow(id)
   }
 }
 
@@ -162,140 +164,156 @@ function handleCheckedChange(value: string[]) {
 </script>
 
 <template>
-  <div>
-    <ElSpace size="large" fill>
-      <ElCard shadow="never" class="search">
-        <ElForm inline :model="searchForm" @submit.prevent>
-          <ElFormItem :label="$t('name')" prop="name">
-            <ElInput v-model="searchForm.name" :placeholder="$t('inputText') + $t('name')" />
-          </ElFormItem>
-          <ElFormItem>
-            <ElButton type="primary" @click="load">
-              <div class="i-material-symbols:search-rounded" />{{ $t('search') }}
-            </ElButton>
-            <ElButton @click="reset">
-              <div class="i-material-symbols:replay-rounded" />{{ $t('reset') }}
-            </ElButton>
-          </ElFormItem>
-        </ElForm>
-      </ElCard>
+  <ElSpace size="large" fill>
+    <ElCard shadow="never">
+      <ElForm inline :model="searchForm" @submit.prevent>
+        <ElFormItem :label="$t('name')" prop="name">
+          <ElInput v-model="searchForm.name" :placeholder="$t('inputText') + $t('name')" />
+        </ElFormItem>
+        <ElFormItem>
+          <ElButton type="primary" @click="load">
+            <div class="i-material-symbols:search-rounded" />{{ $t('search') }}
+          </ElButton>
+          <ElButton @click="reset">
+            <div class="i-material-symbols:replay-rounded" />{{ $t('reset') }}
+          </ElButton>
+        </ElFormItem>
+      </ElForm>
+    </ElCard>
 
-      <ElCard shadow="never">
-        <ElRow :gutter="20" justify="space-between" class="mb-4">
-          <ElCol :span="16" class="text-left">
-            <ElButton type="primary" @click="editRow()">
-              <div class="i-material-symbols:add-rounded" />{{ $t('add') }}
-            </ElButton>
-            <ElButton type="danger" plain>
-              <div class="i-material-symbols:delete-outline-rounded" />{{ $t('remove') }}
-            </ElButton>
-            <ElButton type="warning" plain @click="dialogVisible = true">
-              <div class="i-material-symbols:upload-file-outline-rounded" />{{ $t('import') }}
-            </ElButton>
-            <ElButton type="success" plain>
-              <div class="i-material-symbols:file-save-outline-rounded" />{{ $t('export') }}
-            </ElButton>
-          </ElCol>
+    <ElCard shadow="never">
+      <ElRow :gutter="20" justify="space-between" class="mb-4">
+        <ElCol :span="16" class="text-left">
+          <ElButton type="primary" @click="editRow()">
+            <div class="i-material-symbols:add-rounded" />{{ $t('add') }}
+          </ElButton>
+          <ElButton type="danger" plain>
+            <div class="i-material-symbols:delete-outline-rounded" />{{ $t('remove') }}
+          </ElButton>
+          <ElButton type="warning" plain @click="dialogVisible = true">
+            <div class="i-material-symbols:upload-file-outline-rounded" />{{ $t('import') }}
+          </ElButton>
+          <ElButton type="success" plain>
+            <div class="i-material-symbols:file-save-outline-rounded" />{{ $t('export') }}
+          </ElButton>
+        </ElCol>
 
-          <ElCol :span="8" class="text-right">
-            <ElTooltip class="box-item" effect="dark" :content="$t('refresh')" placement="top">
-              <ElButton type="primary" plain circle @click="load">
-                <div class="i-material-symbols:refresh-rounded" />
-              </ElButton>
-            </ElTooltip>
+        <ElCol :span="8" class="text-right">
+          <ElTooltip class="box-item" effect="dark" :content="$t('refresh')" placement="top">
+            <ElButton type="primary" plain circle @click="load">
+              <div class="i-material-symbols:refresh-rounded" />
+            </ElButton>
+          </ElTooltip>
 
-            <ElTooltip :content="$t('column') + $t('settings')" placement="top">
-              <span class="inline-block ml-3 h-8">
-                <ElPopover :width="200" trigger="click">
-                  <template #reference>
-                    <ElButton type="success" plain circle>
-                      <div class="i-material-symbols:format-list-bulleted" />
-                    </ElButton>
-                  </template>
-                  <div>
-                    <ElCheckbox v-model="checkAll" :indeterminate="isIndeterminate" @change="handleCheckAllChange">
-                      全选
-                    </ElCheckbox>
-                    <ElDivider />
-                    <ElCheckboxGroup v-model="checkedColumns" @change="handleCheckedChange">
-                      <draggable v-model="columns" item-key="simple">
-                        <template #item="{ element }">
-                          <div class="flex items-center space-x-2">
-                            <div class="i-material-symbols:drag-indicator w-4 h-4 hover:cursor-move" />
-                            <ElCheckbox :label="element" :value="element" :disabled="element === columns[0]">
-                              <div class="inline-flex items-center space-x-4">
-                                {{ $t(element) }}
-                              </div>
-                            </ElCheckbox>
-                          </div>
-                        </template>
-                      </draggable>
-                    </ElCheckboxGroup>
-                  </div>
-                </ElPopover>
-              </span>
-            </ElTooltip>
-          </ElCol>
-        </ElRow>
-
-        <ElTable v-loading="loading" :data="datas" lazy :load="load" row-key="id" stripe table-layout="auto"
-          highlight-current-row>
-          <ElTableColumn type="selection" width="55" />
-          <ElTableColumn prop="name" :label="$t('name')" />
-          <ElTableColumn prop="areaCode" :label="$t('areaCode')" />
-          <ElTableColumn prop="postalCode" :label="$t('postalCode')" />
-          <ElTableColumn prop="enabled" :label="$t('enabled')">
-            <template #default="scope">
-              <ElSwitch size="small" v-model="scope.row.enabled"
-                style="--el-switch-on-color: var(--el-color-success);" />
-            </template>
-          </ElTableColumn>
-          <ElTableColumn show-overflow-tooltip prop="description" :label="$t('description')" />
-          <ElTableColumn :label="$t('actions')">
-            <template #default="scope">
-              <ElButton size="small" type="primary" link @click="editRow(scope.row.id)">
-                <div class="i-material-symbols:edit-outline-rounded" />{{ $t('edit') }}
-              </ElButton>
-              <ElPopconfirm :title="$t('removeConfirm')" :width="240" @confirm="confirmEvent(scope.row.id)">
+          <ElTooltip :content="$t('column') + $t('settings')" placement="top">
+            <span class="inline-block ml-3 h-8">
+              <ElPopover :width="200" trigger="click">
                 <template #reference>
-                  <ElButton size="small" type="danger" link>
-                    <div class="i-material-symbols:delete-outline-rounded" />{{ $t('remove') }}
+                  <ElButton type="success" plain circle>
+                    <div class="i-material-symbols:format-list-bulleted" />
                   </ElButton>
                 </template>
-              </ElPopconfirm>
-            </template>
-          </ElTableColumn>
-        </ElTable>
-        <ElPagination layout="prev, pager, next, sizes, jumper, ->, total" @change="pageChange"
-          :total="pagination.total" />
-      </ElCard>
-    </ElSpace>
+                <div>
+                  <ElCheckbox v-model="checkAll" :indeterminate="isIndeterminate" @change="handleCheckAllChange">
+                    全选
+                  </ElCheckbox>
+                  <ElDivider />
+                  <ElCheckboxGroup v-model="checkedColumns" @change="handleCheckedChange">
+                    <draggable v-model="columns" item-key="simple">
+                      <template #item="{ element }">
+                        <div class="flex items-center space-x-2">
+                          <div class="i-material-symbols:drag-indicator w-4 h-4 hover:cursor-move" />
+                          <ElCheckbox :label="element" :value="element" :disabled="element === columns[0]">
+                            <div class="inline-flex items-center space-x-4">
+                              {{ $t(element) }}
+                            </div>
+                          </ElCheckbox>
+                        </div>
+                      </template>
+                    </draggable>
+                  </ElCheckboxGroup>
+                </div>
+              </ElPopover>
+            </span>
+          </ElTooltip>
+        </ElCol>
+      </ElRow>
 
-    <Dialog v-model="dialogVisible" :title="$t('regions')" width="25%">
-      <ElForm ref="formRef" :model="form" :rules="rules" label-position="top">
-        <ElRow :gutter="20" class="w-full !mx-0">
-          <ElCol>
-            <ElFormItem :label="$t('name')" prop="name">
-              <ElInput v-model="form.name" :placeholder="$t('inputText') + $t('name')" />
-            </ElFormItem>
-          </ElCol>
-        </ElRow>
-        <ElRow :gutter="20" class="w-full !mx-0">
-          <ElCol>
-            <ElFormItem :label="$t('description')" prop="description">
-              <ElInput v-model="form.description" type="textarea" :placeholder="$t('inputText') + $t('description')" />
-            </ElFormItem>
-          </ElCol>
-        </ElRow>
-      </ElForm>
-      <template #footer>
-        <ElButton @click="dialogVisible = false">
-          <div class="i-material-symbols:close" />{{ $t('cancel') }}
-        </ElButton>
-        <ElButton type="primary" :loading="saveLoading" @click="onSubmit">
-          <div class="i-material-symbols:check-circle-outline-rounded" /> {{ $t('submit') }}
-        </ElButton>
-      </template>
-    </Dialog>
-  </div>
+      <ElTable v-loading="loading" :data="datas" lazy :load="load" row-key="id" stripe table-layout="auto"
+        highlight-current-row>
+        <ElTableColumn type="selection" width="55" />
+        <ElTableColumn type="expand">
+          <template #default="props">
+            <SubPage :superior-id="props.row.id" :title="props.row.name" />
+          </template>
+        </ElTableColumn>
+        <ElTableColumn prop="name" :label="$t('name')" />
+        <ElTableColumn prop="areaCode" :label="$t('areaCode')" />
+        <ElTableColumn prop="postalCode" :label="$t('postalCode')" />
+        <ElTableColumn prop="enabled" :label="$t('enabled')">
+          <template #default="scope">
+            <ElSwitch size="small" v-model="scope.row.enabled" style="--el-switch-on-color: var(--el-color-success);" />
+          </template>
+        </ElTableColumn>
+        <ElTableColumn show-overflow-tooltip prop="description" :label="$t('description')" />
+        <ElTableColumn :label="$t('actions')">
+          <template #default="scope">
+            <ElButton size="small" type="primary" link @click="editRow(scope.row.id)">
+              <div class="i-material-symbols:edit-outline-rounded" />{{ $t('edit') }}
+            </ElButton>
+            <ElPopconfirm :title="$t('removeConfirm')" :width="240" @confirm="confirmEvent(scope.row.id)">
+              <template #reference>
+                <ElButton size="small" type="danger" link>
+                  <div class="i-material-symbols:delete-outline-rounded" />{{ $t('remove') }}
+                </ElButton>
+              </template>
+            </ElPopconfirm>
+          </template>
+        </ElTableColumn>
+      </ElTable>
+      <ElPagination layout="prev, pager, next, sizes, jumper, ->, total" @change="pageChange"
+        :total="pagination.total" />
+    </ElCard>
+  </ElSpace>
+
+  <Dialog v-model="dialogVisible" :title="$t('regions')" width="25%">
+    <ElForm ref="formRef" :model="form" :rules="rules" label-position="top">
+      <ElRow :gutter="20" class="w-full !mx-0">
+        <ElCol>
+          <ElFormItem :label="$t('name')" prop="name">
+            <ElInput v-model="form.name" :placeholder="$t('inputText') + $t('name')" />
+          </ElFormItem>
+        </ElCol>
+      </ElRow>
+      <ElRow :gutter="20" class="w-full !mx-0">
+        <ElCol>
+          <ElFormItem :label="$t('areaCode')" prop="areaCode">
+            <ElInput v-model="form.areaCode" :placeholder="$t('inputText') + $t('areaCode')" />
+          </ElFormItem>
+        </ElCol>
+      </ElRow>
+      <ElRow :gutter="20" class="w-full !mx-0">
+        <ElCol>
+          <ElFormItem :label="$t('postalCode')" prop="postalCode">
+            <ElInput v-model="form.postalCode" :placeholder="$t('inputText') + $t('postalCode')" />
+          </ElFormItem>
+        </ElCol>
+      </ElRow>
+      <ElRow :gutter="20" class="w-full !mx-0">
+        <ElCol>
+          <ElFormItem :label="$t('description')" prop="description">
+            <ElInput v-model="form.description" type="textarea" :placeholder="$t('inputText') + $t('description')" />
+          </ElFormItem>
+        </ElCol>
+      </ElRow>
+    </ElForm>
+    <template #footer>
+      <ElButton @click="dialogVisible = false">
+        <div class="i-material-symbols:close" />{{ $t('cancel') }}
+      </ElButton>
+      <ElButton type="primary" :loading="saveLoading" @click="onSubmit">
+        <div class="i-material-symbols:check-circle-outline-rounded" /> {{ $t('submit') }}
+      </ElButton>
+    </template>
+  </Dialog>
 </template>

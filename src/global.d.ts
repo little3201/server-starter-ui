@@ -8,18 +8,8 @@ declare global {
 
   declare type Recordable<T = any, K = string> = Record<K extends null | undefined ? string : K, T>
 
-  declare type ComponentRef<T> = InstanceType<T>
-
-  declare interface ContextMenuSchema {
-    disabled?: boolean
-    divided?: boolean
-    icon?: string
-    label: string
-    command?: (item: ContextMenuSchema) => void
-  }
-
-  declare interface ContextMenuExpose {
-    elDropdownMenuRef: ComponentRef<typeof ElDropdown>
-    tagItem: RouteLocationNormalizedLoaded
+  declare interface TableColumnFilter {
+    text: string
+    value: number | string
   }
 }

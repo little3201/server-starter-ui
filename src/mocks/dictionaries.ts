@@ -51,10 +51,10 @@ export const dictionariesHandlers = [
     const page = url.searchParams.get('page')
     const size = url.searchParams.get('size')
 
-    // Construct a JSON response with the list of all Dictionarys
+    // Construct a JSON response with the list of all Row
     // as the response body.
     const data = {
-      content: Array.from(datas.slice((Number(page) - 1) * Number(size), Number(page) * Number(size))),
+      content: Array.from(datas.slice(Number(page) * Number(size), (Number(page) + 1) * Number(size))),
       totalElements: datas.length
     }
 
@@ -64,11 +64,11 @@ export const dictionariesHandlers = [
     // Read the intercepted request body as JSON.
     const newData = await request.json() as Dictionary
 
-    // Push the new Dictionary to the map of all Dictionarys.
+    // Push the new Row to the map of all Row.
     datas.push(newData)
 
     // Don't forget to declare a semantic "201 Created"
-    // response and send back the newly created Dictionary!
+    // response and send back the newly created Row!
     return HttpResponse.json(newData, { status: 201 })
   }),
   http.delete('/api/dictionaries/:id', ({ params }) => {
@@ -76,11 +76,11 @@ export const dictionariesHandlers = [
     // argument of the response resolver.
     const { id } = params
 
-    // Let's attempt to grab the Dictionary by its ID.
+    // Let's attempt to grab the Row by its ID.
     const deletedData = datas.filter(item => item.id === Number(id))
 
     // Respond with a "404 Not Found" response if the given
-    // Dictionary ID does not exist.
+    // Row ID does not exist.
     if (!deletedData) {
       return new HttpResponse(null, { status: 404 })
     }

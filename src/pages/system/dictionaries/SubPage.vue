@@ -2,7 +2,7 @@
 import { ref, reactive, onMounted } from 'vue'
 import type { FormInstance, FormRules } from 'element-plus'
 import Dialog from 'components/Dialog.vue'
-import { retrieveDictionarySubset, fetchDictionary } from 'src/api/dictionaries'
+import { retrieveDictionarySubset, fetchDictionary, createDictionary, modifyDictionary, removeDictionary } from 'src/api/dictionaries'
 import type { Dictionary } from 'src/models'
 
 const props = defineProps<{
@@ -17,11 +17,13 @@ const saveLoading = ref<boolean>(false)
 const dialogVisible = ref<boolean>(false)
 
 const formRef = ref<FormInstance>()
-const form = ref<Dictionary>({
+const initialValues: Dictionary = {
   name: '',
   superiorId: props.superiorId,
+  enabled: true,
   order: 1
-})
+}
+const form = ref<Dictionary>({ ...initialValues })
 
 const rules = reactive<FormRules<typeof form>>({
   name: [
@@ -48,6 +50,7 @@ onMounted(() => {
  * @param id 主键
  */
 function editRow(id?: number) {
+  form.value = { ...initialValues }
   if (id) {
     loadOne(id)
   }
@@ -74,8 +77,17 @@ function onSubmit() {
   formEl.validate((valid, fields) => {
     if (valid) {
       saveLoading.value = true
-    } else {
-      console.log('error submit!', fields)
+      if (form.value.id) {
+        modifyDictionary(form.value.id, form.value).then(() => {
+          load()
+          dialogVisible.value = false
+        }).finally(() => saveLoading.value = false)
+      } else {
+        createDictionary(form.value).then(() => {
+          load()
+          dialogVisible.value = false
+        }).finally(() => saveLoading.value = false)
+      }
     }
   })
 }
@@ -84,8 +96,9 @@ function onSubmit() {
  * 删除
  * @param id 主键
  */
-function removeHandler(id: number) {
-  datas.value = datas.value.filter(item => item.id !== id)
+function removeRow(id: number) {
+  removeDictionary(id)
+    .then(() => load())
 }
 
 /**
@@ -94,7 +107,7 @@ function removeHandler(id: number) {
  */
 function confirmEvent(id: number) {
   if (id) {
-    removeHandler(id)
+    removeRow(id)
   }
 }
 
@@ -112,15 +125,13 @@ function confirmEvent(id: number) {
         </ElButton>
         <ElTooltip class="box-item" effect="dark" :content="$t('refresh')" placement="top">
           <ElButton type="primary" plain circle @click="load">
-            <template #icon>
-              <div class="i-material-symbols:refresh-rounded" />
-            </template>
+            <div class="i-material-symbols:refresh-rounded" />
           </ElButton>
         </ElTooltip>
       </ElCol>
     </ElRow>
 
-    <ElTable v-loading="loading" :data="datas" lazy :load="load" title="sss" row-key="id" stripe table-layout="auto">
+    <ElTable v-loading="loading" :data="datas" lazy :load="load" row-key="id" stripe table-layout="auto">
       <ElTableColumn type="selection" width="55" />
       <ElTableColumn prop="name" :label="$t('name')" />
       <ElTableColumn prop="enabled" :label="$t('enabled')">
@@ -147,7 +158,7 @@ function confirmEvent(id: number) {
     </ElTable>
   </ElCard>
 
-  <Dialog v-model="dialogVisible" :title="$t('dictionary')" width="25%">
+  <Dialog v-model="dialogVisible" :title="$t('dictionary')" width="36%">
     <ElForm ref="formRef" :model="form" :rules="rules" label-position="top">
       <ElRow :gutter="20" class="w-full !mx-0">
         <ElCol :span="12">
@@ -157,7 +168,8 @@ function confirmEvent(id: number) {
         </ElCol>
         <ElCol :span="12">
           <ElFormItem :label="$t('order')" prop="order">
-            <ElInputNumber v-model="form.order" :placeholder="$t('inputText') + $t('order')" />
+            <ElInputNumber v-model="form.order" :placeholder="$t('inputText') + $t('order')" :min="1" :max="299"
+              step-strictly />
           </ElFormItem>
         </ElCol>
       </ElRow>
