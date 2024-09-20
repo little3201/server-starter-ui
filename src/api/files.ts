@@ -10,7 +10,7 @@ import type { File } from 'src/models'
  * @returns Rows data
  */
 export const retrieveFiles = (page: number, size: number, params?: object) => {
-  return api.get(SERVER_URL.FILE, { params: { page, size, ...params } })
+  return api.get(SERVER_URL.FILE, { params: { page: page - 1, size, ...params } })
 }
 
 /**

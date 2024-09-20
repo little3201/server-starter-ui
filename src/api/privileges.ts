@@ -10,7 +10,7 @@ import type { Privilege } from 'src/models'
  * @returns Rows data
  */
 export const retrievePrivileges = (page: number, size: number, params?: object) => {
-  return api.get(SERVER_URL.PRIVILEGE, { params: { page, size, ...params } })
+  return api.get(SERVER_URL.PRIVILEGE, { params: { page: page - 1, size, ...params } })
 }
 
 /**

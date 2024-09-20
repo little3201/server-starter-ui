@@ -9,7 +9,7 @@ import { SERVER_URL } from 'src/api/paths'
  * @returns Rows data
  */
 export const retrieveSchedulerLogs = (page: number, size: number, params?: object) => {
-  return api.get(SERVER_URL.SCHEDULER_LOG, { params: { page, size, ...params } })
+  return api.get(SERVER_URL.SCHEDULER_LOG, { params: { page: page - 1, size, ...params } })
 }
 
 /**

@@ -9,7 +9,7 @@ import { SERVER_URL } from 'src/api/paths'
  * @returns Rows data
  */
 export const retrieveTables = (page: number, size: number, params?: object) => {
-  return api.get(SERVER_URL.TABLE, { params: { page, size, ...params } })
+  return api.get(SERVER_URL.TABLE, { params: { page: page - 1, size, ...params } })
 }
 
 export const retrieveTableColumns = (id: number) => {

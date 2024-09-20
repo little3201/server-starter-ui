@@ -1,31 +1,31 @@
 import { http, HttpResponse } from 'msw'
-import type { Organization, TreeNode } from 'src/models'
+import type { Group, TreeNode } from 'src/models'
 
-const datas: Organization[] = [
+const datas: Group[] = [
   {
     id: 1,
-    name: 'organization_1',
+    name: 'group_1',
     enabled: true,
     description: 'This is region description about xxx'
   },
   {
     id: 2,
     superiorId: 1,
-    name: 'organization_2',
+    name: 'group_2',
     enabled: true,
     description: 'This is region description about xxx'
   },
   {
     id: 3,
     superiorId: 1,
-    name: 'organization_3',
+    name: 'group_3',
     enabled: true,
     description: 'This is region description about xxx'
   },
   {
     id: 4,
     superiorId: 3,
-    name: 'organization_4',
+    name: 'group_4',
     enabled: true,
     description: 'This is region description about xxx'
   }
@@ -34,21 +34,21 @@ const datas: Organization[] = [
 const treeNodes: TreeNode[] = [
   {
     id: 1,
-    name: 'organization_1',
+    name: 'group_1',
     children: [
       {
         id: 2,
-        name: 'organization_2',
+        name: 'group_2',
         children: [
         ]
       },
       {
         id: 3,
-        name: 'organization_3',
+        name: 'group_3',
         children: [
           {
             id: 4,
-            name: 'organization_4',
+            name: 'group_4',
             children: [
             ]
           }
@@ -58,11 +58,11 @@ const treeNodes: TreeNode[] = [
   }
 ]
 
-export const organizationsHandlers = [
-  http.get('/api/organizations/tree', () => {
+export const groupsHandlers = [
+  http.get('/api/groups/tree', () => {
     return HttpResponse.json(treeNodes)
   }),
-  http.get('/api/organizations/:id', ({ params }) => {
+  http.get('/api/groups/:id', ({ params }) => {
     const { id } = params
     if (id) {
       let array = datas.filter(item => item.id === Number(id))
@@ -71,7 +71,7 @@ export const organizationsHandlers = [
       return HttpResponse.json(null)
     }
   }),
-  http.get('/api/organizations', ({ request }) => {
+  http.get('/api/groups', ({ request }) => {
     const url = new URL(request.url)
     const page = url.searchParams.get('page')
     const size = url.searchParams.get('size')
@@ -80,15 +80,15 @@ export const organizationsHandlers = [
     // as the response body.
     const filtered = datas.filter(item => item.superiorId === Number(superiorId))
     const data = {
-      content: Array.from(filtered.slice((Number(page) - 1) * Number(size), Number(page) * Number(size))),
+      content: Array.from(filtered.slice(Number(page) * Number(size), (Number(page) + 1) * Number(size))),
       totalElements: datas.length
     }
 
     return HttpResponse.json(data)
   }),
-  http.post('/api/organizations', async ({ request }) => {
+  http.post('/api/groups', async ({ request }) => {
     // Read the intercepted request body as JSON.
-    const newData = await request.json() as Organization
+    const newData = await request.json() as Group
 
     // Push the new Row to the map of all Row.
     datas.push(newData)
@@ -97,7 +97,7 @@ export const organizationsHandlers = [
     // response and send back the newly created Row!
     return HttpResponse.json(newData, { status: 201 })
   }),
-  http.delete('/api/organizations/:id', ({ params }) => {
+  http.delete('/api/groups/:id', ({ params }) => {
     // All request path params are provided in the "params"
     // argument of the response resolver.
     const { id } = params

@@ -3,8 +3,8 @@ import { ref, reactive, onMounted, watch } from 'vue'
 import type { FormInstance, FormRules } from 'element-plus'
 import draggable from 'vuedraggable'
 import Dialog from 'components/Dialog.vue'
-import { retrieveOrganizationTree } from 'src/api/organizations'
-import { retrieveUsers, fetchUser } from 'src/api/users'
+import { retrieveGroupTree } from 'src/api/groups'
+import { retrieveUsers, fetchUser, createUser, modifyUser, removeUser } from 'src/api/users'
 import { retrieveRoles } from 'src/api/roles'
 import type { TreeNode, User, Role } from 'src/models'
 
@@ -26,8 +26,7 @@ const treeLoading = ref<boolean>(false)
 const currentNodeKey = ref<number>()
 const currentNode = ref('')
 
-const organizationTree = ref<TreeNode[]>([])
-const organizationsOptions = ref<TreeNode[]>([])
+const groupTree = ref<TreeNode[]>([])
 const roles = ref<Role[]>([])
 
 const saveLoading = ref<boolean>(false)
@@ -42,9 +41,9 @@ const formRef = ref<FormInstance>()
 const initialValues: User = {
   username: '',
   email: '',
-  role: null,
+  roleId: null,
   accountNonLocked: true,
-  organization: null
+  groupId: null
 }
 const form = ref<User>({ ...initialValues })
 
@@ -75,7 +74,6 @@ function currentChange(data: TreeNode) {
   }
   currentNodeKey.value = data.id
   pagination.page = 1
-  form.value.organization = currentNodeKey.value
   load()
 }
 
@@ -84,10 +82,11 @@ function currentChange(data: TreeNode) {
  */
 async function loadTree() {
   treeLoading.value = true
-  retrieveOrganizationTree().then(res => {
-    organizationTree.value = res.data
-    currentNodeKey.value =
-      (res.data[0] && res.data[0]?.id) || ''
+  retrieveGroupTree().then(res => {
+    groupTree.value = res.data
+    if (!currentNodeKey.value) {
+      currentNodeKey.value = (res.data[0] && res.data[0]?.id) || ''
+    }
 
     treeEl.value.setCurrentKey(currentNodeKey.value)
 
@@ -107,20 +106,11 @@ function pageChange(currentPage: number, pageSize: number) {
 }
 
 /**
- * 加载组织树
- */
-function fetchOrganizations() {
-  retrieveOrganizationTree().then(res => {
-    organizationsOptions.value = res.data
-  })
-}
-
-/**
  * 加载角色
  */
 function fetchRoles() {
-  retrieveRoles().then(res => {
-    roles.value = res.data
+  retrieveRoles(1, 99).then(res => {
+    roles.value = res.data.content
   })
 }
 
@@ -159,7 +149,6 @@ function reset() {
 
 onMounted(() => {
   loadTree()
-  fetchOrganizations()
   fetchRoles()
 })
 
@@ -205,8 +194,18 @@ function onSubmit() {
   formEl.validate((valid, fields) => {
     if (valid) {
       saveLoading.value = true
-    } else {
-      console.log('error submit!', fields)
+      if (form.value.id) {
+        modifyUser(form.value.id, form.value).then(() => {
+          load()
+          dialogVisible.value = false
+        }).finally(() => saveLoading.value = false)
+      } else {
+        form.value.groupId = currentNodeKey.value
+        createUser(form.value).then(() => {
+          load()
+          dialogVisible.value = false
+        }).finally(() => saveLoading.value = false)
+      }
     }
   })
 }
@@ -216,7 +215,7 @@ function onSubmit() {
  * @param id 主键
  */
 function removeRow(id: number) {
-  datas.value = datas.value.filter(item => item.id !== id)
+  removeUser(id).then(() => load())
 }
 
 /**
@@ -268,9 +267,9 @@ function handleCheckedChange(value: string[]) {
         </ElInput>
       </ElFormItem>
       <ElDivider />
-      <ElTree ref="treeEl" v-loading="treeLoading" :data="organizationTree" default-expand-all
-        :expand-on-click-node="false" node-key="id" :current-node-key="currentNodeKey" :props="{ label: 'name' }"
-        :filter-node-method="filterNode" @current-change="currentChange">
+      <ElTree ref="treeEl" v-loading="treeLoading" :data="groupTree" default-expand-all :expand-on-click-node="false"
+        node-key="id" :current-node-key="currentNodeKey" :props="{ label: 'name' }" :filter-node-method="filterNode"
+        @current-change="currentChange">
       </ElTree>
     </ElCard>
 
@@ -407,19 +406,19 @@ function handleCheckedChange(value: string[]) {
       <ElRow :gutter="20" class="w-full !mx-0">
         <ElCol :span="12">
           <ElFormItem :label="$t('username')" prop="username">
-            <ElInput v-model="form.username" :placeholder="$t('inputText') + $t('username')" />
+            <ElInput v-model="form.username" :placeholder="$t('inputText') + $t('username')" :maxLength="50" />
           </ElFormItem>
         </ElCol>
         <ElCol :span="12">
           <ElFormItem :label="$t('email')" prop="email">
-            <ElInput type="email" v-model="form.email" :placeholder="$t('inputText') + $t('email')" />
+            <ElInput type="email" v-model="form.email" :placeholder="$t('inputText') + $t('email')" :maxLength="50" />
           </ElFormItem>
         </ElCol>
       </ElRow>
       <ElRow :gutter="20" class="w-full !mx-0">
         <ElCol :span="12">
           <ElFormItem :label="$t('roles')" prop="role">
-            <ElSelect v-model="form.role" :placeholder="$t('selectText') + $t('role')">
+            <ElSelect v-model="form.roleId" :placeholder="$t('selectText') + $t('roles')">
               <ElOption v-for="item in roles" :key="item.id" :label="item.name" :value="item.id" />
             </ElSelect>
           </ElFormItem>

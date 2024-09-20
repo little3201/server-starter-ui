@@ -3,12 +3,12 @@ import { ref, reactive, onMounted, watch } from 'vue'
 import type { FormInstance, FormRules } from 'element-plus'
 import draggable from 'vuedraggable'
 import Dialog from 'components/Dialog.vue'
-import { retrieveOrganizations, retrieveOrganizationTree, fetchOrganization } from 'src/api/organizations'
-import type { Organization, TreeNode } from 'src/models'
+import { retrieveGroups, retrieveGroupTree, fetchGroup, createGroup, modifyGroup, removeGroup } from 'src/api/groups'
+import type { Group, TreeNode } from 'src/models'
 
 
 const loading = ref<boolean>(false)
-const datas = ref<Array<Organization>>([])
+const datas = ref<Array<Group>>([])
 const pagination = reactive({
   page: 1,
   size: 10,
@@ -25,7 +25,7 @@ const treeLoading = ref<boolean>(false)
 const currentNodeKey = ref<number>()
 const currentNode = ref('')
 
-const organizationTree = ref<TreeNode[]>([])
+const groupTree = ref<TreeNode[]>([])
 const saveLoading = ref<boolean>(false)
 const dialogVisible = ref<boolean>(false)
 
@@ -34,12 +34,12 @@ const searchForm = ref({
 })
 
 const formRef = ref<FormInstance>()
-const initialValues: Organization = {
+const initialValues: Group = {
   name: '',
   enabled: true,
   description: ''
 }
-const form = ref<Organization>({ ...initialValues })
+const form = ref<Group>({ ...initialValues })
 
 const rules = reactive<FormRules<typeof form>>({
   name: [
@@ -65,7 +65,6 @@ function currentChange(data: TreeNode) {
   }
   currentNodeKey.value = data.id
   pagination.page = 1
-  form.value.superiorId = currentNodeKey.value
   load()
 }
 
@@ -74,10 +73,11 @@ function currentChange(data: TreeNode) {
  */
 async function loadTree() {
   treeLoading.value = true
-  retrieveOrganizationTree().then(res => {
-    organizationTree.value = res.data
-    currentNodeKey.value =
-      (res.data[0] && res.data[0]?.id) || ''
+  retrieveGroupTree().then(res => {
+    groupTree.value = res.data
+    if (!currentNodeKey.value) {
+      currentNodeKey.value = (res.data[0] && res.data[0]?.id) || ''
+    }
 
     treeEl.value.setCurrentKey(currentNodeKey.value)
 
@@ -101,7 +101,7 @@ function pageChange(currentPage: number, pageSize: number) {
  */
 async function load() {
   loading.value = true
-  retrieveOrganizations(pagination.page, pagination.size, currentNodeKey.value, searchForm.value).then(res => {
+  retrieveGroups(pagination.page, pagination.size, currentNodeKey.value, searchForm.value).then(res => {
     datas.value = res.data.content
     pagination.total = res.data.totalElements
   }).finally(() => loading.value = false)
@@ -148,7 +148,7 @@ function editRow(id?: number) {
  * @param id 主键
  */
 async function loadOne(id: number) {
-  fetchOrganization(id).then(res => {
+  fetchGroup(id).then(res => {
     form.value = res.data
   })
 }
@@ -163,8 +163,20 @@ function onSubmit() {
   formEl.validate((valid, fields) => {
     if (valid) {
       saveLoading.value = true
-    } else {
-      console.log('error submit!', fields)
+      if (form.value.id) {
+        modifyGroup(form.value.id, form.value).then(() => {
+          load()
+          loadTree()
+          dialogVisible.value = false
+        }).finally(() => saveLoading.value = false)
+      } else {
+        form.value.superiorId = currentNodeKey.value
+        createGroup(form.value).then(() => {
+          load()
+          loadTree()
+          dialogVisible.value = false
+        }).finally(() => saveLoading.value = false)
+      }
     }
   })
 }
@@ -174,7 +186,10 @@ function onSubmit() {
  * @param id 主键
  */
 function removeRow(id: number) {
-  datas.value = datas.value.filter(item => item.id !== id)
+  removeGroup(id).then(() => {
+    load()
+    loadTree()
+  })
 }
 
 /**
@@ -218,9 +233,9 @@ function handleCheckedChange(value: string[]) {
         </ElInput>
       </ElFormItem>
       <ElDivider />
-      <ElTree ref="treeEl" v-loading="treeLoading" :data="organizationTree" default-expand-all
-        :expand-on-click-node="false" node-key="id" :current-node-key="currentNodeKey" :props="{ label: 'name' }"
-        :filter-node-method="filterNode" @current-change="currentChange">
+      <ElTree ref="treeEl" v-loading="treeLoading" :data="groupTree" default-expand-all :expand-on-click-node="false"
+        node-key="id" :current-node-key="currentNodeKey" :props="{ label: 'name' }" :filter-node-method="filterNode"
+        @current-change="currentChange">
       </ElTree>
     </ElCard>
 
@@ -333,7 +348,7 @@ function handleCheckedChange(value: string[]) {
     </div>
   </div>
 
-  <Dialog v-model="dialogVisible" :title="$t('organizations')" width="25%">
+  <Dialog v-model="dialogVisible" :title="$t('groups')" width="25%">
     <ElForm ref="formRef" :model="form" :rules="rules" label-position="top">
       <ElRow :gutter="20" class="w-full !mx-0">
         <ElCol>

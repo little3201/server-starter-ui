@@ -26,7 +26,7 @@ export default {
   principal: '负责人',
   all: '全部',
   yourself: '仅自己',
-  yourOrganization: '本部门',
+  yourGroup: '所在分组',
   custom: '自定义',
   component: '组件',
   order: '顺序',
@@ -89,7 +89,7 @@ export default {
 
   home: '首页',
   system: '系统管理',
-  organizations: '组织',
+  groups: '分组',
   roles: '角色',
   privileges: '权限',
   users: '用户',

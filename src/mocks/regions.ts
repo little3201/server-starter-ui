@@ -10,7 +10,6 @@ for (let i = 1; i < 34; i++) {
     name: 'region_' + i,
     areaCode: (11 + i) * 10000,
     postalCode: (11 + i),
-    count: i - 1,
     enabled: i % 3 > 0,
     description: 'This is region description about xxx'
   }
@@ -21,7 +20,6 @@ for (let i = 1; i < 34; i++) {
       superiorId: i,
       areaCode: data.areaCode + j,
       postalCode: data.postalCode + j,
-      count: 0,
       enabled: j % 2 > 0,
       description: 'This is region description about xxx'
     }
@@ -31,21 +29,14 @@ for (let i = 1; i < 34; i++) {
 }
 
 export const regionsHandlers = [
-  http.get('/api/regions/:id/subset', ({ params, request }) => {
+  http.get('/api/regions/:id/subset', ({ params }) => {
     const { id } = params
 
-    const url = new URL(request.url)
-    const page = url.searchParams.get('page')
-    const size = url.searchParams.get('size')
     // Construct a JSON response with the list of all Row
     // as the response body.
     const filtered = subDatas.filter(item => item.superiorId === Number(id))
-    const data = {
-      content: Array.from(filtered.slice((Number(page) - 1) * Number(size), Number(page) * Number(size))),
-      totalElements: filtered.length
-    }
 
-    return HttpResponse.json(data)
+    return HttpResponse.json(filtered)
   }),
   http.get('/api/regions/:id', ({ params }) => {
     const { id } = params
@@ -66,7 +57,7 @@ export const regionsHandlers = [
     // Construct a JSON response with the list of all Row
     // as the response body.
     const data = {
-      content: Array.from(datas.slice((Number(page) - 1) * Number(size), Number(page) * Number(size))),
+      content: Array.from(datas.slice(Number(page) * Number(size), (Number(page) + 1) * Number(size))),
       totalElements: datas.length
     }
 

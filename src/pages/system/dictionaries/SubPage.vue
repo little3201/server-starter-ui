@@ -2,7 +2,7 @@
 import { ref, reactive, onMounted } from 'vue'
 import type { FormInstance, FormRules } from 'element-plus'
 import Dialog from 'components/Dialog.vue'
-import { retrieveDictionarySubset, fetchDictionary } from 'src/api/dictionaries'
+import { retrieveDictionarySubset, fetchDictionary, createDictionary, modifyDictionary, removeDictionary } from 'src/api/dictionaries'
 import type { Dictionary } from 'src/models'
 
 const props = defineProps<{
@@ -20,6 +20,7 @@ const formRef = ref<FormInstance>()
 const initialValues: Dictionary = {
   name: '',
   superiorId: props.superiorId,
+  enabled: true,
   order: 1
 }
 const form = ref<Dictionary>({ ...initialValues })
@@ -76,8 +77,17 @@ function onSubmit() {
   formEl.validate((valid, fields) => {
     if (valid) {
       saveLoading.value = true
-    } else {
-      console.log('error submit!', fields)
+      if (form.value.id) {
+        modifyDictionary(form.value.id, form.value).then(() => {
+          load()
+          dialogVisible.value = false
+        }).finally(() => saveLoading.value = false)
+      } else {
+        createDictionary(form.value).then(() => {
+          load()
+          dialogVisible.value = false
+        }).finally(() => saveLoading.value = false)
+      }
     }
   })
 }
@@ -87,7 +97,8 @@ function onSubmit() {
  * @param id 主键
  */
 function removeRow(id: number) {
-  datas.value = datas.value.filter(item => item.id !== id)
+  removeDictionary(id)
+    .then(() => load())
 }
 
 /**
@@ -157,7 +168,8 @@ function confirmEvent(id: number) {
         </ElCol>
         <ElCol :span="12">
           <ElFormItem :label="$t('order')" prop="order">
-            <ElInputNumber v-model="form.order" :placeholder="$t('inputText') + $t('order')" />
+            <ElInputNumber v-model="form.order" :placeholder="$t('inputText') + $t('order')" :min="1" :max="299"
+              step-strictly />
           </ElFormItem>
         </ElCol>
       </ElRow>

@@ -10,7 +10,7 @@ import type { Dictionary } from 'src/models'
  * @returns Rows data
  */
 export const retrieveDictionaries = (page: number, size: number, params?: object) => {
-  return api.get(SERVER_URL.DICTIONARY, { params: { page, size, ...params } })
+  return api.get(SERVER_URL.DICTIONARY, { params: { page: page - 1, size, ...params } })
 }
 
 /**

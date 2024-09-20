@@ -4,7 +4,7 @@ import type { FormInstance, FormRules } from 'element-plus'
 import draggable from 'vuedraggable'
 import Dialog from 'components/Dialog.vue'
 import SubPage from './SubPage.vue'
-import { retrieveRegions, fetchRegion } from 'src/api/regions'
+import { retrieveRegions, fetchRegion, createRegion, modifyRegion, removeRegion } from 'src/api/regions'
 import type { Region } from 'src/models'
 
 const loading = ref<boolean>(false)
@@ -30,8 +30,8 @@ const searchForm = ref({
 const formRef = ref<FormInstance>()
 const initialValues: Region = {
   name: '',
-  areaCode: 0,
-  postalCode: 0,
+  areaCode: null,
+  postalCode: null,
   description: ''
 }
 const form = ref<Region>({ ...initialValues })
@@ -59,13 +59,7 @@ function pageChange(currentPage: number, pageSize: number) {
 async function load() {
   loading.value = true
   retrieveRegions(pagination.page, pagination.size, searchForm.value).then(res => {
-    let list = res.data.content
-    list.forEach((element: Region) => {
-      if (element.count && element.count > 0) {
-        element.hasChildren = true
-      }
-    })
-    datas.value = list
+    datas.value = res.data.content
     pagination.total = res.data.totalElements
   }).finally(() => loading.value = false)
 }
@@ -116,8 +110,17 @@ function onSubmit() {
   formEl.validate((valid, fields) => {
     if (valid) {
       saveLoading.value = true
-    } else {
-      console.log('error submit!', fields)
+      if (form.value.id) {
+        modifyRegion(form.value.id, form.value).then(() => {
+          load()
+          dialogVisible.value = false
+        }).finally(() => saveLoading.value = false)
+      } else {
+        createRegion(form.value).then(() => {
+          load()
+          dialogVisible.value = false
+        }).finally(() => saveLoading.value = false)
+      }
     }
   })
 }
@@ -127,7 +130,7 @@ function onSubmit() {
  * @param id 主键
  */
 function removeRow(id: number) {
-  datas.value = datas.value.filter(item => item.id !== id)
+  removeRegion(id).then(() => load())
 }
 
 /**
@@ -279,6 +282,20 @@ function handleCheckedChange(value: string[]) {
         <ElCol>
           <ElFormItem :label="$t('name')" prop="name">
             <ElInput v-model="form.name" :placeholder="$t('inputText') + $t('name')" />
+          </ElFormItem>
+        </ElCol>
+      </ElRow>
+      <ElRow :gutter="20" class="w-full !mx-0">
+        <ElCol>
+          <ElFormItem :label="$t('areaCode')" prop="areaCode">
+            <ElInput v-model="form.areaCode" :placeholder="$t('inputText') + $t('areaCode')" />
+          </ElFormItem>
+        </ElCol>
+      </ElRow>
+      <ElRow :gutter="20" class="w-full !mx-0">
+        <ElCol>
+          <ElFormItem :label="$t('postalCode')" prop="postalCode">
+            <ElInput v-model="form.postalCode" :placeholder="$t('inputText') + $t('postalCode')" />
           </ElFormItem>
         </ElCol>
       </ElRow>

@@ -68,9 +68,9 @@ const subDatas: Privilege[] = [
   {
     id: 2,
     superiorId: 1,
-    path: 'organizations',
-    component: 'pages/system/organizations/Index',
-    name: 'organizations',
+    path: 'groups',
+    component: 'pages/system/groups/Index',
+    name: 'groups',
     order: 1,
     count: 0,
     enabled: true,
@@ -236,9 +236,9 @@ const treeNodes: PrivilegeTreeNode[] = [
     children: [
       {
         id: 2,
-        path: 'organizations',
-        component: 'pages/system/organizations/Index',
-        name: 'organizations',
+        path: 'groups',
+        component: 'pages/system/groups/Index',
+        name: 'groups',
         icon: 'i-material-symbols:account-tree-outline-rounded'
       },
       {
@@ -400,7 +400,7 @@ export const privilegesHandlers = [
     // Construct a JSON response with the list of all Row
     // as the response body.
     const data = {
-      content: Array.from(datas.slice((Number(page) - 1) * Number(size), Number(page) * Number(size))),
+      content: Array.from(datas.slice(Number(page) * Number(size), (Number(page) + 1) * Number(size))),
       totalElements: datas.length
     }
 

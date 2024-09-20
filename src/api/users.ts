@@ -6,12 +6,12 @@ import type { User } from 'src/models'
  * Retrieve rows
  * @param page Page number
  * @param size Items per page
- * @param organizationId organization ID
+ * @param groupId group ID
  * @param params Optional filter or sort parameters
  * @returns Rows data
  */
-export const retrieveUsers = (page: number, size: number, organizationId: number | undefined, params?: object) => {
-  return api.get(SERVER_URL.USER, { params: { page, size, organizationId, ...params } })
+export const retrieveUsers = (page: number, size: number, groupId: number | undefined, params?: object) => {
+  return api.get(SERVER_URL.USER, { params: { page: page - 1, size, groupId, ...params } })
 }
 
 /**

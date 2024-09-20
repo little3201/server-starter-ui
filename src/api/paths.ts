@@ -10,10 +10,8 @@ export const SERVER_URL = {
   USER: SERVER_PRE.HYPERVISOR.concat('/users'), // 用户
   ROLE: SERVER_PRE.HYPERVISOR.concat('/roles'), // 角色
   PRIVILEGE: SERVER_PRE.HYPERVISOR.concat('/privileges'), // 权限
-  ORGANIZATION: SERVER_PRE.HYPERVISOR.concat('/organizations'), // 组织
+  GROUP: SERVER_PRE.HYPERVISOR.concat('/groups'), // 分组
   DICTIONARY: SERVER_PRE.HYPERVISOR.concat('/dictionaries'), // 字典
-
-  REGION: SERVER_PRE.HYPERVISOR.concat('/regions'), // 行政区划
 
   ACCESS_LOG: SERVER_PRE.HYPERVISOR.concat('/access-logs'), // 访问日志
   AUDIT_LOG: SERVER_PRE.HYPERVISOR.concat('/audit-logs'), // 审计日志
@@ -25,6 +23,7 @@ export const SERVER_URL = {
   CATEGORY: SERVER_PRE.ASSETS.concat('/categories'), // 类别
   STATISTICS: SERVER_PRE.ASSETS.concat('/statistics'), // 统计
   COMMENT: SERVER_PRE.ASSETS.concat('/comments'), // 评论
+  REGION: SERVER_PRE.ASSETS.concat('/regions'), // 行政区划
   FILE: SERVER_PRE.ASSETS.concat('/files'), // 文件
   TABLE: SERVER_PRE.ASSETS.concat('/tables'), // 表
   SCRIPT: SERVER_PRE.ASSETS.concat('/scripts'), // 脚本

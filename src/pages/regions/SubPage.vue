@@ -2,7 +2,7 @@
 import { ref, reactive, onMounted } from 'vue'
 import type { FormInstance, FormRules } from 'element-plus'
 import Dialog from 'components/Dialog.vue'
-import { retrieveRegionSubset, fetchRegion } from 'src/api/regions'
+import { retrieveRegionSubset, fetchRegion, createRegion, modifyRegion, removeRegion } from 'src/api/regions'
 import type { Region } from 'src/models'
 
 const props = defineProps<{
@@ -12,11 +12,6 @@ const props = defineProps<{
 
 const loading = ref<boolean>(false)
 const datas = ref<Array<Region>>([])
-const pagination = reactive({
-  page: 1,
-  size: 10,
-  total: 0
-})
 
 const saveLoading = ref<boolean>(false)
 const dialogVisible = ref<boolean>(false)
@@ -25,8 +20,8 @@ const formRef = ref<FormInstance>()
 const initialValues: Region = {
   name: '',
   superiorId: props.superiorId,
-  areaCode: 0,
-  postalCode: 0,
+  areaCode: null,
+  postalCode: null,
   description: ''
 }
 const form = ref<Region>({ ...initialValues })
@@ -38,30 +33,12 @@ const rules = reactive<FormRules<typeof form>>({
 })
 
 /**
- * 分页变化
- * @param currentPage 当前页码
- * @param pageSize 分页大小
- */
-function pageChange(currentPage: number, pageSize: number) {
-  pagination.page = currentPage
-  pagination.size = pageSize
-  load()
-}
-
-/**
  * 加载列表
  */
 async function load() {
   loading.value = true
-  retrieveRegionSubset(props.superiorId, pagination.page, pagination.size).then(res => {
-    let list = res.data.content
-    list.forEach((element: Region) => {
-      if (element.count && element.count > 0) {
-        element.hasChildren = true
-      }
-    })
-    datas.value = list
-    pagination.total = res.data.totalElements
+  retrieveRegionSubset(props.superiorId).then(res => {
+    datas.value = res.data
   }).finally(() => loading.value = false)
 
 }
@@ -102,8 +79,18 @@ function onSubmit() {
   formEl.validate((valid, fields) => {
     if (valid) {
       saveLoading.value = true
-    } else {
-      console.log('error submit!', fields)
+      if (form.value.id) {
+        modifyRegion(form.value.id, form.value).then(() => {
+          load()
+          dialogVisible.value = false
+        }).finally(() => saveLoading.value = false)
+      } else {
+        form.value.superiorId = props.superiorId
+        createRegion(form.value).then(() => {
+          load()
+          dialogVisible.value = false
+        }).finally(() => saveLoading.value = false)
+      }
     }
   })
 }
@@ -113,7 +100,7 @@ function onSubmit() {
  * @param id 主键
  */
 function removeRow(id: number) {
-  datas.value = datas.value.filter(item => item.id !== id)
+  removeRegion(id).then(() => load())
 }
 
 /**
@@ -176,7 +163,6 @@ function confirmEvent(id: number) {
         </template>
       </ElTableColumn>
     </ElTable>
-    <ElPagination layout="prev, pager, next, sizes, jumper, ->, total" @change="pageChange" :total="pagination.total" />
   </ElCard>
 
   <Dialog v-model="dialogVisible" :title="$t('regions')" width="25%">
@@ -185,6 +171,20 @@ function confirmEvent(id: number) {
         <ElCol>
           <ElFormItem :label="$t('name')" prop="name">
             <ElInput v-model="form.name" :placeholder="$t('inputText') + $t('name')" />
+          </ElFormItem>
+        </ElCol>
+      </ElRow>
+      <ElRow :gutter="20" class="w-full !mx-0">
+        <ElCol>
+          <ElFormItem :label="$t('areaCode')" prop="areaCode">
+            <ElInput v-model="form.areaCode" :placeholder="$t('inputText') + $t('areaCode')" />
+          </ElFormItem>
+        </ElCol>
+      </ElRow>
+      <ElRow :gutter="20" class="w-full !mx-0">
+        <ElCol>
+          <ElFormItem :label="$t('postalCode')" prop="postalCode">
+            <ElInput v-model="form.postalCode" :placeholder="$t('inputText') + $t('postalCode')" />
           </ElFormItem>
         </ElCol>
       </ElRow>

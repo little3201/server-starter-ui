@@ -11,7 +11,7 @@ import type { Role } from 'src/models'
  */
 export const retrieveRoles = (page?: number, size?: number, params?: object) => {
   if (page && size) {
-    return api.get(SERVER_URL.ROLE, { params: { page, size, ...params } })
+    return api.get(SERVER_URL.ROLE, { params: { page: page - 1, size, ...params } })
   }
   return api.get(SERVER_URL.ROLE)
 }
@@ -35,12 +35,12 @@ export const retrieveRolePrivileges = (id: number) => {
 }
 
 /**
- * Retrieve organizations associated with a role
+ * Retrieve groups associated with a role
  * @param id Role ID
- * @returns Role organizations
+ * @returns Role groups
  */
-export const retrieveRoleOrganizations = (id: number) => {
-  return api.get(`${SERVER_URL.ROLE}/${id}/organizations`)
+export const retrieveRoleGroups = (id: number) => {
+  return api.get(`${SERVER_URL.ROLE}/${id}/groups`)
 }
 
 /**

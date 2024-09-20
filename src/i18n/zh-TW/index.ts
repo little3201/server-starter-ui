@@ -26,7 +26,7 @@ export default {
   principal: '負責人',
   all: '全部',
   yourself: '僅自己',
-  yourOrganization: '本部門',
+  yourGroup: '所在分組',
   custom: '自定義',
   operator: '操作人',
   component: '元件',
@@ -88,7 +88,7 @@ export default {
 
   home: '首頁',
   system: '系統管理',
-  organizations: '組織',
+  groups: '分組',
   roles: '角色',
   privileges: '權限',
   users: '用戶',

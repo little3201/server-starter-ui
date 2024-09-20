@@ -10,11 +10,11 @@ import type { Region } from 'src/models'
  * @returns Rows data
  */
 export const retrieveRegions = (page: number, size: number, params?: object) => {
-  return api.get(SERVER_URL.REGION, { params: { page, size, ...params } })
+  return api.get(SERVER_URL.REGION, { params: { page: page - 1, size, ...params } })
 }
 
-export const retrieveRegionSubset = (id: number, page: number, size: number, params?: object) => {
-  return api.get(`${SERVER_URL.REGION}/${id}/subset`, { params: { page, size, ...params } })
+export const retrieveRegionSubset = (id: number) => {
+  return api.get(`${SERVER_URL.REGION}/${id}/subset`)
 }
 
 /**

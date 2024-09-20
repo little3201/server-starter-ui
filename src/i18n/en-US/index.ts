@@ -26,7 +26,7 @@ export default {
   principal: 'Principal',
   all: 'All',
   yourself: 'Only Yourself',
-  yourOrganization: 'Your Organization',
+  yourGroup: 'Your Group',
   custom: 'Custom',
   component: 'Conponent',
   order: 'Order',
@@ -90,7 +90,7 @@ export default {
 
   home: 'Home',
   system: 'System',
-  organizations: 'Organizations',
+  groups: 'Groups',
   roles: 'Roles',
   privileges: 'Privileges',
   users: 'Users',

@@ -7,15 +7,15 @@ export interface User extends AudtiMetadata {
   username: string
   email: string
   avatar?: string
-  role?: number | null
-  organization?: number | null
+  roleId?: number | null
+  groupId?: number | null
   accountNonLocked?: boolean
   accountExpiresAt?: Date
   credentialsExpiresAt?: Date
   enabled?: boolean
 }
 
-export interface Organization extends AudtiMetadata {
+export interface Group extends AudtiMetadata {
   name: string
   superiorId?: number
   enabled: boolean
@@ -49,7 +49,7 @@ export interface Dictionary extends AudtiMetadata {
   name: string
   superiorId?: number
   order: number
-  enabled?: boolean
+  enabled: boolean
   description?: string
   count?: number
   hasChildren?: boolean
@@ -58,9 +58,8 @@ export interface Dictionary extends AudtiMetadata {
 export interface Region extends AudtiMetadata {
   name: string
   superiorId?: number
-  areaCode: number
-  postalCode: number
-  count?: number
+  areaCode: number | null
+  postalCode: number | null
   hasChildren?: boolean
   enabled?: boolean
   description?: string
