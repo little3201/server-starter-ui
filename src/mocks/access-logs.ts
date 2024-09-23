@@ -5,91 +5,91 @@ const datas: AccessLog[] = [
   {
     id: 1,
     operator: 'admin',
-    api: '/users',
-    method: 'POST',
+    url: '/users',
+    httpMethod: 'POST',
     params: '{"operator:"john", "role:"admin"}',
     ip: '192.168.0.1',
     location: 'New York',
-    responseTime: 120,
-    responseCode: 404,
+    responseTimes: 120,
+    statusCode: 404,
     responseMessage: 'Non Content'
   },
   {
     id: 2,
     operator: 'john',
-    api: '/profile',
-    method: 'PUT',
+    url: '/profile',
+    httpMethod: 'PUT',
     params: '{"email:"john@example.com"}',
     ip: '192.168.0.2',
     location: 'London',
-    responseTime: 100,
-    responseCode: 502,
+    responseTimes: 100,
+    statusCode: 502,
     responseMessage: 'Network Error'
   },
   {
     id: 3,
     operator: 'alice',
-    api: '/posts/123',
-    method: 'DELETE',
+    url: '/posts/123',
+    httpMethod: 'DELETE',
     params: null,
     ip: '192.168.0.3',
     location: 'San Francisco',
-    responseTime: 150,
-    responseCode: 200,
+    responseTimes: 150,
+    statusCode: 200,
     responseMessage: 'Success'
   },
   {
     id: 4,
     operator: 'bob',
-    api: '/files',
-    method: 'POST',
+    url: '/files',
+    httpMethod: 'POST',
     params: '{"file_name:"report.pdf"}',
     ip: '192.168.0.4',
     location: 'Berlin',
-    responseTime: 300,
-    responseCode: 400,
+    responseTimes: 300,
+    statusCode: 400,
     responseMessage: 'File too large'
   },
   {
     id: 5,
     operator: 'carol',
-    api: '/login',
-    method: 'POST',
+    url: '/login',
+    httpMethod: 'POST',
     params: '{}',
     ip: '192.168.0.5',
     location: 'Paris',
-    responseTime: 80,
-    responseCode: 200,
+    responseTimes: 80,
+    statusCode: 200,
     responseMessage: 'Success'
   },
   {
     id: 6,
     operator: 'dave',
-    api: '/logout',
-    method: 'POST',
+    url: '/logout',
+    httpMethod: 'POST',
     params: '{}',
     ip: '192.168.0.6',
     location: 'Tokyo',
-    responseTime: 90,
-    responseCode: 500,
+    responseTimes: 90,
+    statusCode: 500,
     responseMessage: 'Network Request Timeout'
   },
   {
     id: 7,
     operator: 'admin',
-    api: '/users/2/password',
-    method: 'PUT',
+    url: '/users/2/password',
+    httpMethod: 'PUT',
     params: '{"new_password:"secret"}',
     ip: '192.168.0.1',
     location: 'New York',
-    responseTime: 110,
-    responseCode: 200,
+    responseTimes: 110,
+    statusCode: 200,
     responseMessage: 'Success'
   }
 ]
 
 export const accessLogsHandlers = [
-  http.get('/api/access-logs/:id', ({ params }) => {
+  http.get('/url/access-logs/:id', ({ params }) => {
     const { id } = params
     if (id) {
       return HttpResponse.json(datas.filter(item => item.id === Number(id))[0])
@@ -97,7 +97,7 @@ export const accessLogsHandlers = [
       return HttpResponse.json(null)
     }
   }),
-  http.get('/api/access-logs', ({ request }) => {
+  http.get('/url/access-logs', ({ request }) => {
     const url = new URL(request.url)
     const page = url.searchParams.get('page')
     const size = url.searchParams.get('size')
@@ -110,7 +110,7 @@ export const accessLogsHandlers = [
 
     return HttpResponse.json(data)
   }),
-  http.delete('/api/access-logs/:id', ({ params }) => {
+  http.delete('/url/access-logs/:id', ({ params }) => {
     // All request path params are provided in the "params"
     // argument of the response resolver.
     const { id } = params

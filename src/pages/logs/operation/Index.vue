@@ -3,7 +3,7 @@ import { ref, onMounted, reactive } from 'vue'
 import { dayjs } from 'element-plus'
 import draggable from 'vuedraggable'
 import Dialog from 'components/Dialog.vue'
-import { retrieveOperationLogs, fetchOperationLog } from 'src/api/operation-logs'
+import { retrieveOperationLogs, fetchOperationLog, removeOperationLog } from 'src/api/operation-logs'
 import type { OperationLog } from 'src/models'
 
 
@@ -17,25 +17,23 @@ const pagination = reactive({
 
 const checkAll = ref<boolean>(true)
 const isIndeterminate = ref<boolean>(false)
-const checkedColumns = ref<Array<string>>(['name', 'status', 'description'])
-const columns = ref<Array<string>>(['name', 'status', 'description'])
+const checkedColumns = ref<Array<string>>(['module', 'httpMethod', 'params', 'ip', 'location', 'status', 'operatedTime'])
+const columns = ref<Array<string>>(['module', 'httpMethod', 'params', 'ip', 'location', 'status', 'operatedTime'])
 
 const searchForm = ref({
-  module: null,
+  operation: null,
   operator: null
 })
 
 const detailLoading = ref<boolean>(false)
 const row = ref<OperationLog>({
   id: undefined,
-  module: '',
-  operator: '',
-  method: "PST",
   operation: '',
-  params: null,
+  content: '',
   ip: '',
   location: '',
-  status: null,
+  statusCode: null,
+  operator: '',
   operatedTime: null
 })
 
@@ -76,7 +74,7 @@ async function loadOne(id: number) {
  */
 function reset() {
   searchForm.value = {
-    module: null,
+    operation: null,
     operator: null
   }
   load()
@@ -100,7 +98,7 @@ function showRow(id: number) {
  * @param id 主键
  */
 function removeRow(id: number) {
-  datas.value = datas.value.filter(item => item.id !== id)
+  removeOperationLog(id).then(() => load())
 }
 
 /**
@@ -137,8 +135,8 @@ function handleCheckedChange(value: string[]) {
   <ElSpace size="large" fill>
     <ElCard shadow="never">
       <ElForm inline :model="searchForm">
-        <ElFormItem :label="$t('module')" prop="module">
-          <ElInput v-model="searchForm.module" :placeholder="$t('inputText') + $t('module')" />
+        <ElFormItem :label="$t('operation')" prop="operation">
+          <ElInput v-model="searchForm.operation" :placeholder="$t('inputText') + $t('operation')" />
         </ElFormItem>
         <ElFormItem :label="$t('operator')" prop="operator">
           <ElInput v-model="searchForm.operator" :placeholder="$t('inputText') + $t('operator')" />
@@ -209,17 +207,20 @@ function handleCheckedChange(value: string[]) {
       <ElTable :data="datas" lazy :load="load" row-key="id" stripe table-layout="auto">
         <ElTableColumn type="selection" width="55" />
         <ElTableColumn type="index" :label="$t('no')" width="55" />
-        <ElTableColumn prop="module" :label="$t('module')" />
         <ElTableColumn prop="operation" :label="$t('operation')" />
-        <ElTableColumn prop="method" :label="$t('method')" />
-        <ElTableColumn show-overflow-tooltip prop="params" :label="$t('params')" />
-        <ElTableColumn prop="operator" :label="$t('operator')" />
-        <ElTableColumn prop="ip" :label="$t('ip')" />
-        <ElTableColumn prop="location" :label="$t('location')" />
-        <ElTableColumn prop="status" :label="$t('status')">
+        <ElTableColumn show-overflow-tooltip prop="ip" :label="$t('ip')" />
+        <ElTableColumn show-overflow-tooltip prop="location" :label="$t('location')" />
+        <ElTableColumn show-overflow-tooltip prop="os" :label="$t('os')" />
+        <ElTableColumn show-overflow-tooltip prop="browser" :label="$t('browser')" />
+        <ElTableColumn prop="statusCode" :label="$t('statusCode')">
           <template #default="scope">
-            <ElTag v-if="scope.row.status === 1" type="success" round>{{ $t('success') }}</ElTag>
-            <ElTag v-else type="danger" round>{{ $t('failure') }}</ElTag>
+            <ElTag v-if="scope.row.statusCode >= 200 && scope.row.statusCode < 300" type="success" round>
+              {{ scope.row.statusCode }}
+            </ElTag>
+            <ElTag v-else-if="scope.row.statusCode >= 500" type="warning" round>
+              {{ scope.row.statusCode }}
+            </ElTag>
+            <ElTag v-else type="danger" round>{{ scope.row.statusCode }}</ElTag>
           </template>
         </ElTableColumn>
         <ElTableColumn prop="operatedTime" :label="$t('operatedTime')">
@@ -227,6 +228,7 @@ function handleCheckedChange(value: string[]) {
             {{ dayjs(scope.row.operatedTime).format('YYYY-MM-DD HH:mm') }}
           </template>
         </ElTableColumn>
+        <ElTableColumn prop="operator" :label="$t('operator')" />
         <ElTableColumn :label="$t('actions')" width="160">
           <template #default="scope">
             <ElButton size="small" type="success" link @click="showRow(scope.row.id)">
@@ -249,17 +251,25 @@ function handleCheckedChange(value: string[]) {
 
   <Dialog v-model="dialogVisible" :title="$t('detail')">
     <ElDescriptions v-loading="detailLoading">
-      <ElDescriptionsItem :label="$t('module')">{{ row.module }}</ElDescriptionsItem>
       <ElDescriptionsItem :label="$t('operation')">{{ row.operation }}</ElDescriptionsItem>
-      <ElDescriptionsItem :label="$t('method')">{{ row.method }}</ElDescriptionsItem>
-      <ElDescriptionsItem :label="$t('params')">{{ row.params }}</ElDescriptionsItem>
+      <ElDescriptionsItem :label="$t('content')">{{ row.content }}</ElDescriptionsItem>
       <ElDescriptionsItem :label="$t('ip')">{{ row.ip }}</ElDescriptionsItem>
       <ElDescriptionsItem :label="$t('location')">{{ row.location }}</ElDescriptionsItem>
-      <ElDescriptionsItem :label="$t('operator')">{{ row.operator }}</ElDescriptionsItem>
-      <ElDescriptionsItem :label="$t('status')">
-        <ElTag v-if="row.status === 1" type="success" round>{{ $t('success') }}</ElTag>
-        <ElTag v-else type="danger" round>{{ $t('failure') }}</ElTag>
+      <ElDescriptionsItem :label="$t('os')">{{ row.os }}</ElDescriptionsItem>
+      <ElDescriptionsItem :label="$t('browser')">{{ row.browser }}</ElDescriptionsItem>
+      <ElDescriptionsItem :label="$t('referer')">{{ row.referer }}</ElDescriptionsItem>
+      <ElDescriptionsItem :label="$t('sessionId')">{{ row.sessionId }}</ElDescriptionsItem>
+      <ElDescriptionsItem :label="$t('userAgent')">{{ row.userAgent }}</ElDescriptionsItem>
+      <ElDescriptionsItem :label="$t('statusCode')">
+        <ElTag v-if="row.statusCode && (row.statusCode >= 200 && row.statusCode < 300)" type="success" round>
+          {{ row.statusCode }}
+        </ElTag>
+        <ElTag v-else-if="row.statusCode && row.statusCode >= 500" type="warning" round>
+          {{ row.statusCode }}
+        </ElTag>
+        <ElTag v-else type="danger" round>{{ row.statusCode }}</ElTag>
       </ElDescriptionsItem>
+      <ElDescriptionsItem :label="$t('operator')">{{ row.operator }}</ElDescriptionsItem>
       <ElDescriptionsItem :label="$t('operatedTime')">{{ dayjs(row.operatedTime).format('YYYY-MM-DD HH:mm') }}
       </ElDescriptionsItem>
     </ElDescriptions>

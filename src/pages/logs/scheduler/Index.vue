@@ -30,7 +30,6 @@ const detailLoading = ref<boolean>(false)
 const row = ref<SchedulerLog>({
   id: undefined,
   name: '',
-  method: '',
   params: '',
   cronExpression: '',
   executedTime: 0,
@@ -138,9 +137,6 @@ function handleCheckedChange(value: string[]) {
         <ElFormItem :label="$t('name')" prop="name">
           <ElInput v-model="searchForm.name" :placeholder="$t('inputText') + $t('name')" />
         </ElFormItem>
-        <ElFormItem :label="$t('method')" prop="method">
-          <ElInput v-model="searchForm.method" :placeholder="$t('inputText') + $t('method')" />
-        </ElFormItem>
         <ElFormItem>
           <ElButton type="primary" @click="load">
             <div class="i-material-symbols:search-rounded" />{{ $t('search') }}
@@ -208,7 +204,6 @@ function handleCheckedChange(value: string[]) {
         <ElTableColumn type="selection" width="55" />
         <ElTableColumn type="index" :label="$t('no')" width="55" />
         <ElTableColumn prop="name" :label="$t('name')" />
-        <ElTableColumn prop="method" :label="$t('method')" />
         <ElTableColumn prop="params" :label="$t('params')" />
         <ElTableColumn prop="cronExpression" :label="$t('cronExpression')" />
         <ElTableColumn prop="status" :label="$t('status')">
@@ -245,7 +240,6 @@ function handleCheckedChange(value: string[]) {
   <Dialog v-model="dialogVisible" :title="$t('detail')">
     <ElDescriptions v-loading="detailLoading">
       <ElDescriptionsItem :label="$t('name')">{{ row.name }}</ElDescriptionsItem>
-      <ElDescriptionsItem :label="$t('method')">{{ row.method }}</ElDescriptionsItem>
       <ElDescriptionsItem :label="$t('params')">{{ row.params }}</ElDescriptionsItem>
       <ElDescriptionsItem :label="$t('cronExpression')">{{ row.cronExpression }}</ElDescriptionsItem>
       <ElDescriptionsItem :label="$t('startTime')">{{ formatDuration(row.executedTime) }}

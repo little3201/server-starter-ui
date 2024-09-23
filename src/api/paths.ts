@@ -1,7 +1,9 @@
 // 服务匹配前缀
 const SERVER_PRE = {
-  HYPERVISOR: '', // 系统
-  ASSETS: '' // 资源
+  HYPERVISOR: '/hypervisor', // 系统
+  ASSETS: '/assets', // 资源
+  EXPLOITER: '/exploiter', // 开发
+  AUTH: '/auth' // 开发
 }
 
 // 接口请求路径
@@ -12,7 +14,6 @@ export const SERVER_URL = {
   PRIVILEGE: SERVER_PRE.HYPERVISOR.concat('/privileges'), // 权限
   GROUP: SERVER_PRE.HYPERVISOR.concat('/groups'), // 分组
   DICTIONARY: SERVER_PRE.HYPERVISOR.concat('/dictionaries'), // 字典
-
   ACCESS_LOG: SERVER_PRE.HYPERVISOR.concat('/access-logs'), // 访问日志
   AUDIT_LOG: SERVER_PRE.HYPERVISOR.concat('/audit-logs'), // 审计日志
   OPERATION_LOG: SERVER_PRE.HYPERVISOR.concat('/operation-logs'), // 操作日志
@@ -25,6 +26,8 @@ export const SERVER_URL = {
   COMMENT: SERVER_PRE.ASSETS.concat('/comments'), // 评论
   REGION: SERVER_PRE.ASSETS.concat('/regions'), // 行政区划
   FILE: SERVER_PRE.ASSETS.concat('/files'), // 文件
-  TABLE: SERVER_PRE.ASSETS.concat('/tables'), // 表
-  SCRIPT: SERVER_PRE.ASSETS.concat('/scripts'), // 脚本
+
+  // exploiter
+  TABLE: SERVER_PRE.EXPLOITER.concat('/tables'), // 表
+  SCRIPT: SERVER_PRE.EXPLOITER.concat('/scripts'), // 脚本
 }
