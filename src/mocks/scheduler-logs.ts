@@ -5,7 +5,6 @@ const datas: SchedulerLog[] = [
   {
     id: 1,
     name: 'DailyBackup',
-    method: 'backupDatabase',
     params: '()',
     cronExpression: '0 0 * * *',
     executedTime: 12,
@@ -14,7 +13,6 @@ const datas: SchedulerLog[] = [
   {
     id: 2,
     name: 'GenerateReport',
-    method: 'generateDailyReport',
     params: '()',
     cronExpression: '0 6 * * *',
     executedTime: 5,
@@ -23,7 +21,6 @@ const datas: SchedulerLog[] = [
   {
     id: 3,
     name: 'SyncData',
-    method: 'synchronizeData',
     params: '()',
     cronExpression: '0 */2 * * *',
     executedTime: 6,
@@ -32,7 +29,6 @@ const datas: SchedulerLog[] = [
   {
     id: 4,
     name: 'ClearTempFiles',
-    method: 'clearTempFiles',
     params: '()',
     cronExpression: '0 3 * * *',
     executedTime: 323,
@@ -41,7 +37,6 @@ const datas: SchedulerLog[] = [
   {
     id: 5,
     name: 'SendEmails',
-    method: 'sendPendingEmails',
     params: '()',
     cronExpression: '0 4 * * *',
     executedTime: 33,
@@ -50,7 +45,6 @@ const datas: SchedulerLog[] = [
   {
     id: 6,
     name: 'UpdateStats',
-    method: 'updateStatistics',
     params: '()',
     cronExpression: '0 1 * * *',
     executedTime: 2,
@@ -59,7 +53,6 @@ const datas: SchedulerLog[] = [
   {
     id: 7,
     name: 'ReindexSearch',
-    method: 'reindexSearchEngine',
     params: '()',
     cronExpression: '0 2 * * *',
     executedTime: 323,
@@ -68,7 +61,6 @@ const datas: SchedulerLog[] = [
   {
     id: 8,
     name: 'ArchiveLogs',
-    method: 'archiveOldLogs',
     params: '()',
     cronExpression: '0 5 * * *',
     executedTime: 23,
@@ -77,7 +69,6 @@ const datas: SchedulerLog[] = [
   {
     id: 9,
     name: 'RefreshCache',
-    method: 'refreshApplicationCache',
     params: '()',
     cronExpression: '*/30 * * * *',
     executedTime: 2345,
@@ -86,7 +77,6 @@ const datas: SchedulerLog[] = [
   {
     id: 10,
     name: 'GenerateInvoices',
-    method: 'generateMonthlyInvoices',
     params: '()',
     cronExpression: '0 0 1 * *',
     executedTime: 125,
@@ -95,7 +85,6 @@ const datas: SchedulerLog[] = [
   {
     id: 11,
     name: 'GenerateInvoices',
-    method: 'generateMonthlyInvoices',
     params: '()',
     cronExpression: '0 0 1 * *',
     executedTime: 125,

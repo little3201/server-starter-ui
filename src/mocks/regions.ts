@@ -8,8 +8,8 @@ for (let i = 1; i < 34; i++) {
   const data: Region = {
     id: i,
     name: 'region_' + i,
-    areaCode: (11 + i) * 10000,
-    postalCode: (11 + i),
+    areaCode: Math.floor(Math.random() * 100),
+    postalCode: Math.floor(Math.random() * 3000),
     enabled: i % 3 > 0,
     description: 'This is region description about xxx'
   }
@@ -18,8 +18,8 @@ for (let i = 1; i < 34; i++) {
       id: 100 + j,
       name: 'region_' + i + '_' + j,
       superiorId: i,
-      areaCode: data.areaCode + j,
-      postalCode: data.postalCode + j,
+      areaCode: Math.floor(Math.random() * 1000),
+      postalCode: Math.floor(Math.random() * 3000) + j * 100,
       enabled: j % 2 > 0,
       description: 'This is region description about xxx'
     }

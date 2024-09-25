@@ -2,7 +2,7 @@
 import { ref, onMounted, reactive } from 'vue'
 import draggable from 'vuedraggable'
 import Dialog from 'components/Dialog.vue'
-import { retrieveAccessLogs, fetchAccessLog } from 'src/api/access-logs'
+import { retrieveAccessLogs, fetchAccessLog, removeAccessLog } from 'src/api/access-logs'
 import type { AccessLog } from 'src/models'
 import { formatDuration } from 'src/utils'
 
@@ -17,25 +17,27 @@ const pagination = reactive({
 
 const checkAll = ref<boolean>(true)
 const isIndeterminate = ref<boolean>(false)
-const checkedColumns = ref<Array<string>>(['name', 'status', 'description'])
-const columns = ref<Array<string>>(['name', 'status', 'description'])
+const checkedColumns = ref<Array<string>>(['url', 'httpMethod', 'params', 'body', 'ip', 'location', 'statusCode', 'responseTimes', 'responseMessage', 'operator'])
+const columns = ref<Array<string>>(['url', 'httpMethod', 'params', 'body', 'ip', 'location', 'statusCode', 'responseTimes', 'responseMessage', 'operator'])
 
 const searchForm = ref({
-  api: null,
+  url: null,
   operator: null
 })
+
+const methods: { [key: string]: string } = { "GET": "success", "POST": "warning", "PUT": "primary", "DELETE": "danger" }
 
 const detailLoading = ref<boolean>(false)
 const row = ref<AccessLog>({
   id: undefined,
   operator: '',
-  api: '',
-  method: "PST",
+  url: '',
+  httpMethod: null,
   params: null,
   ip: '',
   location: '',
-  responseTime: 0,
-  responseCode: null,
+  responseTimes: 0,
+  statusCode: null,
   responseMessage: ''
 })
 
@@ -77,7 +79,7 @@ async function loadOne(id: number) {
  */
 function reset() {
   searchForm.value = {
-    api: null,
+    url: null,
     operator: null
   }
   load()
@@ -101,7 +103,7 @@ function showRow(id: number) {
  * @param id 主键
  */
 function removeRow(id: number) {
-  datas.value = datas.value.filter(item => item.id !== id)
+  removeAccessLog(id).then(() => load())
 }
 
 /**
@@ -138,8 +140,8 @@ function handleCheckedChange(value: string[]) {
   <ElSpace size="large" fill>
     <ElCard shadow="never">
       <ElForm inline :model="searchForm">
-        <ElFormItem :label="$t('api')" prop="api">
-          <ElInput v-model="searchForm.api" :placeholder="$t('inputText') + $t('api')" />
+        <ElFormItem :label="$t('url')" prop="url">
+          <ElInput v-model="searchForm.url" :placeholder="$t('inputText') + $t('url')" />
         </ElFormItem>
         <ElFormItem :label="$t('operator')" prop="operator">
           <ElInput v-model="searchForm.operator" :placeholder="$t('inputText') + $t('operator')" />
@@ -210,29 +212,33 @@ function handleCheckedChange(value: string[]) {
       <ElTable v-loading="loading" :data="datas" lazy :load="load" row-key="id" stripe table-layout="auto">
         <ElTableColumn type="selection" width="55" />
         <ElTableColumn type="index" :label="$t('no')" width="55" />
-        <ElTableColumn prop="api" :label="$t('api')" />
-        <ElTableColumn prop="method" :label="$t('method')" />
-        <ElTableColumn show-overflow-tooltip prop="params" :label="$t('params')" />
-        <ElTableColumn prop="operator" :label="$t('operator')" />
-        <ElTableColumn prop="ip" :label="$t('ip')" />
-        <ElTableColumn show-overflow-tooltip prop="location" :label="$t('location')" />
-        <ElTableColumn prop="responseCode" :label="$t('responseCode')">
+        <ElTableColumn prop="url" :label="$t('url')" />
+        <ElTableColumn prop="httpMethod" :label="$t('httpMethod')">
           <template #default="scope">
-            <ElTag v-if="scope.row.responseCode >= 200 && scope.row.responseCode < 300" type="success" round>
-              {{ scope.row.responseCode }}
-            </ElTag>
-            <ElTag v-else-if="scope.row.responseCode >= 500" type="warning" round>
-              {{ scope.row.responseCode }}
-            </ElTag>
-            <ElTag v-else type="danger" round>{{ scope.row.responseCode }}</ElTag>
+            <el-badge is-dot :type="methods[scope.row.httpMethod]" class="mr-2" />{{ scope.row.httpMethod }}
           </template>
         </ElTableColumn>
-        <ElTableColumn prop="responseTime" :label="$t('responseTime')">
+        <ElTableColumn show-overflow-tooltip prop="params" :label="$t('params')" />
+        <ElTableColumn show-overflow-tooltip prop="ip" :label="$t('ip')" />
+        <ElTableColumn show-overflow-tooltip prop="location" :label="$t('location')" />
+        <ElTableColumn prop="statusCode" :label="$t('statusCode')">
           <template #default="scope">
-            {{ formatDuration(scope.row.responseTime) }}
+            <ElTag v-if="scope.row.statusCode >= 200 && scope.row.statusCode < 300" type="success" round>
+              {{ scope.row.statusCode }}
+            </ElTag>
+            <ElTag v-else-if="scope.row.statusCode >= 500" type="warning" round>
+              {{ scope.row.statusCode }}
+            </ElTag>
+            <ElTag v-else type="danger" round>{{ scope.row.statusCode }}</ElTag>
+          </template>
+        </ElTableColumn>
+        <ElTableColumn prop="responseTimes" :label="$t('responseTimes')">
+          <template #default="scope">
+            {{ formatDuration(scope.row.responseTimes) }}
           </template>
         </ElTableColumn>
         <ElTableColumn show-overflow-tooltip prop="responseMessage" :label="$t('responseMessage')" />
+        <ElTableColumn prop="operator" :label="$t('operator')" />
         <ElTableColumn :label="$t('actions')" width="160">
           <template #default="scope">
             <ElButton size="small" type="success" link @click="showRow(scope.row.id)">
@@ -255,23 +261,34 @@ function handleCheckedChange(value: string[]) {
 
   <Dialog v-model="dialogVisible" :title="$t('detail')">
     <ElDescriptions v-loading="detailLoading">
-      <ElDescriptionsItem :label="$t('api')">{{ row.api }}</ElDescriptionsItem>
+      <ElDescriptionsItem :label="$t('url')">{{ row.url }}</ElDescriptionsItem>
+      <ElDescriptionsItem :label="$t('httpMethod')">
+        <el-badge is-dot :type="methods[row.httpMethod as string]" />
+        {{ row.httpMethod }}
+      </ElDescriptionsItem>
       <ElDescriptionsItem :label="$t('params')">{{ row.params }}</ElDescriptionsItem>
-      <ElDescriptionsItem :label="$t('method')">{{ row.method }}</ElDescriptionsItem>
+      <ElDescriptionsItem v-if="row.body" :span="3" :label="$t('body')">{{ row.body }}</ElDescriptionsItem>
       <ElDescriptionsItem :label="$t('ip')">{{ row.ip }}</ElDescriptionsItem>
       <ElDescriptionsItem :label="$t('location')">{{ row.location }}</ElDescriptionsItem>
       <ElDescriptionsItem :label="$t('operator')">{{ row.operator }}</ElDescriptionsItem>
-      <ElDescriptionsItem :label="$t('responseCode')">
-        <ElTag v-if="row.responseCode && (row.responseCode >= 200 && row.responseCode < 300)" type="success" round>
-          {{ row.responseCode }}
+      <ElDescriptionsItem :label="$t('statusCode')">
+        <ElTag v-if="row.statusCode && (row.statusCode >= 200 && row.statusCode < 300)" type="success" round>
+          {{ row.statusCode }}
         </ElTag>
-        <ElTag v-else-if="row.responseCode && row.responseCode >= 500" type="warning" round>
-          {{ row.responseCode }}
+        <ElTag v-else-if="row.statusCode && row.statusCode >= 500" type="warning" round>
+          {{ row.statusCode }}
         </ElTag>
-        <ElTag v-else type="danger" round>{{ row.responseCode }}</ElTag>
+        <ElTag v-else type="danger" round>{{ row.statusCode }}</ElTag>
       </ElDescriptionsItem>
-      <ElDescriptionsItem :label="$t('responseTime')">{{ formatDuration(row.responseTime) }}</ElDescriptionsItem>
+      <ElDescriptionsItem :label="$t('responseTimes')">{{ formatDuration(row.responseTimes) }}</ElDescriptionsItem>
       <ElDescriptionsItem :label="$t('responseMessage')">{{ row.responseMessage }}</ElDescriptionsItem>
     </ElDescriptions>
   </Dialog>
 </template>
+
+<style lang="scss" scoped>
+.el-badge {
+  display: inline-flex;
+  vertical-align: baseline;
+}
+</style>

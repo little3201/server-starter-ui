@@ -82,26 +82,31 @@ export interface PrivilegeTreeNode extends TreeNode {
 }
 
 export interface OperationLog extends AudtiMetadata {
-  module: string
-  method: string
-  operator: string
   operation: string
-  params: string | null
+  content: string
+  operator: string
   ip: string
   location: string
-  status: number | null
+  referer?: string | null
+  sessionId?: string | null
+  os?: string | null
+  deviceType?: string | null
+  userAgent?: string | null
+  browser?: string | null
+  statusCode: number | null
   operatedTime: string | null
 }
 
 export interface AccessLog extends AudtiMetadata {
-  api: string
-  method: string
+  url: string
+  httpMethod: string | null
   operator: string
-  params: string | null
+  params?: string | null
+  body?: string | null
   ip: string
   location: string
-  responseTime: number
-  responseCode: number | null
+  responseTimes: number
+  statusCode: number | null
   responseMessage: string | null
 }
 
@@ -119,7 +124,6 @@ export interface AuditLog extends AudtiMetadata {
 
 export interface SchedulerLog extends AudtiMetadata {
   name: string
-  method: string
   params: string
   cronExpression: string
   executedTime: number
