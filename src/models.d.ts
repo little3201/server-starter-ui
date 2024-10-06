@@ -35,22 +35,6 @@ export interface Role extends AudtiMetadata {
   description?: string
 }
 
-export interface Privilege extends AudtiMetadata {
-  name: string
-  superiorId?: number
-  path: string
-  order: number
-  component: string
-  redirect?: string
-  icon: string
-  hidden?: boolean
-  actions?: string[]
-  count?: number
-  hasChildren?: boolean
-  enabled?: boolean
-  description?: string
-}
-
 export interface Dictionary extends AudtiMetadata {
   name: string
   superiorId?: number
@@ -78,12 +62,14 @@ export interface TreeNode {
 }
 
 export interface PrivilegeTreeNode extends TreeNode {
-  path: string
-  component: string
-  redirect?: string
-  icon: string
-  hidden?: boolean
-  actions?: string[]
+  meta: {
+    path: string
+    component: string
+    redirect?: string
+    icon: string
+    hidden?: boolean
+    actions?: string[]
+  },
   children?: PrivilegeTreeNode[]
 }
 

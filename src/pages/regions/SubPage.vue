@@ -2,7 +2,7 @@
 import { ref, reactive, onMounted } from 'vue'
 import type { FormInstance, FormRules } from 'element-plus'
 import Dialog from 'components/Dialog.vue'
-import { retrieveRegionSubset, fetchRegion, createRegion, modifyRegion, removeRegion } from 'src/api/regions'
+import { retrieveRegions, fetchRegion, createRegion, modifyRegion, removeRegion } from 'src/api/regions'
 import type { Region } from 'src/models'
 
 const props = defineProps<{
@@ -12,6 +12,13 @@ const props = defineProps<{
 
 const loading = ref<boolean>(false)
 const datas = ref<Array<Region>>([])
+const total = ref<number>(0)
+const pagination = reactive<Pagination>({
+  page: 1,
+  size: 10,
+  sortBy: 'id',
+  descending: false
+})
 
 const saveLoading = ref<boolean>(false)
 const dialogVisible = ref<boolean>(false)
@@ -33,12 +40,24 @@ const rules = reactive<FormRules<typeof form>>({
 })
 
 /**
+ * 分页变化
+ * @param currentPage 当前页码
+ * @param pageSize 分页大小
+ */
+function pageChange(currentPage: number, pageSize: number) {
+  pagination.page = currentPage
+  pagination.size = pageSize
+  load()
+}
+
+/**
  * 加载列表
  */
 async function load() {
   loading.value = true
-  retrieveRegionSubset(props.superiorId).then(res => {
-    datas.value = res.data
+  retrieveRegions(pagination, { superiorId: props.superiorId }).then(res => {
+    datas.value = res.data.content
+    total.value = res.data.page.totalElements
   }).finally(() => loading.value = false)
 
 }
@@ -163,6 +182,7 @@ function confirmEvent(id: number) {
         </template>
       </ElTableColumn>
     </ElTable>
+    <ElPagination layout="prev, pager, next, sizes, jumper, ->, total" @change="pageChange" :total="total" />
   </ElCard>
 
   <Dialog v-model="dialogVisible" :title="$t('regions')" width="25%">

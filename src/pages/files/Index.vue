@@ -235,7 +235,7 @@ function handleCheckedChange(value: string[]) {
     <Dialog v-model="dialogVisible" :title="$t('upload')" width="35%">
       <ElUpload ref="upload" :limit="1" drag action="/api/upload">
         <div class="el-icon--upload inline-flex justify-center">
-          <div class="i-material-symbols:cloud-arrow-up " />
+          <div class="i-material-symbols:upload-rounded" />
         </div>
         <div class="el-upload__text">
           Drop file here or <em>click to upload</em>

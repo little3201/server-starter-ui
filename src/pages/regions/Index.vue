@@ -15,7 +15,7 @@ const pagination = reactive<Pagination>({
   page: 1,
   size: 10,
   sortBy: 'id',
-  descending: true
+  descending: false
 })
 
 const checkAll = ref<boolean>(true)
