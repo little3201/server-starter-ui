@@ -29,15 +29,6 @@ for (let i = 1; i < 34; i++) {
 }
 
 export const regionsHandlers = [
-  http.get('/api/regions/:id/subset', ({ params }) => {
-    const { id } = params
-
-    // Construct a JSON response with the list of all Row
-    // as the response body.
-    const filtered = subDatas.filter(item => item.superiorId === Number(id))
-
-    return HttpResponse.json(filtered)
-  }),
   http.get('/api/regions/:id', ({ params }) => {
     const { id } = params
     if (id) {
@@ -56,9 +47,18 @@ export const regionsHandlers = [
     const size = url.searchParams.get('size')
     // Construct a JSON response with the list of all Row
     // as the response body.
+    let filtered = []
+    const superiorId = url.searchParams.get('superiorId')
+    if (superiorId) {
+      filtered = subDatas.filter(item => item.superiorId === Number(superiorId))
+    } else {
+      filtered = datas
+    }
     const data = {
-      content: Array.from(datas.slice(Number(page) * Number(size), (Number(page) + 1) * Number(size))),
-      totalElements: datas.length
+      content: Array.from(filtered.slice(Number(page) * Number(size), (Number(page) + 1) * Number(size))),
+      page: {
+        totalElements: datas.length
+      }
     }
 
     return HttpResponse.json(data)

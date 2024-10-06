@@ -5,16 +5,18 @@ import draggable from 'vuedraggable'
 import Dialog from 'components/Dialog.vue'
 import SubPage from './SubPage.vue'
 import { retrieveDictionaries, fetchDictionary, modifyDictionary } from 'src/api/dictionaries'
-import type { Dictionary } from 'src/models'
-import { max } from 'lodash-es'
+import type { Pagination, Dictionary } from 'src/models'
 
 
 const loading = ref<boolean>(false)
 const datas = ref<Array<Dictionary>>([])
-const pagination = reactive({
+const total = ref<number>(0)
+
+const pagination = reactive<Pagination>({
   page: 1,
   size: 10,
-  total: 0
+  sortBy: 'id',
+  descending: true
 })
 
 const checkAll = ref<boolean>(true)
@@ -25,7 +27,7 @@ const columns = ref<Array<string>>(['name', 'enabled', 'description'])
 const saveLoading = ref<boolean>(false)
 const dialogVisible = ref<boolean>(false)
 
-const searchForm = ref({
+const filters = ref({
   name: null
 })
 
@@ -59,7 +61,7 @@ function pageChange(currentPage: number, pageSize: number) {
  */
 async function load() {
   loading.value = true
-  retrieveDictionaries(pagination.page, pagination.size, searchForm.value).then(res => {
+  retrieveDictionaries(pagination, filters.value).then(res => {
     let list = res.data.content
     list.forEach((element: Dictionary) => {
       if (element.count && element.count > 0) {
@@ -67,7 +69,7 @@ async function load() {
       }
     })
     datas.value = list
-    pagination.total = res.data.totalElements
+    total.value = res.data.page.totalElements
   }).finally(() => loading.value = false)
 }
 
@@ -75,7 +77,7 @@ async function load() {
  * reset
  */
 function reset() {
-  searchForm.value = {
+  filters.value = {
     name: null
   }
   load()
@@ -150,9 +152,9 @@ function handleCheckedChange(value: string[]) {
 <template>
   <ElSpace size="large" fill>
     <ElCard shadow="never">
-      <ElForm inline :model="searchForm" @submit.prevent>
+      <ElForm inline :model="filters" @submit.prevent>
         <ElFormItem :label="$t('name')" prop="name">
-          <ElInput v-model="searchForm.name" :placeholder="$t('inputText') + $t('name')" />
+          <ElInput v-model="filters.name" :placeholder="$t('inputText') + $t('name')" />
         </ElFormItem>
         <ElFormItem>
           <ElButton type="primary" @click="load">
@@ -240,8 +242,7 @@ function handleCheckedChange(value: string[]) {
           </template>
         </ElTableColumn>
       </ElTable>
-      <ElPagination layout="prev, pager, next, sizes, jumper, ->, total" @change="pageChange"
-        :total="pagination.total" />
+      <ElPagination layout="prev, pager, next, sizes, jumper, ->, total" @change="pageChange" :total="total" />
     </ElCard>
   </ElSpace>
 

@@ -5,14 +5,17 @@ import draggable from 'vuedraggable'
 import Dialog from 'components/Dialog.vue'
 import SubPage from './SubPage.vue'
 import { retrieveRegions, fetchRegion, createRegion, modifyRegion, removeRegion } from 'src/api/regions'
-import type { Region } from 'src/models'
+import type { Pagination, Region } from 'src/models'
 
 const loading = ref<boolean>(false)
 const datas = ref<Array<Region>>([])
-const pagination = reactive({
+const total = ref<number>(0)
+
+const pagination = reactive<Pagination>({
   page: 1,
   size: 10,
-  total: 0
+  sortBy: 'id',
+  descending: true
 })
 
 const checkAll = ref<boolean>(true)
@@ -23,7 +26,7 @@ const columns = ref<Array<string>>(['name', 'enabled', 'description'])
 const saveLoading = ref<boolean>(false)
 const dialogVisible = ref<boolean>(false)
 
-const searchForm = ref({
+const filters = ref({
   name: null
 })
 
@@ -58,9 +61,9 @@ function pageChange(currentPage: number, pageSize: number) {
  */
 async function load() {
   loading.value = true
-  retrieveRegions(pagination.page, pagination.size, searchForm.value).then(res => {
+  retrieveRegions(pagination, filters.value).then(res => {
     datas.value = res.data.content
-    pagination.total = res.data.totalElements
+    total.value = res.data.page.totalElements
   }).finally(() => loading.value = false)
 }
 
@@ -68,7 +71,7 @@ async function load() {
  * reset
  */
 function reset() {
-  searchForm.value = {
+  filters.value = {
     name: null
   }
   load()
@@ -166,9 +169,9 @@ function handleCheckedChange(value: string[]) {
 <template>
   <ElSpace size="large" fill>
     <ElCard shadow="never">
-      <ElForm inline :model="searchForm" @submit.prevent>
+      <ElForm inline :model="filters" @submit.prevent>
         <ElFormItem :label="$t('name')" prop="name">
-          <ElInput v-model="searchForm.name" :placeholder="$t('inputText') + $t('name')" />
+          <ElInput v-model="filters.name" :placeholder="$t('inputText') + $t('name')" />
         </ElFormItem>
         <ElFormItem>
           <ElButton type="primary" @click="load">
@@ -271,8 +274,7 @@ function handleCheckedChange(value: string[]) {
           </template>
         </ElTableColumn>
       </ElTable>
-      <ElPagination layout="prev, pager, next, sizes, jumper, ->, total" @change="pageChange"
-        :total="pagination.total" />
+      <ElPagination layout="prev, pager, next, sizes, jumper, ->, total" @change="pageChange" :total="total" />
     </ElCard>
   </ElSpace>
 

@@ -1,14 +1,15 @@
 import { api } from 'boot/axios'
 import { SERVER_URL } from 'src/api/paths'
+import type { Pagination } from 'src/models'
 
 /**
  * Retrieve rows
- * @param page Page number
- * @param size Items per page
+ * @param pagination Pagination and sort parameters
+ * @param filters Optional filter
  * @returns Rows data
  */
-export const retrieveAccessLogs = (page: number, size: number, params?: object) => {
-  return api.get(SERVER_URL.ACCESS_LOG, { params: { page: page - 1, size, ...params } })
+export const retrieveAccessLogs = (pagination: Pagination, filters?: object) => {
+  return api.get(SERVER_URL.ACCESS_LOG, { params: { ...pagination, page: pagination.page - 1, ...filters } })
 }
 
 /**

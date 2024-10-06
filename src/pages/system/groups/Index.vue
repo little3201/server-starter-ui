@@ -4,15 +4,18 @@ import type { FormInstance, FormRules } from 'element-plus'
 import draggable from 'vuedraggable'
 import Dialog from 'components/Dialog.vue'
 import { retrieveGroups, retrieveGroupTree, fetchGroup, createGroup, modifyGroup, removeGroup } from 'src/api/groups'
-import type { Group, TreeNode } from 'src/models'
+import type { Pagination, Group, TreeNode } from 'src/models'
 
 
 const loading = ref<boolean>(false)
 const datas = ref<Array<Group>>([])
-const pagination = reactive({
+const total = ref<number>(0)
+
+const pagination = reactive<Pagination>({
   page: 1,
   size: 10,
-  total: 0
+  sortBy: 'id',
+  descending: true
 })
 
 const checkAll = ref<boolean>(true)
@@ -29,7 +32,11 @@ const groupTree = ref<TreeNode[]>([])
 const saveLoading = ref<boolean>(false)
 const dialogVisible = ref<boolean>(false)
 
-const searchForm = ref({
+const relationVisible = ref<boolean>(false)
+const members = ref([])
+
+const filters = ref({
+  superiorId: null,
   name: null
 })
 
@@ -101,9 +108,10 @@ function pageChange(currentPage: number, pageSize: number) {
  */
 async function load() {
   loading.value = true
-  retrieveGroups(pagination.page, pagination.size, currentNodeKey.value, searchForm.value).then(res => {
+  filters.value.superiorId = currentNodeKey.value
+  retrieveGroups(pagination, filters.value).then(res => {
     datas.value = res.data.content
-    pagination.total = res.data.totalElements
+    total.value = res.data.page.totalElements
   }).finally(() => loading.value = false)
 }
 
@@ -111,7 +119,7 @@ async function load() {
  * reset
  */
 function reset() {
-  searchForm.value = {
+  filters.value = {
     name: null
   }
   load()
@@ -132,7 +140,15 @@ onMounted(() => {
 })
 
 /**
- * 弹出框
+ * 关联弹出框
+ * @param id 主键
+ */
+function relationRow(id: number) {
+  relationVisible.value = true
+}
+
+/**
+ * 新增、编辑弹出框
  * @param id 主键
  */
 function editRow(id?: number) {
@@ -242,9 +258,9 @@ function handleCheckedChange(value: string[]) {
     <div class="w-full">
       <ElSpace size="large" fill>
         <ElCard shadow="never">
-          <ElForm inline :model="searchForm" @submit.prevent>
+          <ElForm inline :model="filters" @submit.prevent>
             <ElFormItem :label="$t('name')" prop="name">
-              <ElInput v-model="searchForm.name" :placeholder="$t('inputText') + $t('name')" />
+              <ElInput v-model="filters.name" :placeholder="$t('inputText') + $t('name')" />
             </ElFormItem>
             <ElFormItem>
               <ElButton type="primary" @click="load">
@@ -317,6 +333,7 @@ function handleCheckedChange(value: string[]) {
 
           <ElTable v-loading="loading" :data="datas" lazy :load="load" row-key="id" stripe table-layout="auto">
             <ElTableColumn type="selection" width="55" />
+            <ElTableColumn type="index" :label="$t('no')" width="55" />
             <ElTableColumn prop="name" :label="$t('name')" />
             <ElTableColumn prop="enabled" :label="$t('enabled')">
               <template #default="scope">
@@ -327,6 +344,9 @@ function handleCheckedChange(value: string[]) {
             <ElTableColumn show-overflow-tooltip prop="description" :label="$t('description')" />
             <ElTableColumn :label="$t('actions')">
               <template #default="scope">
+                <ElButton size="small" type="primary" link @click="relationRow(scope.row.id)">
+                  <div class="i-material-symbols:link-rounded" />{{ $t('relation') }}
+                </ElButton>
                 <ElButton size="small" type="primary" link @click="editRow(scope.row.id)">
                   <div class="i-material-symbols:edit-outline-rounded" />{{ $t('edit') }}
                 </ElButton>
@@ -341,8 +361,7 @@ function handleCheckedChange(value: string[]) {
               </template>
             </ElTableColumn>
           </ElTable>
-          <ElPagination layout="prev, pager, next, sizes, jumper, ->, total" @change="pageChange"
-            :total="pagination.total" />
+          <ElPagination layout="prev, pager, next, sizes, jumper, ->, total" @change="pageChange" :total="total" />
         </ElCard>
       </ElSpace>
     </div>
@@ -373,5 +392,11 @@ function handleCheckedChange(value: string[]) {
         <div class="i-material-symbols:check-circle-outline-rounded" /> {{ $t('submit') }}
       </ElButton>
     </template>
+  </Dialog>
+
+  <Dialog v-model="relationVisible" :title="$t('relation')">
+    <div style="text-align: center">
+      <ElTransfer :titles="[$t('unselected'), $t('selected')]" filterable :data="members" />
+    </div>
   </Dialog>
 </template>

@@ -131,7 +131,9 @@ export const operationLogsHandlers = [
     // as the response body.
     const data = {
       content: Array.from(datas.slice(Number(page) * Number(size), (Number(page) + 1) * Number(size))),
-      totalElements: datas.length
+      page: {
+        totalElements: datas.length
+      }
     }
 
     return HttpResponse.json(data)

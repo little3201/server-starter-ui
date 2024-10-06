@@ -4,16 +4,19 @@ import { dayjs } from 'element-plus'
 import draggable from 'vuedraggable'
 import Dialog from 'components/Dialog.vue'
 import { retrieveSchedulerLogs, fetchSchedulerLog } from 'src/api/scheduler-logs'
-import type { SchedulerLog } from 'src/models'
+import type { Pagination, SchedulerLog } from 'src/models'
 import { formatDuration } from 'src/utils'
 
 
 const loading = ref<boolean>(false)
 const datas = ref<Array<SchedulerLog>>([])
-const pagination = reactive({
+const total = ref<number>(0)
+
+const pagination = reactive<Pagination>({
   page: 1,
   size: 10,
-  total: 0
+  sortBy: 'id',
+  descending: true
 })
 
 const checkAll = ref<boolean>(true)
@@ -21,7 +24,7 @@ const isIndeterminate = ref<boolean>(false)
 const checkedColumns = ref<Array<string>>(['name', 'status', 'description'])
 const columns = ref<Array<string>>(['name', 'status', 'description'])
 
-const searchForm = ref({
+const filters = ref({
   name: null,
   method: null
 })
@@ -51,9 +54,9 @@ function pageChange(currentPage: number, pageSize: number) {
  * 加载列表
  */
 async function load() {
-  retrieveSchedulerLogs(pagination.page, pagination.size).then(res => {
+  retrieveSchedulerLogs(pagination, filters.value).then(res => {
     datas.value = res.data.content
-    pagination.total = res.data.totalElements
+    total.value = res.data.page.totalElements
   }).finally(() => loading.value = false)
 }
 
@@ -72,7 +75,7 @@ async function loadOne(id: number) {
  * reset
  */
 function reset() {
-  searchForm.value = {
+  filters.value = {
     name: null,
     method: null
   }
@@ -133,9 +136,9 @@ function handleCheckedChange(value: string[]) {
 <template>
   <ElSpace size="large" fill>
     <ElCard shadow="never">
-      <ElForm inline :model="searchForm">
+      <ElForm inline :model="filters">
         <ElFormItem :label="$t('name')" prop="name">
-          <ElInput v-model="searchForm.name" :placeholder="$t('inputText') + $t('name')" />
+          <ElInput v-model="filters.name" :placeholder="$t('inputText') + $t('name')" />
         </ElFormItem>
         <ElFormItem>
           <ElButton type="primary" @click="load">
@@ -232,8 +235,7 @@ function handleCheckedChange(value: string[]) {
           </template>
         </ElTableColumn>
       </ElTable>
-      <ElPagination layout="prev, pager, next, sizes, jumper, ->, total" @change="pageChange"
-        :total="pagination.total" />
+      <ElPagination layout="prev, pager, next, sizes, jumper, ->, total" @change="pageChange" :total="total" />
     </ElCard>
   </ElSpace>
 

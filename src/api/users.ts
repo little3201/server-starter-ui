@@ -1,17 +1,17 @@
 import { api } from 'boot/axios'
 import { SERVER_URL } from 'src/api/paths'
-import type { User } from 'src/models'
+import type { Pagination, User } from 'src/models'
 
 /**
  * Retrieve rows
  * @param page Page number
  * @param size Items per page
  * @param groupId group ID
- * @param params Optional filter or sort parameters
+ * @param filters Optional filter or sort parameters
  * @returns Rows data
  */
-export const retrieveUsers = (page: number, size: number, groupId: number | undefined, params?: object) => {
-  return api.get(SERVER_URL.USER, { params: { page: page - 1, size, groupId, ...params } })
+export const retrieveUsers = (pagination: Pagination, filters?: object) => {
+  return api.get(SERVER_URL.USER, { params: { ...pagination, page: pagination.page - 1, ...filters } })
 }
 
 /**

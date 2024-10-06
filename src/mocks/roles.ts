@@ -21,14 +21,10 @@ for (let i = 1; i < 28; i++) {
 }
 
 export const rolesHandlers = [
-  http.get('/api/roles/:id/:param', ({ params }) => {
-    const { id, param } = params
+  http.get('/api/roles/:id/privileges', ({ params }) => {
+    const { id } = params
     if (id) {
-      if (param === 'privileges') {
-        return HttpResponse.json(rolePrivileges)
-      } else if (param === 'groups') {
-        return HttpResponse.json(roleDepartments)
-      }
+      return HttpResponse.json(rolePrivileges)
     } else {
       return HttpResponse.json(null)
     }
@@ -50,7 +46,9 @@ export const rolesHandlers = [
       // as the response body.
       const data = {
         content: Array.from(datas.slice(Number(page) * Number(size), (Number(page) + 1) * Number(size))),
-        totalElements: datas.length
+        page: {
+          totalElements: datas.length
+        }
       }
       return HttpResponse.json(data)
     } else {

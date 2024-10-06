@@ -4,15 +4,18 @@ import { dayjs } from 'element-plus'
 import draggable from 'vuedraggable'
 import Dialog from 'components/Dialog.vue'
 import { retrieveAuditLogs, fetchAuditLog } from 'src/api/audit-logs'
-import type { AuditLog } from 'src/models'
+import type { Pagination, AuditLog } from 'src/models'
 
 
 const loading = ref<boolean>(false)
 const datas = ref<Array<AuditLog>>([])
-const pagination = reactive({
+const total = ref<number>(0)
+
+const pagination = reactive<Pagination>({
   page: 1,
   size: 10,
-  total: 0
+  sortBy: 'id',
+  descending: true
 })
 
 const checkAll = ref<boolean>(true)
@@ -20,13 +23,13 @@ const isIndeterminate = ref<boolean>(false)
 const checkedColumns = ref<Array<string>>(['name', 'status', 'description'])
 const columns = ref<Array<string>>(['name', 'status', 'description'])
 
-const searchForm = ref({
+const filters = ref({
   resource: null,
   operator: null
 })
 
 const detailLoading = ref<boolean>(false)
-const row = ref<AuditLog>({
+const initialValues: AuditLog = {
   id: undefined,
   operation: '',
   operator: '',
@@ -37,7 +40,8 @@ const row = ref<AuditLog>({
   location: '',
   status: null,
   operatedTime: null
-})
+}
+const row = ref<AuditLog>({ ...initialValues })
 
 const dialogVisible = ref<boolean>(false)
 
@@ -56,9 +60,9 @@ function pageChange(currentPage: number, pageSize: number) {
  */
 async function load() {
   loading.value = true
-  retrieveAuditLogs(pagination.page, pagination.size).then(res => {
+  retrieveAuditLogs(pagination, filters.value).then(res => {
     datas.value = res.data.content
-    pagination.total = res.data.totalElements
+    total.value = res.data.page.totalElements
   }).finally(() => loading.value = false)
 }
 
@@ -77,7 +81,7 @@ async function loadOne(id: number) {
  * reset
  */
 function reset() {
-  searchForm.value = {
+  filters.value = {
     resource: null,
     operator: null
   }
@@ -93,6 +97,7 @@ onMounted(() => {
  * @param id 主键
  */
 function showRow(id: number) {
+  row.value = { ...initialValues }
   dialogVisible.value = true
   loadOne(id)
 }
@@ -120,12 +125,12 @@ function handleCheckedChange(value: string[]) {
 <template>
   <ElSpace size="large" fill>
     <ElCard shadow="never">
-      <ElForm inline :model="searchForm">
+      <ElForm inline :model="filters">
         <ElFormItem :label="$t('resource')" prop="resource">
-          <ElInput v-model="searchForm.resource" :placeholder="$t('inputText') + $t('resource')" />
+          <ElInput v-model="filters.resource" :placeholder="$t('inputText') + $t('resource')" />
         </ElFormItem>
         <ElFormItem :label="$t('operator')" prop="operator">
-          <ElInput v-model="searchForm.operator" :placeholder="$t('inputText') + $t('operator')" />
+          <ElInput v-model="filters.operator" :placeholder="$t('inputText') + $t('operator')" />
         </ElFormItem>
         <ElFormItem>
           <ElButton type="primary" @click="load">
@@ -214,8 +219,7 @@ function handleCheckedChange(value: string[]) {
           </template>
         </ElTableColumn>
       </ElTable>
-      <ElPagination layout="prev, pager, next, sizes, jumper, ->, total" @change="pageChange"
-        :total="pagination.total" />
+      <ElPagination layout="prev, pager, next, sizes, jumper, ->, total" @change="pageChange" :total="total" />
     </ElCard>
   </ElSpace>
 

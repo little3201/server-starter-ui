@@ -3,12 +3,18 @@ interface AudtiMetadata {
   lastModifiedDate?: Date
 }
 
+export interface Pagination {
+  page: number,
+  size: number,
+  sortBy: string | null,
+  descending: boolean | null
+}
+
 export interface User extends AudtiMetadata {
   username: string
+  fullName: string
   email: string
   avatar?: string
-  roleId?: number | null
-  groupId?: number | null
   accountNonLocked?: boolean
   accountExpiresAt?: Date
   credentialsExpiresAt?: Date

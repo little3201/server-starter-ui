@@ -1,9 +1,8 @@
 // 服务匹配前缀
 const SERVER_PRE = {
-  HYPERVISOR: '/hypervisor', // 系统
-  ASSETS: '/assets', // 资源
-  EXPLOITER: '/exploiter', // 开发
-  AUTH: '/auth' // 开发
+  HYPERVISOR: '',
+  ASSETS: '',
+  EXPLOITER: ''
 }
 
 // 接口请求路径

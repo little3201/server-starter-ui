@@ -3,16 +3,19 @@ import { ref, onMounted, reactive } from 'vue'
 import draggable from 'vuedraggable'
 import Dialog from 'components/Dialog.vue'
 import { retrieveAccessLogs, fetchAccessLog, removeAccessLog } from 'src/api/access-logs'
-import type { AccessLog } from 'src/models'
+import type { Pagination, AccessLog } from 'src/models'
 import { formatDuration } from 'src/utils'
 
 
 const loading = ref<boolean>(false)
 const datas = ref<Array<AccessLog>>([])
-const pagination = reactive({
+const total = ref<number>(0)
+
+const pagination = reactive<Pagination>({
   page: 1,
   size: 10,
-  total: 0
+  sortBy: 'id',
+  descending: true
 })
 
 const checkAll = ref<boolean>(true)
@@ -20,7 +23,7 @@ const isIndeterminate = ref<boolean>(false)
 const checkedColumns = ref<Array<string>>(['url', 'httpMethod', 'params', 'body', 'ip', 'location', 'statusCode', 'responseTimes', 'responseMessage', 'operator'])
 const columns = ref<Array<string>>(['url', 'httpMethod', 'params', 'body', 'ip', 'location', 'statusCode', 'responseTimes', 'responseMessage', 'operator'])
 
-const searchForm = ref({
+const filters = ref({
   url: null,
   operator: null
 })
@@ -57,9 +60,9 @@ function pageChange(currentPage: number, pageSize: number) {
  */
 async function load() {
   loading.value = true
-  retrieveAccessLogs(pagination.page, pagination.size).then(res => {
+  retrieveAccessLogs(pagination, filters.value).then(res => {
     datas.value = res.data.content
-    pagination.total = res.data.totalElements
+    total.value = res.data.page.totalElements
   }).finally(() => loading.value = false)
 }
 
@@ -78,7 +81,7 @@ async function loadOne(id: number) {
  * reset
  */
 function reset() {
-  searchForm.value = {
+  filters.value = {
     url: null,
     operator: null
   }
@@ -139,12 +142,12 @@ function handleCheckedChange(value: string[]) {
 <template>
   <ElSpace size="large" fill>
     <ElCard shadow="never">
-      <ElForm inline :model="searchForm">
+      <ElForm inline :model="filters">
         <ElFormItem :label="$t('url')" prop="url">
-          <ElInput v-model="searchForm.url" :placeholder="$t('inputText') + $t('url')" />
+          <ElInput v-model="filters.url" :placeholder="$t('inputText') + $t('url')" />
         </ElFormItem>
         <ElFormItem :label="$t('operator')" prop="operator">
-          <ElInput v-model="searchForm.operator" :placeholder="$t('inputText') + $t('operator')" />
+          <ElInput v-model="filters.operator" :placeholder="$t('inputText') + $t('operator')" />
         </ElFormItem>
         <ElFormItem>
           <ElButton type="primary" @click="load">
@@ -254,8 +257,7 @@ function handleCheckedChange(value: string[]) {
           </template>
         </ElTableColumn>
       </ElTable>
-      <ElPagination layout="prev, pager, next, sizes, jumper, ->, total" @change="pageChange"
-        :total="pagination.total" />
+      <ElPagination layout="prev, pager, next, sizes, jumper, ->, total" @change="pageChange" :total="total" />
     </ElCard>
   </ElSpace>
 

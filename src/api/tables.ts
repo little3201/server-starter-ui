@@ -1,15 +1,16 @@
 import { api } from 'boot/axios'
 import { SERVER_URL } from 'src/api/paths'
+import type { Pagination } from 'src/models'
 
 /**
  * Retrieve rows
  * @param page Page number
  * @param size Items per page
- * @param params Optional filter or sort parameters
+ * @param filters Optional filter or sort parameters
  * @returns Rows data
  */
-export const retrieveTables = (page: number, size: number, params?: object) => {
-  return api.get(SERVER_URL.TABLE, { params: { page: page - 1, size, ...params } })
+export const retrieveTables = (pagination: Pagination, filters?: object) => {
+  return api.get(SERVER_URL.TABLE, { params: { ...pagination, page: pagination.page - 1, ...filters } })
 }
 
 export const retrieveTableColumns = (id: number) => {

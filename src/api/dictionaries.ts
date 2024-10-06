@@ -1,16 +1,15 @@
 import { api } from 'boot/axios'
 import { SERVER_URL } from 'src/api/paths'
-import type { Dictionary } from 'src/models'
+import type { Pagination, Dictionary } from 'src/models'
 
 /**
  * Retrieve rows
- * @param page Page number
- * @param size Items per page
- * @param params Optional filter or sort parameters
+ * @param pagination Pagination and sort parameters
+ * @param filters Optional filter
  * @returns Rows data
  */
-export const retrieveDictionaries = (page: number, size: number, params?: object) => {
-  return api.get(SERVER_URL.DICTIONARY, { params: { page: page - 1, size, ...params } })
+export const retrieveDictionaries = (pagination: Pagination, filters?: object) => {
+  return api.get(SERVER_URL.DICTIONARY, { params: { ...pagination, page: pagination.page - 1, ...filters } })
 }
 
 /**

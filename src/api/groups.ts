@@ -1,17 +1,15 @@
 import { api } from 'boot/axios'
 import { SERVER_URL } from 'src/api/paths'
-import type { Group } from 'src/models'
+import type { Pagination, Group } from 'src/models'
 
 /**
  * Retrieve rows
- * @param page Page number
- * @param size Items per page
- * @param superiorId superior ID
- * @param params Optional filter or sort parameters
+ * @param pagination Pagination and sort parameters
+ * @param filters Optional filter
  * @returns Rows data
  */
-export const retrieveGroups = (page: number, size: number, superiorId: number | undefined, params?: object) => {
-  return api.get(SERVER_URL.GROUP, { params: { page: page - 1, size: size, superiorId, ...params } })
+export const retrieveGroups = (pagination: Pagination, filters?: object) => {
+  return api.get(SERVER_URL.GROUP, { params: { ...pagination, page: pagination.page - 1, ...filters } })
 }
 
 /**
@@ -20,6 +18,14 @@ export const retrieveGroups = (page: number, size: number, superiorId: number | 
  */
 export const retrieveGroupTree = () => {
   return api.get(`${SERVER_URL.GROUP}/tree`)
+}
+
+/**
+ * Retrieve members for a specific group
+ * @returns tree data
+ */
+export const retrieveGroupMembers = (id: number) => {
+  return api.get(`${SERVER_URL.GROUP}/${id}/members`)
 }
 
 /**
