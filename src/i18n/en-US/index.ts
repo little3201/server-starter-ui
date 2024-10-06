@@ -18,6 +18,7 @@ export default {
   description: 'Description',
   lastModifiedDate: 'Last Modified Date',
   username: 'Username',
+  fullName: 'Full Name',
   password: 'Password',
   email: 'Email',
   accountNonLocked: 'Locked',
@@ -46,7 +47,6 @@ export default {
   content: 'Content',
   os: 'OS',
   browser: 'Browser',
-  Time: 'Time',
   status: 'Status',
   operation: 'Operated Time',
   responseTimes: 'Response Times',
@@ -72,6 +72,8 @@ export default {
   unique: 'Unique',
   comment: 'Comment',
   queryable: 'Queryable',
+  selected: 'Selected',
+  unselected: 'Not Selected',
 
   actions: 'Actions ',
   import: 'Import',
@@ -90,6 +92,7 @@ export default {
   download: 'Download',
   config: 'Config',
   preview: 'Preview',
+  relation: 'Relation',
 
   home: 'Home',
   system: 'System',

@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia'
 import { api } from 'boot/axios'
 import { retrievePrivilegeTree } from 'src/api/privileges'
-import type { Privilege } from 'src/models'
+import type { PrivilegeTreeNode } from 'src/models'
 
 interface User {
   username: string
@@ -12,7 +12,7 @@ export const useUserStore = defineStore('user', {
   state: () => ({
     user: null as User | null,
     access_token: null as string | null,
-    privileges: [] as Privilege[]
+    privileges: [] as PrivilegeTreeNode[]
   }),
   actions: {
     async logout() {
@@ -31,7 +31,7 @@ export const useUserStore = defineStore('user', {
         access_token: res.data.access_token
       })
       // privileges
-      const response = await retrievePrivilegeTree(username)
+      const response = await retrievePrivilegeTree()
       this.$patch({
         privileges: response.data
       })

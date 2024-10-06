@@ -3,12 +3,18 @@ interface AudtiMetadata {
   lastModifiedDate?: Date
 }
 
+export interface Pagination {
+  page: number,
+  size: number,
+  sortBy: string | null,
+  descending: boolean | null
+}
+
 export interface User extends AudtiMetadata {
   username: string
+  fullName: string
   email: string
   avatar?: string
-  roleId?: number | null
-  groupId?: number | null
   accountNonLocked?: boolean
   accountExpiresAt?: Date
   credentialsExpiresAt?: Date
@@ -25,22 +31,6 @@ export interface Group extends AudtiMetadata {
 export interface Role extends AudtiMetadata {
   name: string
   privileges: number | undefined
-  enabled?: boolean
-  description?: string
-}
-
-export interface Privilege extends AudtiMetadata {
-  name: string
-  superiorId?: number
-  path: string
-  order: number
-  component: string
-  redirect?: string
-  icon: string
-  hidden?: boolean
-  actions?: string[]
-  count?: number
-  hasChildren?: boolean
   enabled?: boolean
   description?: string
 }
@@ -72,12 +62,14 @@ export interface TreeNode {
 }
 
 export interface PrivilegeTreeNode extends TreeNode {
-  path: string
-  component: string
-  redirect?: string
-  icon: string
-  hidden?: boolean
-  actions?: string[]
+  meta: {
+    path: string
+    component: string
+    redirect?: string
+    icon: string
+    hidden?: boolean
+    actions?: string[]
+  },
   children?: PrivilegeTreeNode[]
 }
 

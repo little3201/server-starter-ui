@@ -4,15 +4,18 @@ import { dayjs } from 'element-plus'
 import draggable from 'vuedraggable'
 import Dialog from 'components/Dialog.vue'
 import { retrieveOperationLogs, fetchOperationLog, removeOperationLog } from 'src/api/operation-logs'
-import type { OperationLog } from 'src/models'
+import type { Pagination, OperationLog } from 'src/models'
 
 
 const loading = ref<boolean>(false)
 const datas = ref<Array<OperationLog>>([])
-const pagination = reactive({
+const total = ref<number>(0)
+
+const pagination = reactive<Pagination>({
   page: 1,
   size: 10,
-  total: 0
+  sortBy: 'id',
+  descending: true
 })
 
 const checkAll = ref<boolean>(true)
@@ -20,7 +23,7 @@ const isIndeterminate = ref<boolean>(false)
 const checkedColumns = ref<Array<string>>(['module', 'httpMethod', 'params', 'ip', 'location', 'status', 'operatedTime'])
 const columns = ref<Array<string>>(['module', 'httpMethod', 'params', 'ip', 'location', 'status', 'operatedTime'])
 
-const searchForm = ref({
+const filters = ref({
   operation: null,
   operator: null
 })
@@ -52,9 +55,9 @@ function pageChange(currentPage: number, pageSize: number) {
  * 加载列表
  */
 async function load() {
-  retrieveOperationLogs(pagination.page, pagination.size).then(res => {
+  retrieveOperationLogs(pagination, filters.value).then(res => {
     datas.value = res.data.content
-    pagination.total = res.data.totalElements
+    total.value = res.data.page.totalElements
   }).finally(() => loading.value = false)
 }
 
@@ -73,7 +76,7 @@ async function loadOne(id: number) {
  * reset
  */
 function reset() {
-  searchForm.value = {
+  filters.value = {
     operation: null,
     operator: null
   }
@@ -134,12 +137,12 @@ function handleCheckedChange(value: string[]) {
 <template>
   <ElSpace size="large" fill>
     <ElCard shadow="never">
-      <ElForm inline :model="searchForm">
+      <ElForm inline :model="filters">
         <ElFormItem :label="$t('operation')" prop="operation">
-          <ElInput v-model="searchForm.operation" :placeholder="$t('inputText') + $t('operation')" />
+          <ElInput v-model="filters.operation" :placeholder="$t('inputText') + $t('operation')" />
         </ElFormItem>
         <ElFormItem :label="$t('operator')" prop="operator">
-          <ElInput v-model="searchForm.operator" :placeholder="$t('inputText') + $t('operator')" />
+          <ElInput v-model="filters.operator" :placeholder="$t('inputText') + $t('operator')" />
         </ElFormItem>
         <ElFormItem>
           <ElButton type="primary" @click="load">
@@ -244,8 +247,7 @@ function handleCheckedChange(value: string[]) {
           </template>
         </ElTableColumn>
       </ElTable>
-      <ElPagination layout="prev, pager, next, sizes, jumper, ->, total" @change="pageChange"
-        :total="pagination.total" />
+      <ElPagination layout="prev, pager, next, sizes, jumper, ->, total" @change="pageChange" :total="total" />
     </ElCard>
   </ElSpace>
 

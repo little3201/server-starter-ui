@@ -18,11 +18,7 @@ const props = withDefaults(defineProps<{
   height: '500px'
 })
 
-const theme = computed(() => {
-  const echartTheme: boolean | string = appStore.isDark ? true : 'auto'
-
-  return echartTheme
-})
+const theme = computed(() => appStore.isDark ? true : 'auto')
 
 const options = computed(() => {
   return Object.assign({}, props.options, {

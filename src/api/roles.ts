@@ -1,28 +1,23 @@
 import { api } from 'boot/axios'
 import { SERVER_URL } from 'src/api/paths'
-import type { Role } from 'src/models'
+import type { Pagination, Role } from 'src/models'
 
 /**
  * Retrieve rows
- * @param page Page number
- * @param size Items per page
- * @param params Optional filter or sort parameters
+ * @param pagination Pagination
+ * @param filters Optional filter or sort parameters
  * @returns Rows data
  */
-export const retrieveRoles = (page?: number, size?: number, params?: object) => {
-  if (page && size) {
-    return api.get(SERVER_URL.ROLE, { params: { page: page - 1, size, ...params } })
-  }
-  return api.get(SERVER_URL.ROLE)
+export const retrieveRoles = (pagination: Pagination, filters?: object) => {
+  return api.get(SERVER_URL.ROLE, { params: { ...pagination, page: pagination.page - 1, ...filters } })
 }
 
 /**
- * Fetch a specific row
- * @param id Row ID
- * @returns Row data
+ * Retrieve members for a specific role
+ * @returns tree data
  */
-export const fetchRole = (id: number) => {
-  return api.get(`${SERVER_URL.ROLE}/${id}`)
+export const retrieveRoleMembers = (id: number) => {
+  return api.get(`${SERVER_URL.ROLE}/${id}/members`)
 }
 
 /**
@@ -35,12 +30,12 @@ export const retrieveRolePrivileges = (id: number) => {
 }
 
 /**
- * Retrieve groups associated with a role
- * @param id Role ID
- * @returns Role groups
+ * Fetch a specific row
+ * @param id Row ID
+ * @returns Row data
  */
-export const retrieveRoleGroups = (id: number) => {
-  return api.get(`${SERVER_URL.ROLE}/${id}/groups`)
+export const fetchRole = (id: number) => {
+  return api.get(`${SERVER_URL.ROLE}/${id}`)
 }
 
 /**

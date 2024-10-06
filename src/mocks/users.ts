@@ -1,5 +1,6 @@
 import { http, HttpResponse } from 'msw'
 import type { User } from 'src/models'
+import { dayjs } from 'element-plus'
 
 const datas: User[] = []
 
@@ -7,12 +8,13 @@ for (let i = 1; i < 28; i++) {
   const data: User = {
     id: i,
     username: 'username' + i,
+    fullName: 'full name' + i,
     avatar: '/src/assets/images/avatar.jpg',
     email: 'username' + i + '@test.com',
-    role: Math.floor((Math.random() * 10)),
-    group: Math.floor((Math.random() * 10)),
     accountNonLocked: i % 2 > 0,
-    enabled: i % 2 > 0
+    enabled: i % 2 > 0,
+    accountExpiresAt: i > 3 ? dayjs().add(Math.floor(Math.random() * 30), 'day').toDate() : undefined,
+    credentialsExpiresAt: i > 3 ? dayjs().add(Math.floor(Math.random() * 30), 'day').toDate() : undefined
   }
   datas.push(data)
 }
@@ -30,26 +32,11 @@ export const usersHandlers = [
     const url = new URL(request.url)
     const page = url.searchParams.get('page')
     const size = url.searchParams.get('size')
-    const groupId = url.searchParams.get('groupId')
     // Construct a JSON response with the list of all Row
     // as the response body.
-    let data = {}
-    if (groupId) {
-      if (Number(groupId) === 1) {
-        data = {
-          content: Array.from(datas.slice(Number(page) * Number(size), (Number(page) + 1) * Number(size))),
-          totalElements: datas.length
-        }
-      } else {
-        let filtered = datas.filter(item => item.group === Number(groupId))
-        data = {
-          content: Array.from(filtered.slice(Number(page) * Number(size), (Number(page) + 1) * Number(size))),
-          totalElements: datas.length
-        }
-      }
-    } else {
-      data = {
-        content: Array.from(datas.slice(Number(page) * Number(size), Number(page) * Number(size))),
+    let data = {
+      content: Array.from(datas.slice(Number(page) * Number(size), (Number(page) + 1) * Number(size))),
+      page: {
         totalElements: datas.length
       }
     }

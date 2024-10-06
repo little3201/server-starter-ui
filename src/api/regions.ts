@@ -1,20 +1,16 @@
 import { api } from 'boot/axios'
 import { SERVER_URL } from 'src/api/paths'
-import type { Region } from 'src/models'
+import type { Pagination, Region } from 'src/models'
 
 /**
  * Retrieve rows
  * @param page Page number
  * @param size Items per page
- * @param params Optional filter or sort parameters
+ * @param filters Optional filter or sort parameters
  * @returns Rows data
  */
-export const retrieveRegions = (page: number, size: number, params?: object) => {
-  return api.get(SERVER_URL.REGION, { params: { page: page - 1, size, ...params } })
-}
-
-export const retrieveRegionSubset = (id: number) => {
-  return api.get(`${SERVER_URL.REGION}/${id}/subset`)
+export const retrieveRegions = (pagination: Pagination, filters?: object) => {
+  return api.get(SERVER_URL.REGION, { params: { ...pagination, page: pagination.page - 1, ...filters } })
 }
 
 /**

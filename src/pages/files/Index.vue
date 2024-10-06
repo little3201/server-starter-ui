@@ -3,16 +3,19 @@ import { ref, onMounted, reactive } from 'vue'
 import draggable from 'vuedraggable'
 import Dialog from 'components/Dialog.vue'
 import { retrieveFiles, fetchFile } from 'src/api/files'
-import type { File } from 'src/models'
+import type { Pagination, File } from 'src/models'
 import { formatFileSize } from 'src/utils'
 
 
 const loading = ref<boolean>(false)
 const datas = ref<Array<File>>([])
-const pagination = reactive({
+const total = ref<number>(0)
+
+const pagination = reactive<Pagination>({
   page: 1,
   size: 10,
-  total: 0
+  sortBy: 'id',
+  descending: true
 })
 
 const checkAll = ref<boolean>(true)
@@ -23,7 +26,7 @@ const columns = ref<Array<string>>(['name', 'type', 'size'])
 const uploadLoading = ref<boolean>(false)
 const dialogVisible = ref<boolean>(false)
 
-const searchForm = ref({
+const filters = ref({
   name: null
 })
 
@@ -37,14 +40,21 @@ function pageChange(currentPage: number, pageSize: number) {
   load()
 }
 
+// 排序变化处理
+function handleSortChange(data: { prop: string, order: any }) {
+  pagination.sortBy = data.prop
+  pagination.descending = data.order === 'descending'
+  load()
+}
+
 /**
  * 加载列表
  */
 async function load() {
   loading.value = true
-  retrieveFiles(pagination.page, pagination.size).then(res => {
+  retrieveFiles(pagination, filters.value).then(res => {
     datas.value = res.data.content
-    pagination.total = res.data.totalElements
+    total.value = res.data.page.totalElements
   }).finally(() => loading.value = false)
 }
 
@@ -52,7 +62,7 @@ async function load() {
  * reset
  */
 function reset() {
-  searchForm.value = {
+  filters.value = {
     name: null
   }
   load()
@@ -128,9 +138,9 @@ function handleCheckedChange(value: string[]) {
   <div>
     <ElSpace size="large" fill>
       <ElCard shadow="never">
-        <ElForm inline :model="searchForm">
+        <ElForm inline :model="filters">
           <ElFormItem :label="$t('name')" prop="name">
-            <ElInput v-model="searchForm.name" :placeholder="$t('inputText') + $t('name')" />
+            <ElInput v-model="filters.name" :placeholder="$t('inputText') + $t('name')" />
           </ElFormItem>
           <ElFormItem>
             <ElButton type="primary" @click="load">
@@ -148,6 +158,9 @@ function handleCheckedChange(value: string[]) {
           <ElCol :span="16" class="text-left">
             <ElButton type="primary" plain @click="uploadRow">
               <div class="i-material-symbols:upload" />{{ $t('upload') }}
+            </ElButton>
+            <ElButton type="danger" plain>
+              <div class="i-material-symbols:delete-outline-rounded" />{{ $t('remove') }}
             </ElButton>
           </ElCol>
 
@@ -192,12 +205,13 @@ function handleCheckedChange(value: string[]) {
           </ElCol>
         </ElRow>
 
-        <ElTable v-loading="loading" :data="datas" lazy :load="load" row-key="id" stripe table-layout="auto">
+        <ElTable v-loading="loading" :data="datas" lazy :load="load" row-key="id" stripe table-layout="auto"
+          @sort-change="handleSortChange">
           <ElTableColumn type="selection" width="55" />
           <ElTableColumn type="index" :label="$t('no')" width="55" />
           <ElTableColumn prop="name" :label="$t('name')" />
           <ElTableColumn prop="type" :label="$t('type')" />
-          <ElTableColumn prop="size" :label="$t('size')">
+          <ElTableColumn prop="size" :label="$t('size')" sortable="custom">
             <template #default="scope">
               {{ formatFileSize(scope.row.size) }}
             </template>
@@ -217,15 +231,14 @@ function handleCheckedChange(value: string[]) {
             </template>
           </ElTableColumn>
         </ElTable>
-        <ElPagination layout="prev, pager, next, sizes, jumper, ->, total" @change="pageChange"
-          :total="pagination.total" />
+        <ElPagination layout="prev, pager, next, sizes, jumper, ->, total" @change="pageChange" :total="total" />
       </ElCard>
     </ElSpace>
 
     <Dialog v-model="dialogVisible" :title="$t('upload')" width="35%">
       <ElUpload ref="upload" :limit="1" drag action="/api/upload">
         <div class="el-icon--upload inline-flex justify-center">
-          <div class="i-material-symbols:cloud-arrow-up " />
+          <div class="i-material-symbols:upload-rounded" />
         </div>
         <div class="el-upload__text">
           Drop file here or <em>click to upload</em>

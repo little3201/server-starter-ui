@@ -18,6 +18,7 @@ export default {
   description: '描述',
   lastModifiedDate: '更新时间',
   username: '账号',
+  fullName: '姓名',
   password: '密码',
   email: '邮箱',
   accountNonLocked: '锁状态',
@@ -71,6 +72,8 @@ export default {
   unique: '唯一',
   comment: '描述',
   queryable: '查询',
+  selected: '已选择',
+  unselected: '未选择',
 
   actions: '操作',
   import: '导入',
@@ -89,6 +92,7 @@ export default {
   download: '下载',
   config: '配置',
   preview: '预览',
+  relation: '关联',
 
   home: '首页',
   system: '系统管理',
