@@ -159,6 +159,9 @@ function handleCheckedChange(value: string[]) {
             <ElButton type="primary" plain @click="uploadRow">
               <div class="i-material-symbols:upload" />{{ $t('upload') }}
             </ElButton>
+            <ElButton type="danger" plain>
+              <div class="i-material-symbols:delete-outline-rounded" />{{ $t('remove') }}
+            </ElButton>
           </ElCol>
 
           <ElCol :span="8" class="text-right">

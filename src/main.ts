@@ -13,12 +13,12 @@ import router from './router'
 import { i18n } from 'boot/i18n'
 
 async function prepareApp() {
-  // if (
-  //   process.env.NODE_ENV !== 'production'
-  // ) {
-  //   const { worker } = await import('boot/msw-browser')
-  //   return worker.start()
-  // }
+  if (
+    process.env.NODE_ENV !== 'production'
+  ) {
+    const { worker } = await import('boot/msw-browser')
+    return worker.start()
+  }
 
   return Promise.resolve()
 }
