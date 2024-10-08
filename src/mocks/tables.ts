@@ -1,4 +1,5 @@
 import { http, HttpResponse } from 'msw'
+import { SERVER_URL } from 'src/api/paths'
 import type { Table, Column, Code } from 'src/models'
 
 const datas: Table[] = [
@@ -66,7 +67,7 @@ const codes: Code[] = [
 ]
 
 export const tablesHandlers = [
-  http.get('/api/tables/:id/codes', ({ params }) => {
+  http.get(`/api${SERVER_URL.TABLE}/:id/codes`, ({ params }) => {
     const { id } = params
     if (id) {
       return HttpResponse.json(codes)
@@ -74,7 +75,7 @@ export const tablesHandlers = [
       return HttpResponse.json(null)
     }
   }),
-  http.get('/api/tables/:id/columns', ({ params }) => {
+  http.get(`/api${SERVER_URL.TABLE}/:id/columns`, ({ params }) => {
     const { id } = params
     if (id) {
       return HttpResponse.json(columnDatas)
@@ -82,7 +83,7 @@ export const tablesHandlers = [
       return HttpResponse.json(null)
     }
   }),
-  http.get('/api/tables/:id', ({ params }) => {
+  http.get(`/api${SERVER_URL.TABLE}/:id`, ({ params }) => {
     const { id } = params
     if (id) {
       return HttpResponse.json(datas.filter(item => item.id === Number(id))[0])
@@ -90,7 +91,7 @@ export const tablesHandlers = [
       return HttpResponse.json(null)
     }
   }),
-  http.get('/api/tables', ({ request }) => {
+  http.get(`/api${SERVER_URL.TABLE}`, ({ request }) => {
     const url = new URL(request.url)
     const page = url.searchParams.get('page')
     const size = url.searchParams.get('size')
@@ -105,7 +106,7 @@ export const tablesHandlers = [
 
     return HttpResponse.json(data)
   }),
-  http.delete('/api/tables/:id', ({ params }) => {
+  http.delete(`/api${SERVER_URL.TABLE}/:id`, ({ params }) => {
     // All request path params are provided in the "params"
     // argument of the response resolver.
     const { id } = params

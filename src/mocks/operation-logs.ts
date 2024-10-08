@@ -1,4 +1,5 @@
 import { http, HttpResponse } from 'msw'
+import { SERVER_URL } from 'src/api/paths'
 import type { OperationLog } from 'src/models'
 
 const datas: OperationLog[] = [
@@ -115,7 +116,7 @@ const datas: OperationLog[] = [
 ]
 
 export const operationLogsHandlers = [
-  http.get('/api/operation-logs/:id', ({ params }) => {
+  http.get(`/api${SERVER_URL.OPERATION_LOG}/:id`, ({ params }) => {
     const { id } = params
     if (id) {
       return HttpResponse.json(datas.filter(item => item.id === Number(id))[0])
@@ -123,7 +124,7 @@ export const operationLogsHandlers = [
       return HttpResponse.json(null)
     }
   }),
-  http.get('/api/operation-logs', ({ request }) => {
+  http.get(`/api${SERVER_URL.OPERATION_LOG}`, ({ request }) => {
     const url = new URL(request.url)
     const page = url.searchParams.get('page')
     const size = url.searchParams.get('size')
@@ -138,7 +139,7 @@ export const operationLogsHandlers = [
 
     return HttpResponse.json(data)
   }),
-  http.delete('/api/operation-logs/:id', ({ params }) => {
+  http.delete(`/api${SERVER_URL.OPERATION_LOG}/:id`, ({ params }) => {
     // All request path params are provided in the "params"
     // argument of the response resolver.
     const { id } = params

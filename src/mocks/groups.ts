@@ -1,4 +1,5 @@
 import { http, HttpResponse } from 'msw'
+import { SERVER_URL } from 'src/api/paths'
 import type { Group, TreeNode } from 'src/models'
 
 const datas: Group[] = [
@@ -59,10 +60,10 @@ const treeNodes: TreeNode[] = [
 ]
 
 export const groupsHandlers = [
-  http.get('/api/groups/tree', () => {
+  http.get(`/api${SERVER_URL.GROUP}/tree`, () => {
     return HttpResponse.json(treeNodes)
   }),
-  http.get('/api/groups/:id', ({ params }) => {
+  http.get(`/api${SERVER_URL.GROUP}/:id`, ({ params }) => {
     const { id } = params
     if (id) {
       let array = datas.filter(item => item.id === Number(id))
@@ -71,7 +72,7 @@ export const groupsHandlers = [
       return HttpResponse.json(null)
     }
   }),
-  http.get('/api/groups', ({ request }) => {
+  http.get(`/api${SERVER_URL.GROUP}`, ({ request }) => {
     const url = new URL(request.url)
     const page = url.searchParams.get('page')
     const size = url.searchParams.get('size')
@@ -88,7 +89,7 @@ export const groupsHandlers = [
 
     return HttpResponse.json(data)
   }),
-  http.post('/api/groups', async ({ request }) => {
+  http.post(`/api${SERVER_URL.GROUP}`, async ({ request }) => {
     // Read the intercepted request body as JSON.
     const newData = await request.json() as Group
 
@@ -99,7 +100,7 @@ export const groupsHandlers = [
     // response and send back the newly created Row!
     return HttpResponse.json(newData, { status: 201 })
   }),
-  http.delete('/api/groups/:id', ({ params }) => {
+  http.delete(`/api${SERVER_URL.GROUP}/:id`, ({ params }) => {
     // All request path params are provided in the "params"
     // argument of the response resolver.
     const { id } = params

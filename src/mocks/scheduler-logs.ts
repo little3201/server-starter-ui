@@ -1,4 +1,5 @@
 import { http, HttpResponse } from 'msw'
+import { SERVER_URL } from 'src/api/paths'
 import type { SchedulerLog } from 'src/models'
 
 const datas: SchedulerLog[] = [
@@ -94,7 +95,7 @@ const datas: SchedulerLog[] = [
 
 
 export const schedulerLogsHandlers = [
-  http.get('/api/scheduler-logs/:id', ({ params }) => {
+  http.get(`/api${SERVER_URL.SCHEDULER_LOG}/:id`, ({ params }) => {
     const { id } = params
     if (id) {
       return HttpResponse.json(datas.filter(item => item.id === Number(id))[0])
@@ -102,7 +103,7 @@ export const schedulerLogsHandlers = [
       return HttpResponse.json(null)
     }
   }),
-  http.get('/api/scheduler-logs', ({ request }) => {
+  http.get(`/api${SERVER_URL.SCHEDULER_LOG}`, ({ request }) => {
     const url = new URL(request.url)
     const page = url.searchParams.get('page')
     const size = url.searchParams.get('size')
@@ -117,7 +118,7 @@ export const schedulerLogsHandlers = [
 
     return HttpResponse.json(data)
   }),
-  http.delete('/api/scheduler-logs/:id', ({ params }) => {
+  http.delete(`/api${SERVER_URL.SCHEDULER_LOG}/:id`, ({ params }) => {
     // All request path params are provided in the "params"
     // argument of the response resolver.
     const { id } = params

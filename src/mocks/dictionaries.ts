@@ -1,4 +1,5 @@
 import { http, HttpResponse } from 'msw'
+import { SERVER_URL } from 'src/api/paths'
 import type { Dictionary } from 'src/models'
 
 const datas: Dictionary[] = []
@@ -29,7 +30,7 @@ for (let i = 1; i < 28; i++) {
 }
 
 export const dictionariesHandlers = [
-  http.get('/api/dictionaries/:id', ({ params }) => {
+  http.get(`/api${SERVER_URL.DICTIONARY}/:id`, ({ params }) => {
     const { id } = params
     if (id) {
       let array = datas.filter(item => item.id === Number(id))
@@ -41,11 +42,11 @@ export const dictionariesHandlers = [
       return HttpResponse.json(null)
     }
   }),
-  http.get('/api/dictionaries/:id/subset', ({ params }) => {
-    const superiorId = params.id
-    return HttpResponse.json(subDatas.filter(item => item.superiorId === Number(superiorId)))
+  http.get(`/api${SERVER_URL.DICTIONARY}/:id/subset`, ({ params }) => {
+    const { id } = params
+    return HttpResponse.json(subDatas.filter(item => item.superiorId === Number(id)))
   }),
-  http.get('/api/dictionaries', ({ request }) => {
+  http.get(`/api${SERVER_URL.DICTIONARY}`, ({ request }) => {
     const url = new URL(request.url)
 
     const page = url.searchParams.get('page')
@@ -62,7 +63,7 @@ export const dictionariesHandlers = [
 
     return HttpResponse.json(data)
   }),
-  http.post('/api/dictionaries', async ({ request }) => {
+  http.post(`/api${SERVER_URL.DICTIONARY}`, async ({ request }) => {
     // Read the intercepted request body as JSON.
     const newData = await request.json() as Dictionary
 

@@ -1,4 +1,5 @@
 import { http, HttpResponse } from 'msw'
+import { SERVER_URL } from 'src/api/paths'
 import type { AuditLog } from 'src/models'
 
 const datas: AuditLog[] = [
@@ -137,7 +138,7 @@ const datas: AuditLog[] = [
 ]
 
 export const auditLogsHandlers = [
-  http.get('/api/audit-logs/:id', ({ params }) => {
+  http.get(`/api${SERVER_URL.AUDIT_LOG}/:id`, ({ params }) => {
     const { id } = params
     if (id) {
       return HttpResponse.json(datas.filter(item => item.id === Number(id))[0])
@@ -145,7 +146,7 @@ export const auditLogsHandlers = [
       return HttpResponse.json(null)
     }
   }),
-  http.get('/api/audit-logs', ({ request }) => {
+  http.get(`/api${SERVER_URL.AUDIT_LOG}`, ({ request }) => {
     const url = new URL(request.url)
     const page = url.searchParams.get('page')
     const size = url.searchParams.get('size')
@@ -160,7 +161,7 @@ export const auditLogsHandlers = [
 
     return HttpResponse.json(data)
   }),
-  http.delete('/api/audit-logs/:id', ({ params }) => {
+  http.delete(`/api${SERVER_URL.AUDIT_LOG}/:id`, ({ params }) => {
     // All request path params are provided in the "params"
     // argument of the response resolver.
     const { id } = params
