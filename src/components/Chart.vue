@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, ref, unref, watch, onMounted, onBeforeUnmount, onActivated } from 'vue'
+import { computed, ref, watch, onMounted, onBeforeUnmount, onActivated } from 'vue'
 import { debounce } from 'lodash-es'
 import echarts from 'boot/echarts'
 import type { EChartsOption } from 'echarts'
@@ -43,9 +43,9 @@ const styles = computed(() => {
 })
 
 const initChart = () => {
-  if (unref(elRef) && props.options) {
-    echartRef = echarts.init(unref(elRef) as HTMLElement)
-    echartRef?.setOption(unref(options))
+  if (elRef.value && props.options) {
+    echartRef = echarts.init(elRef.value as HTMLElement)
+    echartRef?.setOption(options.value)
   }
 }
 
@@ -90,15 +90,15 @@ onMounted(() => {
   window.addEventListener('resize', resizeHandler)
 
   contentEl.value = document.getElementsByClassName(`el-layout-content`)[0]
-  if (unref(contentEl)) {
-    (unref(contentEl) as Element).addEventListener('transitionend', handleContentResize as EventListener)
+  if (contentEl.value) {
+    (contentEl.value as Element).addEventListener('transitionend', handleContentResize as EventListener)
   }
 })
 
 onBeforeUnmount(() => {
   window.removeEventListener('resize', resizeHandler)
-  if (unref(contentEl)) {
-    (unref(contentEl) as Element).removeEventListener('transitionend', handleContentResize as EventListener)
+  if (contentEl.value) {
+    (contentEl.value as Element).removeEventListener('transitionend', handleContentResize as EventListener)
   }
 })
 
