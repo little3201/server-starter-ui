@@ -1,4 +1,5 @@
 import { http, HttpResponse } from 'msw'
+import { SERVER_URL } from 'src/api/paths'
 import type { PrivilegeTreeNode } from 'src/models'
 
 const treeNodes: PrivilegeTreeNode[] = [
@@ -175,7 +176,7 @@ const treeNodes: PrivilegeTreeNode[] = [
 ]
 
 export const privilegesHandlers = [
-  http.get('/api/privileges', () => {
+  http.get(`/api${SERVER_URL.PRIVILEGE}`, () => {
     return HttpResponse.json(treeNodes)
   })
 ]

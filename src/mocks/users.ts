@@ -1,5 +1,6 @@
 import { http, HttpResponse } from 'msw'
 import type { User } from 'src/models'
+import { SERVER_URL } from 'src/api/paths'
 import { dayjs } from 'element-plus'
 
 const datas: User[] = []
@@ -20,7 +21,7 @@ for (let i = 1; i < 28; i++) {
 }
 
 export const usersHandlers = [
-  http.get('/api/users/:id', ({ params }) => {
+  http.get(`/api${SERVER_URL.USER}/:id`, ({ params }) => {
     const { id } = params
     if (id) {
       return HttpResponse.json(datas.filter(item => item.id === Number(id))[0])
@@ -28,7 +29,7 @@ export const usersHandlers = [
       return HttpResponse.json(null)
     }
   }),
-  http.get('/api/users', ({ request }) => {
+  http.get(`/api${SERVER_URL.USER}`, ({ request }) => {
     const url = new URL(request.url)
     const page = url.searchParams.get('page')
     const size = url.searchParams.get('size')
@@ -43,7 +44,7 @@ export const usersHandlers = [
 
     return HttpResponse.json(data)
   }),
-  http.post('/api/users', async ({ request }) => {
+  http.post(`/api${SERVER_URL.USER}`, async ({ request }) => {
     // Read the intercepted request body as JSON.
     const newData = await request.json() as User
 
@@ -54,7 +55,7 @@ export const usersHandlers = [
     // response and send back the newly created Row!
     return HttpResponse.json(newData, { status: 201 })
   }),
-  http.delete('/api/users/:id', ({ params }) => {
+  http.delete(`/api${SERVER_URL.USER}/:id`, ({ params }) => {
     // All request path params are provided in the "params"
     // argument of the response resolver.
     const { id } = params

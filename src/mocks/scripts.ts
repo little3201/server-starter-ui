@@ -1,4 +1,5 @@
 import { http, HttpResponse } from 'msw'
+import { SERVER_URL } from 'src/api/paths'
 import type { Script } from 'src/models'
 
 const datas: Script[] = [
@@ -40,7 +41,7 @@ const datas: Script[] = [
 ]
 
 export const scriptsHandlers = [
-  http.get('/api/scripts/:id', ({ params }) => {
+  http.get(`/api${SERVER_URL.SCRIPT}/:id`, ({ params }) => {
     const { id } = params
     if (id) {
       return HttpResponse.json(datas.filter(item => item.id === Number(id))[0])
@@ -48,13 +49,13 @@ export const scriptsHandlers = [
       return HttpResponse.json(null)
     }
   }),
-  http.get('/api/scripts', () => {
+  http.get(`/api${SERVER_URL.SCRIPT}`, () => {
     // Construct a JSON response with the list of all Row
     // as the response body.
 
     return HttpResponse.json(datas)
   }),
-  http.delete('/api/scripts/:id', ({ params }) => {
+  http.delete(`/api${SERVER_URL.SCRIPT}/:id`, ({ params }) => {
     // All request path params are provided in the "params"
     // argument of the response resolver.
     const { id } = params

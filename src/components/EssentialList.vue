@@ -29,7 +29,7 @@ function isSubMenu(children: PrivilegeTreeNode[]) {
       <EssentialList :essentialLinks="link.children" :parent-path="pathResolve(parentPath, link.meta.path)" />
     </ElSubMenu>
 
-    <ElMenuItem v-else-if="!link.hidden" :index="pathResolve(parentPath, link.meta.path)">
+    <ElMenuItem v-else-if="!link.meta.hidden" :index="pathResolve(parentPath, link.meta.path)">
       <div :class="[link.meta.icon, 'mr-2 ']" />{{
         $t(link.name) }}
     </ElMenuItem>

@@ -1,4 +1,5 @@
 import { http, HttpResponse } from 'msw'
+import { SERVER_URL } from 'src/api/paths'
 import type { Region } from 'src/models'
 
 const datas: Region[] = []
@@ -29,7 +30,7 @@ for (let i = 1; i < 34; i++) {
 }
 
 export const regionsHandlers = [
-  http.get('/api/regions/:id', ({ params }) => {
+  http.get(`/api${SERVER_URL.REGION}/:id`, ({ params }) => {
     const { id } = params
     if (id) {
       let res = datas.filter(item => item.id === Number(id))[0]
@@ -41,7 +42,7 @@ export const regionsHandlers = [
       return HttpResponse.json(null)
     }
   }),
-  http.get('/api/regions', ({ request }) => {
+  http.get(`/api${SERVER_URL.REGION}`, ({ request }) => {
     const url = new URL(request.url)
     const page = url.searchParams.get('page')
     const size = url.searchParams.get('size')
@@ -63,7 +64,7 @@ export const regionsHandlers = [
 
     return HttpResponse.json(data)
   }),
-  http.post('/api/regions', async ({ request }) => {
+  http.post(`/api${SERVER_URL.REGION}`, async ({ request }) => {
     // Read the intercepted request body as JSON.
     const newData = await request.json() as Region
 
@@ -74,7 +75,7 @@ export const regionsHandlers = [
     // response and send back the newly created Row!
     return HttpResponse.json(newData, { status: 201 })
   }),
-  http.delete('/api/regions/:id', ({ params }) => {
+  http.delete(`/api${SERVER_URL.REGION}/:id`, ({ params }) => {
     // All request path params are provided in the "params"
     // argument of the response resolver.
     const { id } = params
