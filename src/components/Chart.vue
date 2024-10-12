@@ -1,16 +1,14 @@
 <script setup lang="ts">
 import { computed, ref, watch, onMounted, onBeforeUnmount, onActivated } from 'vue'
 import { debounce } from 'lodash-es'
-import echarts from 'boot/echarts'
-import type { EChartsOption } from 'echarts'
+import ApexCharts from 'apexcharts'
 import { useAppStore } from 'stores/app-store'
 import { isString } from 'src/utils'
-
 
 const appStore = useAppStore()
 
 const props = withDefaults(defineProps<{
-  options: EChartsOption
+  options: ApexCharts.ApexOptions // 使用 ApexCharts 的配置类型
   width?: number | string
   height?: number | string
 }>(), {
@@ -18,17 +16,19 @@ const props = withDefaults(defineProps<{
   height: '500px'
 })
 
-const theme = computed(() => appStore.isDark ? true : 'auto')
+const theme = computed(() => appStore.isDark ? 'dark' : 'light')
 
 const options = computed(() => {
   return Object.assign({}, props.options, {
-    darkMode: theme.value
+    theme: {
+      mode: theme.value
+    }
   })
 })
 
 const elRef = ref<HTMLElement | null>(null)
 
-let echartRef: Nullable<echarts.ECharts> = null
+let chartRef: Nullable<ApexCharts> = null
 
 const contentEl = ref<Element>()
 
@@ -44,16 +44,20 @@ const styles = computed(() => {
 
 const initChart = () => {
   if (elRef.value && props.options) {
-    echartRef = echarts.init(elRef.value as HTMLElement)
-    echartRef?.setOption(options.value)
+    // 销毁旧图表，防止重复渲染
+    if (chartRef) {
+      chartRef.destroy()
+    }
+    chartRef = new ApexCharts(elRef.value, options.value)
+    chartRef?.render()
   }
 }
 
 watch(
   () => options.value,
   (options) => {
-    if (echartRef) {
-      echartRef?.setOption(options)
+    if (chartRef) {
+      chartRef?.updateOptions(options, true, false) // 第二个参数 true 表示对图表强制更新
     }
   },
   {
@@ -62,8 +66,9 @@ watch(
 )
 
 const resizeHandler = debounce(() => {
-  if (echartRef) {
-    echartRef.resize()
+  if (chartRef) {
+    chartRef?.destroy() // 销毁旧图表
+    initChart()         // 重新初始化图表
   }
 }, 100)
 
@@ -73,14 +78,11 @@ const contentResizeHandler = async (e: TransitionEvent) => {
   }
 }
 
-// 使用一个同步的事件处理器
 const handleContentResize = (e: TransitionEvent): void => {
   if (e.propertyName === 'width') {
-    // 调用异步函数
     contentResizeHandler(e)
   }
 }
-
 
 onMounted(() => {
   setTimeout(() => {
@@ -100,11 +102,15 @@ onBeforeUnmount(() => {
   if (contentEl.value) {
     (contentEl.value as Element).removeEventListener('transitionend', handleContentResize as EventListener)
   }
+
+  if (chartRef) {
+    chartRef.destroy() // 组件卸载时销毁图表
+  }
 })
 
 onActivated(() => {
-  if (echartRef) {
-    echartRef.resize()
+  if (chartRef) {
+    resizeHandler() // 图表重新激活时重新渲染
   }
 })
 </script>

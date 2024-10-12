@@ -1,13 +1,12 @@
 <script setup lang="ts">
 import { ref, reactive } from 'vue'
-import { dayjs } from 'element-plus'
-import type { EChartsOption } from 'echarts'
+import type { ApexOptions } from 'apexcharts'
 import Chart from 'components/Chart.vue'
-import { lineOptions } from 'src/mocks/echarts-data'
+import { lineOptions } from 'src/mocks/charts-data'
 
 const value = ref(new Date())
 // 获取指数
-let lineOptionsData = reactive<EChartsOption>(lineOptions) as EChartsOption
+let lineOptionsData = reactive<ApexOptions | object>(lineOptions) as ApexOptions
 </script>
 
 <template>
@@ -16,11 +15,7 @@ let lineOptionsData = reactive<EChartsOption>(lineOptions) as EChartsOption
       <Chart :options="lineOptionsData" :height="400" />
     </ElCard>
     <ElCard shadow="never">
-      <ElCalendar v-model="value">
-        <template #date-cell="{ data }">
-          <span>{{ dayjs(data.day).date() }}</span>
-        </template>
-      </ElCalendar>
+      <ElCalendar v-model="value" />
     </ElCard>
   </ElSpace>
 </template>
