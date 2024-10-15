@@ -42,9 +42,11 @@ function signOut() {
             </ElSpace>
             <template #dropdown>
               <ElDropdownMenu>
-                <ElDropdownItem>
-                  <div class="i-material-symbols:manage-accounts-outline-rounded mr-2 " />{{ $t('profile') }}
-                </ElDropdownItem>
+                <RouterLink to="/profile" class="no-underline">
+                  <ElDropdownItem>
+                    <div class="i-material-symbols:manage-accounts-outline-rounded mr-2 " />{{ $t('profile') }}
+                  </ElDropdownItem>
+                </RouterLink>
                 <ElDropdownItem divided @click="signOut">
                   <div class="i-material-symbols:logout-rounded mr-2 " />{{ $t('signout') }}
                 </ElDropdownItem>

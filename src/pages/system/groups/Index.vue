@@ -4,6 +4,7 @@ import type { FormInstance, FormRules } from 'element-plus'
 import draggable from 'vuedraggable'
 import Dialog from 'components/Dialog.vue'
 import { retrieveGroups, retrieveGroupTree, fetchGroup, createGroup, modifyGroup, removeGroup } from 'src/api/groups'
+import { retrieveUsers } from 'src/api/users'
 import type { Pagination, Group, TreeNode } from 'src/models'
 
 
@@ -13,9 +14,7 @@ const total = ref<number>(0)
 
 const pagination = reactive<Pagination>({
   page: 1,
-  size: 10,
-  sortBy: 'id',
-  descending: true
+  size: 10
 })
 
 const checkAll = ref<boolean>(true)
@@ -36,7 +35,7 @@ const relationVisible = ref<boolean>(false)
 const members = ref([])
 
 const filters = ref({
-  superiorId: null,
+  superiorId: null as number | null,
   name: null
 })
 
@@ -75,6 +74,10 @@ function currentChange(data: TreeNode) {
   load()
 }
 
+async function loadUsers() {
+  retrieveUsers({ page: 1, size: 99 })
+}
+
 /**
  * 加载tree
  */
@@ -108,7 +111,7 @@ function pageChange(currentPage: number, pageSize: number) {
  */
 async function load() {
   loading.value = true
-  filters.value.superiorId = currentNodeKey.value
+  filters.value.superiorId = currentNodeKey.value ?? null
   retrieveGroups(pagination, filters.value).then(res => {
     datas.value = res.data.content
     total.value = res.data.page.totalElements
@@ -119,9 +122,7 @@ async function load() {
  * reset
  */
 function reset() {
-  filters.value = {
-    name: null
-  }
+  filters.value.name = null
   load()
 }
 

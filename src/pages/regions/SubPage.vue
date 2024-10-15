@@ -3,7 +3,7 @@ import { ref, reactive, onMounted } from 'vue'
 import type { FormInstance, FormRules } from 'element-plus'
 import Dialog from 'components/Dialog.vue'
 import { retrieveRegions, fetchRegion, createRegion, modifyRegion, removeRegion } from 'src/api/regions'
-import type { Region } from 'src/models'
+import type { Pagination, Region } from 'src/models'
 
 const props = defineProps<{
   superiorId: number,
@@ -15,9 +15,7 @@ const datas = ref<Array<Region>>([])
 const total = ref<number>(0)
 const pagination = reactive<Pagination>({
   page: 1,
-  size: 10,
-  sortBy: 'id',
-  descending: false
+  size: 10
 })
 
 const saveLoading = ref<boolean>(false)

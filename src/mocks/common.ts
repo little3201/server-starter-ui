@@ -8,7 +8,10 @@ export const commonHandlers = [
 
     return HttpResponse.json({
       user: {
+        id: 1,
         username: username,
+        fullName: '管理员',
+        email: username + '@leafage.top',
         avatar: '/src/assets/images/avatar.jpg'
       },
       access_token: 'eyJhsdf3SFgasd4asdf'

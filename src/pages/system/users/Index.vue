@@ -1,13 +1,11 @@
 <script setup lang="ts">
-import { ref, reactive, onMounted, watch } from 'vue'
+import { ref, reactive, onMounted } from 'vue'
 import type { FormInstance, FormRules } from 'element-plus'
 import { dayjs } from 'element-plus'
 import draggable from 'vuedraggable'
 import Dialog from 'components/Dialog.vue'
-import { retrieveGroupTree } from 'src/api/groups'
 import { retrieveUsers, fetchUser, createUser, modifyUser, removeUser } from 'src/api/users'
-import { retrieveRoles } from 'src/api/roles'
-import type { Pagination, TreeNode, User, Role } from 'src/models'
+import type { Pagination, User } from 'src/models'
 
 const loading = ref<boolean>(false)
 const datas = ref<Array<User>>([])
@@ -15,9 +13,7 @@ const total = ref<number>(0)
 
 const pagination = reactive<Pagination>({
   page: 1,
-  size: 10,
-  sortBy: 'id',
-  descending: true
+  size: 10
 })
 
 const checkAll = ref<boolean>(true)
@@ -29,17 +25,17 @@ const saveLoading = ref<boolean>(false)
 const dialogVisible = ref<boolean>(false)
 
 const filters = ref({
-  groupId: null,
   username: null
 })
 
 const formRef = ref<FormInstance>()
 const initialValues: User = {
   username: '',
+  fullName: '',
   email: '',
-  roleId: null,
   accountNonLocked: true,
-  groupId: null
+  accountExpiresAt: undefined,
+  credentialsExpiresAt: undefined
 }
 const form = ref<User>({ ...initialValues })
 
@@ -54,14 +50,6 @@ const rules = reactive<FormRules<typeof form>>({
     { required: true, trigger: 'blur' },
   ]
 })
-
-/**
- * tree过滤
- */
-const filterNode = (value: string, data: TreeNode) => {
-  if (!value) return true
-  return data.name.includes(value)
-}
 
 /**
  * 分页变化
@@ -137,7 +125,6 @@ function onSubmit() {
           dialogVisible.value = false
         }).finally(() => saveLoading.value = false)
       } else {
-        form.value.groupId = currentNodeKey.value
         createUser(form.value).then(() => {
           load()
           dialogVisible.value = false

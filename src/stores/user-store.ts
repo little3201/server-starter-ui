@@ -4,7 +4,10 @@ import { retrievePrivilegeTree } from 'src/api/privileges'
 import type { PrivilegeTreeNode } from 'src/models'
 
 interface User {
+  id: number
   username: string
+  fullName: string
+  email: string
   avatar: string
 }
 

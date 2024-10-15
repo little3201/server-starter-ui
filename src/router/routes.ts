@@ -12,6 +12,11 @@ export const constantRouterMap: Array<RouteRecordRaw> = [
         path: '',
         name: 'home',
         component: () => import('pages/Index.vue')
+      },
+      {
+        path: 'profile',
+        name: 'profile',
+        component: () => import('pages/profile/Index.vue')
       }
     ]
   },

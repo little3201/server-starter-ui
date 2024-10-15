@@ -13,7 +13,7 @@ const props = withDefaults(defineProps<{
   height?: number | string
 }>(), {
   width: '100%',
-  height: '500px'
+  height: '400px'
 })
 
 const theme = computed(() => appStore.isDark ? 'dark' : 'light')

@@ -6,8 +6,8 @@ interface AudtiMetadata {
 export interface Pagination {
   page: number,
   size: number,
-  sortBy: string | null,
-  descending: boolean | null
+  sortBy?: string,
+  descending?: boolean
 }
 
 export interface User extends AudtiMetadata {
@@ -38,8 +38,7 @@ export interface Role extends AudtiMetadata {
 export interface Dictionary extends AudtiMetadata {
   name: string
   superiorId?: number
-  order: number
-  enabled: boolean
+  enabled?: boolean
   description?: string
   count?: number
   hasChildren?: boolean

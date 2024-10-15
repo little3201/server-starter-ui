@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, reactive, onMounted, watch } from 'vue'
+import { ref, reactive, onMounted } from 'vue'
 import type { FormInstance, FormRules } from 'element-plus'
 import draggable from 'vuedraggable'
 import Dialog from 'components/Dialog.vue'
@@ -13,9 +13,7 @@ const total = ref<number>(0)
 
 const pagination = reactive<Pagination>({
   page: 1,
-  size: 10,
-  sortBy: 'id',
-  descending: true
+  size: 10
 })
 
 const checkAll = ref<boolean>(true)
@@ -329,7 +327,7 @@ function handleCheckedChange(value: string[]) {
       <ElCol :span="8">
         <ElCard shadow="never" class="h-full">
           <ElTabs stretch>
-            <ElTabPane :label="$t('actions') + $t('privileges')" class="w-full">
+            <ElTabPane :label="$t('actions') + $t('privileges')">
               <ElTree ref="treeEl" v-loading="privilegeTreeLoading" :data="privilegeTree" :expand-on-click-node="false"
                 node-key="id" :props="{ label: 'name' }" show-checkbox @check-change="handlePrivilegeCheckChange"
                 :default-checked-keys="rolePrivileges">
@@ -341,7 +339,7 @@ function handleCheckedChange(value: string[]) {
                 </template>
               </ElTree>
             </ElTabPane>
-            <ElTabPane :label="$t('data') + $t('privileges')" class="w-full">
+            <ElTabPane :label="$t('data') + $t('privileges')">
               <ElSelect v-model="dataPrivilege" class="mb-3">
                 <ElOption :value="0" :label="$t('all')" />
                 <ElOption :value="1" :label="$t('yourself')" />
