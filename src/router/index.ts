@@ -17,7 +17,7 @@ router.beforeEach(async (to, from, next) => {
   progress.start()
   const userStore = useUserStore()
   // 判断是否登录
-  const accessToken = userStore.access_token
+  const accessToken = localStorage.getItem('access_token')
   if (accessToken && accessToken.length > 0) {
     if (to.path === '/login') {
       next({ path: '/' })

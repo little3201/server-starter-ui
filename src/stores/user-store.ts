@@ -15,12 +15,12 @@ interface User {
 export const useUserStore = defineStore('user', {
   state: () => ({
     user: null as User | null,
-    access_token: null as string | null,
     privileges: [] as PrivilegeTreeNode[]
   }),
   actions: {
     async logout() {
       await api.post(SERVER_URL.LOGOUT)
+      localStorage.removeItem('access_token')
       this.$reset()
     },
 
@@ -30,9 +30,8 @@ export const useUserStore = defineStore('user', {
     async login(username: string, password: string) {
       // const { base64 } = useBase64(`${username}:${password}`)
       const res = await api.post(SERVER_URL.LOGIN, {}, { auth: { username, password } })
-      this.$patch({
-        access_token: res.data
-      })
+      localStorage.setItem('access_token', res.data)
+
       const resp = await fetchMe()
       this.$patch({
         user: resp.data
