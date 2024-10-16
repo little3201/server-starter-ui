@@ -1,5 +1,6 @@
 import { api } from 'boot/axios'
 import { SERVER_URL } from 'src/api/paths'
+import type { Pagination } from 'src/models'
 
 /**
  * Retrieve rows
@@ -8,8 +9,8 @@ import { SERVER_URL } from 'src/api/paths'
  * @param params Optional filter or sort parameters
  * @returns Rows data
  */
-export const retrievePrivileges = (page: number, size: number, params?: object) => {
-  return api.get(SERVER_URL.PRIVILEGE, { params: { page: page - 1, size, ...params } })
+export const retrievePrivileges = (pagination: Pagination, filters?: object) => {
+  return api.get(SERVER_URL.PRIVILEGE, { params: { ...pagination, page: pagination.page - 1, ...filters } })
 }
 
 /**

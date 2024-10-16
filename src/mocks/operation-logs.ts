@@ -10,6 +10,8 @@ const datas: OperationLog[] = [
     content: 'Create User: username: test',
     ip: '192.168.0.1',
     location: 'New York',
+    os: 'Windows 11',
+    browser: 'Edge 129.0.2792.89',
     statusCode: 200,
     operatedTime: '2024-07-01T00:00:00'
   },
@@ -20,6 +22,8 @@ const datas: OperationLog[] = [
     content: 'Change avatar to test.jpg',
     ip: '192.168.0.2',
     location: 'London',
+    os: 'Windows 11',
+    browser: 'Edge 129.0.2792.89',
     statusCode: 401,
     operatedTime: '2024-07-01T00:00:00'
   },
@@ -30,7 +34,9 @@ const datas: OperationLog[] = [
     content: 'Delete Post: test',
     ip: '192.168.0.3',
     location: 'San Francisco',
-    statusCode: 1,
+    os: 'Windows 11',
+    browser: 'Edge 129.0.2792.89',
+    statusCode: 200,
     operatedTime: '2024-07-01T00:00:00'
   },
   {
@@ -40,7 +46,9 @@ const datas: OperationLog[] = [
     content: 'Upload file: test.txt',
     ip: '192.168.0.4',
     location: 'Berlin',
-    statusCode: 0,
+    os: 'Windows 11',
+    browser: 'Edge 129.0.2792.89',
+    statusCode: 400,
     operatedTime: '2024-07-01T00:00:00'
   },
   {
@@ -50,7 +58,9 @@ const datas: OperationLog[] = [
     content: 'test login',
     ip: '192.168.0.5',
     location: 'Paris',
-    statusCode: 1,
+    os: 'Windows 11',
+    browser: 'Edge 129.0.2792.89',
+    statusCode: 200,
     operatedTime: '2024-07-01T00:00:00'
   },
   {
@@ -60,7 +70,9 @@ const datas: OperationLog[] = [
     content: 'test logout',
     ip: '192.168.0.6',
     location: 'Tokyo',
-    statusCode: 1,
+    os: 'Windows 11',
+    browser: 'Edge 129.0.2792.89',
+    statusCode: 200,
     operatedTime: '2024-07-01T00:00:00'
   },
   {
@@ -70,7 +82,9 @@ const datas: OperationLog[] = [
     content: 'Change password at 2min ago',
     ip: '192.168.0.1',
     location: 'New York',
-    statusCode: 1,
+    os: 'Windows 11',
+    browser: 'Edge 129.0.2792.89',
+    statusCode: 200,
     operatedTime: '2024-07-01T00:00:00'
   },
   {
@@ -80,7 +94,9 @@ const datas: OperationLog[] = [
     content: 'View shceduler report',
     ip: '192.168.0.2',
     location: 'London',
-    statusCode: 1,
+    os: 'Windows 11',
+    browser: 'Edge 129.0.2792.89',
+    statusCode: 200,
     operatedTime: '2024-07-01T00:00:00'
   },
   {
@@ -90,7 +106,9 @@ const datas: OperationLog[] = [
     content: 'Download file: xxx.txt',
     ip: '192.168.0.3',
     location: 'San Francisco',
-    statusCode: 1,
+    os: 'Windows 11',
+    browser: 'Edge 129.0.2792.89',
+    statusCode: 200,
     operatedTime: '2024-07-01T00:00:00'
   },
   {
@@ -100,7 +118,9 @@ const datas: OperationLog[] = [
     content: 'Update dark mode',
     ip: '192.168.0.4',
     location: 'Berlin',
-    statusCode: 1,
+    os: 'Windows 11',
+    browser: 'Edge 129.0.2792.89',
+    statusCode: 200,
     operatedTime: '2024-07-01T00:00:00'
   },
   {
@@ -110,7 +130,9 @@ const datas: OperationLog[] = [
     content: 'Create theme, set primary to green',
     ip: '192.168.0.4',
     location: 'Berlin',
-    statusCode: 1,
+    os: 'Windows 11',
+    browser: 'Edge 129.0.2792.89',
+    statusCode: 200,
     operatedTime: '2024-07-01T00:00:00'
   }
 ]

@@ -26,6 +26,18 @@ const filters = ref({
   operator: null
 })
 
+const operations: { [key: string]: string } = {
+  "Create": "success",
+  "Update": "primary",
+  "DELETE": "danger",
+  "View": "info",
+  "Upload": "warning",
+  "Download": "info",
+  "Login": "primary",
+  "Logout": "success",
+  "Change Password": "primary"
+}
+
 const detailLoading = ref<boolean>(false)
 const initialValues: AuditLog = {
   id: undefined,
@@ -193,15 +205,24 @@ function handleCheckedChange(value: string[]) {
       <ElTable :data="datas" lazy :load="load" row-key="id" stripe table-layout="auto">
         <ElTableColumn type="index" :label="$t('no')" width="55" />
         <ElTableColumn prop="resource" :label="$t('resource')" />
-        <ElTableColumn prop="operation" :label="$t('operation')" />
+        <ElTableColumn prop="operation" :label="$t('operation')">
+          <template #default="scope">
+            <el-badge is-dot :type="operations[scope.row.operation]" class="mr-2" />{{ scope.row.operation }}
+          </template>
+        </ElTableColumn>
         <ElTableColumn show-overflow-tooltip prop="oldValue" :label="$t('oldValue')" />
         <ElTableColumn show-overflow-tooltip prop="newValue" :label="$t('newValue')" />
         <ElTableColumn prop="ip" :label="$t('ip')" />
         <ElTableColumn prop="location" :label="$t('location')" />
-        <ElTableColumn prop="status" :label="$t('status')">
+        <ElTableColumn prop="statusCode" :label="$t('statusCode')">
           <template #default="scope">
-            <ElTag v-if="scope.row.status === 1" type="success" round>{{ $t('success') }}</ElTag>
-            <ElTag v-else type="danger" round>{{ $t('failure') }}</ElTag>
+            <ElTag v-if="scope.row.statusCode >= 200 && scope.row.statusCode < 300" type="success" round>
+              {{ scope.row.statusCode }}
+            </ElTag>
+            <ElTag v-else-if="scope.row.statusCode >= 500" type="warning" round>
+              {{ scope.row.statusCode }}
+            </ElTag>
+            <ElTag v-else type="danger" round>{{ scope.row.statusCode }}</ElTag>
           </template>
         </ElTableColumn>
         <ElTableColumn prop="operatedTime" :label="$t('operatedTime')">
@@ -239,3 +260,10 @@ function handleCheckedChange(value: string[]) {
     </ElDescriptions>
   </Dialog>
 </template>
+
+<style lang="scss" scoped>
+.el-badge {
+  display: inline-flex;
+  vertical-align: baseline;
+}
+</style>

@@ -12,7 +12,7 @@ const datas: AuditLog[] = [
     newValue: '{"operator:"john", "role:"admin"}',
     ip: '192.168.0.1',
     location: 'New York',
-    status: 1,
+    statusCode: 200,
     operatedTime: '2024-07-01T00:00:00'
   },
   {
@@ -24,7 +24,7 @@ const datas: AuditLog[] = [
     newValue: '{"email:"john@example.com"}',
     ip: '192.168.0.2',
     location: 'London',
-    status: 1,
+    statusCode: 200,
     operatedTime: '2024-07-01T00:00:00'
   },
   {
@@ -36,7 +36,7 @@ const datas: AuditLog[] = [
     newValue: null,
     ip: '192.168.0.3',
     location: 'San Francisco',
-    status: 1,
+    statusCode: 200,
     operatedTime: '2024-07-01T00:00:00'
   },
   {
@@ -48,7 +48,7 @@ const datas: AuditLog[] = [
     newValue: '{"file_name:"report.pdf"}',
     ip: '192.168.0.4',
     location: 'Berlin',
-    status: 0,
+    statusCode: 400,
     operatedTime: '2024-07-01T00:00:00'
   },
   {
@@ -60,7 +60,7 @@ const datas: AuditLog[] = [
     newValue: '{"status:"active"}',
     ip: '192.168.0.5',
     location: 'Paris',
-    status: 1,
+    statusCode: 200,
     operatedTime: '2024-07-01T00:00:00'
   },
   {
@@ -72,7 +72,7 @@ const datas: AuditLog[] = [
     newValue: '{"status:"inactive"}',
     ip: '192.168.0.6',
     location: 'Tokyo',
-    status: 1,
+    statusCode: 200,
     operatedTime: '2024-07-01T00:00:00'
   },
   {
@@ -84,7 +84,7 @@ const datas: AuditLog[] = [
     newValue: '{"id:2, "password:"new"}',
     ip: '192.168.0.1',
     location: 'New York',
-    status: 1,
+    statusCode: 200,
     operatedTime: '2024-07-01T00:00:00'
   },
   {
@@ -96,7 +96,7 @@ const datas: AuditLog[] = [
     newValue: '{"report_id:45}',
     ip: '192.168.0.2',
     location: 'London',
-    status: 1,
+    statusCode: 200,
     operatedTime: '2024-07-01T00:00:00'
   },
   {
@@ -108,7 +108,7 @@ const datas: AuditLog[] = [
     newValue: '{"file_id:789}',
     ip: '192.168.0.3',
     location: 'San Francisco',
-    status: 1,
+    statusCode: 200,
     operatedTime: '2024-07-01T00:00:00'
   },
   {
@@ -120,7 +120,7 @@ const datas: AuditLog[] = [
     newValue: '{"theme:"dark"}',
     ip: '192.168.0.4',
     location: 'Berlin',
-    status: 1,
+    statusCode: 200,
     operatedTime: '2024-07-01T00:00:00'
   },
   {
@@ -132,7 +132,7 @@ const datas: AuditLog[] = [
     newValue: '{"theme:"dark"}',
     ip: '192.168.0.4',
     location: 'Berlin',
-    status: 1,
+    statusCode: 200,
     operatedTime: '2024-07-01T00:00:00'
   }
 ]

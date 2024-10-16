@@ -205,19 +205,20 @@ function handleCheckedChange(value: string[]) {
         <ElTableColumn type="selection" width="55" />
         <ElTableColumn type="index" :label="$t('no')" width="55" />
         <ElTableColumn prop="name" :label="$t('name')" />
-        <ElTableColumn prop="params" :label="$t('params')" />
-        <ElTableColumn prop="cronExpression" :label="$t('cronExpression')" />
+        <ElTableColumn prop="startTime" :label="$t('startTime')" />
         <ElTableColumn prop="status" :label="$t('status')">
           <template #default="scope">
-            <ElTag v-if="scope.row.status === 1" type="success" round>{{ $t('success') }}</ElTag>
+            <ElTag v-if="scope.row.status === 0" type="primary" round>{{ $t('processing') }}</ElTag>
+            <ElTag v-else-if="scope.row.status === 1" type="success" round>{{ $t('done') }}</ElTag>
             <ElTag v-else type="danger" round>{{ $t('failure') }}</ElTag>
           </template>
         </ElTableColumn>
         <ElTableColumn prop="executedTime" :label="$t('executedTime')">
           <template #default="scope">
-            {{ formatDuration(scope.row.executedTime) }}
+            {{ scope.row.executedTime ? formatDuration(scope.row.executedTime) : '-' }}
           </template>
         </ElTableColumn>
+        <ElTableColumn prop="nextExecuteTime" :label="$t('nextExecuteTime')" />
         <ElTableColumn :label="$t('actions')" width="160">
           <template #default="scope">
             <ElButton size="small" type="success" link @click="showRow(scope.row.id)">
@@ -240,16 +241,14 @@ function handleCheckedChange(value: string[]) {
   <Dialog v-model="dialogVisible" :title="$t('detail')">
     <ElDescriptions v-loading="detailLoading">
       <ElDescriptionsItem :label="$t('name')">{{ row.name }}</ElDescriptionsItem>
-      <ElDescriptionsItem :label="$t('params')">{{ row.params }}</ElDescriptionsItem>
-      <ElDescriptionsItem :label="$t('cronExpression')">{{ row.cronExpression }}</ElDescriptionsItem>
-      <ElDescriptionsItem :label="$t('startTime')">{{ formatDuration(row.executedTime) }}
-      </ElDescriptionsItem>
-      <ElDescriptionsItem :label="$t('endTime')">{{ dayjs(row.lastModifiedDate).format('YYYY-MM-DD HH:mm:ss') }}
-      </ElDescriptionsItem>
+      <ElDescriptionsItem :label="$t('startTime')">{{ row.startTime }}</ElDescriptionsItem>
       <ElDescriptionsItem :label="$t('status')">
         <ElTag v-if="row.status === 1" type="success" round>{{ $t('success') }}</ElTag>
         <ElTag v-else type="danger" round>{{ $t('failure') }}</ElTag>
       </ElDescriptionsItem>
+      <ElDescriptionsItem :label="$t('executedTime')">{{ formatDuration(row.executedTime) }}
+      </ElDescriptionsItem>
+      <ElDescriptionsItem :label="$t('nextExecuteTime')">{{ row.nextExecuteTime }}</ElDescriptionsItem>
     </ElDescriptions>
   </Dialog>
 </template>

@@ -11,6 +11,7 @@ export const SERVER_URL = {
   OPERATION_LOG: '/operation-logs', // 操作日志
   SCHEDULER_LOG: '/scheduler-logs', // 调度日志
   FILE: '/files', // 文件
+  REGION: '/regions', // 行政区划
 
   // authentication
   LOGIN: '/token', // 登录

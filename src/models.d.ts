@@ -96,10 +96,10 @@ export interface OperationLog extends AudtiMetadata {
   location: string
   referer?: string | null
   sessionId?: string | null
-  os?: string | null
+  os: string | null
   deviceType?: string | null
   userAgent?: string | null
-  browser?: string | null
+  browser: string | null
   statusCode: number | null
   operatedTime: string | null
 }
@@ -125,15 +125,15 @@ export interface AuditLog extends AudtiMetadata {
   newValue: string | null
   ip: string
   location: string
-  status: number | null
+  statusCode: number | null
   operatedTime: string | null
 }
 
 export interface SchedulerLog extends AudtiMetadata {
   name: string
-  params: string
-  cronExpression: string
-  executedTime: number
+  startTime: string
+  executedTime?: number
+  nextExecuteTime: string
   status: number | null
 }
 
