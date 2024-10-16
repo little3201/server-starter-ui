@@ -1,22 +1,12 @@
 <script setup lang="ts">
-import { onMounted, reactive, ref } from 'vue'
+import { computed, ref } from 'vue'
 import type { FormInstance } from 'element-plus'
 import { useUserStore } from 'stores/user-store'
-import type { User } from 'src/models'
 
 
 const userStore = useUserStore()
 
-const initialValues = {
-  username: '',
-  fullName: '',
-  email: '',
-  avatar: '',
-  accountNonLocked: true,
-  accountExpiresAt: undefined,
-  credentialsExpiresAt: undefined
-}
-const user = reactive<User>({ ...initialValues })
+const user = computed(() => userStore.user)
 
 // 登录历史数据模拟
 const loginHistory = ref([
@@ -115,13 +105,6 @@ function submitPasswordChange() {
     }
   })
 }
-
-onMounted(() => {
-  user.username = userStore.user?.username as string
-  user.fullName = userStore.user?.fullName as string
-  user.email = userStore.user?.email as string
-  user.avatar = userStore.user?.avatar
-})
 </script>
 
 <template>
@@ -129,9 +112,9 @@ onMounted(() => {
     <ElCol :span="6">
       <ElCard shadow="never">
         <div class="text-center">
-          <ElAvatar :size="180" :src="user.avatar" />
-          <div class="text-lg mt-4 mb-2">{{ user.fullName }}</div>
-          <div class="text-sm text-[var(--el-text-color-regular)]">{{ user.username }}</div>
+          <ElAvatar :size="180" :src="user?.avatar" />
+          <div class="text-lg mt-4 mb-2">{{ user?.fullName }}</div>
+          <div class="text-sm text-[var(--el-text-color-regular)]">{{ user?.username }}</div>
         </div>
 
         <ElDivider></ElDivider>
@@ -144,7 +127,7 @@ onMounted(() => {
           </li>
           <li class="flex items-center">
             <div class="i-material-symbols:mail-outline-rounded  mr-2" />
-            <span>{{ user.email }}</span>
+            <span>{{ user?.email }}</span>
           </li>
           <li class="flex items-center">
             <div class="i-material-symbols:shield-person-outline-rounded mr-2" />
@@ -182,8 +165,8 @@ onMounted(() => {
             </ElTable>
           </ElTabPane>
 
-          <!-- Projects -->
-          <ElTabPane label="Projects" name="repositories">
+          <!-- Activities -->
+          <ElTabPane label="Activities" name="activities">
             <ElRow :gutter="20" v-for="repo in repositories" :key="repo.id" class="mb-4">
               <ElCol :span="24">
                 <ElCard shadow="hover">
@@ -200,6 +183,29 @@ onMounted(() => {
 
           <!-- Settings -->
           <ElTabPane label="Settings" name="settings">
+            <h3>Settings</h3>
+            <ElForm ref="formRef" :model="passwordForm" label-width="auto">
+              <ElFormItem label="Old Password" prop="oldPassword">
+                <ElInput v-model="passwordForm.oldPassword"></ElInput>
+              </ElFormItem>
+
+              <ElFormItem label="New Password" prop="newPassword">
+                <ElInput v-model="passwordForm.newPassword" @input="checkPasswordStrength">
+                </ElInput>
+              </ElFormItem>
+
+              <ElFormItem label="Confirm Password" prop="confirmPassword">
+                <ElInput v-model="passwordForm.confirmPassword"></ElInput>
+              </ElFormItem>
+
+              <ElFormItem>
+                <ElButton type="primary" @click="submitPasswordChange">Submit</ElButton>
+              </ElFormItem>
+            </ElForm>
+          </ElTabPane>
+
+          <!-- Change password -->
+          <ElTabPane label="Change password" name="changePassword">
             <h3>Change Password</h3>
             <ElForm ref="formRef" :model="passwordForm" label-width="auto">
               <ElFormItem label="Old Password" prop="oldPassword">

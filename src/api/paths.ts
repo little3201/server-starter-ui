@@ -29,4 +29,8 @@ export const SERVER_URL = {
   // exploiter
   TABLE: SERVER_PRE.EXPLOITER.concat('/tables'), // 表
   SCRIPT: SERVER_PRE.EXPLOITER.concat('/scripts'), // 脚本
+
+  // authentication
+  LOGIN: SERVER_PRE.HYPERVISOR.concat('/login'), // 登录
+  LOGOUT: SERVER_PRE.HYPERVISOR.concat('/logout') // 退出
 }

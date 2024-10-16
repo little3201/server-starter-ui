@@ -93,6 +93,7 @@ export default {
   config: 'Config',
   preview: 'Preview',
   relation: 'Relation',
+  seeMore: 'See More',
 
   home: 'Home',
   system: 'System',

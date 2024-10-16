@@ -93,6 +93,7 @@ export default {
   config: '配置',
   preview: '预览',
   relation: '关联',
+  seeMore: '查看更多',
 
   home: '首页',
   system: '系统管理',

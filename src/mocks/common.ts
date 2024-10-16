@@ -1,31 +1,12 @@
 import { http, HttpResponse } from 'msw'
+import { SERVER_URL } from 'src/api/paths'
 
 export const commonHandlers = [
-  http.post('/api/login', async ({ request }) => {
-    const req = await request.formData()
-
-    const username = req.get('username')
-
-    return HttpResponse.json({
-      user: {
-        id: 1,
-        username: username,
-        fullName: '管理员',
-        email: username + '@leafage.top',
-        avatar: '/src/assets/images/avatar.jpg'
-      },
-      access_token: 'eyJhsdf3SFgasd4asdf'
-    }, {
-      headers: {
-        'Set-Cookie': 'logged_in=yes'
-      }
-    })
+  http.post(`/api/${SERVER_URL.LOGIN}`, async () => {
+    return HttpResponse.text('eyJhbGciOiJSUzI1NiJ9.eyJpc3MiOiJzZWxmIiwic3ViIjoiemhhbmdzYW4iLCJleHAiOjE3MjkwMTU0ODYsImlhdCI6MTcyODk3OTQ4Niwic2NvcGUiOiJST0xFX1VTRVIifQ.1USESTKtTw4uSZECx-5kz9eBh-vVNWpyyrn5iehzbrf6wY7UaOhxZKcJckLdOsau50kkxdxhfuOy__WHE7uNWxpZlBdJO5j4A6FF21Py4EdpEpgHXjZiwvR_Z3AhsWWR7LuYc_Z2M8aWsC88qDlqlKJquZiHn_Qfa7AdMLh5Id-x9UanDEMDqKvmvaKuParhNsGnFqxSQWkYK4TvoF1SKjKF935ZJI4tAM21tFAqj2rPIyZIvxLprT8aPJxoB5Iy7INitp938bV01mhO0MtUPil9gLtq8OIOHxRTPkOIR1v6LXApSRDuBzGypAwNrpqxkz5aM13NLYtQCFYa1XG4BA')
   }),
 
-  http.post('/api/logout', ({ cookies }) => {
-    if (!cookies.logged_in) {
-      return new HttpResponse(null, { status: 200 })
-    }
-    return new HttpResponse()
+  http.post(`/api/${SERVER_URL.LOGOUT}`, () => {
+    return new HttpResponse(null, { status: 200 })
   })
 ]

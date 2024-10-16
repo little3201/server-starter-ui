@@ -93,6 +93,7 @@ export default {
   config: '配置',
   preveiw: '預覽',
   relation: '關聯',
+  seeMore: '查看更多',
 
   home: '首頁',
   system: '系統管理',

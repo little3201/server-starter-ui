@@ -36,7 +36,7 @@ const rules = reactive<FormRules<typeof form>>({
   ],
   password: [
     { required: true, message: t('inputText') + t('password'), trigger: 'blur' },
-    { min: 8, max: 32, message: t('lengthRange', { min: 8, max: 16 }), trigger: 'blur' },
+    { min: 6, max: 32, message: t('lengthRange', { min: 6, max: 16 }), trigger: 'blur' },
   ]
 })
 

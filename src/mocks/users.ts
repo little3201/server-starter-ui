@@ -21,6 +21,9 @@ for (let i = 1; i < 28; i++) {
 }
 
 export const usersHandlers = [
+  http.get(`/api${SERVER_URL.USER}/me`, () => {
+    return HttpResponse.json(datas[Math.random() * 10])
+  }),
   http.get(`/api${SERVER_URL.USER}/:id`, ({ params }) => {
     const { id } = params
     if (id) {

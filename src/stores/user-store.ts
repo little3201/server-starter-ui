@@ -2,9 +2,10 @@ import { defineStore } from 'pinia'
 import { api } from 'boot/axios'
 import { retrievePrivilegeTree } from 'src/api/privileges'
 import type { PrivilegeTreeNode } from 'src/models'
+import { SERVER_URL } from 'src/api/paths'
+import { fetchMe } from 'src/api/users'
 
 interface User {
-  id: number
   username: string
   fullName: string
   email: string
@@ -19,8 +20,7 @@ export const useUserStore = defineStore('user', {
   }),
   actions: {
     async logout() {
-      await api.post('/logout')
-      document.cookie = 'logged_in=; max-age=0;'
+      await api.post(SERVER_URL.LOGOUT)
       this.$reset()
     },
 
@@ -28,10 +28,14 @@ export const useUserStore = defineStore('user', {
      * Attempt to login a user
      */
     async login(username: string, password: string) {
-      const res = await api.post('/login', new URLSearchParams({ username, password }))
+      // const { base64 } = useBase64(`${username}:${password}`)
+      const res = await api.post(SERVER_URL.LOGIN, {}, { auth: { username, password } })
       this.$patch({
-        user: res.data.user,
-        access_token: res.data.access_token
+        access_token: res.data
+      })
+      const resp = await fetchMe()
+      this.$patch({
+        user: resp.data
       })
       // privileges
       const response = await retrievePrivilegeTree()
