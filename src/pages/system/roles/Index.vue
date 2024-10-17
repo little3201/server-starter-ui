@@ -6,7 +6,7 @@ import Dialog from 'components/Dialog.vue'
 import { retrieveRoles, retrieveRoleMembers, retrieveRolePrivileges, fetchRole, createRole, modifyRole, removeRole } from 'src/api/roles'
 import { retrievePrivilegeTree } from 'src/api/privileges'
 import { retrieveUsers } from 'src/api/users'
-import type { Pagination, Role, TreeNode, RoleMembers } from 'src/models'
+import type { Pagination, Role, TreeNode, RoleMembers, RolePrivileges } from 'src/models'
 
 const loading = ref<boolean>(false)
 const datas = ref<Array<Role>>([])
@@ -201,7 +201,7 @@ function handleGroupCheckChange() { }
 function handleCurrentChange(row: Role | undefined) {
   if (row && row.id) {
     form.value.id = row.id
-    retrieveRolePrivileges(row.id).then(res => rolePrivileges.value = res.data)
+    retrieveRolePrivileges(row.id).then(res => rolePrivileges.value = res.data.map((item: RolePrivileges) => item.privilegeId))
   }
 }
 

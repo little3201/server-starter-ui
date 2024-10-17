@@ -47,6 +47,12 @@ export interface RoleMembers {
   username: string
 }
 
+export interface RolePrivileges {
+  id: number
+  roleId: number
+  privilegeId: number
+}
+
 export interface Privilege extends AudtiMetadata {
   name: string
   superiorId?: number

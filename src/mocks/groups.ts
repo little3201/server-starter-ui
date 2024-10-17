@@ -79,7 +79,7 @@ export const groupsHandlers = [
     if (id) {
       return HttpResponse.json(members.filter(item => item.groupId === Number(id)))
     } else {
-      return HttpResponse.json(null)
+      return HttpResponse.json([])
     }
   }),
   http.get(`/api${SERVER_URL.GROUP}/:id`, ({ params }) => {
