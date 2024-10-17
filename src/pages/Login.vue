@@ -22,7 +22,6 @@ const lottieRef = ref<HTMLDivElement>()
 const loading = ref<boolean>(false)
 
 const formRef = ref<FormInstance>()
-
 const form = reactive({
   username: '',
   password: '',
@@ -50,26 +49,18 @@ function onSubmit(formEl: FormInstance | undefined) {
   formEl.validate((valid, fields) => {
     if (valid) {
       loading.value = true
-      signIn(form.username, form.password)
-    } else {
-      console.log('error submit!', fields)
+      userStore.login(form.username, form.password).then(() => {
+        // 生成路由
+        const routes = generateRoutes(userStore.privileges)
+
+        routes.forEach((route) => {
+          router.addRoute(route)
+        })
+        const redirect = router.currentRoute.value.query.redirect as string
+        router.replace(redirect || '/')
+      }).finally(() => loading.value = false)
     }
   })
-}
-
-// 登录
-function signIn(username: string, password: string) {
-  loading.value = true
-  userStore.login(username, password).then(() => {
-    // 生成路由
-    const routes = generateRoutes(userStore.privileges)
-
-    routes.forEach((route) => {
-      router.addRoute(route)
-    })
-    const redirect = router.currentRoute.value.query.redirect as string
-    router.replace(redirect || '/')
-  }).finally(() => loading.value = false)
 }
 
 function show() {

@@ -14,6 +14,6 @@ export const SERVER_URL = {
   REGION: '/regions', // 行政区划
 
   // authentication
-  LOGIN: '/token', // 登录
-  LOGOUT: '/logout' // 退出
+  SIGNIN: '/token', // 登录
+  SIGNOUT: '/logout' // 退出
 }

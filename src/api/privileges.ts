@@ -10,7 +10,7 @@ import type { Pagination } from 'src/models'
  * @returns Rows data
  */
 export const retrievePrivileges = (pagination: Pagination, filters?: object) => {
-  return api.get(SERVER_URL.PRIVILEGE, { params: { ...pagination, page: pagination.page - 1, ...filters } })
+  return api.get(`${SERVER_URL.PRIVILEGE}`, { params: { ...pagination, page: pagination.page - 1, ...filters } })
 }
 
 /**

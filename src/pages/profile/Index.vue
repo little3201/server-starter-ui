@@ -16,9 +16,11 @@ const loginHistory = ref([
 ])
 
 // 仓库数据模拟
-const repositories = ref([
-  { id: 1, name: 'Vue.js', description: 'The Progressive JavaScript Framework', stars: 12000, forks: 4000 },
-  { id: 2, name: 'Element Plus', description: 'A Vue.js 3 UI Library', stars: 6000, forks: 1200 },
+const activities = ref([
+  { id: 4, name: 'Create a set of data', description: 'User: username is test', type: 'primary', lastModifiedDate: '2024-09-12' },
+  { id: 3, name: 'Delete the data from user where username is test', description: 'User: username is test', type: 'success', lastModifiedDate: '2024-08-19' },
+  { id: 2, name: 'Update the test user', description: 'User: username is test', type: 'danger', lastModifiedDate: '2024-08-17' },
+  { id: 1, name: 'Enabled the test user', description: 'User: username is test', type: 'warning', lastModifiedDate: '2024-08-16' },
   // 更多仓库
 ])
 
@@ -167,47 +169,21 @@ function submitPasswordChange() {
 
           <!-- Activities -->
           <ElTabPane label="Activities" name="activities">
-            <ElRow :gutter="20" v-for="repo in repositories" :key="repo.id" class="mb-4">
-              <ElCol :span="24">
-                <ElCard shadow="hover">
-                  <h3>{{ repo.name }}</h3>
-                  <p>{{ repo.description }}</p>
-                  <div class="repo-meta">
-                    <span>Stars: {{ repo.stars }}</span>
-                    <span>Forks: {{ repo.forks }}</span>
-                  </div>
+            <ElTimeline>
+              <ElTimelineItem v-for="activity in activities" :key="activity.id" :type="activity.type"
+                :timestamp="activity.lastModifiedDate" placement="top">
+                <ElCard shadow="never">
+                  <h4 class="my-0">{{ activity.name }}</h4>
+                  <p class="mb-0">{{ activity.description }}</p>
                 </ElCard>
-              </ElCol>
-            </ElRow>
-          </ElTabPane>
-
-          <!-- Settings -->
-          <ElTabPane label="Settings" name="settings">
-            <h3>Settings</h3>
-            <ElForm ref="formRef" :model="passwordForm" label-width="auto">
-              <ElFormItem label="Old Password" prop="oldPassword">
-                <ElInput v-model="passwordForm.oldPassword"></ElInput>
-              </ElFormItem>
-
-              <ElFormItem label="New Password" prop="newPassword">
-                <ElInput v-model="passwordForm.newPassword" @input="checkPasswordStrength">
-                </ElInput>
-              </ElFormItem>
-
-              <ElFormItem label="Confirm Password" prop="confirmPassword">
-                <ElInput v-model="passwordForm.confirmPassword"></ElInput>
-              </ElFormItem>
-
-              <ElFormItem>
-                <ElButton type="primary" @click="submitPasswordChange">Submit</ElButton>
-              </ElFormItem>
-            </ElForm>
+              </ElTimelineItem>
+            </ElTimeline>
           </ElTabPane>
 
           <!-- Change password -->
           <ElTabPane label="Change password" name="changePassword">
             <h3>Change Password</h3>
-            <ElForm ref="formRef" :model="passwordForm" label-width="auto">
+            <ElForm ref="formRef" :model="passwordForm" :rules="rules" label-width="auto">
               <ElFormItem label="Old Password" prop="oldPassword">
                 <ElInput v-model="passwordForm.oldPassword" type="password" show-password></ElInput>
               </ElFormItem>

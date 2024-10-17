@@ -270,7 +270,7 @@ function handleCheckedChange(value: string[]) {
         </ElTableColumn>
         <ElTableColumn prop="hidden" :label="$t('hidden')">
           <template #default="scope">
-            <ElCheckbox v-model="scope.row.hidden" />
+            <ElSwitch size="small" v-model="scope.row.hidden" style="--el-switch-on-color: var(--el-color-success);" />
           </template>
         </ElTableColumn>
         <ElTableColumn prop="order" :label="$t('order')" />

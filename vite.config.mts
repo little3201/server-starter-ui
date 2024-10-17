@@ -44,8 +44,7 @@ export default defineConfig({
       content: {
         pipeline: {
           include: [
-            // the default
-            /\.(vue|[jt]sx|html)($|\?)/,
+            /\.(vue|[jt]sx|html|ts)($|\?)/,
             // include js/ts files
             'src/**/*.{js,ts}',
           ]
@@ -66,6 +65,7 @@ export default defineConfig({
     proxy: {
       '/api': {
         target: 'http://172.28.96.1:8768',
+        ws: true,
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api/, ''),
       }
