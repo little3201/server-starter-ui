@@ -3,9 +3,10 @@ import { ref, reactive, onMounted } from 'vue'
 import type { FormInstance, FormRules } from 'element-plus'
 import draggable from 'vuedraggable'
 import Dialog from 'components/Dialog.vue'
-import { retrieveRoles, retrieveRolePrivileges, fetchRole, createRole, modifyRole, removeRole } from 'src/api/roles'
+import { retrieveRoles, retrieveRoleMembers, retrieveRolePrivileges, fetchRole, createRole, modifyRole, removeRole } from 'src/api/roles'
 import { retrievePrivilegeTree } from 'src/api/privileges'
-import type { Pagination, Role, TreeNode } from 'src/models'
+import { retrieveUsers } from 'src/api/users'
+import type { Pagination, Role, TreeNode, RoleMembers } from 'src/models'
 
 const loading = ref<boolean>(false)
 const datas = ref<Array<Role>>([])
@@ -50,6 +51,15 @@ const rules = reactive<FormRules<typeof form>>({
 })
 
 const dataPrivilege = ref<number>(0)
+const relations = ref<Array<string>>([])
+
+async function loadUsers() {
+  retrieveUsers({ page: 1, size: 99 }).then(res => members.value = res.data.content)
+}
+
+async function loadRoleUsers(id: number) {
+  retrieveRoleMembers(id).then(res => relations.value = res.data.map((item: RoleMembers) => item.username))
+}
 
 /**
  * 权限树
@@ -104,6 +114,8 @@ onMounted(() => {
  */
 function relationRow(id: number) {
   relationVisible.value = true
+  loadUsers()
+  loadRoleUsers(id)
 }
 
 /**
@@ -382,7 +394,8 @@ function handleCheckedChange(value: string[]) {
 
   <Dialog v-model="relationVisible" :title="$t('relation')">
     <div style="text-align: center">
-      <ElTransfer :titles="[$t('unselected'), $t('selected')]" filterable :data="members" />
+      <ElTransfer v-model="relations" :props="{ key: 'username', label: 'fullName' }"
+        :titles="[$t('unselected'), $t('selected')]" filterable :data="members" />
     </div>
   </Dialog>
 </template>

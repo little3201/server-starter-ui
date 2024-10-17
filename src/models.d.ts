@@ -28,11 +28,23 @@ export interface Group extends AudtiMetadata {
   description?: string
 }
 
+export interface GroupMembers {
+  id: number
+  groupId: number
+  username: string
+}
+
 export interface Role extends AudtiMetadata {
   name: string
   privileges: number | undefined
   enabled?: boolean
   description?: string
+}
+
+export interface RoleMembers {
+  id: number
+  roleId: number
+  username: string
 }
 
 export interface Privilege extends AudtiMetadata {
