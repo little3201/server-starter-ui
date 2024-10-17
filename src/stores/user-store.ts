@@ -18,7 +18,7 @@ export const useUserStore = defineStore('user', {
   }),
   actions: {
     async logout() {
-      await signout()
+      // await signout()
       localStorage.removeItem('access_token')
       this.$reset()
     },

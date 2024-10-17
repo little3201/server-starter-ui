@@ -413,11 +413,11 @@ export const privilegesHandlers = [
   http.get(`/api${SERVER_URL.PRIVILEGE}/tree`, () => {
     return HttpResponse.json(treeNodes)
   }),
-  http.get(`/api/${SERVER_URL.PRIVILEGE}/:id/subset`, ({ params }) => {
+  http.get(`/api${SERVER_URL.PRIVILEGE}/:id/subset`, ({ params }) => {
     const { id } = params
     return HttpResponse.json(subDatas.filter(item => item.superiorId === Number(id)))
   }),
-  http.get(`/api/${SERVER_URL.PRIVILEGE}/:id`, ({ params }) => {
+  http.get(`/api${SERVER_URL.PRIVILEGE}/:id`, ({ params }) => {
     const { id } = params
     if (id) {
       let res = datas.filter(item => item.id === Number(id))[0]
@@ -429,7 +429,7 @@ export const privilegesHandlers = [
       return HttpResponse.json(null)
     }
   }),
-  http.get(`/api/${SERVER_URL.PRIVILEGE}`, ({ request }) => {
+  http.get(`/api${SERVER_URL.PRIVILEGE}`, ({ request }) => {
     const url = new URL(request.url)
     const page = url.searchParams.get('page')
     const size = url.searchParams.get('size')
@@ -444,7 +444,7 @@ export const privilegesHandlers = [
 
     return HttpResponse.json(data)
   }),
-  http.post(`/api/${SERVER_URL.PRIVILEGE}`, async ({ request }) => {
+  http.post(`/api${SERVER_URL.PRIVILEGE}`, async ({ request }) => {
     // Read the intercepted request body as JSON.
     const newData = await request.json() as PrivilegeTreeNode
 
@@ -455,7 +455,7 @@ export const privilegesHandlers = [
     // response and send back the newly created Row!
     return HttpResponse.json(newData, { status: 201 })
   }),
-  http.delete(`/api/${SERVER_URL.PRIVILEGE}/:id`, ({ params }) => {
+  http.delete(`/api${SERVER_URL.PRIVILEGE}/:id`, ({ params }) => {
     // All request path params are provided in the "params"
     // argument of the response resolver.
     const { id } = params

@@ -1,4 +1,4 @@
-// browser.ts
+// msw-browser.ts
 import { setupWorker } from 'msw/browser'
 import { handlers } from 'src/mocks/handlers'
 
