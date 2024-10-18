@@ -14,9 +14,7 @@ const total = ref<number>(0)
 
 const pagination = reactive<Pagination>({
   page: 1,
-  size: 10,
-  sortBy: 'id',
-  descending: true
+  size: 10
 })
 
 const checkAll = ref<boolean>(true)
@@ -33,9 +31,7 @@ const filters = ref({
 
 const formRef = ref<FormInstance>()
 const initialValues: Dictionary = {
-  name: '',
-  enabled: true,
-  order: 1
+  name: ''
 }
 const form = ref<Dictionary>({ ...initialValues })
 
@@ -246,23 +242,17 @@ function handleCheckedChange(value: string[]) {
     </ElCard>
   </ElSpace>
 
-  <Dialog v-model="dialogVisible" :title="$t('dictionaries')" width="36%">
+  <Dialog v-model="dialogVisible" :title="$t('dictionaries')" width="25%">
     <ElForm ref="formRef" :model="form" :rules="rules" label-position="top">
       <ElRow :gutter="20" class="w-full !mx-0">
-        <ElCol :span="12">
+        <ElCol :span="24">
           <ElFormItem :label="$t('name')" prop="name">
             <ElInput v-model="form.name" :placeholder="$t('inputText') + $t('name')" />
           </ElFormItem>
         </ElCol>
-        <ElCol :span="12">
-          <ElFormItem :label="$t('order')" prop="order">
-            <ElInputNumber v-model="form.order" :placeholder="$t('inputText') + $t('order')" :min="1" :max="299"
-              step-strictly />
-          </ElFormItem>
-        </ElCol>
       </ElRow>
       <ElRow :gutter="20" class="w-full !mx-0">
-        <ElCol>
+        <ElCol :span="24">
           <ElFormItem :label="$t('description')" prop="description">
             <ElInput v-model="form.description" type="textarea" :placeholder="$t('inputText') + $t('description')" />
           </ElFormItem>

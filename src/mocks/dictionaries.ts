@@ -9,7 +9,6 @@ for (let i = 1; i < 28; i++) {
   const data: Dictionary = {
     id: i,
     name: 'dictionary_' + i,
-    order: i,
     count: i - 1,
     description: 'this is description for this row',
     enabled: i % 3 > 0
@@ -18,7 +17,6 @@ for (let i = 1; i < 28; i++) {
     const subData: Dictionary = {
       id: 100 + i,
       name: 'dictionary_' + i + '_' + j,
-      order: j,
       count: 0,
       superiorId: i,
       enabled: j % 2 > 0,

@@ -6,8 +6,8 @@ interface AudtiMetadata {
 export interface Pagination {
   page: number,
   size: number,
-  sortBy: string | null,
-  descending: boolean | null
+  sortBy?: string,
+  descending?: boolean
 }
 
 export interface User extends AudtiMetadata {
@@ -28,6 +28,12 @@ export interface Group extends AudtiMetadata {
   description?: string
 }
 
+export interface GroupMembers {
+  id: number
+  groupId: number
+  username: string
+}
+
 export interface Role extends AudtiMetadata {
   name: string
   privileges: number | undefined
@@ -35,11 +41,38 @@ export interface Role extends AudtiMetadata {
   description?: string
 }
 
+export interface RoleMembers {
+  id: number
+  roleId: number
+  username: string
+}
+
+export interface RolePrivileges {
+  id: number
+  roleId: number
+  privilegeId: number
+}
+
+export interface Privilege extends AudtiMetadata {
+  name: string
+  superiorId?: number
+  path: string
+  order: number
+  component: string
+  redirect?: string
+  icon: string
+  hidden?: boolean
+  actions?: string[]
+  count?: number
+  hasChildren?: boolean
+  enabled?: boolean
+  description?: string
+}
+
 export interface Dictionary extends AudtiMetadata {
   name: string
   superiorId?: number
-  order: number
-  enabled: boolean
+  enabled?: boolean
   description?: string
   count?: number
   hasChildren?: boolean
@@ -81,10 +114,10 @@ export interface OperationLog extends AudtiMetadata {
   location: string
   referer?: string | null
   sessionId?: string | null
-  os?: string | null
+  os: string | null
   deviceType?: string | null
   userAgent?: string | null
-  browser?: string | null
+  browser: string | null
   statusCode: number | null
   operatedTime: string | null
 }
@@ -110,15 +143,15 @@ export interface AuditLog extends AudtiMetadata {
   newValue: string | null
   ip: string
   location: string
-  status: number | null
+  statusCode: number | null
   operatedTime: string | null
 }
 
 export interface SchedulerLog extends AudtiMetadata {
   name: string
-  params: string
-  cronExpression: string
-  executedTime: number
+  startTime: string
+  executedTime?: number
+  nextExecuteTime: string
   status: number | null
 }
 

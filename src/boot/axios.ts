@@ -1,6 +1,7 @@
 import axios, { AxiosError, AxiosInstance, InternalAxiosRequestConfig, AxiosResponse } from 'axios'
 import { ElMessage } from 'element-plus'
 
+
 const abortControllerMap: Map<string, AbortController> = new Map()
 
 const api: AxiosInstance = axios.create({
@@ -11,6 +12,7 @@ const api: AxiosInstance = axios.create({
 // 请求拦截器
 api.interceptors.request.use(
   (config: InternalAxiosRequestConfig) => {
+    config.headers['Authorization'] = 'Bearer ' + localStorage.getItem('access_token')
     // 创建 AbortController 实例
     const controller = new AbortController()
     // 将 signal 添加到请求配置中
@@ -30,10 +32,7 @@ api.interceptors.response.use(
   (res: AxiosResponse) => {
     const url = res.config.url || ''
     abortControllerMap.delete(url)
-    // 设置token
-    if (res.data && res.data.access_token) {
-      api.defaults.headers.common['Authorization'] = 'Bearer ' + res.data.access_token
-    }
+
     return res
   },
   (error: AxiosError) => {

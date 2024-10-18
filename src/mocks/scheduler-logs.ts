@@ -6,88 +6,87 @@ const datas: SchedulerLog[] = [
   {
     id: 1,
     name: 'DailyBackup',
-    params: '()',
-    cronExpression: '0 0 * * *',
-    executedTime: 12,
-    status: 1
+    startTime: '2024-05-12 23:23',
+    nextExecuteTime: '2024-05-13 03:23',
+    status: 0
   },
   {
     id: 2,
     name: 'GenerateReport',
-    params: '()',
-    cronExpression: '0 6 * * *',
+    startTime: '2024-05-12 23:23',
+    nextExecuteTime: '2024-05-13 03:23',
     executedTime: 5,
     status: 1
   },
   {
     id: 3,
     name: 'SyncData',
-    params: '()',
-    cronExpression: '0 */2 * * *',
+    startTime: '2024-05-12 23:23',
+    nextExecuteTime: '2024-05-13 03:23',
     executedTime: 6,
     status: 1
   },
   {
     id: 4,
     name: 'ClearTempFiles',
-    params: '()',
-    cronExpression: '0 3 * * *',
+    startTime: '2024-05-12 23:23',
+    nextExecuteTime: '2024-05-13 03:23',
     executedTime: 323,
     status: 1
   },
   {
     id: 5,
     name: 'SendEmails',
-    params: '()',
-    cronExpression: '0 4 * * *',
+    startTime: '2024-05-12 23:23',
+    nextExecuteTime: '2024-05-13 03:23',
     executedTime: 33,
-    status: 0
+    status: 2
   },
   {
     id: 6,
     name: 'UpdateStats',
-    params: '()',
-    cronExpression: '0 1 * * *',
+    startTime: '2024-05-12 23:23',
+    nextExecuteTime: '2024-05-13 03:23',
     executedTime: 2,
     status: 1
   },
   {
     id: 7,
     name: 'ReindexSearch',
-    params: '()',
-    cronExpression: '0 2 * * *',
+    startTime: '2024-05-12 23:23',
+    nextExecuteTime: '2024-05-13 03:23',
     executedTime: 323,
     status: 1
   },
   {
     id: 8,
     name: 'ArchiveLogs',
-    params: '()',
-    cronExpression: '0 5 * * *',
+    startTime: '2024-05-12 23:23',
+    nextExecuteTime: '2024-05-13 03:23',
     executedTime: 23,
     status: 1
   },
   {
     id: 9,
     name: 'RefreshCache',
-    params: '()',
-    cronExpression: '*/30 * * * *',
+    startTime: '2024-05-12 23:23',
+    nextExecuteTime: '2024-05-13 03:23',
     executedTime: 2345,
     status: 1
   },
   {
     id: 10,
     name: 'GenerateInvoices',
-    params: '()',
-    cronExpression: '0 0 1 * *',
+    startTime: '2024-05-12 23:23',
+    nextExecuteTime: '2024-05-13 03:23',
     executedTime: 125,
     status: 1
   },
   {
     id: 11,
     name: 'GenerateInvoices',
-    params: '()',
-    cronExpression: '0 0 1 * *',
+    startTime: '2024-05-12 23:23',
+    nextExecuteTime: '2024-05-13 03:23',
     executedTime: 125,
     status: 1
   }

@@ -3,8 +3,9 @@ import { ref, reactive, onMounted, watch } from 'vue'
 import type { FormInstance, FormRules } from 'element-plus'
 import draggable from 'vuedraggable'
 import Dialog from 'components/Dialog.vue'
-import { retrieveGroups, retrieveGroupTree, fetchGroup, createGroup, modifyGroup, removeGroup } from 'src/api/groups'
-import type { Pagination, Group, TreeNode } from 'src/models'
+import { retrieveGroups, retrieveGroupMembers, retrieveGroupTree, fetchGroup, createGroup, modifyGroup, removeGroup } from 'src/api/groups'
+import { retrieveUsers } from 'src/api/users'
+import type { Pagination, Group, TreeNode, GroupMembers } from 'src/models'
 
 
 const loading = ref<boolean>(false)
@@ -13,9 +14,7 @@ const total = ref<number>(0)
 
 const pagination = reactive<Pagination>({
   page: 1,
-  size: 10,
-  sortBy: 'id',
-  descending: true
+  size: 10
 })
 
 const checkAll = ref<boolean>(true)
@@ -36,7 +35,7 @@ const relationVisible = ref<boolean>(false)
 const members = ref([])
 
 const filters = ref({
-  superiorId: null,
+  superiorId: null as number | null,
   name: null
 })
 
@@ -53,6 +52,8 @@ const rules = reactive<FormRules<typeof form>>({
     { required: true, trigger: 'blur' }
   ]
 })
+
+const relations = ref<Array<string>>([])
 
 /**
  * tree过滤
@@ -73,6 +74,14 @@ function currentChange(data: TreeNode) {
   currentNodeKey.value = data.id
   pagination.page = 1
   load()
+}
+
+async function loadUsers() {
+  retrieveUsers({ page: 1, size: 99 }).then(res => members.value = res.data.content)
+}
+
+async function loadGroupUsers(id: number) {
+  retrieveGroupMembers(id).then(res => relations.value = res.data.map((item: GroupMembers) => item.username))
 }
 
 /**
@@ -108,7 +117,7 @@ function pageChange(currentPage: number, pageSize: number) {
  */
 async function load() {
   loading.value = true
-  filters.value.superiorId = currentNodeKey.value
+  filters.value.superiorId = currentNodeKey.value ?? null
   retrieveGroups(pagination, filters.value).then(res => {
     datas.value = res.data.content
     total.value = res.data.page.totalElements
@@ -119,9 +128,7 @@ async function load() {
  * reset
  */
 function reset() {
-  filters.value = {
-    name: null
-  }
+  filters.value.name = null
   load()
 }
 
@@ -145,6 +152,8 @@ onMounted(() => {
  */
 function relationRow(id: number) {
   relationVisible.value = true
+  loadUsers()
+  loadGroupUsers(id)
 }
 
 /**
@@ -396,7 +405,8 @@ function handleCheckedChange(value: string[]) {
 
   <Dialog v-model="relationVisible" :title="$t('relation')">
     <div style="text-align: center">
-      <ElTransfer :titles="[$t('unselected'), $t('selected')]" filterable :data="members" />
+      <ElTransfer v-model="relations" :props="{ key: 'username', label: 'fullName' }"
+        :titles="[$t('unselected'), $t('selected')]" filterable :data="members" />
     </div>
   </Dialog>
 </template>

@@ -19,9 +19,7 @@ const dialogVisible = ref<boolean>(false)
 const formRef = ref<FormInstance>()
 const initialValues: Dictionary = {
   name: '',
-  superiorId: props.superiorId,
-  enabled: true,
-  order: 1
+  superiorId: props.superiorId
 }
 const form = ref<Dictionary>({ ...initialValues })
 
@@ -158,23 +156,17 @@ function confirmEvent(id: number) {
     </ElTable>
   </ElCard>
 
-  <Dialog v-model="dialogVisible" :title="$t('dictionary')" width="36%">
+  <Dialog v-model="dialogVisible" :title="$t('dictionary')" width="25%">
     <ElForm ref="formRef" :model="form" :rules="rules" label-position="top">
       <ElRow :gutter="20" class="w-full !mx-0">
-        <ElCol :span="12">
+        <ElCol :span="24">
           <ElFormItem :label="$t('name')" prop="name">
             <ElInput v-model="form.name" :placeholder="$t('inputText') + $t('name')" />
           </ElFormItem>
         </ElCol>
-        <ElCol :span="12">
-          <ElFormItem :label="$t('order')" prop="order">
-            <ElInputNumber v-model="form.order" :placeholder="$t('inputText') + $t('order')" :min="1" :max="299"
-              step-strictly />
-          </ElFormItem>
-        </ElCol>
       </ElRow>
       <ElRow :gutter="20" class="w-full !mx-0">
-        <ElCol>
+        <ElCol :span="24">
           <ElFormItem :label="$t('description')" prop="description">
             <ElInput v-model="form.description" type="textarea" :placeholder="$t('inputText') + $t('description')" />
           </ElFormItem>

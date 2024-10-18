@@ -61,3 +61,9 @@ body {
     padding-bottom: 0;
   }
 }
+
+.apexcharts-theme-dark {
+  foreignObject {
+    background-color: var(--el-bg-color-overlay);
+  }
+}

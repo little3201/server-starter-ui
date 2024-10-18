@@ -12,7 +12,7 @@ let lineOptionsData = reactive<ApexOptions | object>(lineOptions) as ApexOptions
 <template>
   <ElSpace direction="vertical" fill size="large">
     <ElCard shadow="never">
-      <Chart :options="lineOptionsData" :height="400" />
+      <Chart :options="lineOptionsData" />
     </ElCard>
     <ElCard shadow="never">
       <ElCalendar v-model="value" />

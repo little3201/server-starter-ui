@@ -1,11 +1,8 @@
 import { http, HttpResponse } from 'msw'
 import { SERVER_URL } from 'src/api/paths'
-import type { Role } from 'src/models'
+import type { Role, RolePrivileges, RoleMembers } from 'src/models'
 
 const datas: Role[] = []
-const rolePrivileges: number[] = [
-  2, 3, 4, 5
-]
 
 for (let i = 1; i < 28; i++) {
   const data: Role = {
@@ -18,13 +15,44 @@ for (let i = 1; i < 28; i++) {
   datas.push(data)
 }
 
+
+const privileges: RolePrivileges[] = []
+
+for (let i = 1; i < 28; i++) {
+  const row: RolePrivileges = {
+    id: i,
+    privilegeId: i,
+    roleId: i
+  }
+  privileges.push(row)
+}
+
+const members: RoleMembers[] = []
+
+for (let i = 1; i < 28; i++) {
+  const row: RoleMembers = {
+    id: i,
+    username: 'username' + i,
+    roleId: i
+  }
+  members.push(row)
+}
+
 export const rolesHandlers = [
   http.get(`/api${SERVER_URL.ROLE}/:id/privileges`, ({ params }) => {
     const { id } = params
     if (id) {
-      return HttpResponse.json(rolePrivileges)
+      return HttpResponse.json(privileges.filter(item => item.roleId === Number(id)))
     } else {
-      return HttpResponse.json(null)
+      return HttpResponse.json([])
+    }
+  }),
+  http.get(`/api${SERVER_URL.ROLE}/:id/members`, ({ params }) => {
+    const { id } = params
+    if (id) {
+      return HttpResponse.json(members.filter(item => item.roleId === Number(id)))
+    } else {
+      return HttpResponse.json([])
     }
   }),
   http.get(`/api${SERVER_URL.ROLE}/:id`, ({ params }) => {

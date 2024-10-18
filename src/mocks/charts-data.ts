@@ -2,6 +2,9 @@ export const lineOptions = {
   chart: {
     height: 350,
     type: 'line',
+    toolbar: {
+      show: false
+    }
   },
   series: [{
     name: 'Sales',

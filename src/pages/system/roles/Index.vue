@@ -1,11 +1,12 @@
 <script setup lang="ts">
-import { ref, reactive, onMounted, watch } from 'vue'
+import { ref, reactive, onMounted } from 'vue'
 import type { FormInstance, FormRules } from 'element-plus'
 import draggable from 'vuedraggable'
 import Dialog from 'components/Dialog.vue'
-import { retrieveRoles, retrieveRolePrivileges, fetchRole, createRole, modifyRole, removeRole } from 'src/api/roles'
+import { retrieveRoles, retrieveRoleMembers, retrieveRolePrivileges, fetchRole, createRole, modifyRole, removeRole } from 'src/api/roles'
 import { retrievePrivilegeTree } from 'src/api/privileges'
-import type { Pagination, Role, TreeNode } from 'src/models'
+import { retrieveUsers } from 'src/api/users'
+import type { Pagination, Role, TreeNode, RoleMembers, RolePrivileges } from 'src/models'
 
 const loading = ref<boolean>(false)
 const datas = ref<Array<Role>>([])
@@ -13,9 +14,7 @@ const total = ref<number>(0)
 
 const pagination = reactive<Pagination>({
   page: 1,
-  size: 10,
-  sortBy: 'id',
-  descending: true
+  size: 10
 })
 
 const checkAll = ref<boolean>(true)
@@ -52,6 +51,15 @@ const rules = reactive<FormRules<typeof form>>({
 })
 
 const dataPrivilege = ref<number>(0)
+const relations = ref<Array<string>>([])
+
+async function loadUsers() {
+  retrieveUsers({ page: 1, size: 99 }).then(res => members.value = res.data.content)
+}
+
+async function loadRoleUsers(id: number) {
+  retrieveRoleMembers(id).then(res => relations.value = res.data.map((item: RoleMembers) => item.username))
+}
 
 /**
  * 权限树
@@ -106,6 +114,8 @@ onMounted(() => {
  */
 function relationRow(id: number) {
   relationVisible.value = true
+  loadUsers()
+  loadRoleUsers(id)
 }
 
 /**
@@ -191,7 +201,7 @@ function handleGroupCheckChange() { }
 function handleCurrentChange(row: Role | undefined) {
   if (row && row.id) {
     form.value.id = row.id
-    retrieveRolePrivileges(row.id).then(res => rolePrivileges.value = res.data)
+    retrieveRolePrivileges(row.id).then(res => rolePrivileges.value = res.data.map((item: RolePrivileges) => item.privilegeId))
   }
 }
 
@@ -329,7 +339,7 @@ function handleCheckedChange(value: string[]) {
       <ElCol :span="8">
         <ElCard shadow="never" class="h-full">
           <ElTabs stretch>
-            <ElTabPane :label="$t('actions') + $t('privileges')" class="w-full">
+            <ElTabPane :label="$t('actions') + $t('privileges')">
               <ElTree ref="treeEl" v-loading="privilegeTreeLoading" :data="privilegeTree" :expand-on-click-node="false"
                 node-key="id" :props="{ label: 'name' }" show-checkbox @check-change="handlePrivilegeCheckChange"
                 :default-checked-keys="rolePrivileges">
@@ -341,7 +351,7 @@ function handleCheckedChange(value: string[]) {
                 </template>
               </ElTree>
             </ElTabPane>
-            <ElTabPane :label="$t('data') + $t('privileges')" class="w-full">
+            <ElTabPane :label="$t('data') + $t('privileges')">
               <ElSelect v-model="dataPrivilege" class="mb-3">
                 <ElOption :value="0" :label="$t('all')" />
                 <ElOption :value="1" :label="$t('yourself')" />
@@ -384,7 +394,8 @@ function handleCheckedChange(value: string[]) {
 
   <Dialog v-model="relationVisible" :title="$t('relation')">
     <div style="text-align: center">
-      <ElTransfer :titles="[$t('unselected'), $t('selected')]" filterable :data="members" />
+      <ElTransfer v-model="relations" :props="{ key: 'username', label: 'fullName' }"
+        :titles="[$t('unselected'), $t('selected')]" filterable :data="members" />
     </div>
   </Dialog>
 </template>
