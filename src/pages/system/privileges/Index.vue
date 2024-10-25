@@ -15,6 +15,21 @@ const pagination = reactive<Pagination>({
   size: 10
 })
 
+const actions: { [key: string]: string } = {
+  'add': 'primary',
+  'edit': 'primary',
+  'remove': 'danger',
+  'import': 'warning',
+  'export': 'success',
+  'relation': 'success',
+  'config': 'success',
+  'preview': 'info',
+  'upload': 'primary',
+  'download': 'success',
+  'clear': 'danger',
+  'detail': 'success'
+}
+
 const checkAll = ref<boolean>(true)
 const isIndeterminate = ref<boolean>(false)
 const checkedColumns = ref<Array<string>>(['name', 'enabled', 'description'])
@@ -25,8 +40,7 @@ const dialogVisible = ref<boolean>(false)
 
 const filters = ref({
   name: null,
-  path: null,
-  component: null
+  path: null
 })
 
 const oldComponent = ref<string>('#')
@@ -35,7 +49,6 @@ const formRef = ref<FormInstance>()
 const initialValues: Privilege = {
   name: '',
   path: '',
-  order: 1,
   component: '',
   redirect: '',
   icon: '',
@@ -98,8 +111,7 @@ async function load(row?: Privilege, treeNode?: unknown, resolve?: (date: Privil
 function reset() {
   filters.value = {
     name: null,
-    path: null,
-    component: null
+    path: null
   }
   load()
 }
@@ -187,9 +199,6 @@ function handleCheckedChange(value: string[]) {
         <ElFormItem :label="$t('path')" prop="path">
           <ElInput v-model="filters.path" :placeholder="$t('inputText') + $t('path')" />
         </ElFormItem>
-        <ElFormItem :label="$t('component')" prop="component">
-          <ElInput v-model="filters.component" :placeholder="$t('inputText') + $t('component')" />
-        </ElFormItem>
         <ElFormItem>
           <ElButton type="primary" @click="load">
             <div class="i-material-symbols:search-rounded" />{{ $t('search') }}
@@ -262,10 +271,25 @@ function handleCheckedChange(value: string[]) {
           </template>
         </ElTableColumn>
         <ElTableColumn prop="path" :label="$t('path')" />
-        <ElTableColumn prop="component" :label="$t('component')" />
-        <ElTableColumn prop="redirect" :label="$t('redirect')">
+        <ElTableColumn prop="redirect" :label="$t('redirect')" />
+        <ElTableColumn prop="actions" :label="$t('actions')">
           <template #default="scope">
-            {{ scope.row.redirect ? scope.row.redirect : '-' }}
+            <ElTag v-if="scope.row.actions && scope.row.actions.length > 0" :type="actions[scope.row.actions[0]]"
+              class="mr-2">
+              {{ $t(scope.row.actions[0]) }}
+            </ElTag>
+            <ElPopover v-if="scope.row.actions && scope.row.actions.length > 1" placement="top-start" trigger="hover"
+              :width="100">
+              <template #reference>
+                <ElTag type="primary">
+                  +{{ scope.row.actions.length - 1 }}
+                </ElTag>
+              </template>
+              <ElTag v-for="action in scope.row.actions.slice(1)" :key="action" :type="actions[action]"
+                class="mb-2 mr-4">
+                {{ $t(action) }}
+              </ElTag>
+            </ElPopover>
           </template>
         </ElTableColumn>
         <ElTableColumn prop="hidden" :label="$t('hidden')">
@@ -273,7 +297,6 @@ function handleCheckedChange(value: string[]) {
             <ElSwitch size="small" v-model="scope.row.hidden" style="--el-switch-on-color: var(--el-color-success);" />
           </template>
         </ElTableColumn>
-        <ElTableColumn prop="order" :label="$t('order')" />
         <ElTableColumn prop="enabled" :label="$t('enabled')">
           <template #default="scope">
             <ElSwitch size="small" v-model="scope.row.enabled" style="--el-switch-on-color: var(--el-color-success);" />
@@ -317,8 +340,9 @@ function handleCheckedChange(value: string[]) {
           </ElFormItem>
         </ElCol>
         <ElCol :span="12">
-          <ElFormItem :label="$t('order')" prop="order">
-            <ElInputNumber v-model="form.order" :placeholder="$t('inputText') + $t('order')" />
+          <ElFormItem :label="$t('redirect')" prop="redirect">
+            <ElInput v-model="form.redirect" :placeholder="$t('inputText') + $t('redirect')"
+              :disabled="form.superiorId" />
           </ElFormItem>
         </ElCol>
       </ElRow>
@@ -327,11 +351,13 @@ function handleCheckedChange(value: string[]) {
           <ElFormItem :label="$t('actions')" prop="meta.actions">
             <!-- width 相对body设置, popover默认设置了 position: absolute -->
             <ElSelect multiple v-model="form.actions" :placeholder="$t('selectText') + $t('actions')">
-              <ElOption value="add">{{ $t('add') }}</ElOption>
-              <ElOption value="edit">{{ $t('edit') }}</ElOption>
-              <ElOption value="remove">{{ $t('remove') }}</ElOption>
-              <ElOption value="import">{{ $t('import') }}</ElOption>
-              <ElOption value="export">{{ $t('export') }}</ElOption>
+              <ElOption value="add" :label="$t('add')" />
+              <ElOption value="edit" :label="$t('edit')" />
+              <ElOption value="remove" :label="$t('remove')" />
+              <ElOption value="import" :label="$t('import')" />
+              <ElOption value="export" :label="$t('export')" />
+              <ElOption v-if="form.name === 'groups' || form.name === 'roles'" value="relation"
+                :label="$t('relation')" />
             </ElSelect>
           </ElFormItem>
         </ElCol>

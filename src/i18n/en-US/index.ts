@@ -40,6 +40,7 @@ export default {
   location: 'Location',
   httpMethod: 'Http Method',
   url: 'URL',
+  params: 'Params',
   body: 'Body',
   operator: 'Operator',
   operatedTime: 'Operation',

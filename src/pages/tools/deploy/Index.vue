@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import Dialog from 'components/Dialog.vue'
+import { dayjs } from 'element-plus'
 import { retrieveScripts, fetchScript } from 'src/api/scripts'
 import type { Script } from 'src/models'
-import { ElImage } from 'element-plus'
 
 
 const loading = ref<boolean>(false)
@@ -88,15 +88,12 @@ function handleCheckedChange(value: string[]) {
 </script>
 
 <template>
-  <ElSpace size="large" fill>
+  <ElSpace size="large" fill class="w-full">
     <ElCard shadow="never">
       <ElRow :gutter="20" justify="space-between">
         <ElCol :span="16" class="text-left">
           <ElButton type="primary">
             <div class="i-material-symbols:add-rounded" />{{ $t('add') }}
-          </ElButton>
-          <ElButton type="danger" plain>
-            <div class="i-material-symbols:delete-outline-rounded" />{{ $t('remove') }}
           </ElButton>
           <ElButton type="success" plain @click="dialogVisible = true">
             <div class="i-material-symbols:rule-settings-rounded" />{{ $t('config') }}
@@ -113,17 +110,20 @@ function handleCheckedChange(value: string[]) {
       </ElRow>
     </ElCard>
 
-    <ElRow :gutter="16">
+    <ElRow v-if="datas && datas.length > 0" :gutter="16">
       <ElCol :span="6" v-for="row in datas" :key="row.id" class="mb-4">
         <ElCard shadow="hover" class="text-center cursor-pointer">
-          <ElImage :src="row.icon" />
+          <ElImage :src="row.icon" class="w-12 h-12" />
           <div class="mt-2">
-            <span class="text-[var(--el-text-color-regular)]">{{ row.name }}: {{ row.version }}</span><br />
-            <span class="text-sm text-[var(--el-text-color-secondary)]">{{ row.description }}</span>
+            <span class="text-lg text-[var(--el-text-color-regular)]">{{ row.name }}: {{ row.version }}</span><br />
+            <span class="text-sm text-[var(--el-text-color-secondary)]">{{ row.description }}</span><br />
+            <span class="text-xs text-[var(--el-text-color-secondary)]">Updated Time：{{
+              dayjs(row.lastModifiedDate).format('YYYY-MM-DD HH:mm') }}</span>
           </div>
         </ElCard>
       </ElCol>
     </ElRow>
+    <ElEmpty v-else :image-size="300" />
   </ElSpace>
 
   <Dialog v-model="dialogVisible" :title="$t('detail')">

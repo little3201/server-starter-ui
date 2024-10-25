@@ -226,9 +226,6 @@ function handleCheckedChange(value: string[]) {
           <ElButton type="primary" @click="editRow()">
             <div class="i-material-symbols:add-rounded" />{{ $t('add') }}
           </ElButton>
-          <ElButton type="danger" plain>
-            <div class="i-material-symbols:delete-outline-rounded" />{{ $t('remove') }}
-          </ElButton>
           <ElButton type="warning" plain @click="dialogVisible = true">
             <div class="i-material-symbols:upload-file-outline-rounded" />{{ $t('import') }}
           </ElButton>
@@ -289,10 +286,10 @@ function handleCheckedChange(value: string[]) {
             <ElButton size="small" type="primary" link @click="editRow(scope.row.id)">
               <div class="i-material-symbols:edit-outline-rounded" />{{ $t('edit') }}
             </ElButton>
-            <ElButton size="small" type="primary" link @click="configRow(scope.row.id)">
+            <ElButton size="small" type="success" link @click="configRow(scope.row.id)">
               <div class="i-material-symbols:rule-settings-rounded" />{{ $t('config') }}
             </ElButton>
-            <ElButton size="small" type="primary" link @click="previewRow(scope.row.id)">
+            <ElButton size="small" type="info" link @click="previewRow(scope.row.id)">
               <div class="i-material-symbols:visibility-outline-rounded" />{{ $t('preview') }}
             </ElButton>
             <ElPopconfirm :title="$t('removeConfirm')" :width="240" @confirm="confirmEvent(scope.row.id)">

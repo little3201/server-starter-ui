@@ -48,7 +48,7 @@ const initialValues: AuditLog = {
   newValue: null,
   ip: '',
   location: '',
-  status: null,
+  statusCode: null,
   operatedTime: null
 }
 const row = ref<AuditLog>({ ...initialValues })
@@ -252,8 +252,13 @@ function handleCheckedChange(value: string[]) {
       <ElDescriptionsItem :label="$t('newValue')">{{ row.newValue }}</ElDescriptionsItem>
       <ElDescriptionsItem :label="$t('operator')">{{ row.operator }}</ElDescriptionsItem>
       <ElDescriptionsItem :label="$t('status')">
-        <ElTag v-if="row.status === 1" type="success" round>{{ $t('success') }}</ElTag>
-        <ElTag v-else type="danger" round>{{ $t('failure') }}</ElTag>
+        <ElTag v-if="row.statusCode && (row.statusCode >= 200 && row.statusCode < 300)" type="success" round>
+          {{ row.statusCode }}
+        </ElTag>
+        <ElTag v-else-if="row.statusCode && row.statusCode >= 500" type="warning" round>
+          {{ row.statusCode }}
+        </ElTag>
+        <ElTag v-else type="danger" round>{{ row.statusCode }}</ElTag>
       </ElDescriptionsItem>
       <ElDescriptionsItem :label="$t('operatedTime')">{{ dayjs(row.operatedTime).format('YYYY-MM-DD HH:mm') }}
       </ElDescriptionsItem>

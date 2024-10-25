@@ -220,6 +220,7 @@ function handleCheckedChange(value: string[]) {
           </template>
         </ElTableColumn>
         <ElTableColumn show-overflow-tooltip prop="params" :label="$t('params')" />
+        <ElTableColumn show-overflow-tooltip prop="body" :label="$t('body')" />
         <ElTableColumn show-overflow-tooltip prop="ip" :label="$t('ip')" />
         <ElTableColumn show-overflow-tooltip prop="location" :label="$t('location')" />
         <ElTableColumn prop="statusCode" :label="$t('statusCode')">
@@ -238,7 +239,6 @@ function handleCheckedChange(value: string[]) {
             {{ formatDuration(scope.row.responseTimes) }}
           </template>
         </ElTableColumn>
-        <ElTableColumn show-overflow-tooltip prop="responseMessage" :label="$t('responseMessage')" />
         <ElTableColumn prop="operator" :label="$t('operator')" />
         <ElTableColumn :label="$t('actions')" width="160">
           <template #default="scope">

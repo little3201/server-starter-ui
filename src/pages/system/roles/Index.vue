@@ -58,7 +58,8 @@ async function loadUsers() {
 }
 
 async function loadRoleUsers(id: number) {
-  retrieveRoleMembers(id).then(res => relations.value = res.data.map((item: RoleMembers) => item.username))
+  retrieveRoleMembers(id).then(res =>
+    relations.value = res.data.map((item: RoleMembers) => item.username))
 }
 
 /**
@@ -201,7 +202,8 @@ function handleGroupCheckChange() { }
 function handleCurrentChange(row: Role | undefined) {
   if (row && row.id) {
     form.value.id = row.id
-    retrieveRolePrivileges(row.id).then(res => rolePrivileges.value = res.data.map((item: RolePrivileges) => item.privilegeId))
+    retrieveRolePrivileges(row.id).then(res =>
+      rolePrivileges.value = res.data.map((item: RolePrivileges) => item.privilegeId))
   }
 }
 
@@ -250,9 +252,6 @@ function handleCheckedChange(value: string[]) {
             <ElCol :span="16" class="text-left">
               <ElButton type="primary" @click="editRow()">
                 <div class="i-material-symbols:add-rounded" />{{ $t('add') }}
-              </ElButton>
-              <ElButton type="danger" plain>
-                <div class="i-material-symbols:delete-outline-rounded" />{{ $t('remove') }}
               </ElButton>
               <ElButton type="warning" plain @click="dialogVisible = true">
                 <div class="i-material-symbols:upload-file-outline-rounded" />{{ $t('import') }}
@@ -317,7 +316,7 @@ function handleCheckedChange(value: string[]) {
             <ElTableColumn show-overflow-tooltip prop="description" :label="$t('description')" />
             <ElTableColumn :label="$t('actions')">
               <template #default="scope">
-                <ElButton size="small" type="primary" link @click="relationRow(scope.row.id)">
+                <ElButton size="small" type="success" link @click="relationRow(scope.row.id)">
                   <div class="i-material-symbols:link-rounded" />{{ $t('relation') }}
                 </ElButton>
                 <ElButton size="small" type="primary" link @click="editRow(scope.row.id)">

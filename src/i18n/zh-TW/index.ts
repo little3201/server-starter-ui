@@ -40,6 +40,7 @@ export default {
   location: '歸屬地',
   httpMethod: 'Http方法',
   url: '接口',
+  params: '參數',
   body: '請求體',
   operation: '操作',
   operator: '操作人',

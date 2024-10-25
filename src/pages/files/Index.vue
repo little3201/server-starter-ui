@@ -2,6 +2,7 @@
 import { ref, onMounted, reactive } from 'vue'
 import draggable from 'vuedraggable'
 import Dialog from 'components/Dialog.vue'
+import { dayjs } from 'element-plus'
 import { retrieveFiles, fetchFile } from 'src/api/files'
 import type { Pagination, File } from 'src/models'
 import { formatFileSize } from 'src/utils'
@@ -157,9 +158,6 @@ function handleCheckedChange(value: string[]) {
             <ElButton type="primary" plain @click="uploadRow">
               <div class="i-material-symbols:upload" />{{ $t('upload') }}
             </ElButton>
-            <ElButton type="danger" plain>
-              <div class="i-material-symbols:delete-outline-rounded" />{{ $t('remove') }}
-            </ElButton>
           </ElCol>
 
           <ElCol :span="8" class="text-right">
@@ -212,6 +210,11 @@ function handleCheckedChange(value: string[]) {
           <ElTableColumn prop="size" :label="$t('size')" sortable="custom">
             <template #default="scope">
               {{ formatFileSize(scope.row.size) }}
+            </template>
+          </ElTableColumn>
+          <ElTableColumn prop="lastModifiedDate" :label="$t('lastModifiedDate')">
+            <template #default="scope">
+              {{ dayjs(scope.row.lastModifiedDate).format('YYYY-MM-DD HH:mm') }}
             </template>
           </ElTableColumn>
           <ElTableColumn :label="$t('actions')" width="160">

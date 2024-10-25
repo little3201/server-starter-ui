@@ -57,7 +57,6 @@ export interface Privilege extends AudtiMetadata {
   name: string
   superiorId?: number
   path: string
-  order: number
   component: string
   redirect?: string
   icon: string
@@ -119,7 +118,7 @@ export interface OperationLog extends AudtiMetadata {
   userAgent?: string | null
   browser: string | null
   statusCode: number | null
-  operatedTime: string | null
+  operatedTime: Date | null
 }
 
 export interface AccessLog extends AudtiMetadata {
@@ -144,14 +143,14 @@ export interface AuditLog extends AudtiMetadata {
   ip: string
   location: string
   statusCode: number | null
-  operatedTime: string | null
+  operatedTime: Date | null
 }
 
 export interface SchedulerLog extends AudtiMetadata {
   name: string
-  startTime: string
+  startTime: Date | null
   executedTime?: number
-  nextExecuteTime: string
+  nextExecuteTime?: Date
   status: number | null
 }
 

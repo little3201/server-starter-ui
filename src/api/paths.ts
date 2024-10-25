@@ -15,5 +15,9 @@ export const SERVER_URL = {
 
   // authentication
   SIGNIN: '/token', // 登录
-  SIGNOUT: '/logout' // 退出
+  SIGNOUT: '/logout', // 退出
+
+  // tools
+  SCRIPT: '/scripts', // 脚本
+  TABLE: '/tables' // 表
 }

@@ -1,6 +1,6 @@
 import axios, { AxiosError, AxiosInstance, InternalAxiosRequestConfig, AxiosResponse } from 'axios'
 import { ElMessage } from 'element-plus'
-
+import router from 'src//router'
 
 const abortControllerMap: Map<string, AbortController> = new Map()
 
@@ -36,6 +36,10 @@ api.interceptors.response.use(
     return res
   },
   (error: AxiosError) => {
+    if (error.status === 401) {
+      localStorage.removeItem('access_token')
+      router.replace('/login')
+    }
     ElMessage.error({ message: error.message, grouping: true })
     return Promise.reject(error)
   }
