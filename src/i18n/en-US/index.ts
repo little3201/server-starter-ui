@@ -112,7 +112,7 @@ export default {
   auditLog: 'Audit Log',
   schedulerLog: 'Scheduler Log',
   files: 'Files',
-  tools: 'Development Tools',
+  exploiter: 'Exploiter',
   generator: 'Generator',
   deploy: 'Deploy',
 

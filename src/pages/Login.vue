@@ -35,7 +35,7 @@ const rules = reactive<FormRules<typeof form>>({
   ],
   password: [
     { required: true, message: t('inputText') + t('password'), trigger: 'blur' },
-    { min: 8, max: 32, message: t('lengthRange', { min: 8, max: 16 }), trigger: 'blur' },
+    { min: 8, max: 32, message: t('lengthRange', { min: 8, max: 32 }), trigger: 'blur' },
   ]
 })
 
@@ -59,6 +59,8 @@ function onSubmit(formEl: FormInstance | undefined) {
         const redirect = router.currentRoute.value.query.redirect as string
         router.replace(redirect || '/')
       }).finally(() => loading.value = false)
+    } else {
+
     }
   })
 }
@@ -132,7 +134,8 @@ function show() {
               <div class="text-lg font-bold text-center mb-xs">
                 {{ $t('signinTo') }}
               </div>
-              <ElForm ref="formRef" :model="form" :rules="rules" class="bg-transparent w-full">
+              <ElForm ref="formRef" :model="form" :rules="rules" @submit.prevent="onSubmit(formRef)"
+                class="bg-transparent w-full">
                 <ElRow class="px-12 my-3">
                   <ElCol>
                     <ElFormItem prop="username">
@@ -163,8 +166,8 @@ function show() {
                         v:model-value="changeRememberMe" />
                     </ElFormItem>
                     <ElFormItem>
-                      <ElButton size="large" type="primary" :loading="loading" @click="onSubmit(formRef)" class="w-full"
-                        title="signin" native-type="submit">
+                      <ElButton size="large" type="primary" :loading="loading" class="w-full" title="signin"
+                        native-type="submit">
                         {{ $t('signin') }}
                       </ElButton>
                     </ElFormItem>

@@ -112,7 +112,7 @@ export default {
   auditLog: '审计日志',
   schedulerLog: '调度日志',
   files: '文件管理',
-  tools: '开发工具',
+  exploiter: '开发工具',
   generator: '代码生成',
   deploy: '部署脚本',
 

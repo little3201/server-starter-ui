@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { ref, reactive, onMounted } from 'vue'
-import type { FormInstance, FormRules } from 'element-plus'
+import { ref, reactive, onMounted, nextTick } from 'vue'
+import type { FormInstance, FormRules, TreeInstance } from 'element-plus'
 import draggable from 'vuedraggable'
 import Dialog from 'components/Dialog.vue'
 import { retrieveRoles, retrieveRoleMembers, retrieveRolePrivileges, fetchRole, createRole, modifyRole, removeRole } from 'src/api/roles'
@@ -22,9 +22,10 @@ const isIndeterminate = ref<boolean>(false)
 const checkedColumns = ref<Array<string>>(['name', 'enabled', 'description'])
 const columns = ref<Array<string>>(['name', 'enabled', 'description'])
 
+const treeEl = ref<TreeInstance>()
 const privilegeTreeLoading = ref<boolean>(false)
-const privilegeTree = ref<Array<Number>>([])
-const rolePrivileges = ref<Array<TreeNode>>([])
+const privilegeTree = ref<Array<TreeNode>>([])
+const rolePrivileges = ref<Array<number>>([])
 
 const saveLoading = ref<boolean>(false)
 const dialogVisible = ref<boolean>(false)
@@ -201,7 +202,7 @@ function handleGroupCheckChange() { }
  */
 function handleCurrentChange(row: Role | undefined) {
   if (row && row.id) {
-    form.value.id = row.id
+    treeEl.value?.setCheckedKeys([])
     retrieveRolePrivileges(row.id).then(res =>
       rolePrivileges.value = res.data.map((item: RolePrivileges) => item.privilegeId))
   }

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, reactive, onMounted, watch } from 'vue'
-import type { FormInstance, FormRules } from 'element-plus'
+import type { FormInstance, FormRules, TreeInstance } from 'element-plus'
 import draggable from 'vuedraggable'
 import Dialog from 'components/Dialog.vue'
 import { retrieveGroups, retrieveGroupMembers, retrieveGroupTree, fetchGroup, createGroup, modifyGroup, removeGroup } from 'src/api/groups'
@@ -22,7 +22,7 @@ const isIndeterminate = ref<boolean>(false)
 const checkedColumns = ref<Array<string>>(['name', 'enabled', 'description'])
 const columns = ref<Array<string>>(['name', 'enabled', 'description'])
 
-const treeEl = ref()
+const treeEl = ref<TreeInstance>()
 const treeLoading = ref<boolean>(false)
 const currentNodeKey = ref<number>()
 const currentNode = ref('')
@@ -95,7 +95,7 @@ async function loadTree() {
       currentNodeKey.value = (res.data[0] && res.data[0]?.id) || ''
     }
 
-    treeEl.value.setCurrentKey(currentNodeKey.value)
+    treeEl.value?.setCurrentKey(currentNodeKey.value)
 
     load()
   }).finally(() => treeLoading.value = false)
@@ -138,7 +138,7 @@ function reset() {
 watch(
   () => currentNode.value,
   (val) => {
-    treeEl.value.filter(val)
+    treeEl.value?.filter(val)
   }
 )
 

@@ -50,10 +50,10 @@ const datas: Privilege[] = [
   },
   {
     id: 16,
-    path: '/tools',
+    path: '/exploiter',
     component: '#',
-    name: 'tools',
-    redirect: '/tools',
+    name: 'exploiter',
+    redirect: '/exploiter',
     icon: 'i-material-symbols:build-outline-rounded',
     count: 1,
     enabled: true,
@@ -201,7 +201,7 @@ const subDatas: Privilege[] = [
     superiorId: 16,
     path: 'generator',
     name: 'generator',
-    component: 'pages/tools/generator/Index',
+    component: 'pages/exploiter/generator/Index',
     actions: ['add', 'edit', 'remove', 'import', 'export', 'config', 'preview'],
     count: 0,
     enabled: true,
@@ -213,7 +213,7 @@ const subDatas: Privilege[] = [
     superiorId: 16,
     path: 'deploy',
     name: 'deploy',
-    component: 'pages/tools/deploy/Index',
+    component: 'pages/exploiter/deploy/Index',
     actions: ['add', 'edit', 'remove', 'import', 'export'],
     count: 0,
     enabled: true,
@@ -374,11 +374,11 @@ const treeNodes: PrivilegeTreeNode[] = [
   },
   {
     id: 16,
-    name: 'tools',
+    name: 'exploiter',
     meta: {
-      path: '/tools',
+      path: '/exploiter',
       component: '#',
-      redirect: '/tools/generator',
+      redirect: '/exploiter/generator',
       icon: 'i-material-symbols:build-outline-rounded',
     },
     children: [
@@ -387,7 +387,7 @@ const treeNodes: PrivilegeTreeNode[] = [
         name: 'generator',
         meta: {
           path: 'generator',
-          component: 'pages/tools/generator/Index',
+          component: 'pages/exploiter/generator/Index',
           icon: 'i-material-symbols:code-rounded'
         }
       },
@@ -396,7 +396,7 @@ const treeNodes: PrivilegeTreeNode[] = [
         name: 'deploy',
         meta: {
           path: 'deploy',
-          component: 'pages/tools/deploy/Index',
+          component: 'pages/exploiter/deploy/Index',
           icon: 'i-material-symbols:terminal-rounded'
         }
       }
