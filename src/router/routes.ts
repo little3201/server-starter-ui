@@ -10,7 +10,7 @@ export const constantRouterMap: Array<RouteRecordRaw> = [
     children: [
       {
         path: '',
-        name: 'homeIndex',
+        name: 'index',
         component: () => import('pages/Index.vue')
       },
       {
