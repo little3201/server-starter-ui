@@ -6,11 +6,10 @@ import type { Privilege, PrivilegeTreeNode } from 'src/models'
 const datas: Privilege[] = [
   {
     id: 1,
-    path: '/system',
+    path: 'system',
     component: '#',
     redirect: '/system/users',
     name: 'system',
-    order: 1,
     icon: 'i-material-symbols:settings-outline-rounded',
     count: 5,
     enabled: true,
@@ -18,11 +17,10 @@ const datas: Privilege[] = [
   },
   {
     id: 7,
-    path: '/logs',
+    path: 'logs',
     component: '#',
     redirect: '/logs/operation',
     name: 'logs',
-    order: 2,
     icon: 'i-material-symbols:lab-profile-outline-rounded ',
     count: 3,
     enabled: true,
@@ -30,35 +28,32 @@ const datas: Privilege[] = [
   },
   {
     id: 12,
-    path: '/regions',
-    component: '#',
+    path: 'regions',
+    component: 'pages/regions/Index',
     name: 'regions',
-    redirect: '/regions',
-    order: 3,
     icon: 'i-material-symbols:location-on-outline-rounded',
-    count: 1,
+    actions: ['add', 'edit', 'remove', 'import', 'export'],
+    count: 0,
     enabled: true,
     description: 'this is description for this row'
   },
   {
     id: 14,
-    path: '/files',
-    component: '#',
+    path: 'files',
+    component: 'pages/files/Index',
     name: 'files',
-    redirect: '/files',
-    order: 3,
     icon: 'i-material-symbols:folder-open-outline-rounded',
-    count: 1,
+    actions: ['upload', 'download', 'remove'],
+    count: 0,
     enabled: true,
     description: 'this is description for this row'
   },
   {
     id: 16,
-    path: '/tools',
+    path: 'exploiter',
     component: '#',
-    name: 'tools',
-    redirect: '/tools',
-    order: 3,
+    name: 'exploiter',
+    redirect: '/exploiter',
     icon: 'i-material-symbols:build-outline-rounded',
     count: 1,
     enabled: true,
@@ -73,7 +68,7 @@ const subDatas: Privilege[] = [
     path: 'groups',
     component: 'pages/system/groups/Index',
     name: 'groups',
-    order: 1,
+    actions: ['add', 'edit', 'remove', 'import', 'export', 'relation'],
     count: 0,
     enabled: true,
     icon: 'i-material-symbols:account-tree-outline-rounded',
@@ -85,7 +80,7 @@ const subDatas: Privilege[] = [
     path: 'users',
     component: 'pages/system/users/Index',
     name: 'users',
-    order: 2,
+    actions: ['add', 'edit', 'remove', 'import', 'export'],
     count: 0,
     enabled: true,
     icon: 'i-material-symbols:person-outline-rounded',
@@ -97,7 +92,7 @@ const subDatas: Privilege[] = [
     path: 'privileges',
     component: 'pages/system/privileges/Index',
     name: 'privileges',
-    order: 3,
+    actions: ['edit', 'import', 'export'],
     count: 0,
     enabled: true,
     icon: 'i-material-symbols:admin-panel-settings-outline-rounded',
@@ -109,7 +104,7 @@ const subDatas: Privilege[] = [
     path: 'roles',
     component: 'pages/system/roles/Index',
     name: 'roles',
-    order: 4,
+    actions: ['add', 'edit', 'remove', 'import', 'export', 'relation'],
     count: 0,
     enabled: true,
     icon: 'i-material-symbols:shield-person-outline-rounded',
@@ -121,7 +116,7 @@ const subDatas: Privilege[] = [
     path: 'dictionaries',
     component: 'pages/system/dictionaries/Index',
     name: 'dictionaries',
-    order: 5,
+    actions: ['add', 'edit', 'remove', 'import', 'export'],
     count: 0,
     enabled: true,
     icon: 'i-material-symbols:book-3-outline-rounded',
@@ -133,7 +128,7 @@ const subDatas: Privilege[] = [
     path: 'operation',
     component: 'pages/logs/operation/Index',
     name: 'operationLog',
-    order: 1,
+    actions: ['clear', 'detail', 'export', 'remove'],
     count: 0,
     enabled: true,
     icon: 'i-material-symbols:clinical-notes-outline-rounded',
@@ -145,7 +140,7 @@ const subDatas: Privilege[] = [
     path: 'access',
     component: 'pages/logs/access/Index',
     name: 'accessLog',
-    order: 2,
+    actions: ['clear', 'detail', 'export', 'remove'],
     count: 0,
     enabled: true,
     icon: 'i-material-symbols:sticky-note-2-outline-rounded',
@@ -157,7 +152,7 @@ const subDatas: Privilege[] = [
     path: 'audit',
     component: 'pages/logs/audit/Index',
     name: 'auditLog',
-    order: 3,
+    actions: ['detail', 'export'],
     count: 0,
     enabled: true,
     icon: 'i-material-symbols:note-alt-outline-rounded',
@@ -169,36 +164,10 @@ const subDatas: Privilege[] = [
     path: 'scheduler',
     component: 'pages/logs/scheduler/Index',
     name: 'schedulerLog',
-    order: 4,
+    actions: ['clear', 'detail', 'export', 'remove'],
     count: 0,
     enabled: true,
     icon: 'i-material-symbols:event-note-outline-rounded',
-    description: 'this is description for this row'
-  },
-  {
-    id: 13,
-    superiorId: 12,
-    path: '',
-    name: 'regions',
-    component: 'pages/regions/Index',
-    order: 1,
-    count: 0,
-    enabled: true,
-    icon: 'i-material-symbols:location-on-outline-rounded',
-    hidden: true,
-    description: 'this is description for this row'
-  },
-  {
-    id: 15,
-    superiorId: 14,
-    path: '',
-    name: 'files',
-    component: 'pages/files/Index',
-    order: 1,
-    count: 0,
-    enabled: true,
-    icon: 'i-material-symbols:folder-open-outline-rounded',
-    hidden: true,
     description: 'this is description for this row'
   },
   {
@@ -206,8 +175,8 @@ const subDatas: Privilege[] = [
     superiorId: 16,
     path: 'generator',
     name: 'generator',
-    component: 'pages/tools/generator/Index',
-    order: 1,
+    component: 'pages/exploiter/generator/Index',
+    actions: ['add', 'edit', 'remove', 'import', 'export', 'config', 'preview'],
     count: 0,
     enabled: true,
     icon: 'i-material-symbols:code-rounded',
@@ -218,8 +187,8 @@ const subDatas: Privilege[] = [
     superiorId: 16,
     path: 'deploy',
     name: 'deploy',
-    component: 'pages/tools/deploy/Index',
-    order: 1,
+    component: 'pages/exploiter/deploy/Index',
+    actions: ['add', 'edit', 'remove', 'import', 'export'],
     count: 0,
     enabled: true,
     icon: 'i-material-symbols:terminal-rounded',
@@ -232,7 +201,7 @@ const treeNodes: PrivilegeTreeNode[] = [
     id: 1,
     name: 'system',
     meta: {
-      path: '/system',
+      path: 'system',
       component: '#',
       redirect: '/system/users',
       icon: 'i-material-symbols:settings-outline-rounded',
@@ -289,7 +258,7 @@ const treeNodes: PrivilegeTreeNode[] = [
     id: 7,
     name: 'logs',
     meta: {
-      path: '/logs',
+      path: 'logs',
       component: '#',
       redirect: '/logs/operation',
       icon: 'i-material-symbols:lab-profile-outline-rounded',
@@ -337,53 +306,27 @@ const treeNodes: PrivilegeTreeNode[] = [
     id: 12,
     name: 'regions',
     meta: {
-      path: '/regions',
-      component: '#',
-      redirect: '/regions',
+      path: 'regions',
+      component: 'pages/regions/Index',
       icon: 'i-material-symbols:location-on-outline-rounded',
-    },
-    children: [
-      {
-        id: 13,
-        name: 'regions',
-        meta: {
-          path: '',
-          component: 'pages/regions/Index',
-          icon: 'i-material-symbols:location-on-outline-rounded',
-          hidden: true
-        }
-      }
-    ]
+    }
   },
   {
     id: 14,
     name: 'files',
     meta: {
-      path: '/files',
-      component: '#',
-      redirect: '/files',
+      path: 'files',
+      component: 'pages/files/Index',
       icon: 'i-material-symbols:folder-open-outline-rounded',
-    },
-    children: [
-      {
-        id: 15,
-        name: 'files',
-        meta: {
-          path: '',
-          component: 'pages/files/Index',
-          icon: 'i-material-symbols:folder-open-outline-rounded',
-          hidden: true
-        }
-      }
-    ]
+    }
   },
   {
     id: 16,
-    name: 'tools',
+    name: 'exploiter',
     meta: {
-      path: '/tools',
+      path: 'exploiter',
       component: '#',
-      redirect: '/tools/generator',
+      redirect: '/exploiter/generator',
       icon: 'i-material-symbols:build-outline-rounded',
     },
     children: [
@@ -392,7 +335,7 @@ const treeNodes: PrivilegeTreeNode[] = [
         name: 'generator',
         meta: {
           path: 'generator',
-          component: 'pages/tools/generator/Index',
+          component: 'pages/exploiter/generator/Index',
           icon: 'i-material-symbols:code-rounded'
         }
       },
@@ -401,7 +344,7 @@ const treeNodes: PrivilegeTreeNode[] = [
         name: 'deploy',
         meta: {
           path: 'deploy',
-          component: 'pages/tools/deploy/Index',
+          component: 'pages/exploiter/deploy/Index',
           icon: 'i-material-symbols:terminal-rounded'
         }
       }

@@ -33,6 +33,8 @@ const row = ref<OperationLog>({
   content: '',
   ip: '',
   location: '',
+  os: '',
+  browser: '',
   statusCode: null,
   operator: '',
   operatedTime: null
@@ -209,10 +211,10 @@ function handleCheckedChange(value: string[]) {
         <ElTableColumn type="selection" width="55" />
         <ElTableColumn type="index" :label="$t('no')" width="55" />
         <ElTableColumn prop="operation" :label="$t('operation')" />
-        <ElTableColumn show-overflow-tooltip prop="ip" :label="$t('ip')" />
-        <ElTableColumn show-overflow-tooltip prop="location" :label="$t('location')" />
         <ElTableColumn show-overflow-tooltip prop="os" :label="$t('os')" />
         <ElTableColumn show-overflow-tooltip prop="browser" :label="$t('browser')" />
+        <ElTableColumn show-overflow-tooltip prop="ip" :label="$t('ip')" />
+        <ElTableColumn show-overflow-tooltip prop="location" :label="$t('location')" />
         <ElTableColumn prop="statusCode" :label="$t('statusCode')">
           <template #default="scope">
             <ElTag v-if="scope.row.statusCode >= 200 && scope.row.statusCode < 300" type="success" round>
@@ -232,7 +234,7 @@ function handleCheckedChange(value: string[]) {
         <ElTableColumn prop="operator" :label="$t('operator')" />
         <ElTableColumn :label="$t('actions')" width="160">
           <template #default="scope">
-            <ElButton size="small" type="success" link @click="showRow(scope.row.id)">
+            <ElButton size="small" type="info" link @click="showRow(scope.row.id)">
               <div class="i-material-symbols:sticky-note-outline-rounded" />{{ $t('detail') }}
             </ElButton>
             <ElPopconfirm :title="$t('removeConfirm')" :width="240" @confirm="confirmEvent(scope.row.id)">

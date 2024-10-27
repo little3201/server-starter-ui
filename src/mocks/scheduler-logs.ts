@@ -6,87 +6,87 @@ const datas: SchedulerLog[] = [
   {
     id: 1,
     name: 'DailyBackup',
-    startTime: '2024-05-12 23:23',
-    nextExecuteTime: '2024-05-13 03:23',
+    startTime: new Date(),
+    nextExecuteTime: new Date(),
     status: 0
   },
   {
     id: 2,
     name: 'GenerateReport',
-    startTime: '2024-05-12 23:23',
-    nextExecuteTime: '2024-05-13 03:23',
+    startTime: new Date(),
+    nextExecuteTime: new Date(),
     executedTime: 5,
     status: 1
   },
   {
     id: 3,
     name: 'SyncData',
-    startTime: '2024-05-12 23:23',
-    nextExecuteTime: '2024-05-13 03:23',
+    startTime: new Date(),
+    nextExecuteTime: new Date(),
     executedTime: 6,
     status: 1
   },
   {
     id: 4,
     name: 'ClearTempFiles',
-    startTime: '2024-05-12 23:23',
-    nextExecuteTime: '2024-05-13 03:23',
+    startTime: new Date(),
+    nextExecuteTime: new Date(),
     executedTime: 323,
     status: 1
   },
   {
     id: 5,
     name: 'SendEmails',
-    startTime: '2024-05-12 23:23',
-    nextExecuteTime: '2024-05-13 03:23',
+    startTime: new Date(),
+    nextExecuteTime: new Date(),
     executedTime: 33,
     status: 2
   },
   {
     id: 6,
     name: 'UpdateStats',
-    startTime: '2024-05-12 23:23',
-    nextExecuteTime: '2024-05-13 03:23',
+    startTime: new Date(),
+    nextExecuteTime: new Date(),
     executedTime: 2,
     status: 1
   },
   {
     id: 7,
     name: 'ReindexSearch',
-    startTime: '2024-05-12 23:23',
-    nextExecuteTime: '2024-05-13 03:23',
+    startTime: new Date(),
+    nextExecuteTime: new Date(),
     executedTime: 323,
     status: 1
   },
   {
     id: 8,
     name: 'ArchiveLogs',
-    startTime: '2024-05-12 23:23',
-    nextExecuteTime: '2024-05-13 03:23',
+    startTime: new Date(),
+    nextExecuteTime: new Date(),
     executedTime: 23,
     status: 1
   },
   {
     id: 9,
     name: 'RefreshCache',
-    startTime: '2024-05-12 23:23',
-    nextExecuteTime: '2024-05-13 03:23',
+    startTime: new Date(),
+    nextExecuteTime: new Date(),
     executedTime: 2345,
     status: 1
   },
   {
     id: 10,
     name: 'GenerateInvoices',
-    startTime: '2024-05-12 23:23',
-    nextExecuteTime: '2024-05-13 03:23',
+    startTime: new Date(),
+    nextExecuteTime: new Date(),
     executedTime: 125,
     status: 1
   },
   {
     id: 11,
     name: 'GenerateInvoices',
-    startTime: '2024-05-12 23:23',
-    nextExecuteTime: '2024-05-13 03:23',
+    startTime: new Date(),
+    nextExecuteTime: new Date(),
     executedTime: 125,
     status: 1
   }

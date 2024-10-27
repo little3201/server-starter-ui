@@ -13,7 +13,7 @@ const datas: AuditLog[] = [
     ip: '192.168.0.1',
     location: 'New York',
     statusCode: 200,
-    operatedTime: '2024-07-01T00:00:00'
+    operatedTime: new Date()
   },
   {
     id: 2,
@@ -25,7 +25,7 @@ const datas: AuditLog[] = [
     ip: '192.168.0.2',
     location: 'London',
     statusCode: 200,
-    operatedTime: '2024-07-01T00:00:00'
+    operatedTime: new Date()
   },
   {
     id: 3,
@@ -37,7 +37,7 @@ const datas: AuditLog[] = [
     ip: '192.168.0.3',
     location: 'San Francisco',
     statusCode: 200,
-    operatedTime: '2024-07-01T00:00:00'
+    operatedTime: new Date()
   },
   {
     id: 4,
@@ -49,7 +49,7 @@ const datas: AuditLog[] = [
     ip: '192.168.0.4',
     location: 'Berlin',
     statusCode: 400,
-    operatedTime: '2024-07-01T00:00:00'
+    operatedTime: new Date()
   },
   {
     id: 5,
@@ -61,7 +61,7 @@ const datas: AuditLog[] = [
     ip: '192.168.0.5',
     location: 'Paris',
     statusCode: 200,
-    operatedTime: '2024-07-01T00:00:00'
+    operatedTime: new Date()
   },
   {
     id: 6,
@@ -73,7 +73,7 @@ const datas: AuditLog[] = [
     ip: '192.168.0.6',
     location: 'Tokyo',
     statusCode: 200,
-    operatedTime: '2024-07-01T00:00:00'
+    operatedTime: new Date()
   },
   {
     id: 7,
@@ -85,7 +85,7 @@ const datas: AuditLog[] = [
     ip: '192.168.0.1',
     location: 'New York',
     statusCode: 200,
-    operatedTime: '2024-07-01T00:00:00'
+    operatedTime: new Date()
   },
   {
     id: 8,
@@ -97,7 +97,7 @@ const datas: AuditLog[] = [
     ip: '192.168.0.2',
     location: 'London',
     statusCode: 200,
-    operatedTime: '2024-07-01T00:00:00'
+    operatedTime: new Date()
   },
   {
     id: 9,
@@ -109,7 +109,7 @@ const datas: AuditLog[] = [
     ip: '192.168.0.3',
     location: 'San Francisco',
     statusCode: 200,
-    operatedTime: '2024-07-01T00:00:00'
+    operatedTime: new Date()
   },
   {
     id: 10,
@@ -121,7 +121,7 @@ const datas: AuditLog[] = [
     ip: '192.168.0.4',
     location: 'Berlin',
     statusCode: 200,
-    operatedTime: '2024-07-01T00:00:00'
+    operatedTime: new Date()
   },
   {
     id: 11,
@@ -133,7 +133,7 @@ const datas: AuditLog[] = [
     ip: '192.168.0.4',
     location: 'Berlin',
     statusCode: 200,
-    operatedTime: '2024-07-01T00:00:00'
+    operatedTime: new Date()
   }
 ]
 

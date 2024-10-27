@@ -7,6 +7,11 @@ import type { PrivilegeTreeNode } from 'src/models'
 
 const progress = new ProgressBar({ color: '#1677ff' })
 
+// 生成路由
+const BlankLayout = () => import('layouts/BlankLayout.vue')
+
+const modules = import.meta.glob('../pages/**/*.{vue,tsx}')
+
 const router = createRouter({
   history: createWebHistory(),
   routes: constantRouterMap as RouteRecordRaw[],
@@ -26,9 +31,9 @@ router.beforeEach(async (to, from, next) => {
       if (!to.name || !router.hasRoute(to.name)) {
         const routes = generateRoutes(userStore.privileges as PrivilegeTreeNode[])
 
-        // 动态添加可访问路由表
+        // 动态添加可访问路由表到home下
         routes.forEach((route) => {
-          router.addRoute(route as RouteRecordRaw)
+          router.addRoute('home', route as RouteRecordRaw)
         })
         // 捕获所有未匹配的路径，放在配置的末尾
         router.addRoute({
@@ -59,12 +64,6 @@ router.afterEach(() => {
   progress.finish()
 })
 
-// 生成路由
-const MainLayout = () => import('layouts/MainLayout.vue')
-const BlankLayout = () => import('layouts/BlankLayout.vue')
-
-const modules = import.meta.glob('../pages/**/*.{vue,tsx}')
-
 export const generateRoutes = (routes: PrivilegeTreeNode[]): RouteRecordRaw[] => {
   const res: RouteRecordRaw[] = []
   for (const route of routes) {
@@ -82,8 +81,8 @@ export const generateRoutes = (routes: PrivilegeTreeNode[]): RouteRecordRaw[] =>
         // 动态加载路由文件
         data.component = comModule
       } else if (component.includes('#')) {
-        data.component = component === '#' ? MainLayout : BlankLayout
-        // data.component = BlankLayout
+        // # 表示多级菜单
+        data.component = BlankLayout
       }
     }
     // recursive child routes

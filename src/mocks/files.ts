@@ -10,7 +10,8 @@ for (let i = 1; i < 28; i++) {
     id: i,
     name: 'file_name_' + i,
     type: i % 3 > 0 ? 'File' : 'Media',
-    size: 86756 + i
+    size: 86756 + i,
+    lastModifiedDate: new Date()
   }
   datas.push(data)
 }

@@ -31,9 +31,9 @@ const detailLoading = ref<boolean>(false)
 const row = ref<SchedulerLog>({
   id: undefined,
   name: '',
-  params: '',
-  cronExpression: '',
+  startTime: null,
   executedTime: 0,
+  nextExecuteTime: undefined,
   status: null
 })
 
@@ -205,7 +205,11 @@ function handleCheckedChange(value: string[]) {
         <ElTableColumn type="selection" width="55" />
         <ElTableColumn type="index" :label="$t('no')" width="55" />
         <ElTableColumn prop="name" :label="$t('name')" />
-        <ElTableColumn prop="startTime" :label="$t('startTime')" />
+        <ElTableColumn prop="startTime" :label="$t('startTime')">
+          <template #default="scope">
+            {{ dayjs(scope.row.startTime).format('YYYY-MM-DD HH:mm') }}
+          </template>
+        </ElTableColumn>
         <ElTableColumn prop="status" :label="$t('status')">
           <template #default="scope">
             <ElTag v-if="scope.row.status === 0" type="primary" round>{{ $t('processing') }}</ElTag>
@@ -218,10 +222,14 @@ function handleCheckedChange(value: string[]) {
             {{ scope.row.executedTime ? formatDuration(scope.row.executedTime) : '-' }}
           </template>
         </ElTableColumn>
-        <ElTableColumn prop="nextExecuteTime" :label="$t('nextExecuteTime')" />
+        <ElTableColumn prop="nextExecuteTime" :label="$t('nextExecuteTime')">
+          <template #default="scope">
+            {{ dayjs(scope.row.nextExecuteTime).format('YYYY-MM-DD HH:mm') }}
+          </template>
+        </ElTableColumn>
         <ElTableColumn :label="$t('actions')" width="160">
           <template #default="scope">
-            <ElButton size="small" type="success" link @click="showRow(scope.row.id)">
+            <ElButton size="small" type="info" link @click="showRow(scope.row.id)">
               <div class="i-material-symbols:sticky-note-outline-rounded" />{{ $t('detail') }}
             </ElButton>
             <ElPopconfirm :title="$t('removeConfirm')" :width="240" @confirm="confirmEvent(scope.row.id)">
@@ -243,10 +251,11 @@ function handleCheckedChange(value: string[]) {
       <ElDescriptionsItem :label="$t('name')">{{ row.name }}</ElDescriptionsItem>
       <ElDescriptionsItem :label="$t('startTime')">{{ row.startTime }}</ElDescriptionsItem>
       <ElDescriptionsItem :label="$t('status')">
-        <ElTag v-if="row.status === 1" type="success" round>{{ $t('success') }}</ElTag>
+        <ElTag v-if="row.status === 0" type="primary" round>{{ $t('processing') }}</ElTag>
+        <ElTag v-else-if="row.status === 1" type="success" round>{{ $t('done') }}</ElTag>
         <ElTag v-else type="danger" round>{{ $t('failure') }}</ElTag>
       </ElDescriptionsItem>
-      <ElDescriptionsItem :label="$t('executedTime')">{{ formatDuration(row.executedTime) }}
+      <ElDescriptionsItem :label="$t('executedTime')">{{ row.executedTime ? formatDuration(row.executedTime) : '-' }}
       </ElDescriptionsItem>
       <ElDescriptionsItem :label="$t('nextExecuteTime')">{{ row.nextExecuteTime }}</ElDescriptionsItem>
     </ElDescriptions>

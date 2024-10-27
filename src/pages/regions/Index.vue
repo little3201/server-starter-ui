@@ -188,9 +188,6 @@ function handleCheckedChange(value: string[]) {
           <ElButton type="primary" @click="editRow()">
             <div class="i-material-symbols:add-rounded" />{{ $t('add') }}
           </ElButton>
-          <ElButton type="danger" plain>
-            <div class="i-material-symbols:delete-outline-rounded" />{{ $t('remove') }}
-          </ElButton>
           <ElButton type="warning" plain @click="dialogVisible = true">
             <div class="i-material-symbols:upload-file-outline-rounded" />{{ $t('import') }}
           </ElButton>

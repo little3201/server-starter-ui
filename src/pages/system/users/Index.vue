@@ -312,27 +312,39 @@ function handleCheckedChange(value: string[]) {
     </ElCard>
   </ElSpace>
 
-  <Dialog v-model="dialogVisible" :title="$t('users')" width="25%">
+  <Dialog v-model="dialogVisible" :title="$t('users')" width="36%">
     <ElForm ref="formRef" :model="form" :rules="rules" label-position="top">
       <ElRow :gutter="20" class="w-full !mx-0">
-        <ElCol :span="24">
+        <ElCol :span="12">
           <ElFormItem :label="$t('fullName')" prop="fullName">
             <ElInput type="email" v-model="form.fullName" :placeholder="$t('inputText') + $t('fullName')"
               :maxLength="50" />
           </ElFormItem>
         </ElCol>
-      </ElRow>
-      <ElRow :gutter="20" class="w-full !mx-0">
-        <ElCol :span="24">
+        <ElCol :span="12">
           <ElFormItem :label="$t('username')" prop="username">
-            <ElInput v-model="form.username" :placeholder="$t('inputText') + $t('username')" :maxLength="50" />
+            <ElInput v-model="form.username" :placeholder="$t('inputText') + $t('username')" :maxLength="50"
+              :disabled="form.id" />
           </ElFormItem>
         </ElCol>
       </ElRow>
       <ElRow :gutter="20" class="w-full !mx-0">
         <ElCol :span="24">
           <ElFormItem :label="$t('email')" prop="email">
-            <ElInput type="email" v-model="form.email" :placeholder="$t('inputText') + $t('email')" :maxLength="50" />
+            <ElInput type="email" v-model="form.email" :placeholder="$t('inputText') + $t('email')" :maxLength="50"
+              :disabled="form.id" />
+          </ElFormItem>
+        </ElCol>
+      </ElRow>
+      <ElRow :gutter="20" class="w-full !mx-0">
+        <ElCol :span="12">
+          <ElFormItem :label="$t('accountExpiresAt')" prop="accountExpiresAt">
+            <ElDatePicker v-model="form.accountExpiresAt" type="datetime" :placeholder="$t('selectText')" />
+          </ElFormItem>
+        </ElCol>
+        <ElCol :span="12">
+          <ElFormItem :label="$t('credentialsExpiresAt')" prop="credentialsExpiresAt">
+            <ElDatePicker v-model="form.credentialsExpiresAt" type="datetime" :placeholder="$t('selectText')" />
           </ElFormItem>
         </ElCol>
       </ElRow>

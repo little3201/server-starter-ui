@@ -26,7 +26,13 @@ const filters = ref({
   operator: null
 })
 
-const methods: { [key: string]: string } = { "GET": "success", "POST": "warning", "PUT": "primary", "DELETE": "danger" }
+const methods: { [key: string]: string } = {
+  "GET": "success",
+  "POST": "warning",
+  "PUT": "primary",
+  "PATCH": "primary",
+  "DELETE": "danger"
+}
 
 const detailLoading = ref<boolean>(false)
 const row = ref<AccessLog>({
@@ -216,10 +222,11 @@ function handleCheckedChange(value: string[]) {
         <ElTableColumn prop="url" :label="$t('url')" />
         <ElTableColumn prop="httpMethod" :label="$t('httpMethod')">
           <template #default="scope">
-            <el-badge is-dot :type="methods[scope.row.httpMethod]" class="mr-2" />{{ scope.row.httpMethod }}
+            <ElBadge is-dot :type="methods[scope.row.httpMethod]" class="mr-2" />{{ scope.row.httpMethod }}
           </template>
         </ElTableColumn>
         <ElTableColumn show-overflow-tooltip prop="params" :label="$t('params')" />
+        <ElTableColumn show-overflow-tooltip prop="body" :label="$t('body')" />
         <ElTableColumn show-overflow-tooltip prop="ip" :label="$t('ip')" />
         <ElTableColumn show-overflow-tooltip prop="location" :label="$t('location')" />
         <ElTableColumn prop="statusCode" :label="$t('statusCode')">
@@ -238,11 +245,10 @@ function handleCheckedChange(value: string[]) {
             {{ formatDuration(scope.row.responseTimes) }}
           </template>
         </ElTableColumn>
-        <ElTableColumn show-overflow-tooltip prop="responseMessage" :label="$t('responseMessage')" />
         <ElTableColumn prop="operator" :label="$t('operator')" />
         <ElTableColumn :label="$t('actions')" width="160">
           <template #default="scope">
-            <ElButton size="small" type="success" link @click="showRow(scope.row.id)">
+            <ElButton size="small" type="info" link @click="showRow(scope.row.id)">
               <div class="i-material-symbols:sticky-note-outline-rounded" />{{ $t('detail') }}
             </ElButton>
             <ElPopconfirm :title="$t('removeConfirm')" :width="240" @confirm="confirmEvent(scope.row.id)">

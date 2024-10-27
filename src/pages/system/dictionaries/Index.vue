@@ -228,7 +228,6 @@ function handleCheckedChange(value: string[]) {
             <ElSwitch size="small" v-model="scope.row.enabled" style="--el-switch-on-color: var(--el-color-success);" />
           </template>
         </ElTableColumn>
-        <ElTableColumn prop="order" :label="$t('order')" />
         <ElTableColumn show-overflow-tooltip prop="description" :label="$t('description')" />
         <ElTableColumn :label="$t('actions')">
           <template #default="scope">

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, reactive, onMounted, watch } from 'vue'
-import type { FormInstance, FormRules } from 'element-plus'
+import type { FormInstance, FormRules, TreeInstance } from 'element-plus'
 import draggable from 'vuedraggable'
 import Dialog from 'components/Dialog.vue'
 import { retrieveGroups, retrieveGroupMembers, retrieveGroupTree, fetchGroup, createGroup, modifyGroup, removeGroup } from 'src/api/groups'
@@ -22,7 +22,7 @@ const isIndeterminate = ref<boolean>(false)
 const checkedColumns = ref<Array<string>>(['name', 'enabled', 'description'])
 const columns = ref<Array<string>>(['name', 'enabled', 'description'])
 
-const treeEl = ref()
+const treeEl = ref<TreeInstance>()
 const treeLoading = ref<boolean>(false)
 const currentNodeKey = ref<number>()
 const currentNode = ref('')
@@ -95,7 +95,7 @@ async function loadTree() {
       currentNodeKey.value = (res.data[0] && res.data[0]?.id) || ''
     }
 
-    treeEl.value.setCurrentKey(currentNodeKey.value)
+    treeEl.value!.setCurrentKey(currentNodeKey.value)
 
     load()
   }).finally(() => treeLoading.value = false)
@@ -138,7 +138,7 @@ function reset() {
 watch(
   () => currentNode.value,
   (val) => {
-    treeEl.value.filter(val)
+    treeEl.value!.filter(val)
   }
 )
 
@@ -288,9 +288,6 @@ function handleCheckedChange(value: string[]) {
               <ElButton type="primary" @click="editRow()">
                 <div class="i-material-symbols:add-rounded" />{{ $t('add') }}
               </ElButton>
-              <ElButton type="danger" plain>
-                <div class="i-material-symbols:delete-outline-rounded" />{{ $t('remove') }}
-              </ElButton>
               <ElButton type="warning" plain @click="dialogVisible = true">
                 <div class="i-material-symbols:upload-file-outline-rounded" />{{ $t('import') }}
               </ElButton>
@@ -353,7 +350,7 @@ function handleCheckedChange(value: string[]) {
             <ElTableColumn show-overflow-tooltip prop="description" :label="$t('description')" />
             <ElTableColumn :label="$t('actions')">
               <template #default="scope">
-                <ElButton size="small" type="primary" link @click="relationRow(scope.row.id)">
+                <ElButton size="small" type="success" link @click="relationRow(scope.row.id)">
                   <div class="i-material-symbols:link-rounded" />{{ $t('relation') }}
                 </ElButton>
                 <ElButton size="small" type="primary" link @click="editRow(scope.row.id)">

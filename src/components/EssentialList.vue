@@ -9,19 +9,11 @@ withDefaults(defineProps<{
   parentPath: ''
 })
 
-function isSubMenu(children: PrivilegeTreeNode[]) {
-  for (const child of children) {
-    if (child.meta.hidden) {
-      return false
-    }
-  }
-  return true
-}
 </script>
 
 <template>
   <template v-for="link in essentialLinks" :key="link.name">
-    <ElSubMenu v-if="link.children && isSubMenu(link.children)" :index="pathResolve(parentPath, link.meta.path)">
+    <ElSubMenu v-if="link.children" :index="pathResolve(parentPath, link.meta.path)">
       <template #title>
         <div :class="[link.meta.icon, 'mr-2']" />
         {{ $t(link.name) }}
@@ -29,7 +21,7 @@ function isSubMenu(children: PrivilegeTreeNode[]) {
       <EssentialList :essentialLinks="link.children" :parent-path="pathResolve(parentPath, link.meta.path)" />
     </ElSubMenu>
 
-    <ElMenuItem v-else-if="!link.meta.hidden" :index="pathResolve(parentPath, link.meta.path)">
+    <ElMenuItem v-else :index="pathResolve(parentPath, link.meta.path)">
       <div :class="[link.meta.icon, 'mr-2 ']" />{{
         $t(link.name) }}
     </ElMenuItem>
