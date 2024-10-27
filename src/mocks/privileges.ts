@@ -32,22 +32,24 @@ const datas: Privilege[] = [
     component: 'pages/regions/Index',
     name: 'regions',
     icon: 'i-material-symbols:location-on-outline-rounded',
-    count: 0,
-    enabled: true,
-    description: 'this is description for this row'
-  },
-  {
-    id: 13,
-    path: 'files',
-    component: 'pages/files/Index',
-    name: 'files',
-    icon: 'i-material-symbols:folder-open-outline-rounded',
+    actions: ['add', 'edit', 'remove', 'import', 'export'],
     count: 0,
     enabled: true,
     description: 'this is description for this row'
   },
   {
     id: 14,
+    path: 'files',
+    component: 'pages/files/Index',
+    name: 'files',
+    icon: 'i-material-symbols:folder-open-outline-rounded',
+    actions: ['upload', 'download', 'remove'],
+    count: 0,
+    enabled: true,
+    description: 'this is description for this row'
+  },
+  {
+    id: 16,
     path: 'exploiter',
     component: '#',
     name: 'exploiter',
@@ -169,8 +171,8 @@ const subDatas: Privilege[] = [
     description: 'this is description for this row'
   },
   {
-    id: 15,
-    superiorId: 14,
+    id: 17,
+    superiorId: 16,
     path: 'generator',
     name: 'generator',
     component: 'pages/exploiter/generator/Index',
@@ -181,8 +183,8 @@ const subDatas: Privilege[] = [
     description: 'this is description for this row'
   },
   {
-    id: 16,
-    superiorId: 14,
+    id: 18,
+    superiorId: 16,
     path: 'deploy',
     name: 'deploy',
     component: 'pages/exploiter/deploy/Index',
@@ -310,7 +312,7 @@ const treeNodes: PrivilegeTreeNode[] = [
     }
   },
   {
-    id: 13,
+    id: 14,
     name: 'files',
     meta: {
       path: 'files',
@@ -319,7 +321,7 @@ const treeNodes: PrivilegeTreeNode[] = [
     }
   },
   {
-    id: 14,
+    id: 16,
     name: 'exploiter',
     meta: {
       path: 'exploiter',
@@ -329,7 +331,7 @@ const treeNodes: PrivilegeTreeNode[] = [
     },
     children: [
       {
-        id: 15,
+        id: 17,
         name: 'generator',
         meta: {
           path: 'generator',
@@ -338,7 +340,7 @@ const treeNodes: PrivilegeTreeNode[] = [
         }
       },
       {
-        id: 16,
+        id: 18,
         name: 'deploy',
         meta: {
           path: 'deploy',

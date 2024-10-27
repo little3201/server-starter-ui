@@ -31,7 +31,7 @@ router.beforeEach(async (to, from, next) => {
       if (!to.name || !router.hasRoute(to.name)) {
         const routes = generateRoutes(userStore.privileges as PrivilegeTreeNode[])
 
-        // 动态添加可访问路由表
+        // 动态添加可访问路由表到home下
         routes.forEach((route) => {
           router.addRoute('home', route as RouteRecordRaw)
         })
@@ -81,7 +81,7 @@ export const generateRoutes = (routes: PrivilegeTreeNode[]): RouteRecordRaw[] =>
         // 动态加载路由文件
         data.component = comModule
       } else if (component.includes('#')) {
-        // data.component = component === '#' ? MainLayout : BlankLayout
+        // # 表示多级菜单
         data.component = BlankLayout
       }
     }
