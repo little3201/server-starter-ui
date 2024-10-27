@@ -18,16 +18,20 @@ const pagination = reactive<Pagination>({
 const actions: { [key: string]: string } = {
   'add': 'primary',
   'edit': 'primary',
-  'remove': 'danger',
+  'upload': 'primary',
+
   'import': 'warning',
+
+  'remove': 'danger',
+  'clear': 'danger',
+
   'export': 'success',
   'relation': 'success',
   'config': 'success',
-  'preview': 'info',
-  'upload': 'primary',
   'download': 'success',
-  'clear': 'danger',
-  'detail': 'success'
+
+  'preview': 'info',
+  'detail': 'info'
 }
 
 const checkAll = ref<boolean>(true)
@@ -292,11 +296,6 @@ function handleCheckedChange(value: string[]) {
             </ElPopover>
           </template>
         </ElTableColumn>
-        <ElTableColumn prop="hidden" :label="$t('hidden')">
-          <template #default="scope">
-            <ElSwitch size="small" v-model="scope.row.hidden" style="--el-switch-on-color: var(--el-color-success);" />
-          </template>
-        </ElTableColumn>
         <ElTableColumn prop="enabled" :label="$t('enabled')">
           <template #default="scope">
             <ElSwitch size="small" v-model="scope.row.enabled" style="--el-switch-on-color: var(--el-color-success);" />
@@ -381,11 +380,16 @@ function handleCheckedChange(value: string[]) {
   </Dialog>
 </template>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .name-cell {
   .cell {
     display: inline-flex;
     align-items: center;
   }
+}
+
+.el-badge {
+  display: inline-flex;
+  vertical-align: baseline;
 }
 </style>

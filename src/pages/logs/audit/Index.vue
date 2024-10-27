@@ -232,7 +232,7 @@ function handleCheckedChange(value: string[]) {
         </ElTableColumn>
         <ElTableColumn :label="$t('actions')">
           <template #default="scope">
-            <ElButton size="small" type="success" link @click="showRow(scope.row.id)">
+            <ElButton size="small" type="info" link @click="showRow(scope.row.id)">
               <div class="i-material-symbols:sticky-note-outline-rounded" />{{ $t('detail') }}
             </ElButton>
           </template>

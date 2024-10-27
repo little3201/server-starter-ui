@@ -66,7 +66,6 @@ export default {
   areaCode: '區號',
   postalCode: '郵編',
   enabled: '是否啟用',
-  hidden: '是否隱藏',
   size: '大小',
   length: '長度',
   fieldType: '屬性類型',

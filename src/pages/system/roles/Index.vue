@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, reactive, onMounted, nextTick } from 'vue'
+import { ref, reactive, onMounted } from 'vue'
 import type { FormInstance, FormRules, TreeInstance } from 'element-plus'
 import draggable from 'vuedraggable'
 import Dialog from 'components/Dialog.vue'
@@ -192,17 +192,12 @@ function confirmEvent(id: number) {
 function handlePrivilegeCheckChange() { }
 
 /**
- * group tree check
- */
-function handleGroupCheckChange() { }
-
-/**
  * 行选择操作
  * @param val 选中行
  */
 function handleCurrentChange(row: Role | undefined) {
   if (row && row.id) {
-    treeEl.value?.setCheckedKeys([])
+    treeEl.value!.setCheckedKeys([])
     retrieveRolePrivileges(row.id).then(res =>
       rolePrivileges.value = res.data.map((item: RolePrivileges) => item.privilegeId))
   }

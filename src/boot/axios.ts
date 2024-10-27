@@ -1,6 +1,6 @@
 import axios, { AxiosError, AxiosInstance, InternalAxiosRequestConfig, AxiosResponse } from 'axios'
 import { ElMessage } from 'element-plus'
-import router from 'src//router'
+import router from 'src/router'
 
 const abortControllerMap: Map<string, AbortController> = new Map()
 

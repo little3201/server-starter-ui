@@ -58,6 +58,15 @@ export const modifyRole = (id: number, row: Role) => {
 }
 
 /**
+ * Enable or Disable an existing row
+ * @param id Row ID
+ * @returns Enable or Disable result
+ */
+export const enableRole = (id: number) => {
+  return api.patch(`${SERVER_URL.ROLE}/${id}`)
+}
+
+/**
  * Remove a row
  * @param id Row ID
  * @returns Deletion status

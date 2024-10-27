@@ -66,7 +66,6 @@ export default {
   areaCode: 'Area Code',
   postalCode: 'Postal Code',
   enabled: 'Enabled',
-  hidden: 'Hidden',
   size: 'Size',
   length: 'Leng',
   fieldType: 'Field Type',

@@ -6,7 +6,7 @@ import type { Privilege, PrivilegeTreeNode } from 'src/models'
 const datas: Privilege[] = [
   {
     id: 1,
-    path: '/system',
+    path: 'system',
     component: '#',
     redirect: '/system/users',
     name: 'system',
@@ -17,7 +17,7 @@ const datas: Privilege[] = [
   },
   {
     id: 7,
-    path: '/logs',
+    path: 'logs',
     component: '#',
     redirect: '/logs/operation',
     name: 'logs',
@@ -28,29 +28,27 @@ const datas: Privilege[] = [
   },
   {
     id: 12,
-    path: '/regions',
-    component: '#',
+    path: 'regions',
+    component: 'pages/regions/Index',
     name: 'regions',
-    redirect: '/regions',
     icon: 'i-material-symbols:location-on-outline-rounded',
-    count: 1,
+    count: 0,
+    enabled: true,
+    description: 'this is description for this row'
+  },
+  {
+    id: 13,
+    path: 'files',
+    component: 'pages/files/Index',
+    name: 'files',
+    icon: 'i-material-symbols:folder-open-outline-rounded',
+    count: 0,
     enabled: true,
     description: 'this is description for this row'
   },
   {
     id: 14,
-    path: '/files',
-    component: '#',
-    name: 'files',
-    redirect: '/files',
-    icon: 'i-material-symbols:folder-open-outline-rounded',
-    count: 1,
-    enabled: true,
-    description: 'this is description for this row'
-  },
-  {
-    id: 16,
-    path: '/exploiter',
+    path: 'exploiter',
     component: '#',
     name: 'exploiter',
     redirect: '/exploiter',
@@ -171,34 +169,8 @@ const subDatas: Privilege[] = [
     description: 'this is description for this row'
   },
   {
-    id: 13,
-    superiorId: 12,
-    path: '',
-    name: 'regions',
-    component: 'pages/regions/Index',
-    actions: ['add', 'edit', 'remove', 'import', 'export'],
-    count: 0,
-    enabled: true,
-    icon: 'i-material-symbols:location-on-outline-rounded',
-    hidden: true,
-    description: 'this is description for this row'
-  },
-  {
     id: 15,
     superiorId: 14,
-    path: '',
-    name: 'files',
-    component: 'pages/files/Index',
-    actions: ['upload', 'download', 'remove'],
-    count: 0,
-    enabled: true,
-    icon: 'i-material-symbols:folder-open-outline-rounded',
-    hidden: true,
-    description: 'this is description for this row'
-  },
-  {
-    id: 17,
-    superiorId: 16,
     path: 'generator',
     name: 'generator',
     component: 'pages/exploiter/generator/Index',
@@ -209,8 +181,8 @@ const subDatas: Privilege[] = [
     description: 'this is description for this row'
   },
   {
-    id: 18,
-    superiorId: 16,
+    id: 16,
+    superiorId: 14,
     path: 'deploy',
     name: 'deploy',
     component: 'pages/exploiter/deploy/Index',
@@ -227,7 +199,7 @@ const treeNodes: PrivilegeTreeNode[] = [
     id: 1,
     name: 'system',
     meta: {
-      path: '/system',
+      path: 'system',
       component: '#',
       redirect: '/system/users',
       icon: 'i-material-symbols:settings-outline-rounded',
@@ -284,7 +256,7 @@ const treeNodes: PrivilegeTreeNode[] = [
     id: 7,
     name: 'logs',
     meta: {
-      path: '/logs',
+      path: 'logs',
       component: '#',
       redirect: '/logs/operation',
       icon: 'i-material-symbols:lab-profile-outline-rounded',
@@ -332,58 +304,32 @@ const treeNodes: PrivilegeTreeNode[] = [
     id: 12,
     name: 'regions',
     meta: {
-      path: '/regions',
-      component: '#',
-      redirect: '/regions',
+      path: 'regions',
+      component: 'pages/regions/Index',
       icon: 'i-material-symbols:location-on-outline-rounded',
-    },
-    children: [
-      {
-        id: 13,
-        name: 'regions',
-        meta: {
-          path: '',
-          component: 'pages/regions/Index',
-          icon: 'i-material-symbols:location-on-outline-rounded',
-          hidden: true
-        }
-      }
-    ]
+    }
+  },
+  {
+    id: 13,
+    name: 'files',
+    meta: {
+      path: 'files',
+      component: 'pages/files/Index',
+      icon: 'i-material-symbols:folder-open-outline-rounded',
+    }
   },
   {
     id: 14,
-    name: 'files',
-    meta: {
-      path: '/files',
-      component: '#',
-      redirect: '/files',
-      icon: 'i-material-symbols:folder-open-outline-rounded',
-    },
-    children: [
-      {
-        id: 15,
-        name: 'files',
-        meta: {
-          path: '',
-          component: 'pages/files/Index',
-          icon: 'i-material-symbols:folder-open-outline-rounded',
-          hidden: true
-        }
-      }
-    ]
-  },
-  {
-    id: 16,
     name: 'exploiter',
     meta: {
-      path: '/exploiter',
+      path: 'exploiter',
       component: '#',
       redirect: '/exploiter/generator',
       icon: 'i-material-symbols:build-outline-rounded',
     },
     children: [
       {
-        id: 17,
+        id: 15,
         name: 'generator',
         meta: {
           path: 'generator',
@@ -392,7 +338,7 @@ const treeNodes: PrivilegeTreeNode[] = [
         }
       },
       {
-        id: 18,
+        id: 16,
         name: 'deploy',
         meta: {
           path: 'deploy',

@@ -60,7 +60,6 @@ export interface Privilege extends AudtiMetadata {
   component: string
   redirect?: string
   icon: string
-  hidden?: boolean
   actions?: string[]
   count?: number
   hasChildren?: boolean
@@ -99,7 +98,6 @@ export interface PrivilegeTreeNode extends TreeNode {
     component: string
     redirect?: string
     icon: string
-    hidden?: boolean
     actions?: string[]
   },
   children?: PrivilegeTreeNode[]

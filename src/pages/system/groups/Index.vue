@@ -95,7 +95,7 @@ async function loadTree() {
       currentNodeKey.value = (res.data[0] && res.data[0]?.id) || ''
     }
 
-    treeEl.value?.setCurrentKey(currentNodeKey.value)
+    treeEl.value!.setCurrentKey(currentNodeKey.value)
 
     load()
   }).finally(() => treeLoading.value = false)
@@ -138,7 +138,7 @@ function reset() {
 watch(
   () => currentNode.value,
   (val) => {
-    treeEl.value?.filter(val)
+    treeEl.value!.filter(val)
   }
 )
 

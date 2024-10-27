@@ -57,6 +57,15 @@ export const modifyGroup = (id: number, row: Group) => {
 }
 
 /**
+ * Enable or Disable an existing row
+ * @param id Row ID
+ * @returns Enable or Disable result
+ */
+export const enableGroup = (id: number) => {
+  return api.patch(`${SERVER_URL.GROUP}/${id}`)
+}
+
+/**
  * Remove a row
  * @param id Row ID
  * @returns Deletion status

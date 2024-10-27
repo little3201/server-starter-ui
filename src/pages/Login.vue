@@ -51,11 +51,11 @@ function onSubmit(formEl: FormInstance | undefined) {
       loading.value = true
       userStore.login(form.username, form.password).then(() => {
         // 生成路由
-        const routes = generateRoutes(userStore.privileges)
+        // const routes = generateRoutes(userStore.privileges)
 
-        routes.forEach((route) => {
-          router.addRoute(route)
-        })
+        // routes.forEach((route) => {
+        //   router.addRoute(route)
+        // })
         const redirect = router.currentRoute.value.query.redirect as string
         router.replace(redirect || '/')
       }).finally(() => loading.value = false)
