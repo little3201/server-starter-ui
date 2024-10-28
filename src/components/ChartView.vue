@@ -68,7 +68,7 @@ watch(
 const resizeHandler = debounce(() => {
   if (chartRef) {
     chartRef?.destroy() // 销毁旧图表
-    initChart()         // 重新初始化图表
+    initChart() // 重新初始化图表
   }
 }, 100)
 
@@ -91,7 +91,7 @@ onMounted(() => {
 
   window.addEventListener('resize', resizeHandler)
 
-  contentEl.value = document.getElementsByClassName(`el-layout-content`)[0]
+  contentEl.value = document.getElementsByClassName('el-layout-content')[0]
   if (contentEl.value) {
     (contentEl.value as Element).addEventListener('transitionend', handleContentResize as (event: Event) => void)
   }

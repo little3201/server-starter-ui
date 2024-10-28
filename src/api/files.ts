@@ -31,7 +31,7 @@ export const uploadFile = (row: File) => {
 }
 
 /**
- * Download 
+ * Download
  * @param id Row ID
  * @returns data stream
  */

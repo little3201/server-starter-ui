@@ -1,11 +1,10 @@
 <script setup lang="ts">
 import { ref, onMounted, reactive } from 'vue'
 import draggable from 'vuedraggable'
-import Dialog from 'components/Dialog.vue'
+import DialogView from 'components/DialogView.vue'
 import { retrieveAccessLogs, fetchAccessLog, removeAccessLog } from 'src/api/access-logs'
 import type { Pagination, AccessLog } from 'src/models'
 import { formatDuration } from 'src/utils'
-
 
 const loading = ref<boolean>(false)
 const datas = ref<Array<AccessLog>>([])
@@ -27,11 +26,11 @@ const filters = ref({
 })
 
 const methods: { [key: string]: string } = {
-  "GET": "success",
-  "POST": "warning",
-  "PUT": "primary",
-  "PATCH": "primary",
-  "DELETE": "danger"
+  GET: 'success',
+  POST: 'warning',
+  PUT: 'primary',
+  PATCH: 'primary',
+  DELETE: 'danger'
 }
 
 const detailLoading = ref<boolean>(false)
@@ -68,7 +67,7 @@ async function load() {
   retrieveAccessLogs(pagination, filters.value).then(res => {
     datas.value = res.data.content
     total.value = res.data.page.totalElements
-  }).finally(() => loading.value = false)
+  }).finally(() => { loading.value = false })
 }
 
 /**
@@ -79,7 +78,7 @@ async function loadOne(id: number) {
   detailLoading.value = true
   fetchAccessLog(id).then(res => {
     row.value = res.data
-  }).finally(() => detailLoading.value = false)
+  }).finally(() => { detailLoading.value = false })
 }
 
 /**
@@ -266,7 +265,7 @@ function handleCheckedChange(value: string[]) {
     </ElCard>
   </ElSpace>
 
-  <Dialog v-model="dialogVisible" :title="$t('detail')">
+  <DialogView v-model="dialogVisible" :title="$t('detail')">
     <ElDescriptions v-loading="detailLoading">
       <ElDescriptionsItem :label="$t('url')">{{ row.url }}</ElDescriptionsItem>
       <ElDescriptionsItem :label="$t('httpMethod')">
@@ -290,7 +289,7 @@ function handleCheckedChange(value: string[]) {
       <ElDescriptionsItem :label="$t('responseTimes')">{{ formatDuration(row.responseTimes) }}</ElDescriptionsItem>
       <ElDescriptionsItem :label="$t('responseMessage')">{{ row.responseMessage }}</ElDescriptionsItem>
     </ElDescriptions>
-  </Dialog>
+  </DialogView>
 </template>
 
 <style lang="scss" scoped>

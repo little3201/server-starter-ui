@@ -2,10 +2,9 @@
 import { ref, onMounted, reactive } from 'vue'
 import { dayjs } from 'element-plus'
 import draggable from 'vuedraggable'
-import Dialog from 'components/Dialog.vue'
+import DialogView from 'components/DialogView.vue'
 import { retrieveOperationLogs, fetchOperationLog, removeOperationLog } from 'src/api/operation-logs'
 import type { Pagination, OperationLog } from 'src/models'
-
 
 const loading = ref<boolean>(false)
 const datas = ref<Array<OperationLog>>([])
@@ -58,7 +57,7 @@ async function load() {
   retrieveOperationLogs(pagination, filters.value).then(res => {
     datas.value = res.data.content
     total.value = res.data.page.totalElements
-  }).finally(() => loading.value = false)
+  }).finally(() => { loading.value = false })
 }
 
 /**
@@ -69,7 +68,7 @@ async function loadOne(id: number) {
   detailLoading.value = true
   fetchOperationLog(id).then(res => {
     row.value = res.data
-  }).finally(() => detailLoading.value = false)
+  }).finally(() => { detailLoading.value = false })
 }
 
 /**
@@ -251,7 +250,7 @@ function handleCheckedChange(value: string[]) {
     </ElCard>
   </ElSpace>
 
-  <Dialog v-model="dialogVisible" :title="$t('detail')">
+  <DialogView v-model="dialogVisible" :title="$t('detail')">
     <ElDescriptions v-loading="detailLoading">
       <ElDescriptionsItem :label="$t('operation')">{{ row.operation }}</ElDescriptionsItem>
       <ElDescriptionsItem :label="$t('content')">{{ row.content }}</ElDescriptionsItem>
@@ -275,5 +274,5 @@ function handleCheckedChange(value: string[]) {
       <ElDescriptionsItem :label="$t('operatedTime')">{{ dayjs(row.operatedTime).format('YYYY-MM-DD HH:mm') }}
       </ElDescriptionsItem>
     </ElDescriptions>
-  </Dialog>
+  </DialogView>
 </template>

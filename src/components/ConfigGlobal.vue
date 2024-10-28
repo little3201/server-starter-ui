@@ -8,7 +8,7 @@ import { useLocaleStore } from 'stores/locale-store'
 // 多语言相关
 const localStore = useLocaleStore()
 
-const locale = computed(() => (localStore.lang === 'zh-CN' ? zhCn : localStore.lang === 'zh-TW' ? zhTw: en))
+const locale = computed(() => (localStore.lang === 'zh-CN' ? zhCn : localStore.lang === 'zh-TW' ? zhTw : en))
 </script>
 
 <template>

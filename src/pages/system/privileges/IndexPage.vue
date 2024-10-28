@@ -2,7 +2,7 @@
 import { ref, reactive, onMounted } from 'vue'
 import type { FormInstance, FormRules } from 'element-plus'
 import draggable from 'vuedraggable'
-import Dialog from 'components/Dialog.vue'
+import DialogView from 'components/DialogView.vue'
 import { retrievePrivileges, retrievePrivilegeSubset, fetchPrivilege } from 'src/api/privileges'
 import type { Pagination, Privilege } from 'src/models'
 
@@ -16,22 +16,22 @@ const pagination = reactive<Pagination>({
 })
 
 const actions: { [key: string]: string } = {
-  'add': 'primary',
-  'edit': 'primary',
-  'upload': 'primary',
+  add: 'primary',
+  edit: 'primary',
+  upload: 'primary',
 
-  'import': 'warning',
+  import: 'warning',
 
-  'remove': 'danger',
-  'clear': 'danger',
+  remove: 'danger',
+  clear: 'danger',
 
-  'export': 'success',
-  'relation': 'success',
-  'config': 'success',
-  'download': 'success',
+  export: 'success',
+  relation: 'success',
+  config: 'success',
+  download: 'success',
 
-  'preview': 'info',
-  'detail': 'info'
+  preview: 'info',
+  detail: 'info'
 }
 
 const checkAll = ref<boolean>(true)
@@ -85,7 +85,7 @@ async function load(row?: Privilege, treeNode?: unknown, resolve?: (date: Privil
   loading.value = true
   if (row && row.id && resolve) {
     retrievePrivilegeSubset(row.id).then(res => {
-      let list = res.data
+      const list = res.data
       // 处理字节点
       list.forEach((element: Privilege) => {
         if (element.count && element.count > 0) {
@@ -93,10 +93,10 @@ async function load(row?: Privilege, treeNode?: unknown, resolve?: (date: Privil
         }
       })
       resolve(list)
-    }).finally(() => loading.value = false)
+    }).finally(() => { loading.value = false })
   } else {
     retrievePrivileges(pagination, filters.value).then(res => {
-      let list = res.data.content
+      const list = res.data.content
       // 处理字节点
       list.forEach((element: Privilege) => {
         if (element.count && element.count > 0) {
@@ -105,7 +105,7 @@ async function load(row?: Privilege, treeNode?: unknown, resolve?: (date: Privil
       })
       datas.value = list
       total.value = res.data.page.totalElements
-    }).finally(() => loading.value = false)
+    }).finally(() => { loading.value = false })
   }
 }
 
@@ -151,14 +151,14 @@ async function loadOne(id: number) {
  * 表单提交
  */
 function onSubmit() {
-  let formEl = formRef.value
+  const formEl = formRef.value
   if (!formEl) return
 
-  formEl.validate((valid, fields) => {
+  formEl.validate((valid) => {
     if (valid) {
       saveLoading.value = true
     } else {
-      console.log('error submit!', fields)
+      console.log('error submit!')
     }
   })
 }
@@ -169,8 +169,8 @@ function onSubmit() {
  * @param expanded 是否展开
  */
 function expandChange(row: Privilege, expanded: boolean) {
-  console.log("row: ", row)
-  console.log("expanded: ", expanded)
+  console.log('row: ', row)
+  console.log('expanded: ', expanded)
 }
 
 /**
@@ -314,7 +314,7 @@ function handleCheckedChange(value: string[]) {
     </ElCard>
   </ElSpace>
 
-  <Dialog v-model="dialogVisible" :title="$t('privileges')" width="36%">
+  <DialogView v-model="dialogVisible" :title="$t('privileges')" width="36%">
     <ElForm ref="formRef" :model="form" :rules="rules" label-position="top">
       <ElRow :gutter="20" class="w-full !mx-0">
         <ElCol :span="12">
@@ -377,7 +377,7 @@ function handleCheckedChange(value: string[]) {
         <div class="i-material-symbols:check-circle-outline-rounded" /> {{ $t('submit') }}
       </ElButton>
     </template>
-  </Dialog>
+  </DialogView>
 </template>
 
 <style lang="scss" scoped>

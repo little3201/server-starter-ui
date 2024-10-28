@@ -2,11 +2,10 @@
 import { ref, onMounted, reactive } from 'vue'
 import { dayjs } from 'element-plus'
 import draggable from 'vuedraggable'
-import Dialog from 'components/Dialog.vue'
+import DialogView from 'components/DialogView.vue'
 import { retrieveSchedulerLogs, fetchSchedulerLog } from 'src/api/scheduler-logs'
 import type { Pagination, SchedulerLog } from 'src/models'
 import { formatDuration } from 'src/utils'
-
 
 const loading = ref<boolean>(false)
 const datas = ref<Array<SchedulerLog>>([])
@@ -55,7 +54,7 @@ async function load() {
   retrieveSchedulerLogs(pagination, filters.value).then(res => {
     datas.value = res.data.content
     total.value = res.data.page.totalElements
-  }).finally(() => loading.value = false)
+  }).finally(() => { loading.value = false })
 }
 
 /**
@@ -66,7 +65,7 @@ async function loadOne(id: number) {
   detailLoading.value = true
   fetchSchedulerLog(id).then(res => {
     row.value = res.data
-  }).finally(() => detailLoading.value = false)
+  }).finally(() => { detailLoading.value = false })
 }
 
 /**
@@ -246,7 +245,7 @@ function handleCheckedChange(value: string[]) {
     </ElCard>
   </ElSpace>
 
-  <Dialog v-model="dialogVisible" :title="$t('detail')">
+  <DialogView v-model="dialogVisible" :title="$t('detail')">
     <ElDescriptions v-loading="detailLoading">
       <ElDescriptionsItem :label="$t('name')">{{ row.name }}</ElDescriptionsItem>
       <ElDescriptionsItem :label="$t('startTime')">{{ row.startTime }}</ElDescriptionsItem>
@@ -259,5 +258,5 @@ function handleCheckedChange(value: string[]) {
       </ElDescriptionsItem>
       <ElDescriptionsItem :label="$t('nextExecuteTime')">{{ row.nextExecuteTime }}</ElDescriptionsItem>
     </ElDescriptions>
-  </Dialog>
+  </DialogView>
 </template>

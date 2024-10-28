@@ -22,7 +22,6 @@ export const retrievePrivilegeSubset = (id: number) => {
   return api.get(`${SERVER_URL.PRIVILEGE}/${id}/subset`)
 }
 
-
 /**
  * Fetch row tree structure
  * @returns tree data

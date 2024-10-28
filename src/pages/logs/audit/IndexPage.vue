@@ -2,10 +2,9 @@
 import { ref, onMounted, reactive } from 'vue'
 import { dayjs } from 'element-plus'
 import draggable from 'vuedraggable'
-import Dialog from 'components/Dialog.vue'
+import DialogView from 'components/DialogView.vue'
 import { retrieveAuditLogs, fetchAuditLog } from 'src/api/audit-logs'
 import type { Pagination, AuditLog } from 'src/models'
-
 
 const loading = ref<boolean>(false)
 const datas = ref<Array<AuditLog>>([])
@@ -27,15 +26,15 @@ const filters = ref({
 })
 
 const operations: { [key: string]: string } = {
-  "Create": "success",
-  "Update": "primary",
-  "DELETE": "danger",
-  "View": "info",
-  "Upload": "warning",
-  "Download": "info",
-  "Login": "primary",
-  "Logout": "success",
-  "Change Password": "primary"
+  Create: 'success',
+  Update: 'primary',
+  DELETE: 'danger',
+  View: 'info',
+  Upload: 'warning',
+  Download: 'info',
+  Login: 'primary',
+  Logout: 'success',
+  'Change Password': 'primary'
 }
 
 const detailLoading = ref<boolean>(false)
@@ -73,7 +72,7 @@ async function load() {
   retrieveAuditLogs(pagination, filters.value).then(res => {
     datas.value = res.data.content
     total.value = res.data.page.totalElements
-  }).finally(() => loading.value = false)
+  }).finally(() => { loading.value = false })
 }
 
 /**
@@ -84,7 +83,7 @@ async function loadOne(id: number) {
   detailLoading.value = true
   fetchAuditLog(id).then(res => {
     row.value = res.data
-  }).finally(() => detailLoading.value = false)
+  }).finally(() => { detailLoading.value = false })
 }
 
 /**
@@ -242,7 +241,7 @@ function handleCheckedChange(value: string[]) {
     </ElCard>
   </ElSpace>
 
-  <Dialog v-model="dialogVisible" :title="$t('detail')">
+  <DialogView v-model="dialogVisible" :title="$t('detail')">
     <ElDescriptions v-loading="detailLoading">
       <ElDescriptionsItem :label="$t('operation')">{{ row.operation }}</ElDescriptionsItem>
       <ElDescriptionsItem :label="$t('resource')">{{ row.resource }}</ElDescriptionsItem>
@@ -263,7 +262,7 @@ function handleCheckedChange(value: string[]) {
       <ElDescriptionsItem :label="$t('operatedTime')">{{ dayjs(row.operatedTime).format('YYYY-MM-DD HH:mm') }}
       </ElDescriptionsItem>
     </ElDescriptions>
-  </Dialog>
+  </DialogView>
 </template>
 
 <style lang="scss" scoped>

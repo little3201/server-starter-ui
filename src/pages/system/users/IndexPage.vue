@@ -3,7 +3,7 @@ import { ref, reactive, onMounted } from 'vue'
 import type { FormInstance, FormRules } from 'element-plus'
 import { dayjs } from 'element-plus'
 import draggable from 'vuedraggable'
-import Dialog from 'components/Dialog.vue'
+import DialogView from 'components/DialogView.vue'
 import { retrieveUsers, fetchUser, createUser, modifyUser, removeUser } from 'src/api/users'
 import type { Pagination, User } from 'src/models'
 
@@ -47,7 +47,7 @@ const rules = reactive<FormRules<typeof form>>({
     { required: true, trigger: 'blur' }
   ],
   email: [
-    { required: true, trigger: 'blur' },
+    { required: true, trigger: 'blur' }
   ]
 })
 
@@ -70,7 +70,7 @@ async function load() {
   retrieveUsers(pagination, filters.value).then(res => {
     datas.value = res.data.content
     total.value = res.data.page.totalElements
-  }).finally(() => loading.value = false)
+  }).finally(() => { loading.value = false })
 }
 
 /**
@@ -113,22 +113,22 @@ async function loadOne(id: number) {
  * 表单提交
  */
 function onSubmit() {
-  let formEl = formRef.value
+  const formEl = formRef.value
   if (!formEl) return
 
-  formEl.validate((valid, fields) => {
+  formEl.validate((valid) => {
     if (valid) {
       saveLoading.value = true
       if (form.value.id) {
         modifyUser(form.value.id, form.value).then(() => {
           load()
           dialogVisible.value = false
-        }).finally(() => saveLoading.value = false)
+        }).finally(() => { saveLoading.value = false })
       } else {
         createUser(form.value).then(() => {
           load()
           dialogVisible.value = false
-        }).finally(() => saveLoading.value = false)
+        }).finally(() => { saveLoading.value = false })
       }
     }
   })
@@ -312,7 +312,7 @@ function handleCheckedChange(value: string[]) {
     </ElCard>
   </ElSpace>
 
-  <Dialog v-model="dialogVisible" :title="$t('users')" width="36%">
+  <DialogView v-model="dialogVisible" :title="$t('users')" width="36%">
     <ElForm ref="formRef" :model="form" :rules="rules" label-position="top">
       <ElRow :gutter="20" class="w-full !mx-0">
         <ElCol :span="12">
@@ -357,5 +357,5 @@ function handleCheckedChange(value: string[]) {
         <div class="i-material-symbols:check-circle-outline-rounded" /> {{ $t('submit') }}
       </ElButton>
     </template>
-  </Dialog>
+  </DialogView>
 </template>

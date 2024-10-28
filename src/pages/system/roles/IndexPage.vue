@@ -2,7 +2,7 @@
 import { ref, reactive, onMounted } from 'vue'
 import type { FormInstance, FormRules, TreeInstance } from 'element-plus'
 import draggable from 'vuedraggable'
-import Dialog from 'components/Dialog.vue'
+import DialogView from 'components/DialogView.vue'
 import { retrieveRoles, retrieveRoleMembers, retrieveRolePrivileges, fetchRole, createRole, modifyRole, removeRole } from 'src/api/roles'
 import { retrievePrivilegeTree } from 'src/api/privileges'
 import { retrieveUsers } from 'src/api/users'
@@ -55,12 +55,11 @@ const dataPrivilege = ref<number>(0)
 const relations = ref<Array<string>>([])
 
 async function loadUsers() {
-  retrieveUsers({ page: 1, size: 99 }).then(res => members.value = res.data.content)
+  retrieveUsers({ page: 1, size: 99 }).then(res => { members.value = res.data.content })
 }
 
 async function loadRoleUsers(id: number) {
-  retrieveRoleMembers(id).then(res =>
-    relations.value = res.data.map((item: RoleMembers) => item.username))
+  retrieveRoleMembers(id).then(res => { relations.value = res.data.map((item: RoleMembers) => item.username) })
 }
 
 /**
@@ -70,7 +69,7 @@ async function loadPrivilegeTree() {
   privilegeTreeLoading.value = true
   retrievePrivilegeTree().then(res => {
     privilegeTree.value = res.data
-  }).finally(() => privilegeTreeLoading.value = false)
+  }).finally(() => { privilegeTreeLoading.value = false })
 }
 
 /**
@@ -92,7 +91,7 @@ async function load() {
   retrieveRoles(pagination, filters.value).then(res => {
     datas.value = res.data.content
     total.value = res.data.page.totalElements
-  }).finally(() => loading.value = false)
+  }).finally(() => { loading.value = false })
 }
 
 /**
@@ -146,22 +145,22 @@ async function loadOne(id: number) {
  * 表单提交
  */
 function onSubmit() {
-  let formEl = formRef.value
+  const formEl = formRef.value
   if (!formEl) return
 
-  formEl.validate((valid, fields) => {
+  formEl.validate((valid) => {
     if (valid) {
       saveLoading.value = true
       if (form.value.id) {
         modifyRole(form.value.id, form.value).then(() => {
           load()
           dialogVisible.value = false
-        }).finally(() => saveLoading.value = false)
+        }).finally(() => { saveLoading.value = false })
       } else {
         createRole(form.value).then(() => {
           load()
           dialogVisible.value = false
-        }).finally(() => saveLoading.value = false)
+        }).finally(() => { saveLoading.value = false })
       }
     }
   })
@@ -198,8 +197,7 @@ function handlePrivilegeCheckChange() { }
 function handleCurrentChange(row: Role | undefined) {
   if (row && row.id) {
     treeEl.value!.setCheckedKeys([])
-    retrieveRolePrivileges(row.id).then(res =>
-      rolePrivileges.value = res.data.map((item: RolePrivileges) => item.privilegeId))
+    retrieveRolePrivileges(row.id).then(res => { rolePrivileges.value = res.data.map((item: RolePrivileges) => item.privilegeId) })
   }
 }
 
@@ -360,7 +358,7 @@ function handleCheckedChange(value: string[]) {
     </ElRow>
   </ElSpace>
 
-  <Dialog v-model="dialogVisible" :title="$t('roles')" width="25%">
+  <DialogView v-model="dialogVisible" :title="$t('roles')" width="25%">
     <ElForm ref="formRef" :model="form" :rules="rules" label-position="top">
       <ElRow :gutter="20" class="w-full !mx-0">
         <ElCol>
@@ -385,12 +383,12 @@ function handleCheckedChange(value: string[]) {
         <div class="i-material-symbols:check-circle-outline-rounded" /> {{ $t('submit') }}
       </ElButton>
     </template>
-  </Dialog>
+  </DialogView>
 
-  <Dialog v-model="relationVisible" :title="$t('relation')">
+  <DialogView v-model="relationVisible" :title="$t('relation')">
     <div style="text-align: center">
       <ElTransfer v-model="relations" :props="{ key: 'username', label: 'fullName' }"
         :titles="[$t('unselected'), $t('selected')]" filterable :data="members" />
     </div>
-  </Dialog>
+  </DialogView>
 </template>

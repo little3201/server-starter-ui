@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, reactive, onMounted } from 'vue'
 import type { FormInstance, FormRules } from 'element-plus'
-import Dialog from 'components/Dialog.vue'
+import DialogView from 'components/DialogView.vue'
 import { retrieveDictionarySubset, fetchDictionary, createDictionary, modifyDictionary, removeDictionary } from 'src/api/dictionaries'
 import type { Dictionary } from 'src/models'
 
@@ -36,7 +36,7 @@ async function load() {
   loading.value = true
   retrieveDictionarySubset(props.superiorId).then(res => {
     datas.value = res.data
-  }).finally(() => loading.value = false)
+  }).finally(() => { loading.value = false })
 }
 
 onMounted(() => {
@@ -69,22 +69,22 @@ async function loadOne(id: number) {
  * 表单提交
  */
 function onSubmit() {
-  let formEl = formRef.value
+  const formEl = formRef.value
   if (!formEl) return
 
-  formEl.validate((valid, fields) => {
+  formEl.validate((valid) => {
     if (valid) {
       saveLoading.value = true
       if (form.value.id) {
         modifyDictionary(form.value.id, form.value).then(() => {
           load()
           dialogVisible.value = false
-        }).finally(() => saveLoading.value = false)
+        }).finally(() => { saveLoading.value = false })
       } else {
         createDictionary(form.value).then(() => {
           load()
           dialogVisible.value = false
-        }).finally(() => saveLoading.value = false)
+        }).finally(() => { saveLoading.value = false })
       }
     }
   })
@@ -155,7 +155,7 @@ function confirmEvent(id: number) {
     </ElTable>
   </ElCard>
 
-  <Dialog v-model="dialogVisible" :title="$t('dictionary')" width="25%">
+  <DialogView v-model="dialogVisible" :title="$t('dictionary')" width="25%">
     <ElForm ref="formRef" :model="form" :rules="rules" label-position="top">
       <ElRow :gutter="20" class="w-full !mx-0">
         <ElCol :span="24">
@@ -180,7 +180,7 @@ function confirmEvent(id: number) {
         <div class="i-material-symbols:check-circle-outline-rounded" /> {{ $t('submit') }}
       </ElButton>
     </template>
-  </Dialog>
+  </DialogView>
 </template>
 
 <style lang="scss" scoped>

@@ -2,7 +2,6 @@ import { http, HttpResponse } from 'msw'
 import { SERVER_URL } from 'src/api/paths'
 import type { Privilege, PrivilegeTreeNode } from 'src/models'
 
-
 const datas: Privilege[] = [
   {
     id: 1,
@@ -204,7 +203,7 @@ const treeNodes: PrivilegeTreeNode[] = [
       path: 'system',
       component: '#',
       redirect: '/system/users',
-      icon: 'i-material-symbols:settings-outline-rounded',
+      icon: 'i-material-symbols:settings-outline-rounded'
     },
     children: [
       {
@@ -261,7 +260,7 @@ const treeNodes: PrivilegeTreeNode[] = [
       path: 'logs',
       component: '#',
       redirect: '/logs/operation',
-      icon: 'i-material-symbols:lab-profile-outline-rounded',
+      icon: 'i-material-symbols:lab-profile-outline-rounded'
     },
     children: [
       {
@@ -308,7 +307,7 @@ const treeNodes: PrivilegeTreeNode[] = [
     meta: {
       path: 'regions',
       component: 'pages/regions/IndexPage',
-      icon: 'i-material-symbols:location-on-outline-rounded',
+      icon: 'i-material-symbols:location-on-outline-rounded'
     }
   },
   {
@@ -317,7 +316,7 @@ const treeNodes: PrivilegeTreeNode[] = [
     meta: {
       path: 'files',
       component: 'pages/files/IndexPage',
-      icon: 'i-material-symbols:folder-open-outline-rounded',
+      icon: 'i-material-symbols:folder-open-outline-rounded'
     }
   },
   {
@@ -327,7 +326,7 @@ const treeNodes: PrivilegeTreeNode[] = [
       path: 'exploiter',
       component: '#',
       redirect: '/exploiter/generator',
-      icon: 'i-material-symbols:build-outline-rounded',
+      icon: 'i-material-symbols:build-outline-rounded'
     },
     children: [
       {

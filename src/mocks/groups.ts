@@ -85,7 +85,7 @@ export const groupsHandlers = [
   http.get(`/api${SERVER_URL.GROUP}/:id`, ({ params }) => {
     const { id } = params
     if (id) {
-      let array = datas.filter(item => item.id === Number(id))
+      const array = datas.filter(item => item.id === Number(id))
       return HttpResponse.json(array[0])
     } else {
       return HttpResponse.json(null)

@@ -2,7 +2,7 @@
 import { ref, reactive, onMounted } from 'vue'
 import type { FormInstance, FormRules } from 'element-plus'
 import draggable from 'vuedraggable'
-import Dialog from 'components/Dialog.vue'
+import DialogView from 'components/DialogView.vue'
 import SubPage from './SubPage.vue'
 import { retrieveRegions, fetchRegion, createRegion, modifyRegion, removeRegion } from 'src/api/regions'
 import type { Pagination, Region } from 'src/models'
@@ -62,7 +62,7 @@ async function load() {
   retrieveRegions(pagination, filters.value).then(res => {
     datas.value = res.data.content
     total.value = res.data.page.totalElements
-  }).finally(() => loading.value = false)
+  }).finally(() => { loading.value = false })
 }
 
 /**
@@ -105,22 +105,22 @@ async function loadOne(id: number) {
  * 表单提交
  */
 function onSubmit() {
-  let formEl = formRef.value
+  const formEl = formRef.value
   if (!formEl) return
 
-  formEl.validate((valid, fields) => {
+  formEl.validate((valid) => {
     if (valid) {
       saveLoading.value = true
       if (form.value.id) {
         modifyRegion(form.value.id, form.value).then(() => {
           load()
           dialogVisible.value = false
-        }).finally(() => saveLoading.value = false)
+        }).finally(() => { saveLoading.value = false })
       } else {
         createRegion(form.value).then(() => {
           load()
           dialogVisible.value = false
-        }).finally(() => saveLoading.value = false)
+        }).finally(() => { saveLoading.value = false })
       }
     }
   })
@@ -273,7 +273,7 @@ function handleCheckedChange(value: string[]) {
     </ElCard>
   </ElSpace>
 
-  <Dialog v-model="dialogVisible" :title="$t('regions')" width="25%">
+  <DialogView v-model="dialogVisible" :title="$t('regions')" width="25%">
     <ElForm ref="formRef" :model="form" :rules="rules" label-position="top">
       <ElRow :gutter="20" class="w-full !mx-0">
         <ElCol>
@@ -312,5 +312,5 @@ function handleCheckedChange(value: string[]) {
         <div class="i-material-symbols:check-circle-outline-rounded" /> {{ $t('submit') }}
       </ElButton>
     </template>
-  </Dialog>
+  </DialogView>
 </template>

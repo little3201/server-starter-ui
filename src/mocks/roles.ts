@@ -15,7 +15,6 @@ for (let i = 1; i < 28; i++) {
   datas.push(data)
 }
 
-
 const privileges: RolePrivileges[] = []
 
 for (let i = 1; i < 28; i++) {

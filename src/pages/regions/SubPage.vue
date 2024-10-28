@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, reactive, onMounted } from 'vue'
 import type { FormInstance, FormRules } from 'element-plus'
-import Dialog from 'components/Dialog.vue'
+import DialogView from 'components/DialogView.vue'
 import { retrieveRegions, fetchRegion, createRegion, modifyRegion, removeRegion } from 'src/api/regions'
 import type { Pagination, Region } from 'src/models'
 
@@ -56,8 +56,7 @@ async function load() {
   retrieveRegions(pagination, { superiorId: props.superiorId }).then(res => {
     datas.value = res.data.content
     total.value = res.data.page.totalElements
-  }).finally(() => loading.value = false)
-
+  }).finally(() => { loading.value = false })
 }
 
 onMounted(() => {
@@ -90,23 +89,23 @@ async function loadOne(id: number) {
  * 表单提交
  */
 function onSubmit() {
-  let formEl = formRef.value
+  const formEl = formRef.value
   if (!formEl) return
 
-  formEl.validate((valid, fields) => {
+  formEl.validate((valid) => {
     if (valid) {
       saveLoading.value = true
       if (form.value.id) {
         modifyRegion(form.value.id, form.value).then(() => {
           load()
           dialogVisible.value = false
-        }).finally(() => saveLoading.value = false)
+        }).finally(() => { saveLoading.value = false })
       } else {
         form.value.superiorId = props.superiorId
         createRegion(form.value).then(() => {
           load()
           dialogVisible.value = false
-        }).finally(() => saveLoading.value = false)
+        }).finally(() => { saveLoading.value = false })
       }
     }
   })
@@ -183,7 +182,7 @@ function confirmEvent(id: number) {
     <ElPagination layout="prev, pager, next, sizes, jumper, ->, total" @change="pageChange" :total="total" />
   </ElCard>
 
-  <Dialog v-model="dialogVisible" :title="$t('regions')" width="25%">
+  <DialogView v-model="dialogVisible" :title="$t('regions')" width="25%">
     <ElForm ref="formRef" :model="form" :rules="rules" label-position="top">
       <ElRow :gutter="20" class="w-full !mx-0">
         <ElCol>
@@ -222,7 +221,7 @@ function confirmEvent(id: number) {
         <div class="i-material-symbols:check-circle-outline-rounded" /> {{ $t('submit') }}
       </ElButton>
     </template>
-  </Dialog>
+  </DialogView>
 </template>
 
 <style lang="scss" scoped>

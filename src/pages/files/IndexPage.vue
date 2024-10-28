@@ -1,12 +1,11 @@
 <script setup lang="ts">
 import { ref, onMounted, reactive } from 'vue'
 import draggable from 'vuedraggable'
-import Dialog from 'components/Dialog.vue'
+import DialogView from 'components/DialogView.vue'
 import { dayjs } from 'element-plus'
 import { retrieveFiles, fetchFile } from 'src/api/files'
 import type { Pagination, File } from 'src/models'
 import { formatFileSize } from 'src/utils'
-
 
 const loading = ref<boolean>(false)
 const datas = ref<Array<File>>([])
@@ -40,7 +39,7 @@ function pageChange(currentPage: number, pageSize: number) {
 }
 
 // 排序变化处理
-function handleSortChange(data: { prop: string, order: any }) {
+function handleSortChange(data: { prop: string, order: string }) {
   pagination.sortBy = data.prop
   pagination.descending = data.order === 'descending'
   load()
@@ -54,7 +53,7 @@ async function load() {
   retrieveFiles(pagination, filters.value).then(res => {
     datas.value = res.data.content
     total.value = res.data.page.totalElements
-  }).finally(() => loading.value = false)
+  }).finally(() => { loading.value = false })
 }
 
 /**
@@ -84,7 +83,7 @@ function uploadRow() {
  */
 function downloadRow(id: number) {
   fetchFile(id).then(res => {
-    res.data
+    console.log(res.data)
   })
 }
 
@@ -236,7 +235,7 @@ function handleCheckedChange(value: string[]) {
       </ElCard>
     </ElSpace>
 
-    <Dialog v-model="dialogVisible" :title="$t('upload')" width="35%">
+    <DialogView v-model="dialogVisible" :title="$t('upload')" width="35%">
       <ElUpload ref="upload" :limit="1" drag action="/api/upload">
         <div class="el-icon--upload inline-flex justify-center">
           <div class="i-material-symbols:upload-rounded" />
@@ -258,6 +257,6 @@ function handleCheckedChange(value: string[]) {
           <div class="i-material-symbols:check-circle-outline-rounded" /> {{ $t('submit') }}
         </ElButton>
       </template>
-    </Dialog>
+    </DialogView>
   </div>
 </template>

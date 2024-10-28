@@ -92,7 +92,6 @@ const datas: SchedulerLog[] = [
   }
 ]
 
-
 export const schedulerLogsHandlers = [
   http.get(`/api${SERVER_URL.SCHEDULER_LOG}/:id`, ({ params }) => {
     const { id } = params

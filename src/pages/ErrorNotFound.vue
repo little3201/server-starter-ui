@@ -12,15 +12,15 @@ interface ErrorMap {
 const errorMap: {
   [key: string]: ErrorMap
 } = {
-  '404': {
+  404: {
     url: pageError,
     message: 'pageError'
   },
-  '500': {
+  500: {
     url: networkError,
     message: 'networkError'
   },
-  '403': {
+  403: {
     url: noPermission,
     message: 'noPermission'
   }

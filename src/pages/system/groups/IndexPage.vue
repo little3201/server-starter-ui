@@ -2,11 +2,10 @@
 import { ref, reactive, onMounted, watch } from 'vue'
 import type { FormInstance, FormRules, TreeInstance } from 'element-plus'
 import draggable from 'vuedraggable'
-import Dialog from 'components/Dialog.vue'
+import DialogView from 'components/DialogView.vue'
 import { retrieveGroups, retrieveGroupMembers, retrieveGroupTree, fetchGroup, createGroup, modifyGroup, removeGroup } from 'src/api/groups'
 import { retrieveUsers } from 'src/api/users'
 import type { Pagination, Group, TreeNode, GroupMembers } from 'src/models'
-
 
 const loading = ref<boolean>(false)
 const datas = ref<Array<Group>>([])
@@ -77,11 +76,11 @@ function currentChange(data: TreeNode) {
 }
 
 async function loadUsers() {
-  retrieveUsers({ page: 1, size: 99 }).then(res => members.value = res.data.content)
+  retrieveUsers({ page: 1, size: 99 }).then(res => { members.value = res.data.content })
 }
 
 async function loadGroupUsers(id: number) {
-  retrieveGroupMembers(id).then(res => relations.value = res.data.map((item: GroupMembers) => item.username))
+  retrieveGroupMembers(id).then(res => { relations.value = res.data.map((item: GroupMembers) => item.username) })
 }
 
 /**
@@ -98,7 +97,7 @@ async function loadTree() {
     treeEl.value!.setCurrentKey(currentNodeKey.value)
 
     load()
-  }).finally(() => treeLoading.value = false)
+  }).finally(() => { treeLoading.value = false })
 }
 
 /**
@@ -121,7 +120,7 @@ async function load() {
   retrieveGroups(pagination, filters.value).then(res => {
     datas.value = res.data.content
     total.value = res.data.page.totalElements
-  }).finally(() => loading.value = false)
+  }).finally(() => { loading.value = false })
 }
 
 /**
@@ -182,10 +181,10 @@ async function loadOne(id: number) {
  * 表单提交
  */
 function onSubmit() {
-  let formEl = formRef.value
+  const formEl = formRef.value
   if (!formEl) return
 
-  formEl.validate((valid, fields) => {
+  formEl.validate((valid) => {
     if (valid) {
       saveLoading.value = true
       if (form.value.id) {
@@ -193,14 +192,14 @@ function onSubmit() {
           load()
           loadTree()
           dialogVisible.value = false
-        }).finally(() => saveLoading.value = false)
+        }).finally(() => { saveLoading.value = false })
       } else {
         form.value.superiorId = currentNodeKey.value
         createGroup(form.value).then(() => {
           load()
           loadTree()
           dialogVisible.value = false
-        }).finally(() => saveLoading.value = false)
+        }).finally(() => { saveLoading.value = false })
       }
     }
   })
@@ -373,7 +372,7 @@ function handleCheckedChange(value: string[]) {
     </div>
   </div>
 
-  <Dialog v-model="dialogVisible" :title="$t('groups')" width="25%">
+  <DialogView v-model="dialogVisible" :title="$t('groups')" width="25%">
     <ElForm ref="formRef" :model="form" :rules="rules" label-position="top">
       <ElRow :gutter="20" class="w-full !mx-0">
         <ElCol>
@@ -398,12 +397,12 @@ function handleCheckedChange(value: string[]) {
         <div class="i-material-symbols:check-circle-outline-rounded" /> {{ $t('submit') }}
       </ElButton>
     </template>
-  </Dialog>
+  </DialogView>
 
-  <Dialog v-model="relationVisible" :title="$t('relation')">
+  <DialogView v-model="relationVisible" :title="$t('relation')">
     <div style="text-align: center">
       <ElTransfer v-model="relations" :props="{ key: 'username', label: 'fullName' }"
         :titles="[$t('unselected'), $t('selected')]" filterable :data="members" />
     </div>
-  </Dialog>
+  </DialogView>
 </template>

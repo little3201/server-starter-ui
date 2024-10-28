@@ -3,7 +3,6 @@ import { computed, ref } from 'vue'
 import type { FormInstance } from 'element-plus'
 import { useUserStore } from 'stores/user-store'
 
-
 const userStore = useUserStore()
 
 const user = computed(() => userStore.user)
@@ -12,7 +11,7 @@ const user = computed(() => userStore.user)
 const loginHistory = ref([
   { id: 1, device: 'Chrome on Windows', location: 'New York, USA', ip: '192.168.0.112', status: 'online' },
   { id: 2, device: 'Safari on iPhone', location: 'Los Angeles, USA', ip: '172.168.0.112', status: 'offline' },
-  { id: 3, device: 'Edge on Windows', location: 'Chicago, USA', ip: '127.0.0.112', status: 'offline' },
+  { id: 3, device: 'Edge on Windows', location: 'Chicago, USA', ip: '127.0.0.112', status: 'offline' }
 ])
 
 // 仓库数据模拟
@@ -20,7 +19,7 @@ const activities = ref([
   { id: 4, name: 'Create a set of data', description: 'User: username is test', type: 'primary', lastModifiedDate: '2024-09-12' },
   { id: 3, name: 'Delete the data from user where username is test', description: 'User: username is test', type: 'success', lastModifiedDate: '2024-08-19' },
   { id: 2, name: 'Update the test user', description: 'User: username is test', type: 'danger', lastModifiedDate: '2024-08-17' },
-  { id: 1, name: 'Enabled the test user', description: 'User: username is test', type: 'warning', lastModifiedDate: '2024-08-16' },
+  { id: 1, name: 'Enabled the test user', description: 'User: username is test', type: 'warning', lastModifiedDate: '2024-08-16' }
   // 更多仓库
 ])
 
@@ -32,7 +31,7 @@ const formRef = ref<FormInstance>()
 const passwordForm = ref({
   oldPassword: '',
   newPassword: '',
-  confirmPassword: '',
+  confirmPassword: ''
 })
 
 // 表单验证规则
@@ -40,12 +39,12 @@ const rules = ref({
   oldPassword: [{ required: true, message: 'Please enter your old password', trigger: 'blur' }],
   newPassword: [{ required: true, message: 'Please enter your new password', trigger: 'blur' }],
   confirmPassword: [
-    { required: true, message: 'Please confirm your new password', trigger: 'blur' },
+    { required: true, message: 'Please confirm your new password', trigger: 'blur' }
   ]
 })
 
 function seeMore(id: number) {
-
+  console.log(id)
 }
 
 // 密码强度检测相关状态
@@ -55,14 +54,14 @@ const strengthClass = ref('')
 
 // 密码强度检测
 const checkPasswordStrength = () => {
-  const password = passwordForm.value.newPassword;
+  const password = passwordForm.value.newPassword
   if (!password) {
-    strengthPercent.value = 0;
-    passwordStrengthText.value = '';
-    return;
+    strengthPercent.value = 0
+    passwordStrengthText.value = ''
+    return
   }
 
-  let strength = 0;
+  let strength = 0
   if (/[a-z]/.test(password)) strength += 1
   if (/[A-Z]/.test(password)) strength += 1
   if (/[0-9]/.test(password)) strength += 1
@@ -72,38 +71,38 @@ const checkPasswordStrength = () => {
 
   switch (strength) {
     case 1:
-      passwordStrengthText.value = 'Weak';
-      strengthClass.value = 'bg-red-500';
-      break;
+      passwordStrengthText.value = 'Weak'
+      strengthClass.value = 'bg-red-500'
+      break
     case 2:
-      passwordStrengthText.value = 'Fair';
-      strengthClass.value = 'bg-yellow-500';
-      break;
+      passwordStrengthText.value = 'Fair'
+      strengthClass.value = 'bg-yellow-500'
+      break
     case 3:
-      passwordStrengthText.value = 'Good';
-      strengthClass.value = 'bg-blue-500';
-      break;
+      passwordStrengthText.value = 'Good'
+      strengthClass.value = 'bg-blue-500'
+      break
     case 4:
-      passwordStrengthText.value = 'Strong';
-      strengthClass.value = 'bg-green-500';
-      break;
+      passwordStrengthText.value = 'Strong'
+      strengthClass.value = 'bg-green-500'
+      break
     default:
-      passwordStrengthText.value = '';
-      strengthClass.value = '';
-      break;
+      passwordStrengthText.value = ''
+      strengthClass.value = ''
+      break
   }
 }
 
 // 提交密码修改
 function submitPasswordChange() {
-  let formEl = formRef.value
+  const formEl = formRef.value
   if (!formEl) return
 
   formEl.validate((valid) => {
     if (valid) {
-      alert("success")
+      alert('success')
     } else {
-      alert("error")
+      alert('error')
     }
   })
 }

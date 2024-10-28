@@ -2,11 +2,10 @@
 import { ref, reactive, onMounted } from 'vue'
 import type { FormInstance, FormRules } from 'element-plus'
 import draggable from 'vuedraggable'
-import Dialog from 'components/Dialog.vue'
+import DialogView from 'components/DialogView.vue'
 import SubPage from './SubPage.vue'
 import { retrieveDictionaries, fetchDictionary, modifyDictionary } from 'src/api/dictionaries'
 import type { Pagination, Dictionary } from 'src/models'
-
 
 const loading = ref<boolean>(false)
 const datas = ref<Array<Dictionary>>([])
@@ -58,7 +57,7 @@ function pageChange(currentPage: number, pageSize: number) {
 async function load() {
   loading.value = true
   retrieveDictionaries(pagination, filters.value).then(res => {
-    let list = res.data.content
+    const list = res.data.content
     list.forEach((element: Dictionary) => {
       if (element.count && element.count > 0) {
         element.hasChildren = true
@@ -66,7 +65,7 @@ async function load() {
     })
     datas.value = list
     total.value = res.data.page.totalElements
-  }).finally(() => loading.value = false)
+  }).finally(() => { loading.value = false })
 }
 
 /**
@@ -109,17 +108,17 @@ async function loadOne(id: number) {
  * 表单提交
  */
 function onSubmit() {
-  let formEl = formRef.value
+  const formEl = formRef.value
   if (!formEl) return
 
-  formEl.validate((valid, fields) => {
+  formEl.validate((valid) => {
     if (valid) {
       saveLoading.value = true
       if (form.value.id) {
         modifyDictionary(form.value.id, form.value).then(() => {
           load()
           dialogVisible.value = false
-        }).finally(() => saveLoading.value = false)
+        }).finally(() => { saveLoading.value = false })
       }
     }
   })
@@ -241,7 +240,7 @@ function handleCheckedChange(value: string[]) {
     </ElCard>
   </ElSpace>
 
-  <Dialog v-model="dialogVisible" :title="$t('dictionaries')" width="25%">
+  <DialogView v-model="dialogVisible" :title="$t('dictionaries')" width="25%">
     <ElForm ref="formRef" :model="form" :rules="rules" label-position="top">
       <ElRow :gutter="20" class="w-full !mx-0">
         <ElCol :span="24">
@@ -266,5 +265,5 @@ function handleCheckedChange(value: string[]) {
         <div class="i-material-symbols:check-circle-outline-rounded" /> {{ $t('submit') }}
       </ElButton>
     </template>
-  </Dialog>
+  </DialogView>
 </template>

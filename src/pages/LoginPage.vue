@@ -8,8 +8,6 @@ import ThemeToogle from 'components/ThemeToogle.vue'
 import LanguageSelector from 'components/LanguageSelector.vue'
 import { useAppStore } from 'stores/app-store'
 import { useUserStore } from 'stores/user-store'
-import { generateRoutes } from 'src/router'
-
 
 const { t } = useI18n()
 const router = useRouter()
@@ -31,11 +29,11 @@ const form = reactive({
 const rules = reactive<FormRules<typeof form>>({
   username: [
     { required: true, message: t('inputText') + t('username'), trigger: 'blur' },
-    { min: 5, max: 12, message: t('lengthRange', { min: 5, max: 12 }), trigger: 'blur' },
+    { min: 5, max: 12, message: t('lengthRange', { min: 5, max: 12 }), trigger: 'blur' }
   ],
   password: [
     { required: true, message: t('inputText') + t('password'), trigger: 'blur' },
-    { min: 8, max: 32, message: t('lengthRange', { min: 8, max: 32 }), trigger: 'blur' },
+    { min: 8, max: 32, message: t('lengthRange', { min: 8, max: 32 }), trigger: 'blur' }
   ]
 })
 
@@ -46,15 +44,13 @@ onMounted(() => {
 async function onSubmit(formEl: FormInstance | undefined) {
   if (!formEl) return
 
-  formEl.validate((valid, fields) => {
+  formEl.validate((valid) => {
     if (valid) {
       loading.value = true
       userStore.login(form.username, form.password).then(() => {
         const redirect = router.currentRoute.value.query.redirect as string
         router.replace(redirect || '/')
-      }).finally(() => loading.value = false)
-    } else {
-
+      }).finally(() => { loading.value = false })
     }
   })
 }

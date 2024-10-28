@@ -12,7 +12,7 @@ const api: AxiosInstance = axios.create({
 // 请求拦截器
 api.interceptors.request.use(
   (config: InternalAxiosRequestConfig) => {
-    config.headers['Authorization'] = 'Bearer ' + localStorage.getItem('access_token')
+    config.headers.Authorization = 'Bearer ' + localStorage.getItem('access_token')
     // 创建 AbortController 实例
     const controller = new AbortController()
     // 将 signal 添加到请求配置中
@@ -51,7 +51,7 @@ const defaultRequestInterceptors = (config: InternalAxiosRequestConfig) => {
     url += '?'
     Object.keys(config.params).forEach(key => {
       if (config.params[key] !== undefined && config.params[key] !== null && config.params[key] !== '') {
-        url += `${key}=${encodeURIComponent(config.params[key])}&`;
+        url += `${key}=${encodeURIComponent(config.params[key])}&`
       }
     })
     url = url.substring(0, url.length - 1)
@@ -70,7 +70,7 @@ const cancelRequest = (url: string | string[]) => {
 }
 
 const cancelAllRequest = () => {
-  for (const [_, controller] of abortControllerMap) {
+  for (const controller of abortControllerMap.values()) {
     controller.abort()
   }
   abortControllerMap.clear()

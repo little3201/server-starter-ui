@@ -4,14 +4,17 @@ import { isNumber } from 'src/utils'
 
 const slots = useSlots()
 
+interface Props {
+  [key: string]: string | number | boolean | undefined;
+}
+
 const props = withDefaults(defineProps<{
   modelValue: boolean
-  title: string
+  title?: string
   maxHeight?: string | number,
   showFullScreen?: boolean
 }>(), {
   modelValue: false,
-  title: 'Dialog',
   maxHeight: undefined,
   showFullScreen: false
 })
@@ -19,7 +22,7 @@ const props = withDefaults(defineProps<{
 const getBindValue = computed(() => {
   const delArr: string[] = ['title', 'maxHeight']
   const attrs = useAttrs()
-  const obj = { ...attrs, ...props } as { [key: string]: any }
+  const obj: Props = { ...attrs, ...props }
   for (const key in obj) {
     if (delArr.indexOf(key) !== -1) {
       delete obj[key]
@@ -37,7 +40,7 @@ const toggleFull = () => {
 const dialogHeight = ref(isNumber(props.maxHeight) ? `${props.maxHeight}px` : props.maxHeight)
 
 const dialogStyle = computed(() => {
-  let innerHeight = slots.footer ? 120 : 72
+  const innerHeight = slots.footer ? 120 : 72
   return {
     height: fullScreen.value ? `${document.documentElement.offsetHeight - innerHeight}px` : dialogHeight.value
   }
