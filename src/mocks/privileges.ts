@@ -29,7 +29,7 @@ const datas: Privilege[] = [
   {
     id: 12,
     path: 'regions',
-    component: 'pages/regions/Index',
+    component: 'pages/regions/IndexPage',
     name: 'regions',
     icon: 'i-material-symbols:location-on-outline-rounded',
     actions: ['add', 'edit', 'remove', 'import', 'export'],
@@ -40,7 +40,7 @@ const datas: Privilege[] = [
   {
     id: 14,
     path: 'files',
-    component: 'pages/files/Index',
+    component: 'pages/files/IndexPage',
     name: 'files',
     icon: 'i-material-symbols:folder-open-outline-rounded',
     actions: ['upload', 'download', 'remove'],
@@ -66,7 +66,7 @@ const subDatas: Privilege[] = [
     id: 2,
     superiorId: 1,
     path: 'groups',
-    component: 'pages/system/groups/Index',
+    component: 'pages/system/groups/IndexPage',
     name: 'groups',
     actions: ['add', 'edit', 'remove', 'import', 'export', 'relation'],
     count: 0,
@@ -78,7 +78,7 @@ const subDatas: Privilege[] = [
     id: 3,
     superiorId: 1,
     path: 'users',
-    component: 'pages/system/users/Index',
+    component: 'pages/system/users/IndexPage',
     name: 'users',
     actions: ['add', 'edit', 'remove', 'import', 'export'],
     count: 0,
@@ -90,7 +90,7 @@ const subDatas: Privilege[] = [
     id: 4,
     superiorId: 1,
     path: 'privileges',
-    component: 'pages/system/privileges/Index',
+    component: 'pages/system/privileges/IndexPage',
     name: 'privileges',
     actions: ['edit', 'import', 'export'],
     count: 0,
@@ -102,7 +102,7 @@ const subDatas: Privilege[] = [
     id: 5,
     superiorId: 1,
     path: 'roles',
-    component: 'pages/system/roles/Index',
+    component: 'pages/system/roles/IndexPage',
     name: 'roles',
     actions: ['add', 'edit', 'remove', 'import', 'export', 'relation'],
     count: 0,
@@ -114,7 +114,7 @@ const subDatas: Privilege[] = [
     id: 6,
     superiorId: 1,
     path: 'dictionaries',
-    component: 'pages/system/dictionaries/Index',
+    component: 'pages/system/dictionaries/IndexPage',
     name: 'dictionaries',
     actions: ['add', 'edit', 'remove', 'import', 'export'],
     count: 0,
@@ -126,7 +126,7 @@ const subDatas: Privilege[] = [
     id: 8,
     superiorId: 7,
     path: 'operation',
-    component: 'pages/logs/operation/Index',
+    component: 'pages/logs/operation/IndexPage',
     name: 'operationLog',
     actions: ['clear', 'detail', 'export', 'remove'],
     count: 0,
@@ -138,7 +138,7 @@ const subDatas: Privilege[] = [
     id: 9,
     superiorId: 7,
     path: 'access',
-    component: 'pages/logs/access/Index',
+    component: 'pages/logs/access/IndexPage',
     name: 'accessLog',
     actions: ['clear', 'detail', 'export', 'remove'],
     count: 0,
@@ -150,7 +150,7 @@ const subDatas: Privilege[] = [
     id: 10,
     superiorId: 7,
     path: 'audit',
-    component: 'pages/logs/audit/Index',
+    component: 'pages/logs/audit/IndexPage',
     name: 'auditLog',
     actions: ['detail', 'export'],
     count: 0,
@@ -162,7 +162,7 @@ const subDatas: Privilege[] = [
     id: 11,
     superiorId: 7,
     path: 'scheduler',
-    component: 'pages/logs/scheduler/Index',
+    component: 'pages/logs/scheduler/IndexPage',
     name: 'schedulerLog',
     actions: ['clear', 'detail', 'export', 'remove'],
     count: 0,
@@ -175,7 +175,7 @@ const subDatas: Privilege[] = [
     superiorId: 16,
     path: 'generator',
     name: 'generator',
-    component: 'pages/exploiter/generator/Index',
+    component: 'pages/exploiter/generator/IndexPage',
     actions: ['add', 'edit', 'remove', 'import', 'export', 'config', 'preview'],
     count: 0,
     enabled: true,
@@ -187,7 +187,7 @@ const subDatas: Privilege[] = [
     superiorId: 16,
     path: 'deploy',
     name: 'deploy',
-    component: 'pages/exploiter/deploy/Index',
+    component: 'pages/exploiter/deploy/IndexPage',
     actions: ['add', 'edit', 'remove', 'import', 'export'],
     count: 0,
     enabled: true,
@@ -212,7 +212,7 @@ const treeNodes: PrivilegeTreeNode[] = [
         name: 'groups',
         meta: {
           path: 'groups',
-          component: 'pages/system/groups/Index',
+          component: 'pages/system/groups/IndexPage',
           icon: 'i-material-symbols:account-tree-outline-rounded'
         }
       },
@@ -221,7 +221,7 @@ const treeNodes: PrivilegeTreeNode[] = [
         name: 'users',
         meta: {
           path: 'users',
-          component: 'pages/system/users/Index',
+          component: 'pages/system/users/IndexPage',
           icon: 'i-material-symbols:person-outline-rounded'
         }
       },
@@ -230,7 +230,7 @@ const treeNodes: PrivilegeTreeNode[] = [
         name: 'roles',
         meta: {
           path: 'roles',
-          component: 'pages/system/roles/Index',
+          component: 'pages/system/roles/IndexPage',
           icon: 'i-material-symbols:shield-person-outline-rounded'
         }
       },
@@ -239,7 +239,7 @@ const treeNodes: PrivilegeTreeNode[] = [
         name: 'dictionaries',
         meta: {
           path: 'dictionaries',
-          component: 'pages/system/dictionaries/Index',
+          component: 'pages/system/dictionaries/IndexPage',
           icon: 'i-material-symbols:book-3-outline-rounded'
         }
       },
@@ -248,7 +248,7 @@ const treeNodes: PrivilegeTreeNode[] = [
         name: 'privileges',
         meta: {
           path: 'privileges',
-          component: 'pages/system/privileges/Index',
+          component: 'pages/system/privileges/IndexPage',
           icon: 'i-material-symbols:admin-panel-settings-outline-rounded'
         }
       }
@@ -269,7 +269,7 @@ const treeNodes: PrivilegeTreeNode[] = [
         name: 'operationLog',
         meta: {
           path: 'operation',
-          component: 'pages/logs/operation/Index',
+          component: 'pages/logs/operation/IndexPage',
           icon: 'i-material-symbols:clinical-notes-outline-rounded'
         }
       },
@@ -278,7 +278,7 @@ const treeNodes: PrivilegeTreeNode[] = [
         name: 'accessLog',
         meta: {
           path: 'access',
-          component: 'pages/logs/access/Index',
+          component: 'pages/logs/access/IndexPage',
           icon: 'i-material-symbols:sticky-note-2-outline-rounded'
         }
       },
@@ -287,7 +287,7 @@ const treeNodes: PrivilegeTreeNode[] = [
         name: 'auditLog',
         meta: {
           path: 'audit',
-          component: 'pages/logs/audit/Index',
+          component: 'pages/logs/audit/IndexPage',
           icon: 'i-material-symbols:note-alt-outline-rounded'
         }
       },
@@ -296,7 +296,7 @@ const treeNodes: PrivilegeTreeNode[] = [
         name: 'schedulerLog',
         meta: {
           path: 'scheduler',
-          component: 'pages/logs/scheduler/Index',
+          component: 'pages/logs/scheduler/IndexPage',
           icon: 'i-material-symbols:event-note-outline-rounded'
         }
       }
@@ -307,7 +307,7 @@ const treeNodes: PrivilegeTreeNode[] = [
     name: 'regions',
     meta: {
       path: 'regions',
-      component: 'pages/regions/Index',
+      component: 'pages/regions/IndexPage',
       icon: 'i-material-symbols:location-on-outline-rounded',
     }
   },
@@ -316,7 +316,7 @@ const treeNodes: PrivilegeTreeNode[] = [
     name: 'files',
     meta: {
       path: 'files',
-      component: 'pages/files/Index',
+      component: 'pages/files/IndexPage',
       icon: 'i-material-symbols:folder-open-outline-rounded',
     }
   },
@@ -335,7 +335,7 @@ const treeNodes: PrivilegeTreeNode[] = [
         name: 'generator',
         meta: {
           path: 'generator',
-          component: 'pages/exploiter/generator/Index',
+          component: 'pages/exploiter/generator/IndexPage',
           icon: 'i-material-symbols:code-rounded'
         }
       },
@@ -344,7 +344,7 @@ const treeNodes: PrivilegeTreeNode[] = [
         name: 'deploy',
         meta: {
           path: 'deploy',
-          component: 'pages/exploiter/deploy/Index',
+          component: 'pages/exploiter/deploy/IndexPage',
           icon: 'i-material-symbols:terminal-rounded'
         }
       }

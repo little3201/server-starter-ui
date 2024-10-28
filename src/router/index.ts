@@ -20,7 +20,6 @@ const router = createRouter({
 
 router.beforeEach(async (to, from, next) => {
   progress.start()
-  const userStore = useUserStore()
   // 判断是否登录
   const accessToken = localStorage.getItem('access_token')
   if (accessToken && accessToken.length > 0) {
@@ -29,13 +28,14 @@ router.beforeEach(async (to, from, next) => {
     } else {
       // 获取权限，注册路由表
       if (!to.name || !router.hasRoute(to.name)) {
+        const userStore = useUserStore()
         const routes = generateRoutes(userStore.privileges as PrivilegeTreeNode[])
 
         // 动态添加可访问路由表到home下
         routes.forEach((route) => {
           router.addRoute('home', route as RouteRecordRaw)
         })
-        // 捕获所有未匹配的路径，放在配置的末尾
+        // 捕获所有未匹配的路径（必须放在末尾）
         router.addRoute({
           path: '/:cacheAll(.*)*',
           name: 'ErrorNotFound',

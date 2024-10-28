@@ -41,6 +41,7 @@ const row = ref<AccessLog>({
   url: '',
   httpMethod: null,
   params: null,
+  body: null,
   ip: '',
   location: '',
   responseTimes: 0,

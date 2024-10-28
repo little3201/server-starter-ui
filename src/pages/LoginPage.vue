@@ -43,19 +43,13 @@ onMounted(() => {
   show()
 })
 
-function onSubmit(formEl: FormInstance | undefined) {
+async function onSubmit(formEl: FormInstance | undefined) {
   if (!formEl) return
 
   formEl.validate((valid, fields) => {
     if (valid) {
       loading.value = true
       userStore.login(form.username, form.password).then(() => {
-        // 生成路由
-        // const routes = generateRoutes(userStore.privileges)
-
-        // routes.forEach((route) => {
-        //   router.addRoute(route)
-        // })
         const redirect = router.currentRoute.value.query.redirect as string
         router.replace(redirect || '/')
       }).finally(() => loading.value = false)

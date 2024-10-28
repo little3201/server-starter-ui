@@ -6,23 +6,22 @@ export const constantRouterMap: Array<RouteRecordRaw> = [
     path: '/',
     name: 'home',
     component: MainLayout,
-    redirect: '/',
     children: [
       {
         path: '',
         name: 'index',
-        component: () => import('pages/Index.vue')
+        component: () => import('pages/IndexPage.vue')
       },
       {
         path: 'profile',
         name: 'profile',
-        component: () => import('pages/profile/Index.vue')
+        component: () => import('pages/profile/IndexPage.vue')
       }
     ]
   },
   {
     path: '/login',
     name: 'Login',
-    component: () => import('pages/Login.vue')
+    component: () => import('pages/LoginPage.vue')
   }
 ]

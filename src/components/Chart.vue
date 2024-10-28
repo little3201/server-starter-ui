@@ -28,7 +28,7 @@ const options = computed(() => {
 
 const elRef = ref<HTMLElement | null>(null)
 
-let chartRef: Nullable<ApexCharts> = null
+let chartRef: ApexCharts | null = null
 
 const contentEl = ref<Element>()
 
@@ -93,14 +93,14 @@ onMounted(() => {
 
   contentEl.value = document.getElementsByClassName(`el-layout-content`)[0]
   if (contentEl.value) {
-    (contentEl.value as Element).addEventListener('transitionend', handleContentResize as EventListener)
+    (contentEl.value as Element).addEventListener('transitionend', handleContentResize as (event: Event) => void)
   }
 })
 
 onBeforeUnmount(() => {
   window.removeEventListener('resize', resizeHandler)
   if (contentEl.value) {
-    (contentEl.value as Element).removeEventListener('transitionend', handleContentResize as EventListener)
+    (contentEl.value as Element).removeEventListener('transitionend', handleContentResize as (event: Event) => void)
   }
 
   if (chartRef) {
