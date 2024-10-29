@@ -120,10 +120,9 @@ export default {
   lengthRange: '长度在 {min} 到 {max} 个字符',
   removeConfirm: '是否确定要删除这条数据？',
 
-  unauthorized: '未授权访问',
   notFound: '资源未找到',
   serverError: '服务器错误',
-  default: '发生错误',
+  error: '发生错误',
   goHome: '返回首页',
 
   welcome: '嗨！欢迎回来',

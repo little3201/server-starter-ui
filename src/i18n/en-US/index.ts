@@ -120,10 +120,9 @@ export default {
   lengthRange: 'The length must between {min} and {max}',
   removeConfirm: 'Are you sure to delete this?',
 
-  unauthorized: 'Unauthorized access',
   notFound: 'Resource not found',
   serverError: 'Server error',
-  default: 'An error occurred',
+  error: 'An error occurred',
   goHome: 'Go Home',
 
   welcome: 'Hi! Welcome Back.',

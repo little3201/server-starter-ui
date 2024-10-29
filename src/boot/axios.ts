@@ -2,8 +2,9 @@ import axios, { AxiosError, AxiosInstance, InternalAxiosRequestConfig, AxiosResp
 import { ElMessage } from 'element-plus'
 import router from 'src/router'
 import { i18n } from 'boot/i18n'
+import type { ComposerTranslation } from 'vue-i18n'
 
-const { t } = i18n.global
+const { t } = i18n.global as { t: ComposerTranslation }
 
 const abortControllerMap: Map<string, AbortController> = new Map()
 
@@ -43,13 +44,12 @@ api.interceptors.response.use(
     if (error.response?.status === 401) {
       localStorage.removeItem('access_token')
       router.replace('/login')
-      ElMessage.error({ message: t('unauthorized'), grouping: true })
     } else if (error.response?.status === 404) {
       ElMessage.error({ message: t('notFound'), grouping: true })
     } else if (error.response?.status === 500) {
       ElMessage.error({ message: t('serverError'), grouping: true })
     } else {
-      ElMessage.error({ message: t('default'), grouping: true })
+      ElMessage.error({ message: t('error'), grouping: true })
     }
     return Promise.reject(error)
   }
