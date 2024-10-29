@@ -199,10 +199,10 @@ function visibleActions(actions: string[]) {
     <ElCard shadow="never">
       <ElForm inline :model="filters">
         <ElFormItem :label="$t('name')" prop="name">
-          <ElInput v-model="filters.name" :placeholder="$t('inputText') + $t('name')" />
+          <ElInput v-model="filters.name" :placeholder="$t('inputText', { field: $t('name') })" />
         </ElFormItem>
         <ElFormItem :label="$t('path')" prop="path">
-          <ElInput v-model="filters.path" :placeholder="$t('inputText') + $t('path')" />
+          <ElInput v-model="filters.path" :placeholder="$t('inputText', { field: $t('path') })" />
         </ElFormItem>
         <ElFormItem>
           <ElButton type="primary" @click="load">
@@ -321,7 +321,7 @@ function visibleActions(actions: string[]) {
       <ElRow :gutter="20" class="w-full !mx-0">
         <ElCol :span="12">
           <ElFormItem :label="$t('name')" prop="name">
-            <ElInput v-model="form.name" :placeholder="$t('inputText') + $t('name')" disabled>
+            <ElInput v-model="form.name" :placeholder="$t('inputText', { field: $t('name') })" disabled>
               <template #prefix>
                 <div :class="form.icon" />
               </template>
@@ -330,19 +330,19 @@ function visibleActions(actions: string[]) {
         </ElCol>
         <ElCol :span="12">
           <ElFormItem :label="$t('path')" prop="path">
-            <ElInput v-model="form.path" :placeholder="$t('inputText') + $t('path')" disabled />
+            <ElInput v-model="form.path" :placeholder="$t('inputText', { field: $t('path') })" disabled />
           </ElFormItem>
         </ElCol>
       </ElRow>
       <ElRow :gutter="20" class="w-full !mx-0">
         <ElCol :span="12">
           <ElFormItem :label="$t('component')" prop="component">
-            <ElInput v-model="form.component" :placeholder="$t('inputText') + $t('component')" disabled />
+            <ElInput v-model="form.component" :placeholder="$t('inputText', { field: $t('component') })" disabled />
           </ElFormItem>
         </ElCol>
         <ElCol :span="12">
           <ElFormItem :label="$t('redirect')" prop="redirect">
-            <ElInput v-model="form.redirect" :placeholder="$t('inputText') + $t('redirect')"
+            <ElInput v-model="form.redirect" :placeholder="$t('inputText', { field: $t('redirect') })"
               :disabled="form.superiorId" />
           </ElFormItem>
         </ElCol>
@@ -351,7 +351,7 @@ function visibleActions(actions: string[]) {
         <ElCol>
           <ElFormItem :label="$t('actions')" prop="meta.actions">
             <!-- width 相对body设置, popover默认设置了 position: absolute -->
-            <ElSelect multiple v-model="form.actions" :placeholder="$t('selectText') + $t('actions')">
+            <ElSelect multiple v-model="form.actions" :placeholder="$t('selectText', { field: $t('actions') })">
               <ElOption value="add" :label="$t('add')" />
               <ElOption value="edit" :label="$t('edit')" />
               <ElOption value="remove" :label="$t('remove')" />

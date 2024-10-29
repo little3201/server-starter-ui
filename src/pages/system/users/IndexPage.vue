@@ -184,7 +184,7 @@ function handleCheckedChange(value: string[]) {
     <ElCard shadow="never">
       <ElForm inline :model="filters">
         <ElFormItem :label="$t('username')" prop="username">
-          <ElInput v-model="filters.username" :placeholder="$t('inputText') + $t('username')" />
+          <ElInput v-model="filters.username" :placeholder="$t('inputText', { field: $t('username') })" />
         </ElFormItem>
         <ElFormItem>
           <ElButton type="primary" @click="load">
@@ -319,13 +319,13 @@ function handleCheckedChange(value: string[]) {
       <ElRow :gutter="20" class="w-full !mx-0">
         <ElCol :span="12">
           <ElFormItem :label="$t('fullName')" prop="fullName">
-            <ElInput type="email" v-model="form.fullName" :placeholder="$t('inputText') + $t('fullName')"
+            <ElInput type="email" v-model="form.fullName" :placeholder="$t('inputText', { field: $t('fullName') })"
               :maxLength="50" />
           </ElFormItem>
         </ElCol>
         <ElCol :span="12">
           <ElFormItem :label="$t('username')" prop="username">
-            <ElInput v-model="form.username" :placeholder="$t('inputText') + $t('username')" :maxLength="50"
+            <ElInput v-model="form.username" :placeholder="$t('inputText', { field: $t('username') })" :maxLength="50"
               :disabled="form.id" />
           </ElFormItem>
         </ElCol>
@@ -333,8 +333,8 @@ function handleCheckedChange(value: string[]) {
       <ElRow :gutter="20" class="w-full !mx-0">
         <ElCol :span="24">
           <ElFormItem :label="$t('email')" prop="email">
-            <ElInput type="email" v-model="form.email" :placeholder="$t('inputText') + $t('email')" :maxLength="50"
-              :disabled="form.id" />
+            <ElInput type="email" v-model="form.email" :placeholder="$t('inputText', { field: $t('email') })"
+              :maxLength="50" :disabled="form.id" />
           </ElFormItem>
         </ElCol>
       </ElRow>

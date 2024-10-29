@@ -132,10 +132,10 @@ function handleCheckedChange(value: string[]) {
     <ElCard shadow="never">
       <ElForm inline :model="filters">
         <ElFormItem :label="$t('resource')" prop="resource">
-          <ElInput v-model="filters.resource" :placeholder="$t('inputText') + $t('resource')" />
+          <ElInput v-model="filters.resource" :placeholder="$t('inputText', { field: $t('resource') })" />
         </ElFormItem>
         <ElFormItem :label="$t('operator')" prop="operator">
-          <ElInput v-model="filters.operator" :placeholder="$t('inputText') + $t('operator')" />
+          <ElInput v-model="filters.operator" :placeholder="$t('inputText', { field: $t('operator') })" />
         </ElFormItem>
         <ElFormItem>
           <ElButton type="primary" @click="load">
@@ -228,7 +228,7 @@ function handleCheckedChange(value: string[]) {
         <ElTableColumn :label="$t('actions')">
           <template #default="scope">
             <ElButton size="small" type="info" link @click="showRow(scope.row.id)">
-              <div class="i-material-symbols:sticky-note-outline-rounded" />{{ $t('detail') }}
+              <div class="i-material-symbols:description-outline-rounded" />{{ $t('detail') }}
             </ElButton>
           </template>
         </ElTableColumn>

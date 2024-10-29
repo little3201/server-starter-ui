@@ -115,8 +115,8 @@ export default {
   generator: '代碼生成',
   deploy: '部署腳本',
 
-  inputText: '請輸入',
-  selectText: '請選擇',
+  inputText: '請輸入{field}',
+  selectText: '請選擇{field}',
   lengthRange: '長度在 {min} 到 {max} 個字元',
   removeConfirm: '是否確定要刪除這條數據？',
 

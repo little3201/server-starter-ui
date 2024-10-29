@@ -160,14 +160,15 @@ function confirmEvent(id: number) {
       <ElRow :gutter="20" class="w-full !mx-0">
         <ElCol :span="24">
           <ElFormItem :label="$t('name')" prop="name">
-            <ElInput v-model="form.name" :placeholder="$t('inputText') + $t('name')" />
+            <ElInput v-model="form.name" :placeholder="$t('inputText', { field: $t('name') })" />
           </ElFormItem>
         </ElCol>
       </ElRow>
       <ElRow :gutter="20" class="w-full !mx-0">
         <ElCol :span="24">
           <ElFormItem :label="$t('description')" prop="description">
-            <ElInput v-model="form.description" type="textarea" :placeholder="$t('inputText') + $t('description')" />
+            <ElInput v-model="form.description" type="textarea"
+              :placeholder="$t('inputText', { field: $t('description') })" />
           </ElFormItem>
         </ElCol>
       </ElRow>

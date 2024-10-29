@@ -266,7 +266,7 @@ function handleCheckedChange(value: string[]) {
         <ElCard shadow="never">
           <ElForm inline :model="filters" @submit.prevent>
             <ElFormItem :label="$t('name')" prop="name">
-              <ElInput v-model="filters.name" :placeholder="$t('inputText') + $t('name')" />
+              <ElInput v-model="filters.name" :placeholder="$t('inputText', { field: $t('name') })" />
             </ElFormItem>
             <ElFormItem>
               <ElButton type="primary" @click="load">
@@ -375,14 +375,15 @@ function handleCheckedChange(value: string[]) {
       <ElRow :gutter="20" class="w-full !mx-0">
         <ElCol>
           <ElFormItem :label="$t('name')" prop="name">
-            <ElInput v-model="form.name" :placeholder="$t('inputText') + $t('name')" />
+            <ElInput v-model="form.name" :placeholder="$t('inputText', { field: $t('name') })" />
           </ElFormItem>
         </ElCol>
       </ElRow>
       <ElRow :gutter="20" class="w-full !mx-0">
         <ElCol>
           <ElFormItem :label="$t('description')" prop="description">
-            <ElInput v-model="form.description" type="textarea" :placeholder="$t('inputText') + $t('description')" />
+            <ElInput v-model="form.description" type="textarea"
+              :placeholder="$t('inputText', { field: $t('description') })" />
           </ElFormItem>
         </ElCol>
       </ElRow>

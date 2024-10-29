@@ -115,8 +115,8 @@ export default {
   generator: '代码生成',
   deploy: '部署脚本',
 
-  inputText: '请输入',
-  selectText: '请选择',
+  inputText: '请输入{field}',
+  selectText: '请选择{field}',
   lengthRange: '长度在 {min} 到 {max} 个字符',
   removeConfirm: '是否确定要删除这条数据？',
 

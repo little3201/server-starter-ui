@@ -134,10 +134,10 @@ function handleCheckedChange(value: string[]) {
     <ElCard shadow="never">
       <ElForm inline :model="filters">
         <ElFormItem :label="$t('operation')" prop="operation">
-          <ElInput v-model="filters.operation" :placeholder="$t('inputText') + $t('operation')" />
+          <ElInput v-model="filters.operation" :placeholder="$t('inputText', { field: $t('operation') })" />
         </ElFormItem>
         <ElFormItem :label="$t('operator')" prop="operator">
-          <ElInput v-model="filters.operator" :placeholder="$t('inputText') + $t('operator')" />
+          <ElInput v-model="filters.operator" :placeholder="$t('inputText', { field: $t('operator') })" />
         </ElFormItem>
         <ElFormItem>
           <ElButton type="primary" @click="load">
@@ -230,7 +230,7 @@ function handleCheckedChange(value: string[]) {
         <ElTableColumn :label="$t('actions')" width="160">
           <template #default="scope">
             <ElButton size="small" type="info" link @click="showRow(scope.row.id)">
-              <div class="i-material-symbols:sticky-note-outline-rounded" />{{ $t('detail') }}
+              <div class="i-material-symbols:description-outline-rounded" />{{ $t('detail') }}
             </ElButton>
             <ElPopconfirm :title="$t('removeConfirm')" :width="240" @confirm="confirmEvent(scope.row.id)">
               <template #reference>

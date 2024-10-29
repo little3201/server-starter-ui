@@ -115,8 +115,8 @@ export default {
   generator: 'Generator',
   deploy: 'Deploy',
 
-  inputText: 'Please input ',
-  selectText: 'Please select ',
+  inputText: 'Please input {field}',
+  selectText: 'Please select {field}',
   lengthRange: 'The length must between {min} and {max}',
   removeConfirm: 'Are you sure to delete this?',
 
