@@ -191,6 +191,10 @@ function handleCheckedChange(value: string[]) {
   checkAll.value = checkedCount === columns.value.length
   isIndeterminate.value = checkedCount > 0 && checkedCount < columns.value.length
 }
+
+function visibleActions(actions: string[]) {
+  return actions.length > 3 ? actions.slice(0, 3) : actions
+}
 </script>
 
 <template>
@@ -278,22 +282,23 @@ function handleCheckedChange(value: string[]) {
         <ElTableColumn prop="redirect" :label="$t('redirect')" />
         <ElTableColumn prop="actions" :label="$t('actions')">
           <template #default="scope">
-            <ElTag v-if="scope.row.actions && scope.row.actions.length > 0" :type="actions[scope.row.actions[0]]"
-              class="mr-2">
-              {{ $t(scope.row.actions[0]) }}
-            </ElTag>
-            <ElPopover v-if="scope.row.actions && scope.row.actions.length > 1" placement="top-start" trigger="hover"
-              :width="100">
-              <template #reference>
-                <ElTag type="primary">
-                  +{{ scope.row.actions.length - 1 }}
-                </ElTag>
-              </template>
-              <ElTag v-for="action in scope.row.actions.slice(1)" :key="action" :type="actions[action]"
-                class="mb-2 mr-4">
+            <template v-if="scope.row.actions && scope.row.actions.length > 0">
+              <ElTag v-for="(action, index) in visibleActions(scope.row.actions)" :key="index" :type="actions[action]"
+                class="mr-2">
                 {{ $t(action) }}
               </ElTag>
-            </ElPopover>
+              <ElPopover v-if="scope.row.actions.length > 3" placement="top-start" trigger="hover" :width="100">
+                <template #reference>
+                  <ElTag type="primary">
+                    +{{ scope.row.actions.length - 3 }}
+                  </ElTag>
+                </template>
+                <ElTag v-for="action in scope.row.actions.slice(3)" :key="action" :type="actions[action]"
+                  class="mb-2 mr-4">
+                  {{ $t(action) }}
+                </ElTag>
+              </ElPopover>
+            </template>
           </template>
         </ElTableColumn>
         <ElTableColumn prop="enabled" :label="$t('enabled')">

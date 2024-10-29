@@ -147,12 +147,12 @@ export interface AuditLog extends AudtiMetadata {
 export interface SchedulerLog extends AudtiMetadata {
   name: string
   startTime: Date | null
-  executedTime?: number
+  executedTimes?: number
   nextExecuteTime?: Date
   status: number | null
 }
 
-export interface File extends AudtiMetadata {
+export interface FileRecord extends AudtiMetadata {
   name: string
   type: string
   size: number

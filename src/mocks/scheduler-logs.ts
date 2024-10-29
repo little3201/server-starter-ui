@@ -15,7 +15,7 @@ const datas: SchedulerLog[] = [
     name: 'GenerateReport',
     startTime: new Date(),
     nextExecuteTime: new Date(),
-    executedTime: 5,
+    executedTimes: 5,
     status: 1
   },
   {
@@ -23,7 +23,7 @@ const datas: SchedulerLog[] = [
     name: 'SyncData',
     startTime: new Date(),
     nextExecuteTime: new Date(),
-    executedTime: 6,
+    executedTimes: 6,
     status: 1
   },
   {
@@ -31,7 +31,7 @@ const datas: SchedulerLog[] = [
     name: 'ClearTempFiles',
     startTime: new Date(),
     nextExecuteTime: new Date(),
-    executedTime: 323,
+    executedTimes: 323,
     status: 1
   },
   {
@@ -39,7 +39,7 @@ const datas: SchedulerLog[] = [
     name: 'SendEmails',
     startTime: new Date(),
     nextExecuteTime: new Date(),
-    executedTime: 33,
+    executedTimes: 33,
     status: 2
   },
   {
@@ -47,7 +47,7 @@ const datas: SchedulerLog[] = [
     name: 'UpdateStats',
     startTime: new Date(),
     nextExecuteTime: new Date(),
-    executedTime: 2,
+    executedTimes: 2,
     status: 1
   },
   {
@@ -55,7 +55,7 @@ const datas: SchedulerLog[] = [
     name: 'ReindexSearch',
     startTime: new Date(),
     nextExecuteTime: new Date(),
-    executedTime: 323,
+    executedTimes: 323,
     status: 1
   },
   {
@@ -63,7 +63,7 @@ const datas: SchedulerLog[] = [
     name: 'ArchiveLogs',
     startTime: new Date(),
     nextExecuteTime: new Date(),
-    executedTime: 23,
+    executedTimes: 23,
     status: 1
   },
   {
@@ -71,7 +71,7 @@ const datas: SchedulerLog[] = [
     name: 'RefreshCache',
     startTime: new Date(),
     nextExecuteTime: new Date(),
-    executedTime: 2345,
+    executedTimes: 2345,
     status: 1
   },
   {
@@ -79,7 +79,7 @@ const datas: SchedulerLog[] = [
     name: 'GenerateInvoices',
     startTime: new Date(),
     nextExecuteTime: new Date(),
-    executedTime: 125,
+    executedTimes: 125,
     status: 1
   },
   {
@@ -87,7 +87,7 @@ const datas: SchedulerLog[] = [
     name: 'GenerateInvoices',
     startTime: new Date(),
     nextExecuteTime: new Date(),
-    executedTime: 125,
+    executedTimes: 125,
     status: 1
   }
 ]

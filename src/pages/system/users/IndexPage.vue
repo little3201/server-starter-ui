@@ -6,6 +6,7 @@ import draggable from 'vuedraggable'
 import DialogView from 'components/DialogView.vue'
 import { retrieveUsers, fetchUser, createUser, modifyUser, removeUser } from 'src/api/users'
 import type { Pagination, User } from 'src/models'
+import { calculate } from 'src/utils'
 
 const loading = ref<boolean>(false)
 const datas = ref<Array<User>>([])
@@ -283,11 +284,15 @@ function handleCheckedChange(value: string[]) {
         </ElTableColumn>
         <ElTableColumn prop="accountExpiresAt" :label="$t('accountExpiresAt')">
           <template #default="scope">
+            <ElBadge v-if="scope.row.accountExpiresAt" is-dot :type="calculate(scope.row.accountExpiresAt)"
+              class="mr-2" />
             {{ scope.row.accountExpiresAt ? dayjs(scope.row.accountExpiresAt).format('YYYY-MM-DD HH:mm:ss') : '-' }}
           </template>
         </ElTableColumn>
-        <ElTableColumn prop="encredentialsExpiresAtbled" :label="$t('credentialsExpiresAt')">
+        <ElTableColumn prop="credentialsExpiresAt" :label="$t('credentialsExpiresAt')">
           <template #default="scope">
+            <ElBadge v-if="scope.row.credentialsExpiresAt" is-dot :type="calculate(scope.row.credentialsExpiresAt)"
+              class="mr-2" />
             {{ scope.row.credentialsExpiresAt ? dayjs(scope.row.credentialsExpiresAt).format('YYYY-MM-DD HH:mm:ss') :
               '-'
             }}
@@ -359,3 +364,10 @@ function handleCheckedChange(value: string[]) {
     </template>
   </DialogView>
 </template>
+
+<style lang="scss" scoped>
+.el-badge {
+  display: inline-flex;
+  vertical-align: baseline;
+}
+</style>

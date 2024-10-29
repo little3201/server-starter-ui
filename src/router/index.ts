@@ -22,13 +22,13 @@ router.beforeEach(async (to, from, next) => {
   progress.start()
   // 判断是否登录
   const accessToken = localStorage.getItem('access_token')
-  if (accessToken && accessToken.length > 0) {
+  const userStore = useUserStore()
+  if (accessToken && accessToken.length > 0 && Object.keys(userStore.user || {}).length > 0) {
     if (to.path === '/login') {
       next({ path: '/' })
     } else {
       // 获取权限，注册路由表
       if (!to.name || !router.hasRoute(to.name)) {
-        const userStore = useUserStore()
         const routes = generateRoutes(userStore.privileges as PrivilegeTreeNode[])
 
         // 动态添加可访问路由表到home下

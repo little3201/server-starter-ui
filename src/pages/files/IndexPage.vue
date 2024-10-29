@@ -4,11 +4,11 @@ import draggable from 'vuedraggable'
 import DialogView from 'components/DialogView.vue'
 import { dayjs } from 'element-plus'
 import { retrieveFiles, fetchFile } from 'src/api/files'
-import type { Pagination, File } from 'src/models'
+import type { Pagination, FileRecord } from 'src/models'
 import { formatFileSize } from 'src/utils'
 
 const loading = ref<boolean>(false)
-const datas = ref<Array<File>>([])
+const datas = ref<Array<FileRecord>>([])
 const total = ref<number>(0)
 
 const pagination = reactive<Pagination>({

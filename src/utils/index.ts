@@ -1,3 +1,5 @@
+import { dayjs } from 'element-plus'
+
 export const isString = (val: unknown): val is string => {
   return is(val, 'String')
 }
@@ -46,4 +48,22 @@ export const formatFileSize = (size: number) => {
   }
 
   return `${size.toFixed(2)}${units[index]}`
+}
+
+export function calculate(target: string) {
+  const now = new Date()
+  const targetDate = new Date(target)
+  // 失效时间是否小于7天
+  const diff = dayjs(targetDate).diff(now, 'days')
+  if (diff > 7) {
+    return 'success'
+  } else {
+    // 是否失效
+    const diffSec = dayjs(targetDate).diff(now, 'seconds')
+    if (diffSec > 0) {
+      return 'warning'
+    } else {
+      return 'danger'
+    }
+  }
 }

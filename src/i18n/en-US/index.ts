@@ -58,7 +58,7 @@ export default {
   oldValue: 'Old Value',
   newValue: 'New Value',
   cronExpression: 'Cron Expression',
-  executedTime: 'Executed Time',
+  executedTimes: 'Executed Times',
   processing: 'Processing',
   done: 'Done',
   failure: 'Failure',

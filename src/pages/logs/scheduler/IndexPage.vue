@@ -31,7 +31,7 @@ const row = ref<SchedulerLog>({
   id: undefined,
   name: '',
   startTime: null,
-  executedTime: 0,
+  executedTimes: 0,
   nextExecuteTime: undefined,
   status: null
 })
@@ -216,9 +216,9 @@ function handleCheckedChange(value: string[]) {
             <ElTag v-else type="danger" round>{{ $t('failure') }}</ElTag>
           </template>
         </ElTableColumn>
-        <ElTableColumn prop="executedTime" :label="$t('executedTime')">
+        <ElTableColumn prop="executedTimes" :label="$t('executedTimes')">
           <template #default="scope">
-            {{ scope.row.executedTime ? formatDuration(scope.row.executedTime) : '-' }}
+            {{ scope.row.executedTimes ? formatDuration(scope.row.executedTimes) : '-' }}
           </template>
         </ElTableColumn>
         <ElTableColumn prop="nextExecuteTime" :label="$t('nextExecuteTime')">
@@ -254,7 +254,7 @@ function handleCheckedChange(value: string[]) {
         <ElTag v-else-if="row.status === 1" type="success" round>{{ $t('done') }}</ElTag>
         <ElTag v-else type="danger" round>{{ $t('failure') }}</ElTag>
       </ElDescriptionsItem>
-      <ElDescriptionsItem :label="$t('executedTime')">{{ row.executedTime ? formatDuration(row.executedTime) : '-' }}
+      <ElDescriptionsItem :label="$t('executedTimes')">{{ row.executedTimes ? formatDuration(row.executedTimes) : '-' }}
       </ElDescriptionsItem>
       <ElDescriptionsItem :label="$t('nextExecuteTime')">{{ row.nextExecuteTime }}</ElDescriptionsItem>
     </ElDescriptions>

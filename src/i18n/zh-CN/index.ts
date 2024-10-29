@@ -58,7 +58,7 @@ export default {
   oldValue: '旧值',
   newValue: '新值',
   cronExpression: 'Cron表达式',
-  executedTime: '耗时',
+  executedTimes: '耗时',
   processing: '进行中',
   done: '完成',
   failure: '失败',

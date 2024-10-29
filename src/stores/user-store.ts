@@ -18,9 +18,11 @@ export const useUserStore = defineStore('user', {
   }),
   actions: {
     async logout() {
-      await signout()
-      localStorage.removeItem('access_token')
-      this.$reset()
+      const res = await signout()
+      if (res.status === 200) {
+        localStorage.removeItem('access_token')
+        this.$reset()
+      }
     },
 
     /**
@@ -33,7 +35,7 @@ export const useUserStore = defineStore('user', {
         const [userResp, privilegesResp] = await Promise.all([fetchMe(), retrievePrivilegeTree()])
         // 执行结果处理
         this.$patch({
-          user: userResp.data.user,
+          user: userResp.data,
           privileges: privilegesResp.data
         })
       }
