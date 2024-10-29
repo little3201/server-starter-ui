@@ -120,9 +120,10 @@ export default {
   lengthRange: 'The length must between {min} and {max}',
   removeConfirm: 'Are you sure to delete this?',
 
-  pageError: 'Not found the page',
-  networkError: 'Network Error',
-  noPermission: 'Permission Denied',
+  unauthorized: 'Unauthorized access',
+  notFound: 'Resource not found',
+  serverError: 'Server error',
+  default: 'An error occurred',
   goHome: 'Go Home',
 
   welcome: 'Hi! Welcome Back.',

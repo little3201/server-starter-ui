@@ -120,9 +120,10 @@ export default {
   lengthRange: '長度在 {min} 到 {max} 個字元',
   removeConfirm: '是否確定要刪除這條數據？',
 
-  pageError: '未找到相關頁面',
-  networkError: '網絡錯誤',
-  noPermission: '無訪問權限',
+  unauthorized: '未授權訪問',
+  notFound: '資源未找到',
+  serverError: '伺服器錯誤',
+  default: '發生錯誤',
   goHome: '返回首頁',
 
   welcome: '嗨！歡迎回來',
