@@ -32,11 +32,7 @@ const row = ref<OperationLog>({
   content: '',
   ip: '',
   location: '',
-  os: '',
-  browser: '',
-  statusCode: null,
-  operator: '',
-  operatedTime: null
+  operator: ''
 })
 
 const dialogVisible = ref<boolean>(false)

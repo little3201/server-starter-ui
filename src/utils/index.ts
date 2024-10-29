@@ -1,21 +1,44 @@
 import { dayjs } from 'element-plus'
 
-export const isString = (val: unknown): val is string => {
-  return is(val, 'String')
+export const pathResolve = (parentPath: string, path: string) => {
+  if (!path) return ''
+  const childPath = path.startsWith('/') ? path : `/${path}`
+  return `${parentPath}${childPath}`.replace(/\/\//g, '/').trim()
 }
 
 export const is = (val: unknown, type: string) => {
   return toString.call(val) === `[object ${type}]`
 }
 
+export const isString = (val: unknown): val is string => {
+  return is(val, 'String')
+}
+
 export const isNumber = (val: unknown): val is number => {
   return is(val, 'Number')
 }
 
-export const pathResolve = (parentPath: string, path: string) => {
-  if (!path) return ''
-  const childPath = path.startsWith('/') ? path : `/${path}`
-  return `${parentPath}${childPath}`.replace(/\/\//g, '/').trim()
+/**
+ * 对比当前时间，大于7天返回success，小于7天大于当前，返回warning，否则返回danger
+ * @param target targe
+ * @returns type
+ */
+export function calculate(target: string) {
+  const now = new Date()
+  const targetDate = new Date(target)
+  // 失效时间是否小于7天
+  const diff = dayjs(targetDate).diff(now, 'days')
+  if (diff > 7) {
+    return 'success'
+  } else {
+    // 是否失效
+    const diffSec = dayjs(targetDate).diff(now, 'seconds')
+    if (diffSec > 0) {
+      return 'warning'
+    } else {
+      return 'danger'
+    }
+  }
 }
 
 export const formatDuration = (milliseconds: number) => {
@@ -48,22 +71,4 @@ export const formatFileSize = (size: number) => {
   }
 
   return `${size.toFixed(2)}${units[index]}`
-}
-
-export function calculate(target: string) {
-  const now = new Date()
-  const targetDate = new Date(target)
-  // 失效时间是否小于7天
-  const diff = dayjs(targetDate).diff(now, 'days')
-  if (diff > 7) {
-    return 'success'
-  } else {
-    // 是否失效
-    const diffSec = dayjs(targetDate).diff(now, 'seconds')
-    if (diffSec > 0) {
-      return 'warning'
-    } else {
-      return 'danger'
-    }
-  }
 }

@@ -29,11 +29,7 @@ const filters = ref({
 const detailLoading = ref<boolean>(false)
 const row = ref<SchedulerLog>({
   id: undefined,
-  name: '',
-  startTime: null,
-  executedTimes: 0,
-  nextExecuteTime: undefined,
-  status: null
+  name: ''
 })
 
 const dialogVisible = ref<boolean>(false)

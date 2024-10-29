@@ -38,13 +38,9 @@ const row = ref<AccessLog>({
   id: undefined,
   operator: '',
   url: '',
-  httpMethod: null,
-  params: null,
-  body: null,
+  httpMethod: '',
   ip: '',
   location: '',
-  responseTimes: 0,
-  statusCode: null,
   responseMessage: ''
 })
 
@@ -286,7 +282,8 @@ function handleCheckedChange(value: string[]) {
         </ElTag>
         <ElTag v-else type="danger" round>{{ row.statusCode }}</ElTag>
       </ElDescriptionsItem>
-      <ElDescriptionsItem :label="$t('responseTimes')">{{ formatDuration(row.responseTimes) }}</ElDescriptionsItem>
+      <ElDescriptionsItem :label="$t('responseTimes')">{{ row.responseTimes ? formatDuration(row.responseTimes) : '-' }}
+      </ElDescriptionsItem>
       <ElDescriptionsItem :label="$t('responseMessage')">{{ row.responseMessage }}</ElDescriptionsItem>
     </ElDescriptions>
   </DialogView>

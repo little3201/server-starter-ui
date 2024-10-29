@@ -43,12 +43,8 @@ const initialValues: AuditLog = {
   operation: '',
   operator: '',
   resource: '',
-  oldValue: '',
-  newValue: null,
   ip: '',
-  location: '',
-  statusCode: null,
-  operatedTime: null
+  location: ''
 }
 const row = ref<AuditLog>({ ...initialValues })
 
