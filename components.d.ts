@@ -7,7 +7,6 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
-    Chart: typeof import('./src/components/Chart.vue')['default']
     ChartView: typeof import('./src/components/ChartView.vue')['default']
     ConfigGlobal: typeof import('./src/components/ConfigGlobal.vue')['default']
     DialogView: typeof import('./src/components/DialogView.vue')['default']
@@ -37,7 +36,6 @@ declare module 'vue' {
     ElHeader: typeof import('element-plus/es')['ElHeader']
     ElImage: typeof import('element-plus/es')['ElImage']
     ElInput: typeof import('element-plus/es')['ElInput']
-    ElInputNumber: typeof import('element-plus/es')['ElInputNumber']
     ElMain: typeof import('element-plus/es')['ElMain']
     ElMenu: typeof import('element-plus/es')['ElMenu']
     ElMenuItem: typeof import('element-plus/es')['ElMenuItem']

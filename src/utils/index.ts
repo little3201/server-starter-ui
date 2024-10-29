@@ -1,74 +1,95 @@
 import { dayjs } from 'element-plus'
 
-export const pathResolve = (parentPath: string, path: string) => {
+/**
+ * Resolve a child path relative to a parent path
+ * @param {string} parentPath - The parent path
+ * @param {string} path - The child path
+ * @returns {string} - The resolved path
+ */
+export const pathResolve = (parentPath: string, path: string): string => {
   if (!path) return ''
   const childPath = path.startsWith('/') ? path : `/${path}`
   return `${parentPath}${childPath}`.replace(/\/\//g, '/').trim()
 }
 
-export const is = (val: unknown, type: string) => {
-  return toString.call(val) === `[object ${type}]`
+/**
+ * Check if a value matches a specific type
+ * @param {unknown} val - The value to check
+ * @param {string} type - The type to match
+ * @returns {boolean} - True if the value matches the type, otherwise false
+ */
+export const is = (val: unknown, type: string): boolean => {
+  return Object.prototype.toString.call(val) === `[object ${type}]`
 }
 
+/**
+ * Check if a value is a string
+ * @param {unknown} val - The value to check
+ * @returns {boolean} - True if the value is a string, otherwise false
+ */
 export const isString = (val: unknown): val is string => {
   return is(val, 'String')
 }
 
+/**
+ * Check if a value is a number
+ * @param {unknown} val - The value to check
+ * @returns {boolean} - True if the value is a number, otherwise false
+ */
 export const isNumber = (val: unknown): val is number => {
   return is(val, 'Number')
 }
 
 /**
- * 对比当前时间，大于7天返回success，小于7天大于当前，返回warning，否则返回danger
- * @param target targe
- * @returns type
+ * Compare the target date with the current date and return a status
+ * @param {string} target - The target date
+ * @returns {string} - The status ('success', 'warning', 'danger')
  */
-export function calculate(target: string) {
+export function calculate(target: string): string {
   const now = new Date()
   const targetDate = new Date(target)
-  // 失效时间是否小于7天
   const diff = dayjs(targetDate).diff(now, 'days')
   if (diff > 7) {
     return 'success'
   } else {
-    // 是否失效
     const diffSec = dayjs(targetDate).diff(now, 'seconds')
-    if (diffSec > 0) {
-      return 'warning'
-    } else {
-      return 'danger'
-    }
+    return diffSec > 0 ? 'warning' : 'danger'
   }
 }
 
-export const formatDuration = (milliseconds: number) => {
+/**
+ * Format a duration given in milliseconds into a human-readable string
+ * @param {number} milliseconds - The duration in milliseconds
+ * @returns {string} - The formatted duration
+ */
+export const formatDuration = (milliseconds: number): string => {
   const timeUnits = [
-    { unit: 'h', factor: 3600000 }, // 1小时 = 3600000毫秒
-    { unit: 'min', factor: 60000 }, // 1分钟 = 60000毫秒
-    { unit: 's', factor: 1000 }, // 1秒 = 1000毫秒
-    { unit: 'ms', factor: 1 } // 毫秒
+    { unit: 'h', factor: 3600000 },
+    { unit: 'min', factor: 60000 },
+    { unit: 's', factor: 1000 },
+    { unit: 'ms', factor: 1 }
   ]
-
   for (const { unit, factor } of timeUnits) {
     if (milliseconds >= factor) {
       const value = Math.floor(milliseconds / factor)
       return `${value}${unit}`
     }
   }
-
-  return '0ms' // 处理0毫秒的情况
+  return '0ms'
 }
 
-export const formatFileSize = (size: number) => {
+/**
+ * Format a file size given in bytes into a human-readable string
+ * @param {number} size - The file size in bytes
+ * @returns {string} - The formatted file size
+ */
+export const formatFileSize = (size: number): string => {
   if (isNaN(size) || size <= 0) return '-'
-
   const units = ['B', 'KB', 'MB', 'GB', 'TB']
   let index = 0
-
   while (size >= 1024 && index < units.length - 1) {
     size /= 1024
     index++
   }
-
   return `${size.toFixed(2)}${units[index]}`
 }

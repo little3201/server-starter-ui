@@ -33,10 +33,7 @@ const formRef = ref<FormInstance>()
 const initialValues: User = {
   username: '',
   fullName: '',
-  email: '',
-  accountNonLocked: true,
-  accountExpiresAt: undefined,
-  credentialsExpiresAt: undefined
+  email: ''
 }
 const form = ref<User>({ ...initialValues })
 

@@ -54,10 +54,7 @@ const initialValues: Privilege = {
   name: '',
   path: '',
   component: '',
-  redirect: '',
-  icon: '',
-  actions: [],
-  description: ''
+  icon: ''
 }
 const form = ref<Privilege>({ ...initialValues })
 

@@ -26,7 +26,7 @@ export interface Group extends AudtiMetadata {
   superiorId?: number
   principal?: string
   members?: string[]
-  enabled: boolean
+  enabled?: boolean
   description?: string
 }
 

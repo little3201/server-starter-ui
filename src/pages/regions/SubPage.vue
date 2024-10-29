@@ -24,10 +24,7 @@ const dialogVisible = ref<boolean>(false)
 const formRef = ref<FormInstance>()
 const initialValues: Region = {
   name: '',
-  superiorId: props.superiorId,
-  areaCode: null,
-  postalCode: null,
-  description: ''
+  superiorId: props.superiorId
 }
 const form = ref<Region>({ ...initialValues })
 

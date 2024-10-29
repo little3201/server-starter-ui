@@ -30,10 +30,7 @@ const filters = ref({
 
 const formRef = ref<FormInstance>()
 const initialValues: Region = {
-  name: '',
-  areaCode: null,
-  postalCode: null,
-  description: ''
+  name: ''
 }
 const form = ref<Region>({ ...initialValues })
 

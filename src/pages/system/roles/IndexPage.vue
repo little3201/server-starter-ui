@@ -39,9 +39,7 @@ const filters = ref({
 
 const formRef = ref<FormInstance>()
 const initialValues: Role = {
-  name: '',
-  privileges: undefined,
-  description: ''
+  name: ''
 }
 const form = ref<Role>({ ...initialValues })
 
