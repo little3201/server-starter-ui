@@ -8,8 +8,6 @@ import sql from 'highlight.js/lib/languages/sql'
 import json from 'highlight.js/lib/languages/json'
 import xml from 'highlight.js/lib/languages/xml'
 
-import 'highlight.js/styles/github.min.css'
-
 // register the languages
 hljs.registerLanguage('handlebars', handlebars)
 hljs.registerLanguage('javascript', javascript)

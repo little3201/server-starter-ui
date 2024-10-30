@@ -10,8 +10,9 @@ import { accessLogsHandlers } from './access-logs'
 import { auditLogsHandlers } from './audit-logs'
 import { schedulerLogsHandlers } from './scheduler-logs'
 import { filesHandlers } from './files'
-import { tablesHandlers } from './tables'
+import { schemasHandlers } from './schemas'
 import { scriptsHandlers } from './scripts'
+import { templatesHandlers } from './templates'
 
 export const handlers = [
   ...authenticationHandlers,
@@ -26,6 +27,7 @@ export const handlers = [
   ...auditLogsHandlers,
   ...schedulerLogsHandlers,
   ...filesHandlers,
-  ...tablesHandlers,
-  ...scriptsHandlers
+  ...schemasHandlers,
+  ...scriptsHandlers,
+  ...templatesHandlers
 ]

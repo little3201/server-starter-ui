@@ -19,5 +19,6 @@ export const SERVER_URL = {
 
   // exploiter
   SCRIPT: '/scripts', // 脚本
-  TABLE: '/tables' // 表
+  SCHEMA: '/schemas', // 表
+  TEMPLATE: '/templates' // 模板
 }

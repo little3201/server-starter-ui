@@ -382,14 +382,15 @@ function visibleActions(actions: string[]) {
   </DialogView>
 </template>
 
-<style lang="scss" scoped>
+<style lang="scss">
 .name-cell {
   .cell {
     display: inline-flex;
     align-items: center;
   }
 }
-
+</style>
+<style lang="scss" scoped>
 .el-badge {
   display: inline-flex;
   vertical-align: baseline;

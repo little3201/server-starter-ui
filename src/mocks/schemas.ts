@@ -1,12 +1,12 @@
 import { http, HttpResponse } from 'msw'
 import { SERVER_URL } from 'src/api/paths'
-import type { Table, Column, Code } from 'src/models'
+import type { Schema, Field, Code } from 'src/models'
 
-const datas: Table[] = [
+const datas: Schema[] = [
 ]
 
 for (let i = 1; i < 28; i++) {
-  const data: Table = {
+  const data: Schema = {
     id: i,
     name: 'table_name' + i,
     comment: '表名称_' + i,
@@ -15,10 +15,10 @@ for (let i = 1; i < 28; i++) {
   datas.push(data)
 }
 
-const columnDatas: Column[] = []
+const columnDatas: Field[] = []
 
 for (let i = 1; i < 28; i++) {
-  const data: Column = {
+  const data: Field = {
     id: i,
     name: 'column_name' + i,
     comment: '属性名称_' + i,
@@ -33,7 +33,7 @@ for (let i = 1; i < 28; i++) {
 
 const codes: Code[] = [
   {
-    name: 'Index',
+    name: 'IndexPage',
     content: "<template>\n  <div class=\"app-container\">\n    <!--工具栏-->\n    <div class=\"head-container\">\n      <!--如果想在工具栏加入更多按钮，可以使用插槽方式， slot = 'left' or 'right'-->\n      <crudOperation :permission=\"permission\" />\n      <!--表单组件-->\n      <el-dialog :close-on-click-modal=\"false\" :before-close=\"crud.cancelCU\" :visible.sync=\"crud.status.cu > 0\" :title=\"crud.status.title\" width=\"500px\">\n        <el-form ref=\"form\" :model=\"form\" :rules=\"rules\" size=\"small\" label-width=\"80px\">\n          <el-form-item label=\"用户ID\" prop=\"userId\">\n            未设置字典，请手动设置 Select\n          </el-form-item>\n          <el-form-item label=\"岗位ID\" prop=\"jobId\">\n            未设置字典，请手动设置 Select\n          </el-form-item>\n        </el-form>\n        <div slot=\"footer\" class=\"dialog-footer\">\n          <el-button type=\"text\" @click=\"crud.cancelCU\">取消</el-button>\n          <el-button :loading=\"crud.status.cu === 2\" type=\"primary\" @click=\"crud.submitCU\">确认</el-button>\n        </div>\n      </el-dialog>\n      <!--表格渲染-->\n      <el-table ref=\"table\" v-loading=\"crud.loading\" :data=\"crud.data\" size=\"small\" style=\"width: 100%;\" @selection-change=\"crud.selectionChangeHandler\">\n        <el-table-column type=\"selection\" width=\"55\" />\n        <el-table-column prop=\"userId\" label=\"用户ID\" />\n        <el-table-column prop=\"jobId\" label=\"岗位ID\" />\n        <el-table-column v-if=\"checkPer(['admin','sysUsersJobs:edit','sysUsersJobs:del'])\" label=\"操作\" width=\"150px\" align=\"center\">\n          <template slot-scope=\"scope\">\n            <udOperation\n              :data=\"scope.row\"\n              :permission=\"permission\"\n            />\n          </template>\n        </el-table-column>\n      </el-table>\n      <!--分页组件-->\n      <pagination />\n    </div>\n  </div>\n</template>\n\n<script>\nimport crudSysUsersJobs from '@/api/sysUsersJobs'\nimport CRUD, { presenter, header, form, crud } from '@crud/crud'\nimport rrOperation from '@crud/RR.operation'\nimport crudOperation from '@crud/CRUD.operation'\nimport udOperation from '@crud/UD.operation'\nimport pagination from '@crud/Pagination'\n\nconst defaultForm = { userId: null, jobId: null }\nexport default {\n  name: 'SysUsersJobs',\n  components: { pagination, crudOperation, rrOperation, udOperation },\n  mixins: [presenter(), header(), form(defaultForm), crud()],\n  cruds() {\n    return CRUD({ title: 'bannerInter', url: 'api/sysUsersJobs', idField: 'jobId', sort: 'jobId,desc', crudMethod: { ...crudSysUsersJobs }})\n  },\n  data() {\n    return {\n      permission: {\n        add: ['admin', 'sysUsersJobs:add'],\n        edit: ['admin', 'sysUsersJobs:edit'],\n        del: ['admin', 'sysUsersJobs:del']\n      },\n      rules: {\n        userId: [\n          { required: true, message: '用户ID不能为空', trigger: 'blur' }\n        ],\n        jobId: [\n          { required: true, message: '岗位ID不能为空', trigger: 'blur' }\n        ]\n      }    }\n  },\n  methods: {\n    // 钩子：在获取表格数据之前执行，false 则代表不获取数据\n    [CRUD.HOOK.beforeRefresh]() {\n      return true\n    }\n  }\n}\n</script>\n\n<style scoped>\n\n</style>\n"
   },
   {
@@ -66,8 +66,8 @@ const codes: Code[] = [
   }
 ]
 
-export const tablesHandlers = [
-  http.get(`/api${SERVER_URL.TABLE}/:id/codes`, ({ params }) => {
+export const schemasHandlers = [
+  http.get(`/api${SERVER_URL.SCHEMA}/:id/codes`, ({ params }) => {
     const { id } = params
     if (id) {
       return HttpResponse.json(codes)
@@ -75,7 +75,7 @@ export const tablesHandlers = [
       return HttpResponse.json(null)
     }
   }),
-  http.get(`/api${SERVER_URL.TABLE}/:id/columns`, ({ params }) => {
+  http.get(`/api${SERVER_URL.SCHEMA}/:id/columns`, ({ params }) => {
     const { id } = params
     if (id) {
       return HttpResponse.json(columnDatas)
@@ -83,7 +83,7 @@ export const tablesHandlers = [
       return HttpResponse.json(null)
     }
   }),
-  http.get(`/api${SERVER_URL.TABLE}/:id`, ({ params }) => {
+  http.get(`/api${SERVER_URL.SCHEMA}/:id`, ({ params }) => {
     const { id } = params
     if (id) {
       return HttpResponse.json(datas.filter(item => item.id === Number(id))[0])
@@ -91,7 +91,7 @@ export const tablesHandlers = [
       return HttpResponse.json(null)
     }
   }),
-  http.get(`/api${SERVER_URL.TABLE}`, ({ request }) => {
+  http.get(`/api${SERVER_URL.SCHEMA}`, ({ request }) => {
     const url = new URL(request.url)
     const page = url.searchParams.get('page')
     const size = url.searchParams.get('size')
@@ -106,7 +106,7 @@ export const tablesHandlers = [
 
     return HttpResponse.json(data)
   }),
-  http.delete(`/api${SERVER_URL.TABLE}/:id`, ({ params }) => {
+  http.delete(`/api${SERVER_URL.SCHEMA}/:id`, ({ params }) => {
     // All request path params are provided in the "params"
     // argument of the response resolver.
     const { id } = params

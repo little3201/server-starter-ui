@@ -192,6 +192,18 @@ const subDatas: Privilege[] = [
     enabled: true,
     icon: 'i-material-symbols:terminal-rounded',
     description: 'this is description for this row'
+  },
+  {
+    id: 19,
+    superiorId: 16,
+    path: 'templates',
+    name: 'templates',
+    component: 'pages/exploiter/templates/IndexPage',
+    actions: ['add', 'edit', 'remove', 'import', 'export'],
+    count: 0,
+    enabled: true,
+    icon: 'i-material-symbols:terminal-rounded',
+    description: 'this is description for this row'
   }
 ]
 
@@ -344,6 +356,15 @@ const treeNodes: PrivilegeTreeNode[] = [
         meta: {
           path: 'deploy',
           component: 'pages/exploiter/deploy/IndexPage',
+          icon: 'i-material-symbols:terminal-rounded'
+        }
+      },
+      {
+        id: 19,
+        name: 'templates',
+        meta: {
+          path: 'templates',
+          component: 'pages/exploiter/templates/IndexPage',
           icon: 'i-material-symbols:terminal-rounded'
         }
       }

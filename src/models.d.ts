@@ -160,13 +160,13 @@ export interface FileRecord extends AudtiMetadata {
   size: number
 }
 
-export interface Table extends AudtiMetadata {
+export interface Schema extends AudtiMetadata {
   name: string
   comment: string
   description: string
 }
 
-export interface Column extends AudtiMetadata {
+export interface Field extends AudtiMetadata {
   name: string
   type: string
   length: number
@@ -179,6 +179,12 @@ export interface Column extends AudtiMetadata {
 export interface Code extends AudtiMetadata {
   name: string
   content: string
+}
+
+export interface Template extends AudtiMetadata {
+  name: string
+  content: string
+  type: string
 }
 
 export interface Script extends AudtiMetadata {

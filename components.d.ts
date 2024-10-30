@@ -8,6 +8,7 @@ export {}
 declare module 'vue' {
   export interface GlobalComponents {
     ChartView: typeof import('./src/components/ChartView.vue')['default']
+    CodeView: typeof import('./src/components/CodeView.vue')['default']
     ConfigGlobal: typeof import('./src/components/ConfigGlobal.vue')['default']
     DialogView: typeof import('./src/components/DialogView.vue')['default']
     ElAside: typeof import('element-plus/es')['ElAside']
