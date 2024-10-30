@@ -22,12 +22,13 @@ watchEffect(() => {
   } else {
     import('highlight.js/styles//base16/summerfruit-light.min.css')
   }
+
   rendered.value = hljs.highlightAuto(props.content).value
 })
 </script>
 
 <template>
-  <div id="preview">
+  <section>
     <pre><code class="hljs" v-html="rendered"></code></pre>
-  </div>
+  </section>
 </template>

@@ -114,6 +114,7 @@ export default {
   exploiter: 'Exploiter',
   generator: 'Generator',
   deploy: 'Deploy',
+  templates: 'Templates',
 
   inputText: 'Please input {field}',
   selectText: 'Please select {field}',

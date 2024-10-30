@@ -114,6 +114,7 @@ export default {
   exploiter: '开发工具',
   generator: '代码生成',
   deploy: '部署脚本',
+  templates: '开发模板',
 
   inputText: '请输入{field}',
   selectText: '请选择{field}',
