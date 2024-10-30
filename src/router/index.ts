@@ -1,11 +1,8 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import type { RouteRecordRaw } from 'vue-router'
 import { constantRouterMap } from './routes'
-import ProgressBar from '@badrap/bar-of-progress'
 import { useUserStore } from 'stores/user-store'
 import type { PrivilegeTreeNode } from 'src/models'
-
-const progress = new ProgressBar({ color: '#1677ff' })
 
 // Lazy load layout
 const BlankLayout = () => import('layouts/BlankLayout.vue')
@@ -20,7 +17,6 @@ const router = createRouter({
 
 // Router guard for authentication and dynamic route registration
 router.beforeEach(async (to, from, next) => {
-  progress.start()
   const accessToken = localStorage.getItem('access_token')
   const userStore = useUserStore()
 
@@ -53,10 +49,6 @@ router.beforeEach(async (to, from, next) => {
       next(`/login?redirect=${to.path}`)
     }
   }
-})
-
-router.afterEach(() => {
-  progress.finish()
 })
 
 /**
