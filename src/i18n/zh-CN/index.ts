@@ -121,6 +121,7 @@ export default {
   lengthRange: '长度在 {min} 到 {max} 个字符',
   removeConfirm: '是否确定要删除这条数据？',
 
+  alreadyExists: '{field}已存在',
   notFound: '资源未找到',
   serverError: '服务器错误',
   error: '发生错误',

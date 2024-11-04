@@ -23,6 +23,16 @@ export const fetchRegion = (id: number) => {
 }
 
 /**
+ * Check if a specific row exists by name
+ * @param superiorId Row ID
+ * @param name Row name
+ * @returns Row data
+ */
+export const checkRegionExist = (superiorId: number, name: string) => {
+  return api.get(`${SERVER_URL.REGION}/${superiorId}/exist`, { params: { name } })
+}
+
+/**
  * Create a new row
  * @param row Row data
  * @returns Created row
@@ -39,6 +49,15 @@ export const createRegion = (row: Region) => {
  */
 export const modifyRegion = (id: number, row: Region) => {
   return api.put(`${SERVER_URL.REGION}/${id}`, row)
+}
+
+/**
+ * Enable or Disable an existing row
+ * @param id Row ID
+ * @returns Enable or Disable result
+ */
+export const enableRegion = (id: number) => {
+  return api.patch(`${SERVER_URL.REGION}/${id}`)
 }
 
 /**

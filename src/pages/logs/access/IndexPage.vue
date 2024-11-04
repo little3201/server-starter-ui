@@ -34,7 +34,7 @@ const methods: { [key: string]: string } = {
 }
 
 const detailLoading = ref<boolean>(false)
-const row = ref<AccessLog>({
+const initialValues: AccessLog = {
   id: undefined,
   operator: '',
   url: '',
@@ -42,7 +42,8 @@ const row = ref<AccessLog>({
   ip: '',
   location: '',
   responseMessage: ''
-})
+}
+const row = ref<AccessLog>({ ...initialValues })
 
 const dialogVisible = ref<boolean>(false)
 /**
@@ -97,6 +98,7 @@ onMounted(() => {
  * @param id 主键
  */
 function showRow(id: number) {
+  row.value = { ...initialValues }
   dialogVisible.value = true
   loadOne(id)
 }

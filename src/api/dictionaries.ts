@@ -39,6 +39,16 @@ export const fetchDictionary = (id: number) => {
 }
 
 /**
+ * Check if a specific row exists by name
+ * @param superiorId Row ID
+ * @param name Row name
+ * @returns Row data
+ */
+export const checkDictionaryExist = (superiorId: number, name: string) => {
+  return api.get(`${SERVER_URL.DICTIONARY}/${superiorId}/exist`, { params: { name } })
+}
+
+/**
  * Create a new row
  * @param row Row data
  * @returns Created row
@@ -55,6 +65,15 @@ export const createDictionary = (row: Dictionary) => {
  */
 export const modifyDictionary = (id: number, row: Dictionary) => {
   return api.put(`${SERVER_URL.DICTIONARY}/${id}`, row)
+}
+
+/**
+ * Enable or Disable an existing row
+ * @param id Row ID
+ * @returns Enable or Disable result
+ */
+export const enableDictionary = (id: number) => {
+  return api.patch(`${SERVER_URL.DICTIONARY}/${id}`)
 }
 
 /**

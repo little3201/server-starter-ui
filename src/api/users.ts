@@ -32,6 +32,15 @@ export const fetchMe = () => {
 }
 
 /**
+ * Check if a specific row exists by username
+ * @param username Row username
+ * @returns Row data
+ */
+export const checkUserExist = (username: string) => {
+  return api.get(`${SERVER_URL.USER}/exist`, { params: { username } })
+}
+
+/**
  * Create a new row
  * @param row Row data
  * @returns Created row

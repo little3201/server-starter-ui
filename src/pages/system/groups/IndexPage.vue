@@ -1,12 +1,18 @@
 <script setup lang="ts">
 import { ref, reactive, onMounted, watch } from 'vue'
 import type { FormInstance, FormRules, TreeInstance } from 'element-plus'
+import type { InternalRuleItem } from 'async-validator/dist-types/interface'
 import draggable from 'vuedraggable'
+import { useI18n } from 'vue-i18n'
 import DialogView from 'components/DialogView.vue'
-import { retrieveGroups, retrieveGroupMembers, retrieveGroupTree, fetchGroup, createGroup, modifyGroup, removeGroup } from 'src/api/groups'
+import {
+  retrieveGroups, retrieveGroupMembers, retrieveGroupTree,
+  fetchGroup, createGroup, modifyGroup, removeGroup, enableGroup, checkGroupExist
+} from 'src/api/groups'
 import { retrieveUsers } from 'src/api/users'
 import type { Pagination, Group, TreeNode, GroupMembers } from 'src/models'
 
+const { t } = useI18n()
 const loading = ref<boolean>(false)
 const datas = ref<Array<Group>>([])
 const total = ref<number>(0)
@@ -46,9 +52,20 @@ const form = ref<Group>({ ...initialValues })
 
 const rules = reactive<FormRules<typeof form>>({
   name: [
-    { required: true, trigger: 'blur' }
+    { required: true, message: t('inputText', { field: t('name') }), trigger: 'blur' },
+    { validator: checkNameExistence, trigger: 'blur' }
   ]
 })
+
+function checkNameExistence(rule: InternalRuleItem, value: string, callback: (error?: string | Error) => void) {
+  checkGroupExist(value).then(res => {
+    if (res.data) {
+      callback(new Error(t('alreadyExists', { field: t('name') })))
+    } else {
+      callback()
+    }
+  })
+}
 
 const relations = ref<Array<string>>([])
 
@@ -176,10 +193,17 @@ async function loadOne(id: number) {
 }
 
 /**
+ * 启用、停用
+ * @param id 主键
+ */
+async function enableChange(id: number) {
+  enableGroup(id).then(() => { load() })
+}
+
+/**
  * 表单提交
  */
-function onSubmit() {
-  const formEl = formRef.value
+function onSubmit(formEl: FormInstance | undefined) {
   if (!formEl) return
 
   formEl.validate((valid) => {
@@ -340,7 +364,7 @@ function handleCheckedChange(value: string[]) {
             <ElTableColumn prop="name" :label="$t('name')" />
             <ElTableColumn prop="enabled" :label="$t('enabled')">
               <template #default="scope">
-                <ElSwitch size="small" v-model="scope.row.enabled"
+                <ElSwitch size="small" v-model="scope.row.enabled" @change="enableChange(scope.row.id)"
                   style="--el-switch-on-color: var(--el-color-success);" />
               </template>
             </ElTableColumn>
@@ -392,7 +416,7 @@ function handleCheckedChange(value: string[]) {
       <ElButton @click="dialogVisible = false">
         <div class="i-material-symbols:close" />{{ $t('cancel') }}
       </ElButton>
-      <ElButton type="primary" :loading="saveLoading" @click="onSubmit">
+      <ElButton type="primary" :loading="saveLoading" @click="onSubmit(formRef)">
         <div class="i-material-symbols:check-circle-outline-rounded" /> {{ $t('submit') }}
       </ElButton>
     </template>

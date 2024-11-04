@@ -26,14 +26,15 @@ const filters = ref({
 })
 
 const detailLoading = ref<boolean>(false)
-const row = ref<OperationLog>({
+const initialValues: OperationLog = {
   id: undefined,
   operation: '',
   content: '',
   ip: '',
   location: '',
   operator: ''
-})
+}
+const row = ref<OperationLog>({ ...initialValues })
 
 const dialogVisible = ref<boolean>(false)
 /**
@@ -87,6 +88,7 @@ onMounted(() => {
  * @param id 主键
  */
 function showRow(id: number) {
+  row.value = { ...initialValues }
   dialogVisible.value = true
   loadOne(id)
 }

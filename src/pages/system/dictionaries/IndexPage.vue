@@ -2,11 +2,13 @@
 import { ref, reactive, onMounted } from 'vue'
 import type { FormInstance, FormRules } from 'element-plus'
 import draggable from 'vuedraggable'
+import { useI18n } from 'vue-i18n'
 import DialogView from 'components/DialogView.vue'
 import SubPage from './SubPage.vue'
-import { retrieveDictionaries, fetchDictionary, modifyDictionary } from 'src/api/dictionaries'
+import { retrieveDictionaries, fetchDictionary, modifyDictionary, enableDictionary } from 'src/api/dictionaries'
 import type { Pagination, Dictionary } from 'src/models'
 
+const { t } = useI18n()
 const loading = ref<boolean>(false)
 const datas = ref<Array<Dictionary>>([])
 const total = ref<number>(0)
@@ -36,7 +38,7 @@ const form = ref<Dictionary>({ ...initialValues })
 
 const rules = reactive<FormRules<typeof form>>({
   name: [
-    { required: true, trigger: 'blur' }
+    { required: true, message: t('inputText', { field: t('name') }), trigger: 'blur' }
   ]
 })
 
@@ -105,10 +107,17 @@ async function loadOne(id: number) {
 }
 
 /**
+ * 启用、停用
+ * @param id 主键
+ */
+async function enableChange(id: number) {
+  enableDictionary(id).then(() => { load() })
+}
+
+/**
  * 表单提交
  */
-function onSubmit() {
-  const formEl = formRef.value
+function onSubmit(formEl: FormInstance | undefined) {
   if (!formEl) return
 
   formEl.validate((valid) => {
@@ -224,7 +233,8 @@ function handleCheckedChange(value: string[]) {
         <ElTableColumn prop="name" :label="$t('name')" />
         <ElTableColumn prop="enabled" :label="$t('enabled')">
           <template #default="scope">
-            <ElSwitch size="small" v-model="scope.row.enabled" style="--el-switch-on-color: var(--el-color-success);" />
+            <ElSwitch size="small" v-model="scope.row.enabled" @change="enableChange(scope.row.id)"
+              style="--el-switch-on-color: var(--el-color-success);" />
           </template>
         </ElTableColumn>
         <ElTableColumn show-overflow-tooltip prop="description" :label="$t('description')" />
@@ -262,7 +272,7 @@ function handleCheckedChange(value: string[]) {
       <ElButton @click="dialogVisible = false">
         <div class="i-material-symbols:close" />{{ $t('cancel') }}
       </ElButton>
-      <ElButton type="primary" :loading="saveLoading" @click="onSubmit">
+      <ElButton type="primary" :loading="saveLoading" @click="onSubmit(formRef)">
         <div class="i-material-symbols:check-circle-outline-rounded" /> {{ $t('submit') }}
       </ElButton>
     </template>

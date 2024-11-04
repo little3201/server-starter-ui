@@ -28,7 +28,7 @@ const form = reactive({
 
 const rules = reactive<FormRules<typeof form>>({
   username: [
-    { required: true, message: t('inputText', { field: 'username' }), trigger: 'blur' },
+    { required: true, message: t('inputText', { field: t('username') }), trigger: 'blur' },
     { min: 5, max: 12, message: t('lengthRange', { min: 5, max: 12 }), trigger: 'blur' }
   ],
   password: [

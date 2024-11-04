@@ -3,8 +3,9 @@ import { ref, reactive, onMounted } from 'vue'
 import type { FormInstance, FormRules } from 'element-plus'
 import draggable from 'vuedraggable'
 import DialogView from 'components/DialogView.vue'
-import { retrievePrivileges, retrievePrivilegeSubset, fetchPrivilege } from 'src/api/privileges'
+import { retrievePrivileges, retrievePrivilegeSubset, fetchPrivilege, modifyPrivilege, enablePrivilege } from 'src/api/privileges'
 import type { Pagination, Privilege } from 'src/models'
+import { visibleArray } from 'src/utils'
 
 const loading = ref<boolean>(false)
 const datas = ref<Array<Privilege>>([])
@@ -144,30 +145,27 @@ async function loadOne(id: number) {
   })
 }
 
+async function enableChange(id: number) {
+  enablePrivilege(id).then(() => { load() })
+}
+
 /**
  * 表单提交
  */
-function onSubmit() {
-  const formEl = formRef.value
+async function onSubmit(formEl: FormInstance | undefined) {
   if (!formEl) return
 
   formEl.validate((valid) => {
     if (valid) {
       saveLoading.value = true
-    } else {
-      console.log('error submit!')
+      if (form.value.id) {
+        modifyPrivilege(form.value.id, form.value).then(res => {
+          load(res.data)
+          dialogVisible.value = false
+        }).finally(() => { saveLoading.value = false })
+      }
     }
   })
-}
-
-/**
- * expand 回调
- * @param row 数据行
- * @param expanded 是否展开
- */
-function expandChange(row: Privilege, expanded: boolean) {
-  console.log('row: ', row)
-  console.log('expanded: ', expanded)
 }
 
 /**
@@ -189,9 +187,6 @@ function handleCheckedChange(value: string[]) {
   isIndeterminate.value = checkedCount > 0 && checkedCount < columns.value.length
 }
 
-function visibleActions(actions: string[]) {
-  return actions.length > 3 ? actions.slice(0, 3) : actions
-}
 </script>
 
 <template>
@@ -266,8 +261,7 @@ function visibleActions(actions: string[]) {
         </ElCol>
       </ElRow>
 
-      <ElTable v-loading="loading" :data="datas" lazy :load="load" row-key="id" stripe table-layout="auto"
-        @expand-change="expandChange">
+      <ElTable v-loading="loading" :data="datas" lazy :load="load" row-key="id" stripe table-layout="auto">
         <ElTableColumn type="selection" width="55" />
         <ElTableColumn prop="name" :label="$t('name')" class-name="name-cell">
           <template #default="scope">
@@ -280,7 +274,7 @@ function visibleActions(actions: string[]) {
         <ElTableColumn prop="actions" :label="$t('actions')">
           <template #default="scope">
             <template v-if="scope.row.actions && scope.row.actions.length > 0">
-              <ElTag v-for="(action, index) in visibleActions(scope.row.actions)" :key="index" :type="actions[action]"
+              <ElTag v-for="(action, index) in visibleArray(scope.row.actions, 3)" :key="index" :type="actions[action]"
                 class="mr-2">
                 {{ $t(action) }}
               </ElTag>
@@ -300,7 +294,8 @@ function visibleActions(actions: string[]) {
         </ElTableColumn>
         <ElTableColumn prop="enabled" :label="$t('enabled')">
           <template #default="scope">
-            <ElSwitch size="small" v-model="scope.row.enabled" style="--el-switch-on-color: var(--el-color-success);" />
+            <ElSwitch size="small" v-model="scope.row.enabled" @change="enableChange(scope.row.id)"
+              style="--el-switch-on-color: var(--el-color-success);" />
           </template>
         </ElTableColumn>
         <ElTableColumn show-overflow-tooltip prop="description" :label="$t('description')" />
@@ -343,7 +338,7 @@ function visibleActions(actions: string[]) {
         <ElCol :span="12">
           <ElFormItem :label="$t('redirect')" prop="redirect">
             <ElInput v-model="form.redirect" :placeholder="$t('inputText', { field: $t('redirect') })"
-              :disabled="form.superiorId" />
+              :disabled="!!form.superiorId" />
           </ElFormItem>
         </ElCol>
       </ElRow>
@@ -352,13 +347,23 @@ function visibleActions(actions: string[]) {
           <ElFormItem :label="$t('actions')" prop="meta.actions">
             <!-- width 相对body设置, popover默认设置了 position: absolute -->
             <ElSelect multiple v-model="form.actions" :placeholder="$t('selectText', { field: $t('actions') })">
-              <ElOption value="add" :label="$t('add')" />
-              <ElOption value="edit" :label="$t('edit')" />
+              <ElOption v-if="form.name !== 'files' && !form.name.includes('Log')" value="add" :label="$t('add')" />
+              <ElOption v-if="form.name !== 'files' && !form.name.includes('Log')" value="edit" :label="$t('edit')" />
               <ElOption value="remove" :label="$t('remove')" />
-              <ElOption value="import" :label="$t('import')" />
-              <ElOption value="export" :label="$t('export')" />
+              <ElOption v-if="form.name !== 'files' && !form.name.includes('Log')" value="import"
+                :label="$t('import')" />
+              <ElOption v-if="form.name !== 'files'" value="export" :label="$t('export')" />
               <ElOption v-if="form.name === 'groups' || form.name === 'roles'" value="relation"
                 :label="$t('relation')" />
+              <ElOption v-if="form.name.includes('Log')" value="clear" :label="$t('clear')" />
+              <ElOption v-if="form.name.includes('Log')" value="detail" :label="$t('detail')" />
+              <ElOption v-if="form.name === 'generator'" value="config" :label="$t('config')" />
+              <ElOption v-if="form.name === 'generator' || form.name === 'templates'" value="preview"
+                :label="$t('preview')" />
+              <template v-if="form.name === 'files'">
+                <ElOption value="upload" :label="$t('upload')" />
+                <ElOption value="download" :label="$t('download')" />
+              </template>
             </ElSelect>
           </ElFormItem>
         </ElCol>
@@ -375,7 +380,7 @@ function visibleActions(actions: string[]) {
       <ElButton @click="dialogVisible = false">
         <div class="i-material-symbols:close" />{{ $t('cancel') }}
       </ElButton>
-      <ElButton type="primary" :loading="saveLoading" @click="onSubmit">
+      <ElButton type="primary" :loading="saveLoading" @click="onSubmit(formRef)">
         <div class="i-material-symbols:check-circle-outline-rounded" /> {{ $t('submit') }}
       </ElButton>
     </template>

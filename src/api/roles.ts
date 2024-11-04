@@ -39,6 +39,15 @@ export const fetchRole = (id: number) => {
 }
 
 /**
+ * Check if a specific row exists by name
+ * @param name Row name
+ * @returns Row data
+ */
+export const checkRoleExist = (name: string) => {
+  return api.get(`${SERVER_URL.ROLE}/exist`, { params: { name } })
+}
+
+/**
  * Create a new row
  * @param row Row data
  * @returns Created row

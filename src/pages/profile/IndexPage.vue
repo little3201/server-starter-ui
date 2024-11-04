@@ -26,13 +26,12 @@ const activities = ref([
 const activeTab = ref('overview')
 
 const formRef = ref<FormInstance>()
-
-// 密码修改表单
-const passwordForm = ref({
+const initialValues = {
   oldPassword: '',
   newPassword: '',
   confirmPassword: ''
-})
+}
+const form = ref({ ...initialValues })
 
 // 表单验证规则
 const rules = ref({
@@ -47,55 +46,8 @@ function seeMore(id: number) {
   console.log(id)
 }
 
-// 密码强度检测相关状态
-const strengthPercent = ref(0)
-const passwordStrengthText = ref('')
-const strengthClass = ref('')
-
-// 密码强度检测
-const checkPasswordStrength = () => {
-  const password = passwordForm.value.newPassword
-  if (!password) {
-    strengthPercent.value = 0
-    passwordStrengthText.value = ''
-    return
-  }
-
-  let strength = 0
-  if (/[a-z]/.test(password)) strength += 1
-  if (/[A-Z]/.test(password)) strength += 1
-  if (/[0-9]/.test(password)) strength += 1
-  if (/[^a-zA-Z0-9]/.test(password)) strength += 1
-
-  strengthPercent.value = (strength / 4) * 100
-
-  switch (strength) {
-    case 1:
-      passwordStrengthText.value = 'Weak'
-      strengthClass.value = 'bg-red-500'
-      break
-    case 2:
-      passwordStrengthText.value = 'Fair'
-      strengthClass.value = 'bg-yellow-500'
-      break
-    case 3:
-      passwordStrengthText.value = 'Good'
-      strengthClass.value = 'bg-blue-500'
-      break
-    case 4:
-      passwordStrengthText.value = 'Strong'
-      strengthClass.value = 'bg-green-500'
-      break
-    default:
-      passwordStrengthText.value = ''
-      strengthClass.value = ''
-      break
-  }
-}
-
 // 提交密码修改
-function submitPasswordChange() {
-  const formEl = formRef.value
+async function onSubmit(formEl: FormInstance | undefined) {
   if (!formEl) return
 
   formEl.validate((valid) => {
@@ -182,30 +134,21 @@ function submitPasswordChange() {
           <!-- Change password -->
           <ElTabPane label="Change password" name="changePassword">
             <h3>Change Password</h3>
-            <ElForm ref="formRef" :model="passwordForm" :rules="rules" label-width="auto">
+            <ElForm ref="formRef" :model="form" :rules="rules" label-width="auto">
               <ElFormItem label="Old Password" prop="oldPassword">
-                <ElInput v-model="passwordForm.oldPassword" type="password" show-password></ElInput>
+                <ElInput v-model="form.oldPassword" type="password" show-password></ElInput>
               </ElFormItem>
 
               <ElFormItem label="New Password" prop="newPassword">
-                <ElInput v-model="passwordForm.newPassword" type="password" show-password
-                  @input="checkPasswordStrength">
-                  <!-- 密码强度条 -->
-                  <div v-if="passwordForm.newPassword" class="mt-2">
-                    <div class="h-2 bg-[#e0e0e0]">
-                      <div :class="strengthClass" :style="{ width: strengthPercent + '%' }"></div>
-                    </div>
-                    <p class="text-sm">{{ passwordStrengthText }}</p>
-                  </div>
-                </ElInput>
+                <ElInput v-model="form.newPassword" type="password" show-password />
               </ElFormItem>
 
               <ElFormItem label="Confirm Password" prop="confirmPassword">
-                <ElInput v-model="passwordForm.confirmPassword" type="password" show-password></ElInput>
+                <ElInput v-model="form.confirmPassword" type="password" show-password></ElInput>
               </ElFormItem>
 
               <ElFormItem>
-                <ElButton type="primary" @click="submitPasswordChange">Submit</ElButton>
+                <ElButton type="primary" @click="onSubmit(formRef)">Submit</ElButton>
               </ElFormItem>
             </ElForm>
           </ElTabPane>

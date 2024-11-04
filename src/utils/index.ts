@@ -6,7 +6,7 @@ import { dayjs } from 'element-plus'
  * @param {string} path - The child path
  * @returns {string} - The resolved path
  */
-export const pathResolve = (parentPath: string, path: string): string => {
+export function pathResolve(parentPath: string, path: string): string {
   if (!path) return ''
   const childPath = path.startsWith('/') ? path : `/${path}`
   return `${parentPath}${childPath}`.replace(/\/\//g, '/').trim()
@@ -18,7 +18,7 @@ export const pathResolve = (parentPath: string, path: string): string => {
  * @param {string} type - The type to match
  * @returns {boolean} - True if the value matches the type, otherwise false
  */
-export const is = (val: unknown, type: string): boolean => {
+function is(val: unknown, type: string): boolean {
   return Object.prototype.toString.call(val) === `[object ${type}]`
 }
 
@@ -27,7 +27,7 @@ export const is = (val: unknown, type: string): boolean => {
  * @param {unknown} val - The value to check
  * @returns {boolean} - True if the value is a string, otherwise false
  */
-export const isString = (val: unknown): val is string => {
+export function isString(val: unknown): val is string {
   return is(val, 'String')
 }
 
@@ -62,7 +62,7 @@ export function calculate(target: string): string {
  * @param {number} milliseconds - The duration in milliseconds
  * @returns {string} - The formatted duration
  */
-export const formatDuration = (milliseconds: number): string => {
+export function formatDuration(milliseconds: number): string {
   const timeUnits = [
     { unit: 'h', factor: 3600000 },
     { unit: 'min', factor: 60000 },
@@ -83,7 +83,7 @@ export const formatDuration = (milliseconds: number): string => {
  * @param {number} size - The file size in bytes
  * @returns {string} - The formatted file size
  */
-export const formatFileSize = (size: number): string => {
+export function formatFileSize(size: number): string {
   if (isNaN(size) || size <= 0) return '-'
   const units = ['B', 'KB', 'MB', 'GB', 'TB']
   let index = 0
@@ -92,4 +92,8 @@ export const formatFileSize = (size: number): string => {
     index++
   }
   return `${size.toFixed(2)}${units[index]}`
+}
+
+export function visibleArray(array: string[], count: number): string[] {
+  return array.length > count ? array.slice(0, count) : array
 }

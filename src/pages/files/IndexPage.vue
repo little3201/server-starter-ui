@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref, onMounted, reactive } from 'vue'
+import type { UploadInstance } from 'element-plus'
 import draggable from 'vuedraggable'
 import DialogView from 'components/DialogView.vue'
 import { dayjs } from 'element-plus'
@@ -21,6 +22,7 @@ const isIndeterminate = ref<boolean>(false)
 const checkedColumns = ref<Array<string>>(['name', 'type', 'size'])
 const columns = ref<Array<string>>(['name', 'type', 'size'])
 
+const uploadRef = ref<UploadInstance>()
 const uploadLoading = ref<boolean>(false)
 const dialogVisible = ref<boolean>(false)
 
@@ -90,7 +92,8 @@ function downloadRow(id: number) {
 /**
  * 提交
  */
-function onSubmit() {
+function onSubmit(uploadEl: UploadInstance | undefined) {
+  if (!uploadEl) return
   uploadLoading.value = true
 }
 
@@ -235,7 +238,7 @@ function handleCheckedChange(value: string[]) {
     </ElSpace>
 
     <DialogView v-model="dialogVisible" :title="$t('upload')" width="35%">
-      <ElUpload ref="upload" :limit="1" drag action="/api/upload">
+      <ElUpload ref="uploadRef" :limit="1" drag action="/api/upload">
         <div class="el-icon--upload inline-flex justify-center">
           <div class="i-material-symbols:upload-rounded" />
         </div>
@@ -252,7 +255,7 @@ function handleCheckedChange(value: string[]) {
         <ElButton @click="dialogVisible = false">
           <div class="i-material-symbols:close" />{{ $t('cancel') }}
         </ElButton>
-        <ElButton type="primary" :loading="uploadLoading" @click="onSubmit">
+        <ElButton type="primary" :loading="uploadLoading" @click="onSubmit(uploadRef)">
           <div class="i-material-symbols:check-circle-outline-rounded" /> {{ $t('submit') }}
         </ElButton>
       </template>

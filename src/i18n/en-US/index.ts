@@ -121,6 +121,7 @@ export default {
   lengthRange: 'The length must between {min} and {max}',
   removeConfirm: 'Are you sure to delete this?',
 
+  alreadyExists: '{field} already exists',
   notFound: 'Resource not found',
   serverError: 'Server error',
   error: 'An error occurred',

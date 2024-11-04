@@ -1,10 +1,16 @@
 <script setup lang="ts">
 import { ref, reactive, onMounted } from 'vue'
 import type { FormInstance, FormRules } from 'element-plus'
+import type { InternalRuleItem } from 'async-validator/dist-types/interface'
+import { useI18n } from 'vue-i18n'
 import DialogView from 'components/DialogView.vue'
-import { retrieveDictionarySubset, fetchDictionary, createDictionary, modifyDictionary, removeDictionary } from 'src/api/dictionaries'
+import {
+  retrieveDictionarySubset, fetchDictionary, createDictionary,
+  modifyDictionary, removeDictionary, enableDictionary, checkDictionaryExist
+} from 'src/api/dictionaries'
 import type { Dictionary } from 'src/models'
 
+const { t } = useI18n()
 const props = defineProps<{
   superiorId: number,
   title: string
@@ -25,9 +31,22 @@ const form = ref<Dictionary>({ ...initialValues })
 
 const rules = reactive<FormRules<typeof form>>({
   name: [
-    { required: true, trigger: 'blur' }
+    { required: true, message: t('inputText', { field: t('name') }), trigger: 'blur' },
+    { validator: checkNameExistence, trigger: 'blur' }
   ]
 })
+
+function checkNameExistence(rule: InternalRuleItem, value: string, callback: (error?: string | Error) => void) {
+  if (form.value.superiorId) {
+    checkDictionaryExist(form.value.superiorId, value).then(res => {
+      if (res.data) {
+        callback(new Error(t('alreadyExists', { field: t('name') })))
+      } else {
+        callback()
+      }
+    })
+  }
+}
 
 /**
  * 加载列表
@@ -66,10 +85,17 @@ async function loadOne(id: number) {
 }
 
 /**
+ * 启用、停用
+ * @param id 主键
+ */
+async function enableChange(id: number) {
+  enableDictionary(id).then(() => { load() })
+}
+
+/**
  * 表单提交
  */
-function onSubmit() {
-  const formEl = formRef.value
+function onSubmit(formEl: FormInstance | undefined) {
   if (!formEl) return
 
   formEl.validate((valid) => {
@@ -134,7 +160,8 @@ function confirmEvent(id: number) {
       <ElTableColumn prop="name" :label="$t('name')" />
       <ElTableColumn prop="enabled" :label="$t('enabled')">
         <template #default="scope">
-          <ElSwitch size="small" v-model="scope.row.enabled" style="--el-switch-on-color: var(--el-color-success);" />
+          <ElSwitch size="small" v-model="scope.row.enabled" @change="enableChange(scope.row.id)"
+            style="--el-switch-on-color: var(--el-color-success);" />
         </template>
       </ElTableColumn>
       <ElTableColumn show-overflow-tooltip prop="description" :label="$t('description')" />
@@ -155,7 +182,7 @@ function confirmEvent(id: number) {
     </ElTable>
   </ElCard>
 
-  <DialogView v-model="dialogVisible" :title="$t('dictionary')" width="25%">
+  <DialogView v-model="dialogVisible" :title="$t('dictionaries')" width="25%">
     <ElForm ref="formRef" :model="form" :rules="rules" label-position="top">
       <ElRow :gutter="20" class="w-full !mx-0">
         <ElCol :span="24">
@@ -177,7 +204,7 @@ function confirmEvent(id: number) {
       <ElButton @click="dialogVisible = false">
         <div class="i-material-symbols:close" />{{ $t('cancel') }}
       </ElButton>
-      <ElButton type="primary" :loading="saveLoading" @click="onSubmit">
+      <ElButton type="primary" :loading="saveLoading" @click="onSubmit(formRef)">
         <div class="i-material-symbols:check-circle-outline-rounded" /> {{ $t('submit') }}
       </ElButton>
     </template>

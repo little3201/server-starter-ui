@@ -1,13 +1,16 @@
 <script setup lang="ts">
 import { ref, reactive, onMounted } from 'vue'
 import type { FormInstance, FormRules } from 'element-plus'
+import type { InternalRuleItem } from 'async-validator/dist-types/interface'
 import { dayjs } from 'element-plus'
 import draggable from 'vuedraggable'
+import { useI18n } from 'vue-i18n'
 import DialogView from 'components/DialogView.vue'
-import { retrieveUsers, fetchUser, createUser, modifyUser, removeUser } from 'src/api/users'
+import { retrieveUsers, fetchUser, createUser, modifyUser, removeUser, enableUser, checkUserExist } from 'src/api/users'
 import type { Pagination, User } from 'src/models'
 import { calculate } from 'src/utils'
 
+const { t } = useI18n()
 const loading = ref<boolean>(false)
 const datas = ref<Array<User>>([])
 const total = ref<number>(0)
@@ -39,15 +42,26 @@ const form = ref<User>({ ...initialValues })
 
 const rules = reactive<FormRules<typeof form>>({
   username: [
-    { required: true, trigger: 'blur' }
+    { required: true, message: t('inputText', { field: t('uername') }), trigger: 'blur' },
+    { validator: checkNameExistence, trigger: 'blur' }
   ],
   fullName: [
-    { required: true, trigger: 'blur' }
+    { required: true, message: t('inputText', { field: t('fullName') }), trigger: 'blur' }
   ],
   email: [
-    { required: true, trigger: 'blur' }
+    { required: true, message: t('inputText', { field: t('email') }), trigger: 'blur' }
   ]
 })
+
+function checkNameExistence(rule: InternalRuleItem, value: string, callback: (error?: string | Error) => void) {
+  checkUserExist(value).then(res => {
+    if (res.data) {
+      callback(new Error(t('alreadyExists', { field: t('username') })))
+    } else {
+      callback()
+    }
+  })
+}
 
 /**
  * 分页变化
@@ -108,10 +122,17 @@ async function loadOne(id: number) {
 }
 
 /**
+ * 启用、停用
+ * @param id 主键
+ */
+async function enableChange(id: number) {
+  enableUser(id).then(() => { load() })
+}
+
+/**
  * 表单提交
  */
-function onSubmit() {
-  const formEl = formRef.value
+function onSubmit(formEl: FormInstance | undefined) {
   if (!formEl) return
 
   formEl.validate((valid) => {
@@ -258,7 +279,7 @@ function handleCheckedChange(value: string[]) {
         <ElTableColumn show-overflow-tooltip prop="username" :label="$t('username')">
           <template #default="scope">
             <div class="flex items-center">
-              <ElAvatar :size="30" :src="scope.row.avatar" class="flex-shrink-0" />
+              <ElAvatar alt="avatar" :size="30" :src="scope.row.avatar" />
               <div class="ml-2 inline-flex flex-col">
                 <span class="text-sm">{{ scope.row.fullName }}</span>
                 <span class="text-xs text-[var(--el-text-color-secondary)]">{{ scope.row.username }}</span>
@@ -276,7 +297,8 @@ function handleCheckedChange(value: string[]) {
         </ElTableColumn>
         <ElTableColumn prop="enabled" :label="$t('enabled')">
           <template #default="scope">
-            <ElSwitch size="small" v-model="scope.row.enabled" style="--el-switch-on-color: var(--el-color-success);" />
+            <ElSwitch size="small" v-model="scope.row.enabled" @change="enableChange(scope.row.id)"
+              style="--el-switch-on-color: var(--el-color-success);" />
           </template>
         </ElTableColumn>
         <ElTableColumn prop="accountExpiresAt" :label="$t('accountExpiresAt')">
@@ -326,7 +348,7 @@ function handleCheckedChange(value: string[]) {
         <ElCol :span="12">
           <ElFormItem :label="$t('username')" prop="username">
             <ElInput v-model="form.username" :placeholder="$t('inputText', { field: $t('username') })" :maxLength="50"
-              :disabled="form.id" />
+              :disabled="!!form.id" />
           </ElFormItem>
         </ElCol>
       </ElRow>
@@ -334,7 +356,7 @@ function handleCheckedChange(value: string[]) {
         <ElCol :span="24">
           <ElFormItem :label="$t('email')" prop="email">
             <ElInput type="email" v-model="form.email" :placeholder="$t('inputText', { field: $t('email') })"
-              :maxLength="50" :disabled="form.id" />
+              :maxLength="50" :disabled="!!form.id" />
           </ElFormItem>
         </ElCol>
       </ElRow>
@@ -355,7 +377,7 @@ function handleCheckedChange(value: string[]) {
       <ElButton @click="dialogVisible = false">
         <div class="i-material-symbols:close" />{{ $t('cancel') }}
       </ElButton>
-      <ElButton type="primary" :loading="saveLoading" @click="onSubmit">
+      <ElButton type="primary" :loading="saveLoading" @click="onSubmit(formRef)">
         <div class="i-material-symbols:check-circle-outline-rounded" /> {{ $t('submit') }}
       </ElButton>
     </template>
