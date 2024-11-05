@@ -97,3 +97,22 @@ export function formatFileSize(size: number): string {
 export function visibleArray(array: string[], count: number): string[] {
   return array.length > count ? array.slice(0, count) : array
 }
+
+export const actions: { [key: string]: 'primary' | 'success' | 'info' | 'warning' | 'danger' } = {
+  add: 'primary',
+  edit: 'primary',
+  upload: 'primary',
+
+  import: 'warning',
+
+  remove: 'danger',
+  clear: 'danger',
+
+  export: 'success',
+  relation: 'success',
+  config: 'success',
+  download: 'success',
+
+  preview: 'info',
+  detail: 'info'
+}

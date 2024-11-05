@@ -11,7 +11,7 @@ import {
 } from 'src/api/roles'
 import { retrievePrivilegeTree } from 'src/api/privileges'
 import { retrieveUsers } from 'src/api/users'
-import type { Pagination, Role, TreeNode, RoleMembers, RolePrivileges } from 'src/models'
+import type { Pagination, Role, RoleMembers, RolePrivileges, PrivilegeTreeNode } from 'src/models'
 
 const { t } = useI18n()
 const loading = ref<boolean>(false)
@@ -30,7 +30,7 @@ const columns = ref<Array<string>>(['name', 'enabled', 'description'])
 
 const treeEl = ref<TreeInstance>()
 const privilegeTreeLoading = ref<boolean>(false)
-const privilegeTree = ref<Array<TreeNode>>([])
+const privilegeTree = ref<Array<PrivilegeTreeNode>>([])
 const rolePrivileges = ref<Array<number>>([])
 
 const saveLoading = ref<boolean>(false)
@@ -68,6 +68,7 @@ function checkNameExistence(rule: InternalRuleItem, value: string, callback: (er
 
 const dataPrivilege = ref<number>(0)
 const relations = ref<Array<string>>([])
+const checkedActions = ref<Array<number>>([])
 
 async function loadUsers() {
   retrieveUsers({ page: 1, size: 99 }).then(res => { members.value = res.data.content })
@@ -359,9 +360,23 @@ function handleCheckedChange(value: string[]) {
                 node-key="id" :props="{ label: 'name' }" show-checkbox @check-change="handlePrivilegeCheckChange"
                 :default-checked-keys="rolePrivileges">
                 <template #default="{ node, data }">
-                  <div class="inline-flex items-center whitespace-nowrap overflow-ellipsis overflow-hidden">
-                    <div :class="data.icon" />
-                    <span class="ml-2">{{ $t(node.label) }}</span>
+                  <div class="flex flex-1 items-center justify-between">
+                    <div>
+                      <div :class="data.icon" />
+                      <span class="ml-2">{{ $t(node.label) }}</span>
+                    </div>
+
+                    <ElPopover v-if="data.meta.actions && data.meta.actions.length > 0" placement="top-start"
+                      trigger="hover" :width="100">
+                      <template #reference>
+                        {{ $t('actions') }}
+                      </template>
+                      <ElCheckboxGroup v-model="checkedActions">
+                        <ElCheckbox v-for="action in data.meta.actions" :key="action" :value="action" class="mb-2 mr-4">
+                          {{ $t(action) }}
+                        </ElCheckbox>
+                      </ElCheckboxGroup>
+                    </ElPopover>
                   </div>
                 </template>
               </ElTree>

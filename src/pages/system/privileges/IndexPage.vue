@@ -5,7 +5,7 @@ import draggable from 'vuedraggable'
 import DialogView from 'components/DialogView.vue'
 import { retrievePrivileges, retrievePrivilegeSubset, fetchPrivilege, modifyPrivilege, enablePrivilege } from 'src/api/privileges'
 import type { Pagination, Privilege } from 'src/models'
-import { visibleArray } from 'src/utils'
+import { visibleArray, actions } from 'src/utils'
 
 const loading = ref<boolean>(false)
 const datas = ref<Array<Privilege>>([])
@@ -15,25 +15,6 @@ const pagination = reactive<Pagination>({
   page: 1,
   size: 10
 })
-
-const actions: { [key: string]: string } = {
-  add: 'primary',
-  edit: 'primary',
-  upload: 'primary',
-
-  import: 'warning',
-
-  remove: 'danger',
-  clear: 'danger',
-
-  export: 'success',
-  relation: 'success',
-  config: 'success',
-  download: 'success',
-
-  preview: 'info',
-  detail: 'info'
-}
 
 const checkAll = ref<boolean>(true)
 const isIndeterminate = ref<boolean>(false)
