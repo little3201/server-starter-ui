@@ -1,3 +1,4 @@
+// @unocss-include
 import { http, HttpResponse } from 'msw'
 import { SERVER_URL } from 'src/api/paths'
 import type { Privilege, PrivilegeTreeNode } from 'src/models'
@@ -9,7 +10,7 @@ const datas: Privilege[] = [
     component: '#',
     redirect: '/system/users',
     name: 'system',
-    icon: 'i-material-symbols:settings-outline-rounded',
+    icon: 'settings-outline-rounded',
     count: 5,
     enabled: true,
     description: 'this is description for this row'
@@ -20,7 +21,7 @@ const datas: Privilege[] = [
     component: '#',
     redirect: '/logs/operation',
     name: 'logs',
-    icon: 'i-material-symbols:lab-profile-outline-rounded ',
+    icon: 'lab-profile-outline-rounded ',
     count: 3,
     enabled: true,
     description: 'this is description for this row'
@@ -30,7 +31,7 @@ const datas: Privilege[] = [
     path: 'regions',
     component: 'pages/regions/IndexPage',
     name: 'regions',
-    icon: 'i-material-symbols:location-on-outline-rounded',
+    icon: 'location-on-outline-rounded',
     actions: ['add', 'edit', 'remove', 'import', 'export'],
     count: 0,
     enabled: true,
@@ -41,7 +42,7 @@ const datas: Privilege[] = [
     path: 'files',
     component: 'pages/files/IndexPage',
     name: 'files',
-    icon: 'i-material-symbols:folder-open-outline-rounded',
+    icon: 'folder-open-outline-rounded',
     actions: ['upload', 'download', 'remove'],
     count: 0,
     enabled: true,
@@ -53,7 +54,7 @@ const datas: Privilege[] = [
     component: '#',
     name: 'exploiter',
     redirect: '/exploiter',
-    icon: 'i-material-symbols:build-outline-rounded',
+    icon: 'build-outline-rounded',
     count: 1,
     enabled: true,
     description: 'this is description for this row'
@@ -70,7 +71,7 @@ const subDatas: Privilege[] = [
     actions: ['add', 'edit', 'remove', 'import', 'export', 'relation'],
     count: 0,
     enabled: true,
-    icon: 'i-material-symbols:account-tree-outline-rounded',
+    icon: 'account-tree-outline-rounded',
     description: 'this is description for this row'
   },
   {
@@ -82,7 +83,7 @@ const subDatas: Privilege[] = [
     actions: ['add', 'edit', 'remove', 'import', 'export'],
     count: 0,
     enabled: true,
-    icon: 'i-material-symbols:person-outline-rounded',
+    icon: 'person-outline-rounded',
     description: 'this is description for this row'
   },
   {
@@ -94,7 +95,7 @@ const subDatas: Privilege[] = [
     actions: ['edit', 'import', 'export'],
     count: 0,
     enabled: true,
-    icon: 'i-material-symbols:admin-panel-settings-outline-rounded',
+    icon: 'admin-panel-settings-outline-rounded',
     description: 'this is description for this row'
   },
   {
@@ -106,7 +107,7 @@ const subDatas: Privilege[] = [
     actions: ['add', 'edit', 'remove', 'import', 'export', 'relation'],
     count: 0,
     enabled: true,
-    icon: 'i-material-symbols:shield-person-outline-rounded',
+    icon: 'shield-person-outline-rounded',
     description: 'this is description for this row'
   },
   {
@@ -118,7 +119,7 @@ const subDatas: Privilege[] = [
     actions: ['add', 'edit', 'remove', 'import', 'export'],
     count: 0,
     enabled: true,
-    icon: 'i-material-symbols:book-3-outline-rounded',
+    icon: 'book-3-outline-rounded',
     description: 'this is description for this row'
   },
   {
@@ -130,7 +131,7 @@ const subDatas: Privilege[] = [
     actions: ['clear', 'detail', 'export', 'remove'],
     count: 0,
     enabled: true,
-    icon: 'i-material-symbols:clinical-notes-outline-rounded',
+    icon: 'clinical-notes-outline-rounded',
     description: 'this is description for this row'
   },
   {
@@ -142,7 +143,7 @@ const subDatas: Privilege[] = [
     actions: ['clear', 'detail', 'export', 'remove'],
     count: 0,
     enabled: true,
-    icon: 'i-material-symbols:sticky-note-2-outline-rounded',
+    icon: 'sticky-note-2-outline-rounded',
     description: 'this is description for this row'
   },
   {
@@ -154,7 +155,7 @@ const subDatas: Privilege[] = [
     actions: ['detail', 'export'],
     count: 0,
     enabled: true,
-    icon: 'i-material-symbols:note-alt-outline-rounded',
+    icon: 'note-alt-outline-rounded',
     description: 'this is description for this row'
   },
   {
@@ -166,7 +167,7 @@ const subDatas: Privilege[] = [
     actions: ['clear', 'detail', 'export', 'remove'],
     count: 0,
     enabled: true,
-    icon: 'i-material-symbols:event-note-outline-rounded',
+    icon: 'event-note-outline-rounded',
     description: 'this is description for this row'
   },
   {
@@ -178,7 +179,7 @@ const subDatas: Privilege[] = [
     actions: ['add', 'edit', 'remove', 'import', 'export', 'config', 'preview'],
     count: 0,
     enabled: true,
-    icon: 'i-material-symbols:code-rounded',
+    icon: 'code-rounded',
     description: 'this is description for this row'
   },
   {
@@ -190,7 +191,7 @@ const subDatas: Privilege[] = [
     actions: ['add', 'edit', 'remove', 'import', 'export'],
     count: 0,
     enabled: true,
-    icon: 'i-material-symbols:terminal-rounded',
+    icon: 'terminal-rounded',
     description: 'this is description for this row'
   },
   {
@@ -202,7 +203,7 @@ const subDatas: Privilege[] = [
     actions: ['add', 'edit', 'remove', 'import', 'export'],
     count: 0,
     enabled: true,
-    icon: 'i-material-symbols:terminal-rounded',
+    icon: 'terminal-rounded',
     description: 'this is description for this row'
   }
 ]
@@ -215,7 +216,7 @@ const treeNodes: PrivilegeTreeNode[] = [
       path: 'system',
       component: '#',
       redirect: '/system/users',
-      icon: 'i-material-symbols:settings-outline-rounded'
+      icon: 'settings-outline-rounded'
     },
     children: [
       {
@@ -224,7 +225,7 @@ const treeNodes: PrivilegeTreeNode[] = [
         meta: {
           path: 'groups',
           component: 'pages/system/groups/IndexPage',
-          icon: 'i-material-symbols:account-tree-outline-rounded'
+          icon: 'account-tree-outline-rounded'
         }
       },
       {
@@ -233,7 +234,7 @@ const treeNodes: PrivilegeTreeNode[] = [
         meta: {
           path: 'users',
           component: 'pages/system/users/IndexPage',
-          icon: 'i-material-symbols:person-outline-rounded'
+          icon: 'person-outline-rounded'
         }
       },
       {
@@ -242,7 +243,7 @@ const treeNodes: PrivilegeTreeNode[] = [
         meta: {
           path: 'roles',
           component: 'pages/system/roles/IndexPage',
-          icon: 'i-material-symbols:shield-person-outline-rounded'
+          icon: 'shield-person-outline-rounded'
         }
       },
       {
@@ -251,7 +252,7 @@ const treeNodes: PrivilegeTreeNode[] = [
         meta: {
           path: 'dictionaries',
           component: 'pages/system/dictionaries/IndexPage',
-          icon: 'i-material-symbols:book-3-outline-rounded'
+          icon: 'book-3-outline-rounded'
         }
       },
       {
@@ -260,7 +261,7 @@ const treeNodes: PrivilegeTreeNode[] = [
         meta: {
           path: 'privileges',
           component: 'pages/system/privileges/IndexPage',
-          icon: 'i-material-symbols:admin-panel-settings-outline-rounded'
+          icon: 'admin-panel-settings-outline-rounded'
         }
       }
     ]
@@ -272,7 +273,7 @@ const treeNodes: PrivilegeTreeNode[] = [
       path: 'logs',
       component: '#',
       redirect: '/logs/operation',
-      icon: 'i-material-symbols:lab-profile-outline-rounded'
+      icon: 'lab-profile-outline-rounded'
     },
     children: [
       {
@@ -281,7 +282,7 @@ const treeNodes: PrivilegeTreeNode[] = [
         meta: {
           path: 'operation',
           component: 'pages/logs/operation/IndexPage',
-          icon: 'i-material-symbols:clinical-notes-outline-rounded'
+          icon: 'clinical-notes-outline-rounded'
         }
       },
       {
@@ -290,7 +291,7 @@ const treeNodes: PrivilegeTreeNode[] = [
         meta: {
           path: 'access',
           component: 'pages/logs/access/IndexPage',
-          icon: 'i-material-symbols:sticky-note-2-outline-rounded'
+          icon: 'sticky-note-2-outline-rounded'
         }
       },
       {
@@ -299,7 +300,7 @@ const treeNodes: PrivilegeTreeNode[] = [
         meta: {
           path: 'audit',
           component: 'pages/logs/audit/IndexPage',
-          icon: 'i-material-symbols:note-alt-outline-rounded'
+          icon: 'note-alt-outline-rounded'
         }
       },
       {
@@ -308,7 +309,7 @@ const treeNodes: PrivilegeTreeNode[] = [
         meta: {
           path: 'scheduler',
           component: 'pages/logs/scheduler/IndexPage',
-          icon: 'i-material-symbols:event-note-outline-rounded'
+          icon: 'event-note-outline-rounded'
         }
       }
     ]
@@ -319,7 +320,7 @@ const treeNodes: PrivilegeTreeNode[] = [
     meta: {
       path: 'regions',
       component: 'pages/regions/IndexPage',
-      icon: 'i-material-symbols:location-on-outline-rounded'
+      icon: 'location-on-outline-rounded'
     }
   },
   {
@@ -328,7 +329,7 @@ const treeNodes: PrivilegeTreeNode[] = [
     meta: {
       path: 'files',
       component: 'pages/files/IndexPage',
-      icon: 'i-material-symbols:folder-open-outline-rounded'
+      icon: 'folder-open-outline-rounded'
     }
   },
   {
@@ -338,7 +339,7 @@ const treeNodes: PrivilegeTreeNode[] = [
       path: 'exploiter',
       component: '#',
       redirect: '/exploiter/generator',
-      icon: 'i-material-symbols:build-outline-rounded'
+      icon: 'build-outline-rounded'
     },
     children: [
       {
@@ -347,7 +348,7 @@ const treeNodes: PrivilegeTreeNode[] = [
         meta: {
           path: 'generator',
           component: 'pages/exploiter/generator/IndexPage',
-          icon: 'i-material-symbols:code-rounded'
+          icon: 'code-rounded'
         }
       },
       {
@@ -356,7 +357,7 @@ const treeNodes: PrivilegeTreeNode[] = [
         meta: {
           path: 'deploy',
           component: 'pages/exploiter/deploy/IndexPage',
-          icon: 'i-material-symbols:terminal-rounded'
+          icon: 'terminal-rounded'
         }
       },
       {
@@ -365,7 +366,7 @@ const treeNodes: PrivilegeTreeNode[] = [
         meta: {
           path: 'templates',
           component: 'pages/exploiter/templates/IndexPage',
-          icon: 'i-material-symbols:terminal-rounded'
+          icon: 'terminal-rounded'
         }
       }
     ]

@@ -41,15 +41,6 @@ export default defineConfig({
     // https://github.com/antfu/unocss
     // see unocss.config.ts for config
     Unocss({
-      content: {
-        pipeline: {
-          include: [
-            /\.(vue|[jt]sx|html|ts)($|\?)/,
-            // include js/ts files
-            'src/**/*.{js,ts}'
-          ]
-        }
-      },
       presets: [
         presetUno({
           preflight: false
@@ -64,7 +55,7 @@ export default defineConfig({
   server: {
     proxy: {
       '/api': {
-        target: 'http://172.28.96.1:8768',
+        target: 'https://preview.leafage.top/api',
         ws: true,
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api/, '')

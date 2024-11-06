@@ -246,7 +246,7 @@ function handleCheckedChange(value: string[]) {
         <ElTableColumn type="selection" width="55" />
         <ElTableColumn prop="name" :label="$t('name')" class-name="name-cell">
           <template #default="scope">
-            <div :class="scope.row.icon" class="inline-block mr-2" />
+            <div :class="`i-material-symbols:${scope.row.icon}`" class="inline-block mr-2" />
             {{ $t(scope.row.name) }}
           </template>
         </ElTableColumn>

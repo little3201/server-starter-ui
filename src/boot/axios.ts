@@ -10,7 +10,7 @@ const abortControllerMap: Map<string, AbortController> = new Map()
 
 const api: AxiosInstance = axios.create({
   baseURL: import.meta.env.VITE_API_BASE_API,
-  timeout: 10000
+  timeout: 5000
 })
 
 // 请求拦截器

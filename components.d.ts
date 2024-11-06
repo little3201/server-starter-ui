@@ -9,7 +9,6 @@ declare module 'vue' {
   export interface GlobalComponents {
     ChartView: typeof import('./src/components/ChartView.vue')['default']
     CodeRender: typeof import('./src/components/CodeRender.vue')['default']
-    ConfigGlobal: typeof import('./src/components/ConfigGlobal.vue')['default']
     DialogView: typeof import('./src/components/DialogView.vue')['default']
     ElAside: typeof import('element-plus/es')['ElAside']
     ElAvatar: typeof import('element-plus/es')['ElAvatar']
@@ -17,7 +16,6 @@ declare module 'vue' {
     ElButton: typeof import('element-plus/es')['ElButton']
     ElCalendar: typeof import('element-plus/es')['ElCalendar']
     ElCard: typeof import('element-plus/es')['ElCard']
-    ElCheckbogGroup: typeof import('element-plus/es')['ElCheckbogGroup']
     ElCheckbox: typeof import('element-plus/es')['ElCheckbox']
     ElCheckboxGroup: typeof import('element-plus/es')['ElCheckboxGroup']
     ElCol: typeof import('element-plus/es')['ElCol']
