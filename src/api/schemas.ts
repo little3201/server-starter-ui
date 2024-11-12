@@ -1,6 +1,6 @@
 import { api } from 'boot/axios'
 import { SERVER_URL } from 'src/api/paths'
-import type { Pagination, Schema } from 'src/models'
+import type { Pagination, Schema, Field } from 'src/models'
 
 /**
  * Retrieve rows
@@ -14,7 +14,7 @@ export const retrieveSchemas = (pagination: Pagination, filters?: object) => {
 }
 
 export const retrieveSchemaFields = (id: number) => {
-  return api.get(`${SERVER_URL.SCHEMA}/${id}/columns`)
+  return api.get(`${SERVER_URL.SCHEMA}/${id}/fields`)
 }
 
 export const retrieveSchemaCodes = (id: number) => {
@@ -65,4 +65,8 @@ export const enableSchema = (id: number) => {
  */
 export const removeSchema = (id: number) => {
   return api.delete(`${SERVER_URL.SCHEMA}/${id}`)
+}
+
+export const configSchemaFields = (id: number, rows: Array<Field>) => {
+  return api.patch(`${SERVER_URL.SCHEMA}/${id}/fields`, rows)
 }

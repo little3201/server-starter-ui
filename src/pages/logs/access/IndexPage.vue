@@ -264,7 +264,7 @@ function handleCheckedChange(value: string[]) {
   </ElSpace>
 
   <DialogView v-model="dialogVisible" :title="$t('detail')">
-    <ElDescriptions v-loading="detailLoading">
+    <ElDescriptions v-loading="detailLoading" border>
       <ElDescriptionsItem :label="$t('url')">{{ row.url }}</ElDescriptionsItem>
       <ElDescriptionsItem :label="$t('httpMethod')">
         <el-badge is-dot :type="methods[row.httpMethod as string]" />

@@ -69,7 +69,7 @@ export default {
   size: 'Size',
   length: 'Leng',
   fieldType: 'Field Type',
-  showType: 'Show Type',
+  formType: 'Form Type',
   nullable: 'Nullable',
   unique: 'Unique',
   comment: 'Comment',

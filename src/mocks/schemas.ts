@@ -9,8 +9,8 @@ for (let i = 1; i < 28; i++) {
   const data: Schema = {
     id: i,
     name: 'table_name' + i,
-    comment: '表名称_' + i,
-    description: 'this is description for this row'
+    reference: 'package/domain',
+    className: 'TableName' + i
   }
   datas.push(data)
 }
@@ -22,10 +22,13 @@ for (let i = 1; i < 28; i++) {
     id: i,
     name: 'column_name' + i,
     comment: '属性名称_' + i,
-    type: 'varchar',
+    dataType: 'varchar',
     length: 255,
+    fieldType: 2,
+    formType: 14,
     nullable: i % 3 > 0,
-    unique: i < 3,
+    queryable: i < 2,
+    editable: i > 2,
     description: 'this is description for this row'
   }
   columnDatas.push(data)

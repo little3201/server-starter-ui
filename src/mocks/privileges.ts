@@ -1,4 +1,3 @@
-// @unocss-include
 import { http, HttpResponse } from 'msw'
 import { SERVER_URL } from 'src/api/paths'
 import type { Privilege, PrivilegeTreeNode } from 'src/models'
@@ -34,7 +33,7 @@ const datas: Privilege[] = [
     icon: 'location-on-outline-rounded',
     actions: ['add', 'edit', 'remove', 'import', 'export'],
     count: 0,
-    enabled: true,
+    enabled: false,
     description: 'this is description for this row'
   },
   {
@@ -314,15 +313,15 @@ const treeNodes: PrivilegeTreeNode[] = [
       }
     ]
   },
-  {
-    id: 12,
-    name: 'regions',
-    meta: {
-      path: 'regions',
-      component: 'pages/regions/IndexPage',
-      icon: 'location-on-outline-rounded'
-    }
-  },
+  // {
+  //   id: 12,
+  //   name: 'regions',
+  //   meta: {
+  //     path: 'regions',
+  //     component: 'pages/regions/IndexPage',
+  //     icon: 'location-on-outline-rounded'
+  //   }
+  // },
   {
     id: 13,
     name: 'files',

@@ -244,9 +244,10 @@ function handleCheckedChange(value: string[]) {
   </ElSpace>
 
   <DialogView v-model="dialogVisible" :title="$t('detail')">
-    <ElDescriptions v-loading="detailLoading">
+    <ElDescriptions v-loading="detailLoading" border>
       <ElDescriptionsItem :label="$t('name')">{{ row.name }}</ElDescriptionsItem>
-      <ElDescriptionsItem :label="$t('startTime')">{{ row.startTime }}</ElDescriptionsItem>
+      <ElDescriptionsItem :label="$t('startTime')">{{ dayjs(row.startTime).format('YYYY-MM-DD HH:mm') }}
+      </ElDescriptionsItem>
       <ElDescriptionsItem :label="$t('status')">
         <ElTag v-if="row.status === 0" type="primary" round>{{ $t('processing') }}</ElTag>
         <ElTag v-else-if="row.status === 1" type="success" round>{{ $t('done') }}</ElTag>
@@ -254,7 +255,8 @@ function handleCheckedChange(value: string[]) {
       </ElDescriptionsItem>
       <ElDescriptionsItem :label="$t('executedTimes')">{{ row.executedTimes ? formatDuration(row.executedTimes) : '-' }}
       </ElDescriptionsItem>
-      <ElDescriptionsItem :label="$t('nextExecuteTime')">{{ row.nextExecuteTime }}</ElDescriptionsItem>
+      <ElDescriptionsItem :label="$t('nextExecuteTime')">{{ dayjs(row.nextExecuteTime).format('YYYY-MM-DD HH:mm') }}
+      </ElDescriptionsItem>
     </ElDescriptions>
   </DialogView>
 </template>

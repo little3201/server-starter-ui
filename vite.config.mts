@@ -55,7 +55,7 @@ export default defineConfig({
   server: {
     proxy: {
       '/api': {
-        target: 'https://preview.leafage.top/api',
+        target: 'http://172.28.96.1:8768',
         ws: true,
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api/, '')

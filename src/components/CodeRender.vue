@@ -28,7 +28,7 @@ watchEffect(() => {
 </script>
 
 <template>
-  <section>
-    <pre><code class="hljs" v-html="rendered"></code></pre>
-  </section>
+  <article>
+    <pre><code class="hljs lang-ts" v-html="rendered"></code></pre>
+  </article>
 </template>

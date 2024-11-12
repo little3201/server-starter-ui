@@ -3,12 +3,11 @@
   "editor.guides.bracketPairs": true,
   "editor.formatOnSave": true,
   "editor.defaultFormatter": "dbaeumer.vscode-eslint",
-  "editor.codeActionsOnSave": [
-    "source.fixAll.eslint"
-  ],
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "explicit"
+  },
   "eslint.validate": [
     "javascript",
-    "javascriptreact",
     "typescript",
     "vue"
   ],

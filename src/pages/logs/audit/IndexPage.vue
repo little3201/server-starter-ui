@@ -238,14 +238,14 @@ function handleCheckedChange(value: string[]) {
   </ElSpace>
 
   <DialogView v-model="dialogVisible" :title="$t('detail')">
-    <ElDescriptions v-loading="detailLoading">
+    <ElDescriptions v-loading="detailLoading" border>
       <ElDescriptionsItem :label="$t('operation')">{{ row.operation }}</ElDescriptionsItem>
       <ElDescriptionsItem :label="$t('resource')">{{ row.resource }}</ElDescriptionsItem>
-      <ElDescriptionsItem :label="$t('oldValue')">{{ row.oldValue }}</ElDescriptionsItem>
-      <ElDescriptionsItem :label="$t('ip')">{{ row.ip }}</ElDescriptionsItem>
-      <ElDescriptionsItem :label="$t('location')">{{ row.location }}</ElDescriptionsItem>
-      <ElDescriptionsItem :label="$t('newValue')">{{ row.newValue }}</ElDescriptionsItem>
       <ElDescriptionsItem :label="$t('operator')">{{ row.operator }}</ElDescriptionsItem>
+      <ElDescriptionsItem :label="$t('oldValue')" :span="3">{{ row.oldValue }}</ElDescriptionsItem>
+      <ElDescriptionsItem :label="$t('newValue')" :span="3">{{ row.newValue }}</ElDescriptionsItem>
+      <ElDescriptionsItem :label="$t('ip')">{{ row.ip }}</ElDescriptionsItem>
+      <ElDescriptionsItem :label="$t('location')" :span="2">{{ row.location }}</ElDescriptionsItem>
       <ElDescriptionsItem :label="$t('status')">
         <ElTag v-if="row.statusCode && (row.statusCode >= 200 && row.statusCode < 300)" type="success" round>
           {{ row.statusCode }}
