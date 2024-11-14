@@ -49,10 +49,10 @@ const datas: Privilege[] = [
   },
   {
     id: 14,
-    path: 'exploiter',
+    path: 'exploiters',
     component: '#',
-    name: 'exploiter',
-    redirect: '/exploiter',
+    name: 'exploiters',
+    redirect: '/exploiters',
     icon: 'build-outline-rounded',
     count: 1,
     enabled: true,
@@ -172,21 +172,21 @@ const subDatas: Privilege[] = [
   {
     id: 15,
     superiorId: 14,
-    path: 'generator',
-    name: 'generator',
-    component: 'pages/exploiter/generator/IndexPage',
+    path: 'code-generations',
+    name: 'codeGenerations',
+    component: 'pages/exploiters/code-generations/IndexPage',
     actions: ['add', 'edit', 'remove', 'import', 'export', 'config', 'preview'],
     count: 0,
     enabled: true,
-    icon: 'code-rounded',
+    icon: 'genetics-rounded',
     description: 'this is description for this row'
   },
   {
     id: 16,
     superiorId: 14,
-    path: 'deploy',
-    name: 'deploy',
-    component: 'pages/exploiter/deploy/IndexPage',
+    path: 'scripts',
+    name: 'scripts',
+    component: 'pages/exploiters/scripts/IndexPage',
     actions: ['add', 'edit', 'remove', 'import', 'export'],
     count: 0,
     enabled: true,
@@ -198,11 +198,11 @@ const subDatas: Privilege[] = [
     superiorId: 14,
     path: 'templates',
     name: 'templates',
-    component: 'pages/exploiter/templates/IndexPage',
+    component: 'pages/exploiters/templates/IndexPage',
     actions: ['add', 'edit', 'remove', 'import', 'export'],
     count: 0,
     enabled: true,
-    icon: 'terminal-rounded',
+    icon: 'code-rounded',
     description: 'this is description for this row'
   }
 ]
@@ -333,29 +333,29 @@ const treeNodes: PrivilegeTreeNode[] = [
   },
   {
     id: 14,
-    name: 'exploiter',
+    name: 'exploiters',
     meta: {
-      path: 'exploiter',
+      path: 'exploiters',
       component: '#',
-      redirect: '/exploiter/generator',
+      redirect: '/exploiters/code-generations',
       icon: 'build-outline-rounded'
     },
     children: [
       {
         id: 15,
-        name: 'generator',
+        name: 'codeGenerations',
         meta: {
-          path: 'generator',
-          component: 'pages/exploiter/generator/IndexPage',
+          path: 'code-generations',
+          component: 'pages/exploiters/code-generations/IndexPage',
           icon: 'code-rounded'
         }
       },
       {
         id: 16,
-        name: 'deploy',
+        name: 'scripts',
         meta: {
-          path: 'deploy',
-          component: 'pages/exploiter/deploy/IndexPage',
+          path: 'scripts',
+          component: 'pages/exploiters/scripts/IndexPage',
           icon: 'terminal-rounded'
         }
       },
@@ -364,7 +364,7 @@ const treeNodes: PrivilegeTreeNode[] = [
         name: 'templates',
         meta: {
           path: 'templates',
-          component: 'pages/exploiter/templates/IndexPage',
+          component: 'pages/exploiters/templates/IndexPage',
           icon: 'terminal-rounded'
         }
       }

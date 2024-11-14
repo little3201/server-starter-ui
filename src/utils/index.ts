@@ -94,8 +94,43 @@ export function formatFileSize(size: number): string {
   return `${size.toFixed(2)}${units[index]}`
 }
 
-export function visibleArray(array: string[], count: number): string[] {
+export function visibleArray<T extends string | number>(array: T[], count: number): T[] {
   return array.length > count ? array.slice(0, count) : array
+}
+
+/**
+  将下划线格式转换为驼峰格式，并将每个单词的首字母大写
+ * @param word 输入
+ * @returns 结果
+ */
+export function pluralToSingularAndCapitalize(word: string) {
+  const camelCase = word.split('_').map((part: string) => {
+    const singular = wordToSingular(part)
+    return singular.charAt(0).toUpperCase() + singular.slice(1).toLowerCase()
+  }).join('')
+
+  return camelCase
+}
+
+/**
+ * 复数到单数的转换规则
+ * @param word 复数
+ * @returns 单数
+ */
+export function wordToSingular(word: string) {
+  const pluralRules = [
+    { regex: /ies$/, replacement: 'y' },
+    { regex: /ves$/, replacement: 'f' },
+    { regex: /s$/, replacement: '' }
+  ]
+
+  // 将单词转换为单数
+  for (const rule of pluralRules) {
+    if (rule.regex.test(word)) {
+      return word.replace(rule.regex, rule.replacement)
+    }
+  }
+  return word
 }
 
 export const actions: { [key: string]: 'primary' | 'success' | 'info' | 'warning' | 'danger' } = {

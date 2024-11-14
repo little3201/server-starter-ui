@@ -3,8 +3,12 @@ import { ref, reactive, onMounted } from 'vue'
 import type { FormInstance, FormRules } from 'element-plus'
 import draggable from 'vuedraggable'
 import DialogView from 'components/DialogView.vue'
-import { retrievePrivileges, retrievePrivilegeSubset, fetchPrivilege, modifyPrivilege, enablePrivilege } from 'src/api/privileges'
-import type { Pagination, Privilege } from 'src/models'
+import {
+  retrievePrivileges, retrievePrivilegeSubset,
+  fetchPrivilege, modifyPrivilege, enablePrivilege
+} from 'src/api/privileges'
+import { retrieveDictionarySubset } from 'src/api/dictionaries'
+import type { Pagination, Privilege, Dictionary } from 'src/models'
 import { visibleArray, actions } from 'src/utils'
 
 const loading = ref<boolean>(false)
@@ -21,6 +25,7 @@ const isIndeterminate = ref<boolean>(false)
 const checkedColumns = ref<Array<string>>(['name', 'enabled', 'description'])
 const columns = ref<Array<string>>(['name', 'enabled', 'description'])
 
+const buttonOptions = ref<Array<Dictionary>>([])
 const saveLoading = ref<boolean>(false)
 const dialogVisible = ref<boolean>(false)
 
@@ -88,6 +93,12 @@ async function load(row?: Privilege, treeNode?: unknown, resolve?: (date: Privil
   }
 }
 
+async function loadDictionaries() {
+  retrieveDictionarySubset(42).then(res => {
+    buttonOptions.value = res.data
+  })
+}
+
 /**
  * reset
  */
@@ -112,6 +123,7 @@ function editRow(id?: number) {
   if (id) {
     loadOne(id)
   }
+  loadDictionaries()
   dialogVisible.value = true
 }
 
@@ -147,6 +159,21 @@ async function onSubmit(formEl: FormInstance | undefined) {
       }
     }
   })
+}
+
+/**
+ * handle check change
+ * @param item checked item
+ */
+function onCheckChange(item: string) {
+  if (form.value.actions) {
+    const index = form.value.actions.indexOf(item)
+    if (index === -1) {
+      form.value.actions.push(item)
+    } else {
+      form.value.actions.splice(index, 1)
+    }
+  }
 }
 
 /**
@@ -255,20 +282,20 @@ function handleCheckedChange(value: string[]) {
         <ElTableColumn prop="actions" :label="$t('actions')">
           <template #default="scope">
             <template v-if="scope.row.actions && scope.row.actions.length > 0">
-              <ElTag v-for="(action, index) in visibleArray(scope.row.actions, 3)" :key="index" :type="actions[action]"
-                class="mr-2">
-                {{ $t(action) }}
-              </ElTag>
+              <ElCheckTag v-for="(item, index) in visibleArray(scope.row.actions, 3)" :key="index" :type="actions[item]"
+                class="mr-2" checked>
+                {{ $t(item as string) }}
+              </ElCheckTag>
               <ElPopover v-if="scope.row.actions.length > 3" placement="top-start" trigger="hover" :width="100">
                 <template #reference>
-                  <ElTag type="primary">
+                  <ElCheckTag type="primary">
                     +{{ scope.row.actions.length - 3 }}
-                  </ElTag>
+                  </ElCheckTag>
                 </template>
-                <ElTag v-for="action in scope.row.actions.slice(3)" :key="action" :type="actions[action]"
-                  class="mb-2 mr-4">
-                  {{ $t(action) }}
-                </ElTag>
+                <ElCheckTag v-for="(item, index) in scope.row.actions.slice(3)" :key="index" :type="actions[item]"
+                  class="mb-2 mr-4" checked>
+                  {{ $t(item) }}
+                </ElCheckTag>
               </ElPopover>
             </template>
           </template>
@@ -326,8 +353,12 @@ function handleCheckedChange(value: string[]) {
       <ElRow :gutter="20" class="w-full !mx-0">
         <ElCol>
           <ElFormItem :label="$t('actions')" prop="meta.actions">
-            <!-- width 相对body设置, popover默认设置了 position: absolute -->
-            <ElSelect multiple v-model="form.actions" :placeholder="$t('selectText', { field: $t('actions') })">
+            <ElCheckTag v-for="item in buttonOptions" :key="item.id" :checked="form.actions?.includes(item.name)"
+              :type="actions[item.name]" class="mr-2 mb-2" @change="onCheckChange(item.name)">
+              {{ $t(item.name) }}
+            </ElCheckTag>
+
+            <!-- <ElSelect multiple v-model="form.actions" :placeholder="$t('selectText', { field: $t('actions') })">
               <ElOption v-if="form.name !== 'files' && !form.name.includes('Log')" value="add" :label="$t('add')" />
               <ElOption v-if="form.name !== 'files' && !form.name.includes('Log')" value="edit" :label="$t('edit')" />
               <ElOption value="remove" :label="$t('remove')" />
@@ -338,14 +369,15 @@ function handleCheckedChange(value: string[]) {
                 :label="$t('relation')" />
               <ElOption v-if="form.name.includes('Log')" value="clear" :label="$t('clear')" />
               <ElOption v-if="form.name.includes('Log')" value="detail" :label="$t('detail')" />
-              <ElOption v-if="form.name === 'generator'" value="config" :label="$t('config')" />
-              <ElOption v-if="form.name === 'generator' || form.name === 'templates'" value="preview"
+              <ElOption v-if="form.name === 'codeGenerations'" value="config" :label="$t('config')" />
+              <ElOption v-if="form.name === 'codeGenerations'" value="execute" :label="$t('execute')" />
+              <ElOption v-if="form.name === 'codeGenerations' || form.name === 'templates'" value="preview"
                 :label="$t('preview')" />
               <template v-if="form.name === 'files'">
                 <ElOption value="upload" :label="$t('upload')" />
                 <ElOption value="download" :label="$t('download')" />
               </template>
-            </ElSelect>
+            </ElSelect> -->
           </ElFormItem>
         </ElCol>
       </ElRow>

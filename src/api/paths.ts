@@ -17,7 +17,7 @@ export const SERVER_URL = {
   SIGNIN: '/signin', // 登录
   SIGNOUT: '/signout', // 退出
 
-  // exploiter
+  // exploiters
   SCRIPT: '/scripts', // 脚本
   SCHEMA: '/schemas', // 表配置
   TEMPLATE: '/templates', // 模板

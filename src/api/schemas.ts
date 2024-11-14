@@ -17,8 +17,8 @@ export const retrieveSchemaFields = (id: number) => {
   return api.get(`${SERVER_URL.SCHEMA}/${id}/fields`)
 }
 
-export const retrieveSchemaCodes = (id: number) => {
-  return api.get(`${SERVER_URL.SCHEMA}/${id}/codes`)
+export const retrieveSchemaPreview = (id: number) => {
+  return api.get(`${SERVER_URL.SCHEMA}/${id}/preview`)
 }
 
 /**
@@ -50,11 +50,20 @@ export const modifySchema = (id: number, row: Schema) => {
 }
 
 /**
- * Enable or Disable an existing row
+ * Sync a existing row
  * @param id Row ID
- * @returns Enable or Disable result
+ * @returns Created row
  */
-export const enableSchema = (id: number) => {
+export const syncSchema = (id: number) => {
+  return api.patch(`${SERVER_URL.SCHEMA}/${id}`)
+}
+
+/**
+ * Generate
+ * @param id Row ID
+ * @returns Created row
+ */
+export const generateSchema = (id: number) => {
   return api.patch(`${SERVER_URL.SCHEMA}/${id}`)
 }
 

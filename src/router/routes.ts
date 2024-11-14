@@ -20,7 +20,8 @@ export const icons: string[] = [
   'i-material-symbols:terminal-rounded',
   'i-material-symbols:code-rounded',
   'i-material-symbols:terminal-rounded',
-  'i-material-symbols:account-tree-outline-rounded'
+  'i-material-symbols:account-tree-outline-rounded',
+  'i-material-symbols:genetics-rounded'
 ]
 
 export const constantRouterMap: Array<RouteRecordRaw> = [

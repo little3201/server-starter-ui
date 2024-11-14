@@ -163,15 +163,17 @@ export interface FileRecord extends AudtiMetadata {
 export interface Schema extends AudtiMetadata {
   name: string
   reference: string
-  className: string
+  domain: string
+  enabled?: boolean
+  templates: number[]
 }
 
 export interface Field extends AudtiMetadata {
   name: string
   dataType: string
   length: number
-  fieldType: number
-  formType: number
+  fieldType: string
+  formType: string
   nullable: boolean
   queryable: boolean
   editable: boolean
@@ -179,15 +181,12 @@ export interface Field extends AudtiMetadata {
   description: string
 }
 
-export interface Code extends AudtiMetadata {
-  name: string
-  content: string
-}
-
 export interface Template extends AudtiMetadata {
   name: string
   content: string
-  type: number | null
+  type?: number
+  suffix?: string
+  enabled?: boolean
 }
 
 export interface Script extends AudtiMetadata {
