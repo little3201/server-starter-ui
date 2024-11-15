@@ -117,9 +117,9 @@ export default {
   schedulerLog: '調度日誌',
   files: '文檔管理',
   exploiters: '開發工具',
-  codeGenerations: '代碼生成',
-  scripts: '部署腳本',
-  templates: '開發範本',
+  generators: '生成器',
+  scripts: '腳本',
+  templates: '範本',
 
   inputText: '請輸入{field}',
   selectText: '請選擇{field}',

@@ -159,7 +159,7 @@ async function onSubmit(formEl: FormInstance | undefined) {
 </template>
 
 <style lang="scss" scoped>
-.el-badge {
+.ElBadge {
   display: inline-flex;
   vertical-align: baseline;
 }

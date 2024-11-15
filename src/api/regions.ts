@@ -24,12 +24,13 @@ export const fetchRegion = (id: number) => {
 
 /**
  * Check if a specific row exists by name
- * @param superiorId Row ID
+ * @param superiorId Superior ID
  * @param name Row name
+ * @param id Row ID
  * @returns Row data
  */
-export const checkRegionExist = (superiorId: number, name: string) => {
-  return api.get(`${SERVER_URL.REGION}/${superiorId}/exist`, { params: { name } })
+export const checkRegionExist = (superiorId: number, name: string, id?: number) => {
+  return api.get(`${SERVER_URL.REGION}/${superiorId}/exist`, { params: { name, id } })
 }
 
 /**

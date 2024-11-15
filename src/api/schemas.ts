@@ -40,6 +40,16 @@ export const createSchema = (row: Schema) => {
 }
 
 /**
+ * Check if a specific row exists by name
+ * @param name Row name
+ * @param id Row ID
+ * @returns Row data
+ */
+export const checkSchemaExist = (name: string, id?: number) => {
+  return api.get(`${SERVER_URL.SCHEMA}/exist`, { params: { name, id } })
+}
+
+/**
  * Modify an existing row
  * @param id Row ID
  * @param data Updated row data
@@ -55,7 +65,7 @@ export const modifySchema = (id: number, row: Schema) => {
  * @returns Created row
  */
 export const syncSchema = (id: number) => {
-  return api.patch(`${SERVER_URL.SCHEMA}/${id}`)
+  return api.patch(`${SERVER_URL.SCHEMA}/${id}/sync`)
 }
 
 /**
@@ -64,7 +74,7 @@ export const syncSchema = (id: number) => {
  * @returns Created row
  */
 export const generateSchema = (id: number) => {
-  return api.patch(`${SERVER_URL.SCHEMA}/${id}`)
+  return api.patch(`${SERVER_URL.SCHEMA}/${id}/generate`)
 }
 
 /**

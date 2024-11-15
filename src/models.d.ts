@@ -174,6 +174,7 @@ export interface Field extends AudtiMetadata {
   length: number
   fieldType: string
   formType: string
+  tsType: string
   nullable: boolean
   queryable: boolean
   editable: boolean

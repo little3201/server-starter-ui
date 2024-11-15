@@ -5,11 +5,6 @@ import Components from 'unplugin-vue-components/vite'
 import { ElementPlusResolver } from 'unplugin-vue-components/resolvers'
 
 import Unocss from 'unocss/vite'
-import {
-  presetAttributify,
-  presetIcons,
-  presetUno
-} from 'unocss'
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -40,17 +35,7 @@ export default defineConfig({
     }),
     // https://github.com/antfu/unocss
     // see unocss.config.ts for config
-    Unocss({
-      presets: [
-        presetUno({
-          preflight: false
-        }),
-        presetAttributify(),
-        presetIcons({
-          scale: 1.25
-        })
-      ]
-    })
+    Unocss()
   ],
   server: {
     proxy: {

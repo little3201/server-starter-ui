@@ -77,6 +77,7 @@ export default {
   unique: '唯一',
   comment: '描述',
   queryable: '查询',
+  editable: '编辑',
   selected: '已选择',
   unselected: '未选择',
 
@@ -117,9 +118,9 @@ export default {
   schedulerLog: '调度日志',
   files: '文件管理',
   exploiters: '开发工具',
-  codeGenerations: '代码生成',
-  scripts: '部署脚本',
-  templates: '开发模板',
+  generators: '生成器',
+  scripts: '脚本',
+  templates: '模板',
 
   inputText: '请输入{field}',
   selectText: '请选择{field}',

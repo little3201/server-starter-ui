@@ -38,7 +38,6 @@ api.interceptors.response.use(
   (res: AxiosResponse) => {
     const uniqueKey = `${res.config.method}:${res.config.url}`
     abortControllerMap.delete(uniqueKey)
-
     return res
   },
   (error: AxiosError) => {

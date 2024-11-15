@@ -28,6 +28,7 @@ for (let i = 1; i < 28; i++) {
     length: 255,
     fieldType: 'String',
     formType: 'ElInput',
+    tsType: 'string',
     nullable: i % 3 > 0,
     queryable: i < 2,
     editable: i > 2,

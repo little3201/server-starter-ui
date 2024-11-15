@@ -220,7 +220,7 @@ function handleCheckedChange(value: string[]) {
         <ElTableColumn prop="url" :label="$t('url')" />
         <ElTableColumn prop="httpMethod" :label="$t('httpMethod')">
           <template #default="scope">
-            <ElBadge is-dot :type="methods[scope.row.httpMethod]" class="mr-2" />{{ scope.row.httpMethod }}
+            <ElBadge is-dot :type="methods[scope.row.httpMethod]" class="mr-1" />{{ scope.row.httpMethod }}
           </template>
         </ElTableColumn>
         <ElTableColumn show-overflow-tooltip prop="params" :label="$t('params')" />
@@ -267,7 +267,7 @@ function handleCheckedChange(value: string[]) {
     <ElDescriptions v-loading="detailLoading" border>
       <ElDescriptionsItem :label="$t('url')">{{ row.url }}</ElDescriptionsItem>
       <ElDescriptionsItem :label="$t('httpMethod')">
-        <el-badge is-dot :type="methods[row.httpMethod as string]" />
+        <ElBadge is-dot :type="methods[row.httpMethod as string]" />
         {{ row.httpMethod }}
       </ElDescriptionsItem>
       <ElDescriptionsItem :label="$t('params')">{{ row.params }}</ElDescriptionsItem>
@@ -292,7 +292,7 @@ function handleCheckedChange(value: string[]) {
 </template>
 
 <style lang="scss" scoped>
-.el-badge {
+.ElBadge {
   display: inline-flex;
   vertical-align: baseline;
 }

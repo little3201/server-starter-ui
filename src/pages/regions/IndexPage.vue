@@ -2,10 +2,13 @@
 import { ref, reactive, onMounted } from 'vue'
 import type { FormInstance, FormRules } from 'element-plus'
 import draggable from 'vuedraggable'
+import { useI18n } from 'vue-i18n'
 import DialogView from 'components/DialogView.vue'
 import SubPage from './SubPage.vue'
 import { retrieveRegions, fetchRegion, createRegion, modifyRegion, removeRegion, enableRegion } from 'src/api/regions'
 import type { Pagination, Region } from 'src/models'
+
+const { t } = useI18n()
 
 const loading = ref<boolean>(false)
 const datas = ref<Array<Region>>([])
@@ -36,7 +39,7 @@ const form = ref<Region>({ ...initialValues })
 
 const rules = reactive<FormRules<typeof form>>({
   name: [
-    { required: true, trigger: 'blur' }
+    { required: true, message: t('inputText', { field: t('name') }), trigger: 'blur' }
   ]
 })
 

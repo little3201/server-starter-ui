@@ -202,7 +202,7 @@ function handleCheckedChange(value: string[]) {
         <ElTableColumn prop="resource" :label="$t('resource')" />
         <ElTableColumn prop="operation" :label="$t('operation')">
           <template #default="scope">
-            <el-badge is-dot :type="operations[scope.row.operation]" class="mr-2" />{{ scope.row.operation }}
+            <ElBadge is-dot :type="operations[scope.row.operation]" class="mr-1" />{{ scope.row.operation }}
           </template>
         </ElTableColumn>
         <ElTableColumn show-overflow-tooltip prop="oldValue" :label="$t('oldValue')" />
@@ -262,7 +262,7 @@ function handleCheckedChange(value: string[]) {
 </template>
 
 <style lang="scss" scoped>
-.el-badge {
+.ElBadge {
   display: inline-flex;
   vertical-align: baseline;
 }

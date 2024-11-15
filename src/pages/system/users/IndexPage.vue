@@ -54,7 +54,7 @@ const rules = reactive<FormRules<typeof form>>({
 })
 
 function checkNameExistence(rule: InternalRuleItem, value: string, callback: (error?: string | Error) => void) {
-  checkUserExist(value).then(res => {
+  checkUserExist(value, form.value.id).then(res => {
     if (res.data) {
       callback(new Error(t('alreadyExists', { field: t('username') })))
     } else {
@@ -304,14 +304,14 @@ function handleCheckedChange(value: string[]) {
         <ElTableColumn prop="accountExpiresAt" :label="$t('accountExpiresAt')">
           <template #default="scope">
             <ElBadge v-if="scope.row.accountExpiresAt" is-dot :type="calculate(scope.row.accountExpiresAt)"
-              class="mr-2" />
+              class="mr-1" />
             {{ scope.row.accountExpiresAt ? dayjs(scope.row.accountExpiresAt).format('YYYY-MM-DD HH:mm:ss') : '-' }}
           </template>
         </ElTableColumn>
         <ElTableColumn prop="credentialsExpiresAt" :label="$t('credentialsExpiresAt')">
           <template #default="scope">
             <ElBadge v-if="scope.row.credentialsExpiresAt" is-dot :type="calculate(scope.row.credentialsExpiresAt)"
-              class="mr-2" />
+              class="mr-1" />
             {{ scope.row.credentialsExpiresAt ? dayjs(scope.row.credentialsExpiresAt).format('YYYY-MM-DD HH:mm:ss') :
               '-'
             }}
@@ -385,7 +385,7 @@ function handleCheckedChange(value: string[]) {
 </template>
 
 <style lang="scss" scoped>
-.el-badge {
+.ElBadge {
   display: inline-flex;
   vertical-align: baseline;
 }

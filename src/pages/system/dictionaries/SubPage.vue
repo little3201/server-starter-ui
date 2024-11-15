@@ -38,7 +38,7 @@ const rules = reactive<FormRules<typeof form>>({
 
 function checkNameExistence(rule: InternalRuleItem, value: string, callback: (error?: string | Error) => void) {
   if (form.value.superiorId) {
-    checkDictionaryExist(form.value.superiorId, value).then(res => {
+    checkDictionaryExist(form.value.superiorId, value, form.value.id).then(res => {
       if (res.data) {
         callback(new Error(t('alreadyExists', { field: t('name') })))
       } else {

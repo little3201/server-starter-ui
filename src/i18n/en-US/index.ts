@@ -117,7 +117,7 @@ export default {
   schedulerLog: 'Scheduler Log',
   files: 'Files',
   exploiters: 'Exploiters',
-  codeGenerations: 'Code Generations',
+  generators: 'Generators',
   scripts: 'Scripts',
   templates: 'Templates',
 

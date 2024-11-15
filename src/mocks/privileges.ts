@@ -172,9 +172,9 @@ const subDatas: Privilege[] = [
   {
     id: 15,
     superiorId: 14,
-    path: 'code-generations',
-    name: 'codeGenerations',
-    component: 'pages/exploiters/code-generations/IndexPage',
+    path: 'generators',
+    name: 'generators',
+    component: 'pages/exploiters/generators/IndexPage',
     actions: ['add', 'edit', 'remove', 'import', 'export', 'config', 'preview'],
     count: 0,
     enabled: true,
@@ -337,16 +337,16 @@ const treeNodes: PrivilegeTreeNode[] = [
     meta: {
       path: 'exploiters',
       component: '#',
-      redirect: '/exploiters/code-generations',
+      redirect: '/exploiters/generators',
       icon: 'build-outline-rounded'
     },
     children: [
       {
         id: 15,
-        name: 'codeGenerations',
+        name: 'generators',
         meta: {
-          path: 'code-generations',
-          component: 'pages/exploiters/code-generations/IndexPage',
+          path: 'generators',
+          component: 'pages/exploiters/generators/IndexPage',
           icon: 'code-rounded'
         }
       },

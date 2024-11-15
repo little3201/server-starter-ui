@@ -57,7 +57,7 @@ const rules = reactive<FormRules<typeof form>>({
 })
 
 function checkNameExistence(rule: InternalRuleItem, value: string, callback: (error?: string | Error) => void) {
-  checkRoleExist(value).then(res => {
+  checkRoleExist(value, form.value.id).then(res => {
     if (res.data) {
       callback(new Error(t('alreadyExists', { field: t('name') })))
     } else {

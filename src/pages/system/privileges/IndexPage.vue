@@ -282,20 +282,20 @@ function handleCheckedChange(value: string[]) {
         <ElTableColumn prop="actions" :label="$t('actions')">
           <template #default="scope">
             <template v-if="scope.row.actions && scope.row.actions.length > 0">
-              <ElCheckTag v-for="(item, index) in visibleArray(scope.row.actions, 3)" :key="index" :type="actions[item]"
-                class="mr-2" checked>
+              <ElTag v-for="(item, index) in visibleArray(scope.row.actions, 3)" :key="index" :type="actions[item]"
+                class="mr-2">
                 {{ $t(item as string) }}
-              </ElCheckTag>
-              <ElPopover v-if="scope.row.actions.length > 3" placement="top-start" trigger="hover" :width="100">
+              </ElTag>
+              <ElPopover v-if="scope.row.actions.length > 3" placement="top-start" trigger="hover">
                 <template #reference>
-                  <ElCheckTag type="primary">
+                  <ElTag type="primary">
                     +{{ scope.row.actions.length - 3 }}
-                  </ElCheckTag>
+                  </ElTag>
                 </template>
-                <ElCheckTag v-for="(item, index) in scope.row.actions.slice(3)" :key="index" :type="actions[item]"
-                  class="mb-2 mr-4" checked>
+                <ElTag v-for="(item, index) in scope.row.actions.slice(3)" :key="index" :type="actions[item]"
+                  class="mb-2 mr-2">
                   {{ $t(item) }}
-                </ElCheckTag>
+                </ElTag>
               </ElPopover>
             </template>
           </template>
@@ -369,9 +369,9 @@ function handleCheckedChange(value: string[]) {
                 :label="$t('relation')" />
               <ElOption v-if="form.name.includes('Log')" value="clear" :label="$t('clear')" />
               <ElOption v-if="form.name.includes('Log')" value="detail" :label="$t('detail')" />
-              <ElOption v-if="form.name === 'codeGenerations'" value="config" :label="$t('config')" />
-              <ElOption v-if="form.name === 'codeGenerations'" value="execute" :label="$t('execute')" />
-              <ElOption v-if="form.name === 'codeGenerations' || form.name === 'templates'" value="preview"
+              <ElOption v-if="form.name === 'generators'" value="config" :label="$t('config')" />
+              <ElOption v-if="form.name === 'generators'" value="execute" :label="$t('execute')" />
+              <ElOption v-if="form.name === 'generators' || form.name === 'templates'" value="preview"
                 :label="$t('preview')" />
               <template v-if="form.name === 'files'">
                 <ElOption value="upload" :label="$t('upload')" />
@@ -409,7 +409,7 @@ function handleCheckedChange(value: string[]) {
 }
 </style>
 <style lang="scss" scoped>
-.el-badge {
+.ElBadge {
   display: inline-flex;
   vertical-align: baseline;
 }

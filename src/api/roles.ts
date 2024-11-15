@@ -41,10 +41,11 @@ export const fetchRole = (id: number) => {
 /**
  * Check if a specific row exists by name
  * @param name Row name
+ * @param id Row ID
  * @returns Row data
  */
-export const checkRoleExist = (name: string) => {
-  return api.get(`${SERVER_URL.ROLE}/exist`, { params: { name } })
+export const checkRoleExist = (name: string, id?: number) => {
+  return api.get(`${SERVER_URL.ROLE}/exist`, { params: { name, id } })
 }
 
 /**

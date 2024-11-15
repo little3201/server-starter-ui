@@ -40,10 +40,11 @@ export const fetchGroup = (id: number) => {
 /**
  * Check if a specific row exists by name
  * @param name Row name
+ * @param id Row ID
  * @returns Row data
  */
-export const checkGroupExist = (name: string) => {
-  return api.get(`${SERVER_URL.GROUP}/exist`, { params: { name } })
+export const checkGroupExist = (name: string, id?: number) => {
+  return api.get(`${SERVER_URL.GROUP}/exist`, { params: { name, id } })
 }
 
 /**

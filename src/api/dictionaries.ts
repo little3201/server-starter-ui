@@ -44,8 +44,8 @@ export const fetchDictionary = (id: number) => {
  * @param name Row name
  * @returns Row data
  */
-export const checkDictionaryExist = (superiorId: number, name: string) => {
-  return api.get(`${SERVER_URL.DICTIONARY}/${superiorId}/exist`, { params: { name } })
+export const checkDictionaryExist = (superiorId: number, name: string, id?: number) => {
+  return api.get(`${SERVER_URL.DICTIONARY}/${superiorId}/exist`, { params: { name, id } })
 }
 
 /**
