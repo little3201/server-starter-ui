@@ -186,7 +186,6 @@ export interface Template extends AudtiMetadata {
   name: string
   content: string
   type?: number
-  suffix?: string
   enabled?: boolean
 }
 

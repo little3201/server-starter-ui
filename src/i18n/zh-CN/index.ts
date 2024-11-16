@@ -36,7 +36,6 @@ export default {
   path: '路径',
   redirect: '跳转',
   icon: '图标',
-  suffix: '后缀',
   reference: '引用路径',
   domain: '领域',
   ip: 'IP',

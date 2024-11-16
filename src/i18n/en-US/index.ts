@@ -36,7 +36,6 @@ export default {
   path: 'Path',
   redirect: 'Redirect',
   icon: 'Icon',
-  suffix: 'Suffix',
   reference: 'Reference Path',
   domain: 'Domain',
   ip: 'IP',
