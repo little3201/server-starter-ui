@@ -48,6 +48,12 @@ body {
   --el-card-border-radius: 8px !important;
 }
 
+.el-card__body {
+  .el-form-item {
+    margin-bottom: 0px;
+  }
+}
+
 .el-transfer {
   --el-transfer-panel-body-height: 420px !important;
 }

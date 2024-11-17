@@ -50,10 +50,10 @@ const dialogStyle = computed(() => {
 <template>
   <ElDialog v-bind="getBindValue" :fullscreen="fullScreen" align-center destroy-on-close lock-scroll draggable
     append-to-body :close-on-click-modal="false" :show-close="false">
-    <template #header="{ close, titleId, titleClass }">
+    <template #header="{ close }">
       <div class="flex justify-between items-center">
         <slot name="title">
-          <span :id="titleId" :class="titleClass">{{ title }}</span>
+          <span>{{ title }}</span>
         </slot>
         <div class="inline-flex justify-between items-center space-x-4">
           <div v-if="showFullScreen"
