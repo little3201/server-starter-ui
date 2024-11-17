@@ -2,7 +2,6 @@
 import { computed, ref } from 'vue'
 import type { FormInstance } from 'element-plus'
 import { useUserStore } from 'stores/user-store'
-import { getAssetsFile } from 'src/utils'
 
 const userStore = useUserStore()
 
@@ -66,7 +65,7 @@ async function onSubmit(formEl: FormInstance | undefined) {
     <ElCol :span="6">
       <ElCard shadow="never">
         <div class="text-center">
-          <ElAvatar :size="180" :src="getAssetsFile(user?.avatar as string)" />
+          <ElAvatar :size="180" :src="user?.avatar" />
           <div class="text-lg mt-4 mb-2">{{ user?.fullName }}</div>
           <div class="text-sm text-[var(--el-text-color-regular)]">{{ user?.username }}</div>
         </div>

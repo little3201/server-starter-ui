@@ -6,7 +6,7 @@ const datas: Script[] = [
   {
     id: 1,
     name: 'MySQL',
-    icon: '/src/assets/svgs/mysql.svg',
+    icon: '/svgs/mysql.svg',
     version: '8.0.34',
     description: 'This is the description of row',
     lastModifiedDate: new Date()
@@ -14,7 +14,7 @@ const datas: Script[] = [
   {
     id: 2,
     name: 'Nginx',
-    icon: '/src/assets/svgs/nginx.svg',
+    icon: '/svgs/nginx.svg',
     version: '1.8.12',
     description: 'This is the description of row',
     lastModifiedDate: new Date()
@@ -22,7 +22,7 @@ const datas: Script[] = [
   {
     id: 3,
     name: 'Nodejs',
-    icon: '/src/assets/svgs/nodejs.svg',
+    icon: '/svgs/nodejs.svg',
     version: '20.5.6',
     description: 'This is the description of row',
     lastModifiedDate: new Date()
@@ -30,7 +30,7 @@ const datas: Script[] = [
   {
     id: 4,
     name: 'PostgreSql',
-    icon: '/src/assets/svgs/postgresql.svg',
+    icon: '/svgs/postgresql.svg',
     version: '16.2.3',
     description: 'This is the description of row',
     lastModifiedDate: new Date()
@@ -38,7 +38,7 @@ const datas: Script[] = [
   {
     id: 5,
     name: 'Redis',
-    icon: '/src/assets/svgs/redis.svg',
+    icon: '/svgs/redis.svg',
     version: '7.0.1',
     description: 'This is the description of row',
     lastModifiedDate: new Date()

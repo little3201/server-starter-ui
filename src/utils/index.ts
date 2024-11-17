@@ -133,11 +133,6 @@ export function wordToSingular(word: string) {
   return word
 }
 
-// 获取assets静态资源
-export const getAssetsFile = (url: string) => {
-  return new URL(`${url}`, import.meta.url).href
-}
-
 export const actions: { [key: string]: 'primary' | 'success' | 'info' | 'warning' | 'danger' } = {
   add: 'primary',
   edit: 'primary',
