@@ -292,7 +292,7 @@ function handleCheckedChange(value: string[]) {
 </template>
 
 <style lang="scss" scoped>
-.ElBadge {
+.el-badge {
   display: inline-flex;
   vertical-align: baseline;
 }

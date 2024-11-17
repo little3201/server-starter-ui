@@ -8,7 +8,7 @@ import { useI18n } from 'vue-i18n'
 import DialogView from 'components/DialogView.vue'
 import { retrieveUsers, fetchUser, createUser, modifyUser, removeUser, enableUser, checkUserExist } from 'src/api/users'
 import type { Pagination, User } from 'src/models'
-import { calculate } from 'src/utils'
+import { calculate, getAssetsFile } from 'src/utils'
 
 const { t } = useI18n()
 const loading = ref<boolean>(false)
@@ -276,10 +276,10 @@ function handleCheckedChange(value: string[]) {
       <ElTable v-loading="loading" :data="datas" lazy :load="load" row-key="id" stripe table-layout="auto">
         <ElTableColumn type="selection" width="55" />
         <ElTableColumn type="index" :label="$t('no')" width="55" />
-        <ElTableColumn show-overflow-tooltip prop="username" :label="$t('username')">
+        <ElTableColumn prop="username" :label="$t('username')">
           <template #default="scope">
             <div class="flex items-center">
-              <ElAvatar alt="avatar" :size="30" :src="scope.row.avatar" />
+              <ElAvatar alt="avatar" :size="30" :src="getAssetsFile(scope.row.avatar)" />
               <div class="ml-2 inline-flex flex-col">
                 <span class="text-sm">{{ scope.row.fullName }}</span>
                 <span class="text-xs text-[var(--el-text-color-secondary)]">{{ scope.row.username }}</span>
@@ -385,7 +385,7 @@ function handleCheckedChange(value: string[]) {
 </template>
 
 <style lang="scss" scoped>
-.ElBadge {
+.el-badge {
   display: inline-flex;
   vertical-align: baseline;
 }

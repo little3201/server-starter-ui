@@ -3,7 +3,7 @@ import { computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAppStore } from 'stores/app-store'
 import { useUserStore } from 'stores/user-store'
-
+import { getAssetsFile } from 'src/utils'
 import ThemeToogle from 'components/ThemeToogle.vue'
 import LanguageSelector from 'components/LanguageSelector.vue'
 import EssentialList from 'components/EssentialList.vue'
@@ -37,7 +37,7 @@ function signOut() {
 
           <ElDropdown trigger="click" class="cursor-pointer">
             <ElSpace>
-              <ElAvatar alt="avatar" :size="28" :src="userStore.user?.avatar" />
+              <ElAvatar alt="avatar" :size="28" :src="getAssetsFile(userStore.user?.avatar as string)" />
               <span class="text-white">{{ userStore.user?.username }}</span>
             </ElSpace>
             <template #dropdown>

@@ -11,7 +11,7 @@ for (let i = 1; i < 28; i++) {
     username: 'username' + i,
     fullName: 'full name' + i,
     avatar: '/src/assets/images/avatar.jpg',
-    email: 'username' + i + '@test.com',
+    email: 'usexxx' + '@test.com',
     accountNonLocked: i % 2 > 0,
     enabled: i % 2 > 0,
     accountExpiresAt: i > 3 ? dayjs().add(Math.floor(Math.random() * 30), 'day').toDate() : undefined,
