@@ -72,10 +72,11 @@ export default {
   length: '長度',
   fieldType: '屬性類型',
   formType: '表單類型',
-  nullable: '是否必填',
+  nullable: '可為空',
   unique: '唯一',
   comment: '描述',
-  queryable: '查詢',
+  queryable: '可查詢',
+  editable: '可編輯',
   selected: '已選擇',
   unselected: '未選擇',
 
@@ -99,7 +100,7 @@ export default {
   sync: '同步',
   preveiw: '預覽',
   relation: '關聯',
-  seeMore: '查看更多',
+  more: '更多',
 
   home: '首頁',
   system: '系統管理',

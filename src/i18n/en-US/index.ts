@@ -76,6 +76,7 @@ export default {
   unique: 'Unique',
   comment: 'Comment',
   queryable: 'Queryable',
+  editable: 'Editable',
   selected: 'Selected',
   unselected: 'Not Selected',
 
@@ -99,7 +100,7 @@ export default {
   sync: 'Sync',
   preview: 'Preview',
   relation: 'Relation',
-  seeMore: 'See More',
+  more: 'More',
 
   home: 'Home',
   system: 'System',

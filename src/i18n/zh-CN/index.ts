@@ -72,11 +72,11 @@ export default {
   length: '长度',
   fieldType: '属性类型',
   formType: '表单类型',
-  nullable: '是否必填',
+  nullable: '可为空',
   unique: '唯一',
   comment: '描述',
-  queryable: '查询',
-  editable: '编辑',
+  queryable: '可查询',
+  editable: '可编辑',
   selected: '已选择',
   unselected: '未选择',
 
@@ -100,7 +100,7 @@ export default {
   sync: '同步',
   preview: '预览',
   relation: '关联',
-  seeMore: '查看更多',
+  more: '更多',
 
   home: '首页',
   system: '系统管理',

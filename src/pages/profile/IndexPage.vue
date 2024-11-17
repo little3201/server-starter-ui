@@ -42,7 +42,7 @@ const rules = ref({
   ]
 })
 
-function seeMore(id: number) {
+function more(id: number) {
   console.log(id)
 }
 
@@ -110,8 +110,8 @@ async function onSubmit(formEl: FormInstance | undefined) {
               </ElTableColumn>
               <ElTableColumn width="80">
                 <template #default="scope">
-                  <ElButton size="small" type="primary" link @click="seeMore(scope.row.id)">
-                    {{ $t('seeMore') }}
+                  <ElButton size="small" type="primary" link @click="more(scope.row.id)">
+                    {{ $t('more') }}
                   </ElButton>
                 </template>
               </ElTableColumn>
