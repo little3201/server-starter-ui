@@ -127,9 +127,10 @@ export default {
   removeConfirm: '是否确定要删除这条数据？',
 
   alreadyExists: '{field}已存在',
+  forbidden: '请求未授权',
   notFound: '资源未找到',
   serverError: '服务器错误',
-  error: '发生错误',
+  error: '请求发生错误',
   goHome: '返回首页',
 
   welcome: '嗨！欢迎回来',

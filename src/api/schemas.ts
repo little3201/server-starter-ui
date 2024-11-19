@@ -52,7 +52,7 @@ export const checkSchemaExist = (name: string, id?: number) => {
 /**
  * Modify an existing row
  * @param id Row ID
- * @param data Updated row data
+ * @param row Updated row data
  * @returns Modified row
  */
 export const modifySchema = (id: number, row: Schema) => {
@@ -86,6 +86,22 @@ export const removeSchema = (id: number) => {
   return api.delete(`${SERVER_URL.SCHEMA}/${id}`)
 }
 
+/**
+ * Config rows
+ * @param id Row ID
+ * @param row  rows data
+ * @returns
+ */
 export const configSchemaFields = (id: number, rows: Array<Field>) => {
   return api.patch(`${SERVER_URL.SCHEMA}/${id}/fields`, rows)
+}
+
+/**
+ * Export rows
+ * @param ids Rows ID
+ * @returns
+ */
+export const exprotSchemas = (ids?: number[]) => {
+  const params = ids ? { ids: ids.join(',') } : {}
+  return api.get(`${SERVER_URL.SCHEMA}/export`, { params, responseType: 'blob' })
 }

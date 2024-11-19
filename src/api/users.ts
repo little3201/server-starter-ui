@@ -53,7 +53,7 @@ export const createUser = (row: User) => {
 /**
  * Modify an existing row
  * @param id Row ID
- * @param data Updated row data
+ * @param row Updated row data
  * @returns Modified row
  */
 export const modifyUser = (id: number, row: User) => {

@@ -16,7 +16,7 @@ const api: AxiosInstance = axios.create({
 // 请求拦截器
 api.interceptors.request.use(
   (config: InternalAxiosRequestConfig) => {
-    config.headers.Authorization = 'Bearer ' + localStorage.getItem('access_token')
+    config.headers.Authorization = `Bearer ${localStorage.getItem('access_token')}`
 
     // 创建 AbortController 实例
     const controller = new AbortController()
@@ -24,7 +24,6 @@ api.interceptors.request.use(
     config.signal = controller.signal
     abortControllerMap.set(uniqueKey, controller)
 
-    defaultRequestInterceptors(config)
     return config
   },
   (error: AxiosError) => {
@@ -44,6 +43,8 @@ api.interceptors.response.use(
     if (error.response?.status === 401) {
       localStorage.removeItem('access_token')
       router.replace('/login')
+    } else if (error.response?.status === 403) {
+      ElMessage.error({ message: t('forbidden'), grouping: true })
     } else if (error.response?.status === 404) {
       ElMessage.error({ message: t('notFound'), grouping: true })
     } else if (error.response?.status === 500) {
@@ -54,22 +55,6 @@ api.interceptors.response.use(
     return Promise.reject(error)
   }
 )
-
-const defaultRequestInterceptors = (config: InternalAxiosRequestConfig) => {
-  if (config.method === 'get' && config.params) {
-    let url = config.url as string
-    url += '?'
-    Object.keys(config.params).forEach((key) => {
-      if (config.params[key] !== undefined && config.params[key] !== null && config.params[key] !== '') {
-        url += `${key}=${encodeURIComponent(config.params[key])}&`
-      }
-    })
-    url = url.substring(0, url.length - 1)
-    config.params = {}
-    config.url = url
-  }
-  return config
-}
 
 const cancelRequest = (url: string | string[], method: string = 'get') => {
   const urlList = Array.isArray(url) ? url : [url]

@@ -59,7 +59,7 @@ export const createGroup = (row: Group) => {
 /**
  * Modify an existing row
  * @param id Row ID
- * @param data Updated row data
+ * @param row Updated row data
  * @returns Modified row
  */
 export const modifyGroup = (id: number, row: Group) => {

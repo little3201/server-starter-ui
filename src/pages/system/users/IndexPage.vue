@@ -228,7 +228,7 @@ function handleCheckedChange(value: string[]) {
             <div class="i-material-symbols:upload-file-outline-rounded" />{{ $t('import') }}
           </ElButton>
           <ElButton type="success" plain>
-            <div class="i-material-symbols:file-save-outline-rounded" />{{ $t('export') }}
+            <div class="i-material-symbols:file-export-outline-rounded" />{{ $t('export') }}
           </ElButton>
         </ElCol>
 

@@ -238,7 +238,7 @@ function handleCheckedChange(value: string[]) {
     </ElSpace>
 
     <DialogView v-model="dialogVisible" :title="$t('upload')" width="35%">
-      <ElUpload ref="uploadRef" :limit="1" drag action="/api/upload">
+      <ElUpload ref="uploadRef" :limit="1" drag action="/api/files/upload">
         <div class="el-icon--upload inline-flex justify-center">
           <div class="i-material-symbols:upload-rounded" />
         </div>

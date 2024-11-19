@@ -42,7 +42,7 @@ export const fetchPrivilege = (id: number) => {
 /**
  * Modify an existing row
  * @param id Row ID
- * @param data Updated row data
+ * @param row Updated row data
  * @returns Modified row
  */
 export const modifyPrivilege = (id: number, row: Privilege) => {

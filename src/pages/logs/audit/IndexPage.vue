@@ -152,7 +152,7 @@ function handleCheckedChange(value: string[]) {
       <ElRow :gutter="20" justify="space-between" class="mb-4">
         <ElCol :span="16" class="text-left">
           <ElButton type="success" plain>
-            <div class="i-material-symbols:file-save-outline-rounded" />{{ $t('export') }}
+            <div class="i-material-symbols:file-export-outline-rounded" />{{ $t('export') }}
           </ElButton>
         </ElCol>
 

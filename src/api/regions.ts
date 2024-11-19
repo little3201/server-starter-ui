@@ -45,7 +45,7 @@ export const createRegion = (row: Region) => {
 /**
  * Modify an existing row
  * @param id Row ID
- * @param data Updated row data
+ * @param row Updated row data
  * @returns Modified row
  */
 export const modifyRegion = (id: number, row: Region) => {

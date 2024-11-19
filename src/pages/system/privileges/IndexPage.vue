@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, reactive, onMounted } from 'vue'
-import type { FormInstance, FormRules } from 'element-plus'
+import type { FormInstance, FormRules, UploadInstance } from 'element-plus'
 import draggable from 'vuedraggable'
 import DialogView from 'components/DialogView.vue'
 import {
@@ -28,6 +28,10 @@ const columns = ref<Array<string>>(['name', 'enabled', 'description'])
 const buttonOptions = ref<Array<Dictionary>>([])
 const saveLoading = ref<boolean>(false)
 const dialogVisible = ref<boolean>(false)
+
+const importVisible = ref<boolean>(false)
+const importLoading = ref<boolean>(false)
+const importRef = ref<UploadInstance>()
 
 const filters = ref({
   name: null,
@@ -115,6 +119,13 @@ onMounted(() => {
 })
 
 /**
+ * 导入
+ */
+function importRows() {
+  importVisible.value = true
+}
+
+/**
  * 弹出框
  * @param id 主键
  */
@@ -159,6 +170,15 @@ async function onSubmit(formEl: FormInstance | undefined) {
       }
     }
   })
+}
+
+/**
+ * 表单提交
+ */
+async function onImportSubmit(importEl: UploadInstance | undefined) {
+  if (!importEl) return
+
+  importLoading.value = true
 }
 
 /**
@@ -221,11 +241,11 @@ function handleCheckedChange(value: string[]) {
     <ElCard shadow="never">
       <ElRow :gutter="20" justify="space-between" class="mb-4">
         <ElCol :span="16" class="text-left">
-          <ElButton type="warning" plain @click="dialogVisible = true">
+          <ElButton type="warning" plain @click="importRows">
             <div class="i-material-symbols:upload-file-outline-rounded" />{{ $t('import') }}
           </ElButton>
           <ElButton type="success" plain>
-            <div class="i-material-symbols:file-save-outline-rounded" />{{ $t('export') }}
+            <div class="i-material-symbols:file-export-outline-rounded" />{{ $t('export') }}
           </ElButton>
         </ElCol>
         <ElCol :span="8" class="text-right">
@@ -357,27 +377,6 @@ function handleCheckedChange(value: string[]) {
               :type="actions[item.name]" class="mr-2 mb-2" @change="onCheckChange(item.name)">
               {{ $t(item.name) }}
             </ElCheckTag>
-
-            <!-- <ElSelect multiple v-model="form.actions" :placeholder="$t('selectText', { field: $t('actions') })">
-              <ElOption v-if="form.name !== 'files' && !form.name.includes('Log')" value="add" :label="$t('add')" />
-              <ElOption v-if="form.name !== 'files' && !form.name.includes('Log')" value="edit" :label="$t('edit')" />
-              <ElOption value="remove" :label="$t('remove')" />
-              <ElOption v-if="form.name !== 'files' && !form.name.includes('Log')" value="import"
-                :label="$t('import')" />
-              <ElOption v-if="form.name !== 'files'" value="export" :label="$t('export')" />
-              <ElOption v-if="form.name === 'groups' || form.name === 'roles'" value="relation"
-                :label="$t('relation')" />
-              <ElOption v-if="form.name.includes('Log')" value="clear" :label="$t('clear')" />
-              <ElOption v-if="form.name.includes('Log')" value="detail" :label="$t('detail')" />
-              <ElOption v-if="form.name === 'generators'" value="config" :label="$t('config')" />
-              <ElOption v-if="form.name === 'generators'" value="execute" :label="$t('execute')" />
-              <ElOption v-if="form.name === 'generators' || form.name === 'templates'" value="preview"
-                :label="$t('preview')" />
-              <template v-if="form.name === 'files'">
-                <ElOption value="upload" :label="$t('upload')" />
-                <ElOption value="download" :label="$t('download')" />
-              </template>
-            </ElSelect> -->
           </ElFormItem>
         </ElCol>
       </ElRow>
@@ -394,6 +393,34 @@ function handleCheckedChange(value: string[]) {
         <div class="i-material-symbols:close" />{{ $t('cancel') }}
       </ElButton>
       <ElButton type="primary" :loading="saveLoading" @click="onSubmit(formRef)">
+        <div class="i-material-symbols:check-circle-outline-rounded" /> {{ $t('submit') }}
+      </ElButton>
+    </template>
+  </DialogView>
+
+  <!-- import -->
+  <DialogView v-model="importVisible" :title="$t('import')" width="36%">
+    <p>模版下载：<a :href="`templates/equipments.xlsx`" download="仪器设备模版.xlsx">仪器设备模版.xlsx</a></p>
+    <ElUpload ref="importRef" :limit="1" drag action="/api/privileges/import"
+      accept=".xls,.xlsx,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-excel">
+      <div class="el-icon--upload inline-flex justify-center">
+        <div class="i-material-symbols:upload-rounded" />
+      </div>
+      <div class="el-upload__text">
+        Drop file here or <em>click to upload</em>
+      </div>
+      <template #tip>
+        <div class="el-upload__tip">
+          File with a size less than 50MB.
+        </div>
+      </template>
+    </ElUpload>
+    <p class="text-red">xxxx</p>
+    <template #footer>
+      <ElButton @click="importVisible = false">
+        <div class="i-material-symbols:close" />{{ $t('cancel') }}
+      </ElButton>
+      <ElButton type="primary" :loading="importLoading" @click="onImportSubmit(importRef)">
         <div class="i-material-symbols:check-circle-outline-rounded" /> {{ $t('submit') }}
       </ElButton>
     </template>

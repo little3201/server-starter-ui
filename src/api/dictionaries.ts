@@ -60,7 +60,7 @@ export const createDictionary = (row: Dictionary) => {
 /**
  * Modify an existing row
  * @param id Row ID
- * @param data Updated row data
+ * @param row Updated row data
  * @returns Modified row
  */
 export const modifyDictionary = (id: number, row: Dictionary) => {

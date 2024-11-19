@@ -127,9 +127,10 @@ export default {
   removeConfirm: 'Are you sure to delete this?',
 
   alreadyExists: '{field} already exists',
+  forbidden: 'Request Forbidden',
   notFound: 'Resource not found',
   serverError: 'Server error',
-  error: 'An error occurred',
+  error: 'An error occurred on the request',
   goHome: 'Go Home',
 
   welcome: 'Hi! Welcome Back.',

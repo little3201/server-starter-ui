@@ -180,4 +180,8 @@ function show() {
 .el-main {
   display: flex;
 }
+
+.el-form-item {
+  margin-bottom: 18px;
+}
 </style>

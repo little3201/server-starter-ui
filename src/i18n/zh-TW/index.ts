@@ -127,9 +127,10 @@ export default {
   removeConfirm: '是否確定要刪除這條數據？',
 
   alreadyExists: '{field}已存在',
+  forbidden: '請求未授權',
   notFound: '資源未找到',
   serverError: '伺服器錯誤',
-  error: '發生錯誤',
+  error: '請求發生錯誤',
   goHome: '返回首頁',
 
   welcome: '嗨！歡迎回來',

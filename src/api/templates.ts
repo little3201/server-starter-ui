@@ -43,7 +43,7 @@ export const createTemplate = (row: Template) => {
 /**
  * Modify an existing row
  * @param id Row ID
- * @param data Updated row data
+ * @param row Updated row data
  * @returns Modified row
  */
 export const modifyTemplate = (id: number, row: Template) => {
@@ -66,4 +66,14 @@ export const enableTemplate = (id: number) => {
  */
 export const removeTemplate = (id: number) => {
   return api.delete(`${SERVER_URL.TEMPLATE}/${id}`)
+}
+
+/**
+ * Export rows
+ * @param ids Rows ID
+ * @returns
+ */
+export const exprotTemplates = (ids?: number[]) => {
+  const params = ids ? { ids: ids.join(',') } : {}
+  return api.get(`${SERVER_URL.TEMPLATE}/export`, { params, responseType: 'blob' })
 }
