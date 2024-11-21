@@ -15,14 +15,14 @@ withDefaults(defineProps<{
   <template v-for="link in essentialLinks" :key="link.name">
     <ElSubMenu v-if="link.children" :index="pathResolve(parentPath, link.meta.path)">
       <template #title>
-        <div :class="[link.meta.icon, 'mr-2']" />
+        <div :class="[`i-material-symbols:${link.meta.icon}`, 'mr-2']" />
         {{ $t(link.name) }}
       </template>
       <EssentialList :essentialLinks="link.children" :parent-path="pathResolve(parentPath, link.meta.path)" />
     </ElSubMenu>
 
     <ElMenuItem v-else :index="pathResolve(parentPath, link.meta.path)">
-      <div :class="[link.meta.icon, 'mr-2 ']" />{{
+      <div :class="[`i-material-symbols:${link.meta.icon}`, 'mr-2 ']" />{{
         $t(link.name) }}
     </ElMenuItem>
   </template>

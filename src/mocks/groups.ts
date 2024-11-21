@@ -1,5 +1,5 @@
 import { http, HttpResponse } from 'msw'
-import { SERVER_URL } from 'src/api/paths'
+import { SERVER_URL } from 'src/constants'
 import type { Group, TreeNode, GroupMembers } from 'src/models'
 
 const datas: Group[] = [
@@ -85,7 +85,7 @@ export const groupsHandlers = [
   http.get(`/api${SERVER_URL.GROUP}/:id`, ({ params }) => {
     const { id } = params
     if (id) {
-      let array = datas.filter(item => item.id === Number(id))
+      const array = datas.filter(item => item.id === Number(id))
       return HttpResponse.json(array[0])
     } else {
       return HttpResponse.json(null)

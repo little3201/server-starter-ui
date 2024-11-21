@@ -1,5 +1,5 @@
 import { http, HttpResponse } from 'msw'
-import { SERVER_URL } from 'src/api/paths'
+import { SERVER_URL } from 'src/constants'
 import type { Role, RolePrivileges, RoleMembers } from 'src/models'
 
 const datas: Role[] = []
@@ -14,7 +14,6 @@ for (let i = 1; i < 28; i++) {
   }
   datas.push(data)
 }
-
 
 const privileges: RolePrivileges[] = []
 

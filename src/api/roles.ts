@@ -1,5 +1,5 @@
 import { api } from 'boot/axios'
-import { SERVER_URL } from 'src/api/paths'
+import { SERVER_URL } from 'src/constants'
 import type { Pagination, Role } from 'src/models'
 
 /**
@@ -39,6 +39,16 @@ export const fetchRole = (id: number) => {
 }
 
 /**
+ * Check if a specific row exists by name
+ * @param name Row name
+ * @param id Row ID
+ * @returns Row data
+ */
+export const checkRoleExists = (name: string, id?: number) => {
+  return api.get(`${SERVER_URL.ROLE}/exists`, { params: { name, id } })
+}
+
+/**
  * Create a new row
  * @param row Row data
  * @returns Created row
@@ -50,7 +60,7 @@ export const createRole = (row: Role) => {
 /**
  * Modify an existing row
  * @param id Row ID
- * @param data Updated row data
+ * @param row Updated row data
  * @returns Modified row
  */
 export const modifyRole = (id: number, row: Role) => {

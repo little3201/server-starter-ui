@@ -1,6 +1,6 @@
 import { http, HttpResponse } from 'msw'
 import type { User } from 'src/models'
-import { SERVER_URL } from 'src/api/paths'
+import { SERVER_URL } from 'src/constants'
 import { dayjs } from 'element-plus'
 
 const datas: User[] = []
@@ -10,8 +10,8 @@ for (let i = 1; i < 28; i++) {
     id: i,
     username: 'username' + i,
     fullName: 'full name' + i,
-    avatar: '/src/assets/images/avatar.jpg',
-    email: 'username' + i + '@test.com',
+    avatar: '/images/avatar.jpg',
+    email: 'usexxx' + '@test.com',
     accountNonLocked: i % 2 > 0,
     enabled: i % 2 > 0,
     accountExpiresAt: i > 3 ? dayjs().add(Math.floor(Math.random() * 30), 'day').toDate() : undefined,
@@ -38,7 +38,7 @@ export const usersHandlers = [
     const size = url.searchParams.get('size')
     // Construct a JSON response with the list of all Row
     // as the response body.
-    let data = {
+    const data = {
       content: Array.from(datas.slice(Number(page) * Number(size), (Number(page) + 1) * Number(size))),
       page: {
         totalElements: datas.length

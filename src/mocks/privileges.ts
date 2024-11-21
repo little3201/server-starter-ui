@@ -1,7 +1,6 @@
 import { http, HttpResponse } from 'msw'
-import { SERVER_URL } from 'src/api/paths'
+import { SERVER_URL } from 'src/constants'
 import type { Privilege, PrivilegeTreeNode } from 'src/models'
-
 
 const datas: Privilege[] = [
   {
@@ -10,7 +9,7 @@ const datas: Privilege[] = [
     component: '#',
     redirect: '/system/users',
     name: 'system',
-    icon: 'i-material-symbols:settings-outline-rounded',
+    icon: 'settings-outline-rounded',
     count: 5,
     enabled: true,
     description: 'this is description for this row'
@@ -21,7 +20,7 @@ const datas: Privilege[] = [
     component: '#',
     redirect: '/logs/operation',
     name: 'logs',
-    icon: 'i-material-symbols:lab-profile-outline-rounded ',
+    icon: 'lab-profile-outline-rounded ',
     count: 3,
     enabled: true,
     description: 'this is description for this row'
@@ -29,32 +28,32 @@ const datas: Privilege[] = [
   {
     id: 12,
     path: 'regions',
-    component: 'pages/regions/Index',
+    component: 'pages/regions/IndexPage',
     name: 'regions',
-    icon: 'i-material-symbols:location-on-outline-rounded',
-    actions: ['add', 'edit', 'remove', 'import', 'export'],
+    icon: 'location-on-outline-rounded',
+    actions: ['create', 'modify', 'remove', 'import', 'export'],
     count: 0,
-    enabled: true,
+    enabled: false,
     description: 'this is description for this row'
   },
   {
     id: 14,
     path: 'files',
-    component: 'pages/files/Index',
+    component: 'pages/files/IndexPage',
     name: 'files',
-    icon: 'i-material-symbols:folder-open-outline-rounded',
+    icon: 'folder-open-outline-rounded',
     actions: ['upload', 'download', 'remove'],
     count: 0,
     enabled: true,
     description: 'this is description for this row'
   },
   {
-    id: 16,
-    path: 'exploiter',
+    id: 14,
+    path: 'exploiters',
     component: '#',
-    name: 'exploiter',
-    redirect: '/exploiter',
-    icon: 'i-material-symbols:build-outline-rounded',
+    name: 'exploiters',
+    redirect: '/exploiters',
+    icon: 'build-outline-rounded',
     count: 1,
     enabled: true,
     description: 'this is description for this row'
@@ -66,132 +65,144 @@ const subDatas: Privilege[] = [
     id: 2,
     superiorId: 1,
     path: 'groups',
-    component: 'pages/system/groups/Index',
+    component: 'pages/system/groups/IndexPage',
     name: 'groups',
-    actions: ['add', 'edit', 'remove', 'import', 'export', 'relation'],
+    actions: ['create', 'modify', 'remove', 'import', 'export', 'relation'],
     count: 0,
     enabled: true,
-    icon: 'i-material-symbols:account-tree-outline-rounded',
+    icon: 'account-tree-outline-rounded',
     description: 'this is description for this row'
   },
   {
     id: 3,
     superiorId: 1,
     path: 'users',
-    component: 'pages/system/users/Index',
+    component: 'pages/system/users/IndexPage',
     name: 'users',
-    actions: ['add', 'edit', 'remove', 'import', 'export'],
+    actions: ['create', 'modify', 'remove', 'import', 'export'],
     count: 0,
     enabled: true,
-    icon: 'i-material-symbols:person-outline-rounded',
+    icon: 'person-outline-rounded',
     description: 'this is description for this row'
   },
   {
     id: 4,
     superiorId: 1,
     path: 'privileges',
-    component: 'pages/system/privileges/Index',
+    component: 'pages/system/privileges/IndexPage',
     name: 'privileges',
-    actions: ['edit', 'import', 'export'],
+    actions: ['modify', 'import', 'export'],
     count: 0,
     enabled: true,
-    icon: 'i-material-symbols:admin-panel-settings-outline-rounded',
+    icon: 'admin-panel-settings-outline-rounded',
     description: 'this is description for this row'
   },
   {
     id: 5,
     superiorId: 1,
     path: 'roles',
-    component: 'pages/system/roles/Index',
+    component: 'pages/system/roles/IndexPage',
     name: 'roles',
-    actions: ['add', 'edit', 'remove', 'import', 'export', 'relation'],
+    actions: ['create', 'modify', 'remove', 'import', 'export', 'relation'],
     count: 0,
     enabled: true,
-    icon: 'i-material-symbols:shield-person-outline-rounded',
+    icon: 'shield-person-outline-rounded',
     description: 'this is description for this row'
   },
   {
     id: 6,
     superiorId: 1,
     path: 'dictionaries',
-    component: 'pages/system/dictionaries/Index',
+    component: 'pages/system/dictionaries/IndexPage',
     name: 'dictionaries',
-    actions: ['add', 'edit', 'remove', 'import', 'export'],
+    actions: ['create', 'modify', 'remove', 'import', 'export'],
     count: 0,
     enabled: true,
-    icon: 'i-material-symbols:book-3-outline-rounded',
+    icon: 'book-3-outline-rounded',
     description: 'this is description for this row'
   },
   {
     id: 8,
     superiorId: 7,
     path: 'operation',
-    component: 'pages/logs/operation/Index',
+    component: 'pages/logs/operation/IndexPage',
     name: 'operationLog',
     actions: ['clear', 'detail', 'export', 'remove'],
     count: 0,
     enabled: true,
-    icon: 'i-material-symbols:clinical-notes-outline-rounded',
+    icon: 'clinical-notes-outline-rounded',
     description: 'this is description for this row'
   },
   {
     id: 9,
     superiorId: 7,
     path: 'access',
-    component: 'pages/logs/access/Index',
+    component: 'pages/logs/access/IndexPage',
     name: 'accessLog',
     actions: ['clear', 'detail', 'export', 'remove'],
     count: 0,
     enabled: true,
-    icon: 'i-material-symbols:sticky-note-2-outline-rounded',
+    icon: 'sticky-note-2-outline-rounded',
     description: 'this is description for this row'
   },
   {
     id: 10,
     superiorId: 7,
     path: 'audit',
-    component: 'pages/logs/audit/Index',
+    component: 'pages/logs/audit/IndexPage',
     name: 'auditLog',
     actions: ['detail', 'export'],
     count: 0,
     enabled: true,
-    icon: 'i-material-symbols:note-alt-outline-rounded',
+    icon: 'note-alt-outline-rounded',
     description: 'this is description for this row'
   },
   {
     id: 11,
     superiorId: 7,
     path: 'scheduler',
-    component: 'pages/logs/scheduler/Index',
+    component: 'pages/logs/scheduler/IndexPage',
     name: 'schedulerLog',
     actions: ['clear', 'detail', 'export', 'remove'],
     count: 0,
     enabled: true,
-    icon: 'i-material-symbols:event-note-outline-rounded',
+    icon: 'event-note-outline-rounded',
+    description: 'this is description for this row'
+  },
+  {
+    id: 15,
+    superiorId: 14,
+    path: 'generators',
+    name: 'generators',
+    component: 'pages/exploiters/generators/IndexPage',
+    actions: ['create', 'modify', 'remove', 'import', 'export', 'config', 'preview'],
+    count: 0,
+    enabled: true,
+    icon: 'genetics-rounded',
+    description: 'this is description for this row'
+  },
+  {
+    id: 16,
+    superiorId: 14,
+    path: 'scripts',
+    name: 'scripts',
+    component: 'pages/exploiters/scripts/IndexPage',
+    actions: ['create', 'modify', 'remove', 'import', 'export'],
+    count: 0,
+    enabled: true,
+    icon: 'terminal-rounded',
     description: 'this is description for this row'
   },
   {
     id: 17,
-    superiorId: 16,
-    path: 'generator',
-    name: 'generator',
-    component: 'pages/exploiter/generator/Index',
-    actions: ['add', 'edit', 'remove', 'import', 'export', 'config', 'preview'],
+    superiorId: 14,
+    path: 'templates',
+    name: 'templates',
+    component: 'pages/exploiters/templates/IndexPage',
+    actions: ['create', 'modify', 'remove', 'import', 'export'],
     count: 0,
     enabled: true,
-    icon: 'i-material-symbols:code-rounded',
-    description: 'this is description for this row'
-  },
-  {
-    id: 18,
-    superiorId: 16,
-    path: 'deploy',
-    name: 'deploy',
-    component: 'pages/exploiter/deploy/Index',
-    actions: ['add', 'edit', 'remove', 'import', 'export'],
-    count: 0,
-    enabled: true,
-    icon: 'i-material-symbols:terminal-rounded',
+    icon: 'code-rounded',
     description: 'this is description for this row'
   }
 ]
@@ -204,7 +215,7 @@ const treeNodes: PrivilegeTreeNode[] = [
       path: 'system',
       component: '#',
       redirect: '/system/users',
-      icon: 'i-material-symbols:settings-outline-rounded',
+      icon: 'settings-outline-rounded'
     },
     children: [
       {
@@ -212,8 +223,8 @@ const treeNodes: PrivilegeTreeNode[] = [
         name: 'groups',
         meta: {
           path: 'groups',
-          component: 'pages/system/groups/Index',
-          icon: 'i-material-symbols:account-tree-outline-rounded'
+          component: 'pages/system/groups/IndexPage',
+          icon: 'account-tree-outline-rounded'
         }
       },
       {
@@ -221,8 +232,8 @@ const treeNodes: PrivilegeTreeNode[] = [
         name: 'users',
         meta: {
           path: 'users',
-          component: 'pages/system/users/Index',
-          icon: 'i-material-symbols:person-outline-rounded'
+          component: 'pages/system/users/IndexPage',
+          icon: 'person-outline-rounded'
         }
       },
       {
@@ -230,8 +241,8 @@ const treeNodes: PrivilegeTreeNode[] = [
         name: 'roles',
         meta: {
           path: 'roles',
-          component: 'pages/system/roles/Index',
-          icon: 'i-material-symbols:shield-person-outline-rounded'
+          component: 'pages/system/roles/IndexPage',
+          icon: 'shield-person-outline-rounded'
         }
       },
       {
@@ -239,8 +250,8 @@ const treeNodes: PrivilegeTreeNode[] = [
         name: 'dictionaries',
         meta: {
           path: 'dictionaries',
-          component: 'pages/system/dictionaries/Index',
-          icon: 'i-material-symbols:book-3-outline-rounded'
+          component: 'pages/system/dictionaries/IndexPage',
+          icon: 'book-3-outline-rounded'
         }
       },
       {
@@ -248,8 +259,8 @@ const treeNodes: PrivilegeTreeNode[] = [
         name: 'privileges',
         meta: {
           path: 'privileges',
-          component: 'pages/system/privileges/Index',
-          icon: 'i-material-symbols:admin-panel-settings-outline-rounded'
+          component: 'pages/system/privileges/IndexPage',
+          icon: 'admin-panel-settings-outline-rounded'
         }
       }
     ]
@@ -261,7 +272,7 @@ const treeNodes: PrivilegeTreeNode[] = [
       path: 'logs',
       component: '#',
       redirect: '/logs/operation',
-      icon: 'i-material-symbols:lab-profile-outline-rounded',
+      icon: 'lab-profile-outline-rounded'
     },
     children: [
       {
@@ -269,8 +280,8 @@ const treeNodes: PrivilegeTreeNode[] = [
         name: 'operationLog',
         meta: {
           path: 'operation',
-          component: 'pages/logs/operation/Index',
-          icon: 'i-material-symbols:clinical-notes-outline-rounded'
+          component: 'pages/logs/operation/IndexPage',
+          icon: 'clinical-notes-outline-rounded'
         }
       },
       {
@@ -278,8 +289,8 @@ const treeNodes: PrivilegeTreeNode[] = [
         name: 'accessLog',
         meta: {
           path: 'access',
-          component: 'pages/logs/access/Index',
-          icon: 'i-material-symbols:sticky-note-2-outline-rounded'
+          component: 'pages/logs/access/IndexPage',
+          icon: 'sticky-note-2-outline-rounded'
         }
       },
       {
@@ -287,8 +298,8 @@ const treeNodes: PrivilegeTreeNode[] = [
         name: 'auditLog',
         meta: {
           path: 'audit',
-          component: 'pages/logs/audit/Index',
-          icon: 'i-material-symbols:note-alt-outline-rounded'
+          component: 'pages/logs/audit/IndexPage',
+          icon: 'note-alt-outline-rounded'
         }
       },
       {
@@ -296,56 +307,65 @@ const treeNodes: PrivilegeTreeNode[] = [
         name: 'schedulerLog',
         meta: {
           path: 'scheduler',
-          component: 'pages/logs/scheduler/Index',
-          icon: 'i-material-symbols:event-note-outline-rounded'
+          component: 'pages/logs/scheduler/IndexPage',
+          icon: 'event-note-outline-rounded'
         }
       }
     ]
   },
+  // {
+  //   id: 12,
+  //   name: 'regions',
+  //   meta: {
+  //     path: 'regions',
+  //     component: 'pages/regions/IndexPage',
+  //     icon: 'location-on-outline-rounded'
+  //   }
+  // },
   {
-    id: 12,
-    name: 'regions',
+    id: 13,
+    name: 'files',
     meta: {
-      path: 'regions',
-      component: 'pages/regions/Index',
-      icon: 'i-material-symbols:location-on-outline-rounded',
+      path: 'files',
+      component: 'pages/files/IndexPage',
+      icon: 'folder-open-outline-rounded'
     }
   },
   {
     id: 14,
-    name: 'files',
+    name: 'exploiters',
     meta: {
-      path: 'files',
-      component: 'pages/files/Index',
-      icon: 'i-material-symbols:folder-open-outline-rounded',
-    }
-  },
-  {
-    id: 16,
-    name: 'exploiter',
-    meta: {
-      path: 'exploiter',
+      path: 'exploiters',
       component: '#',
-      redirect: '/exploiter/generator',
-      icon: 'i-material-symbols:build-outline-rounded',
+      redirect: '/exploiters/generators',
+      icon: 'build-outline-rounded'
     },
     children: [
       {
-        id: 17,
-        name: 'generator',
+        id: 15,
+        name: 'generators',
         meta: {
-          path: 'generator',
-          component: 'pages/exploiter/generator/Index',
-          icon: 'i-material-symbols:code-rounded'
+          path: 'generators',
+          component: 'pages/exploiters/generators/IndexPage',
+          icon: 'code-rounded'
         }
       },
       {
-        id: 18,
-        name: 'deploy',
+        id: 16,
+        name: 'scripts',
         meta: {
-          path: 'deploy',
-          component: 'pages/exploiter/deploy/Index',
-          icon: 'i-material-symbols:terminal-rounded'
+          path: 'scripts',
+          component: 'pages/exploiters/scripts/IndexPage',
+          icon: 'terminal-rounded'
+        }
+      },
+      {
+        id: 17,
+        name: 'templates',
+        meta: {
+          path: 'templates',
+          component: 'pages/exploiters/templates/IndexPage',
+          icon: 'terminal-rounded'
         }
       }
     ]

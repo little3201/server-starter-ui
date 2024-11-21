@@ -1,9 +1,13 @@
 <script setup lang="ts">
 import { ref, reactive, onMounted } from 'vue'
 import type { FormInstance, FormRules } from 'element-plus'
-import Dialog from 'components/Dialog.vue'
-import { retrieveRegions, fetchRegion, createRegion, modifyRegion, removeRegion } from 'src/api/regions'
+import type { InternalRuleItem } from 'async-validator/dist-types/interface'
+import { useI18n } from 'vue-i18n'
+import DialogView from 'components/DialogView.vue'
+import { retrieveRegions, fetchRegion, createRegion, modifyRegion, removeRegion, enableRegion, checkRegionExists } from 'src/api/regions'
 import type { Pagination, Region } from 'src/models'
+
+const { t } = useI18n()
 
 const props = defineProps<{
   superiorId: number,
@@ -24,18 +28,28 @@ const dialogVisible = ref<boolean>(false)
 const formRef = ref<FormInstance>()
 const initialValues: Region = {
   name: '',
-  superiorId: props.superiorId,
-  areaCode: null,
-  postalCode: null,
-  description: ''
+  superiorId: props.superiorId
 }
 const form = ref<Region>({ ...initialValues })
 
 const rules = reactive<FormRules<typeof form>>({
   name: [
-    { required: true, trigger: 'blur' }
+    { required: true, message: t('inputText', { field: t('name') }), trigger: 'blur' },
+    { validator: checkNameExistsence, trigger: 'blur' }
   ]
 })
+
+function checkNameExistsence(rule: InternalRuleItem, value: string, callback: (error?: string | Error) => void) {
+  if (form.value.superiorId) {
+    checkRegionExists(form.value.superiorId, value, form.value.id).then(res => {
+      if (res.data) {
+        callback(new Error(t('alreadyExists', { field: t('name') })))
+      } else {
+        callback()
+      }
+    })
+  }
+}
 
 /**
  * 分页变化
@@ -56,8 +70,7 @@ async function load() {
   retrieveRegions(pagination, { superiorId: props.superiorId }).then(res => {
     datas.value = res.data.content
     total.value = res.data.page.totalElements
-  }).finally(() => loading.value = false)
-
+  }).finally(() => { loading.value = false })
 }
 
 onMounted(() => {
@@ -87,26 +100,33 @@ async function loadOne(id: number) {
 }
 
 /**
+ * 启用、停用
+ * @param id 主键
+ */
+async function enableChange(id: number) {
+  enableRegion(id).then(() => { load() })
+}
+
+/**
  * 表单提交
  */
-function onSubmit() {
-  let formEl = formRef.value
+function onSubmit(formEl: FormInstance | undefined) {
   if (!formEl) return
 
-  formEl.validate((valid, fields) => {
+  formEl.validate((valid) => {
     if (valid) {
       saveLoading.value = true
       if (form.value.id) {
         modifyRegion(form.value.id, form.value).then(() => {
           load()
           dialogVisible.value = false
-        }).finally(() => saveLoading.value = false)
+        }).finally(() => { saveLoading.value = false })
       } else {
         form.value.superiorId = props.superiorId
         createRegion(form.value).then(() => {
           load()
           dialogVisible.value = false
-        }).finally(() => saveLoading.value = false)
+        }).finally(() => { saveLoading.value = false })
       }
     }
   })
@@ -161,7 +181,8 @@ function confirmEvent(id: number) {
       <ElTableColumn prop="postalCode" :label="$t('postalCode')" />
       <ElTableColumn prop="enabled" :label="$t('enabled')">
         <template #default="scope">
-          <ElSwitch size="small" v-model="scope.row.enabled" style="--el-switch-on-color: var(--el-color-success);" />
+          <ElSwitch size="small" v-model="scope.row.enabled" @change="enableChange(scope.row.id)"
+            style="--el-switch-on-color: var(--el-color-success);" />
         </template>
       </ElTableColumn>
       <ElTableColumn show-overflow-tooltip prop="description" :label="$t('description')" />
@@ -183,33 +204,34 @@ function confirmEvent(id: number) {
     <ElPagination layout="prev, pager, next, sizes, jumper, ->, total" @change="pageChange" :total="total" />
   </ElCard>
 
-  <Dialog v-model="dialogVisible" :title="$t('regions')" width="25%">
+  <DialogView v-model="dialogVisible" :title="$t('regions')" width="25%">
     <ElForm ref="formRef" :model="form" :rules="rules" label-position="top">
       <ElRow :gutter="20" class="w-full !mx-0">
         <ElCol>
           <ElFormItem :label="$t('name')" prop="name">
-            <ElInput v-model="form.name" :placeholder="$t('inputText') + $t('name')" />
+            <ElInput v-model="form.name" :placeholder="$t('inputText', { field: $t('name') })" />
           </ElFormItem>
         </ElCol>
       </ElRow>
       <ElRow :gutter="20" class="w-full !mx-0">
         <ElCol>
           <ElFormItem :label="$t('areaCode')" prop="areaCode">
-            <ElInput v-model="form.areaCode" :placeholder="$t('inputText') + $t('areaCode')" />
+            <ElInput v-model="form.areaCode" :placeholder="$t('inputText', { field: $t('areaCode') })" />
           </ElFormItem>
         </ElCol>
       </ElRow>
       <ElRow :gutter="20" class="w-full !mx-0">
         <ElCol>
           <ElFormItem :label="$t('postalCode')" prop="postalCode">
-            <ElInput v-model="form.postalCode" :placeholder="$t('inputText') + $t('postalCode')" />
+            <ElInput v-model="form.postalCode" :placeholder="$t('inputText', { field: $t('postalCode') })" />
           </ElFormItem>
         </ElCol>
       </ElRow>
       <ElRow :gutter="20" class="w-full !mx-0">
         <ElCol>
           <ElFormItem :label="$t('description')" prop="description">
-            <ElInput v-model="form.description" type="textarea" :placeholder="$t('inputText') + $t('description')" />
+            <ElInput v-model="form.description" type="textarea"
+              :placeholder="$t('inputText', { field: $t('description') })" />
           </ElFormItem>
         </ElCol>
       </ElRow>
@@ -218,11 +240,11 @@ function confirmEvent(id: number) {
       <ElButton @click="dialogVisible = false">
         <div class="i-material-symbols:close" />{{ $t('cancel') }}
       </ElButton>
-      <ElButton type="primary" :loading="saveLoading" @click="onSubmit">
+      <ElButton type="primary" :loading="saveLoading" @click="onSubmit(formRef)">
         <div class="i-material-symbols:check-circle-outline-rounded" /> {{ $t('submit') }}
       </ElButton>
     </template>
-  </Dialog>
+  </DialogView>
 </template>
 
 <style lang="scss" scoped>

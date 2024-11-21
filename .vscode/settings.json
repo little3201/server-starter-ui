@@ -3,21 +3,20 @@
   "editor.guides.bracketPairs": true,
   "editor.formatOnSave": true,
   "editor.defaultFormatter": "dbaeumer.vscode-eslint",
-  "editor.codeActionsOnSave": [
-    "source.fixAll.eslint"
-  ],
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "explicit"
+  },
   "eslint.validate": [
     "javascript",
-    "javascriptreact",
     "typescript",
     "vue"
   ],
   "typescript.tsdk": "node_modules/typescript/lib",
-  "eslint.format.enable": true,
   "[scss]": {
     "editor.defaultFormatter": "vscode.css-language-features"
   },
   "[typescript]": {
     "editor.defaultFormatter": "vscode.typescript-language-features"
-  }
+  },
+  "eslint.format.enable": true
 }

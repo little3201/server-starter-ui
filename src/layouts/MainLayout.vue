@@ -3,7 +3,6 @@ import { computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAppStore } from 'stores/app-store'
 import { useUserStore } from 'stores/user-store'
-
 import ThemeToogle from 'components/ThemeToogle.vue'
 import LanguageSelector from 'components/LanguageSelector.vue'
 import EssentialList from 'components/EssentialList.vue'
@@ -25,7 +24,7 @@ function signOut() {
     <ElHeader class="flex flex-nowrap bg-[var(--el-color-primary)] z-10" height="50px">
       <div class="inline-flex flex-grow justify-between">
         <div class="inline-flex items-center">
-          <ElImage src="/vite.svg" alt="avatar" class="w-8 h-8" />
+          <ElImage src="/svgs/vite.svg" alt="avatar" class="w-8 h-8" />
           <span class="ml-3 text-20px font-bold text-white">{{ appStore.title }}</span>
         </div>
 

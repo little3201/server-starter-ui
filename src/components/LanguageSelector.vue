@@ -12,10 +12,10 @@ const localStore = useLocaleStore()
 const currentLang = computed(() => localStore.lang)
 
 const setHtmlPageLang = (locale: string = 'zh-CN') => {
-  const htmlElement = document.querySelector('html');
+  const htmlElement = document.querySelector('html')
 
   if (htmlElement) {
-    htmlElement.setAttribute('lang', locale);
+    htmlElement.setAttribute('lang', locale)
   }
 }
 
@@ -31,8 +31,9 @@ const setLang = (lang: string) => {
 
 <template>
   <ElDropdown trigger="click" @command="setLang">
-    <div id="translate" role="button" class="i-material-symbols:translate cursor-pointer w-6 h-6 text-white"
-      aria-labelledby="translate" />
+    <ElButton type="default" link>
+      <div class="i-material-symbols:translate cursor-pointer w-6 h-6 text-white"></div>
+    </ElButton>
     <template #dropdown>
       <ElDropdownMenu>
         <ElDropdownItem v-for="item in localeOptions" :key="item.value" :command="item.value">

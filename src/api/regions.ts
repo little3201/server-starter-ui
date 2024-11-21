@@ -1,5 +1,5 @@
 import { api } from 'boot/axios'
-import { SERVER_URL } from 'src/api/paths'
+import { SERVER_URL } from 'src/constants'
 import type { Pagination, Region } from 'src/models'
 
 /**
@@ -23,6 +23,17 @@ export const fetchRegion = (id: number) => {
 }
 
 /**
+ * Check if a specific row exists by name
+ * @param superiorId Superior ID
+ * @param name Row name
+ * @param id Row ID
+ * @returns Row data
+ */
+export const checkRegionExists = (superiorId: number, name: string, id?: number) => {
+  return api.get(`${SERVER_URL.REGION}/${superiorId}/exists`, { params: { name, id } })
+}
+
+/**
  * Create a new row
  * @param row Row data
  * @returns Created row
@@ -34,11 +45,20 @@ export const createRegion = (row: Region) => {
 /**
  * Modify an existing row
  * @param id Row ID
- * @param data Updated row data
+ * @param row Updated row data
  * @returns Modified row
  */
 export const modifyRegion = (id: number, row: Region) => {
   return api.put(`${SERVER_URL.REGION}/${id}`, row)
+}
+
+/**
+ * Enable or Disable an existing row
+ * @param id Row ID
+ * @returns Enable or Disable result
+ */
+export const enableRegion = (id: number) => {
+  return api.patch(`${SERVER_URL.REGION}/${id}`)
 }
 
 /**

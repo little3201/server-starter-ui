@@ -1,5 +1,5 @@
 import { api } from 'boot/axios'
-import { SERVER_URL } from 'src/api/paths'
+import { SERVER_URL } from 'src/constants'
 import type { Pagination, Group } from 'src/models'
 
 /**
@@ -38,6 +38,16 @@ export const fetchGroup = (id: number) => {
 }
 
 /**
+ * Check if a specific row exists by name
+ * @param name Row name
+ * @param id Row ID
+ * @returns Row data
+ */
+export const checkGroupExists = (name: string, id?: number) => {
+  return api.get(`${SERVER_URL.GROUP}/exists`, { params: { name, id } })
+}
+
+/**
  * Create a new row
  * @param row Row data
  * @returns Created row
@@ -49,7 +59,7 @@ export const createGroup = (row: Group) => {
 /**
  * Modify an existing row
  * @param id Row ID
- * @param data Updated row data
+ * @param row Updated row data
  * @returns Modified row
  */
 export const modifyGroup = (id: number, row: Group) => {

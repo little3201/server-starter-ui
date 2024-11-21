@@ -1,10 +1,8 @@
 import { api } from 'boot/axios'
-import { SERVER_URL } from 'src/api/paths'
+import { SERVER_URL } from 'src/constants'
 
 /**
  * Retrieve rows
- * @param page Page number
- * @param size Items per page
  * @param filters Optional filter or sort parameters
  * @returns Rows data
  */

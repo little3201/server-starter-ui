@@ -1,5 +1,5 @@
 import { api } from 'boot/axios'
-import { SERVER_URL } from 'src/api/paths'
+import { SERVER_URL } from 'src/constants'
 import type { Pagination, User } from 'src/models'
 
 /**
@@ -32,6 +32,16 @@ export const fetchMe = () => {
 }
 
 /**
+ * Check if a specific row exists by username
+ * @param username Row username
+ * @param id Row ID
+ * @returns Row data
+ */
+export const checkUserExists = (username: string, id?: number) => {
+  return api.get(`${SERVER_URL.USER}/exists`, { params: { username, id } })
+}
+
+/**
  * Create a new row
  * @param row Row data
  * @returns Created row
@@ -43,7 +53,7 @@ export const createUser = (row: User) => {
 /**
  * Modify an existing row
  * @param id Row ID
- * @param data Updated row data
+ * @param row Updated row data
  * @returns Modified row
  */
 export const modifyUser = (id: number, row: User) => {

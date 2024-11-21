@@ -24,7 +24,9 @@ export interface User extends AudtiMetadata {
 export interface Group extends AudtiMetadata {
   name: string
   superiorId?: number
-  enabled: boolean
+  principal?: string
+  members?: string[]
+  enabled?: boolean
   description?: string
 }
 
@@ -36,7 +38,7 @@ export interface GroupMembers {
 
 export interface Role extends AudtiMetadata {
   name: string
-  privileges: number | undefined
+  members?: string[]
   enabled?: boolean
   description?: string
 }
@@ -79,8 +81,8 @@ export interface Dictionary extends AudtiMetadata {
 export interface Region extends AudtiMetadata {
   name: string
   superiorId?: number
-  areaCode: number | null
-  postalCode: number | null
+  areaCode?: number
+  postalCode?: number
   hasChildren?: boolean
   enabled?: boolean
   description?: string
@@ -109,74 +111,84 @@ export interface OperationLog extends AudtiMetadata {
   operator: string
   ip: string
   location: string
-  referer?: string | null
-  sessionId?: string | null
-  os: string | null
-  deviceType?: string | null
-  userAgent?: string | null
-  browser: string | null
-  statusCode: number | null
-  operatedTime: Date | null
+  referer?: string
+  sessionId?: string
+  os?: string
+  deviceType?: string
+  userAgent?: string
+  browser?: string
+  statusCode?: number
+  operatedTime?: Date
 }
 
 export interface AccessLog extends AudtiMetadata {
   url: string
-  httpMethod: string | null
+  httpMethod: string
   operator: string
-  params?: string | null
-  body?: string | null
+  params?: string
+  body?: string
   ip: string
   location: string
-  responseTimes: number
-  statusCode: number | null
-  responseMessage: string | null
+  responseTimes?: number
+  statusCode?: number
+  responseMessage?: string
 }
 
 export interface AuditLog extends AudtiMetadata {
   operator: string
   operation: string
   resource: string
-  oldValue: string | null
-  newValue: string | null
+  oldValue?: string
+  newValue?: string
   ip: string
   location: string
-  statusCode: number | null
-  operatedTime: Date | null
+  statusCode?: number
+  operatedTime?: Date
 }
 
 export interface SchedulerLog extends AudtiMetadata {
   name: string
-  startTime: Date | null
-  executedTime?: number
+  startTime?: Date
+  executedTimes?: number
   nextExecuteTime?: Date
-  status: number | null
+  status?: number
 }
 
-export interface File extends AudtiMetadata {
+export interface FileRecord extends AudtiMetadata {
   name: string
   type: string
   size: number
 }
 
-export interface Table extends AudtiMetadata {
+export interface Schema extends AudtiMetadata {
   name: string
-  comment: string
-  description: string
+  reference: string
+  domain: string
+  enabled?: boolean
+  templates: number[]
 }
 
-export interface Column extends AudtiMetadata {
+export interface Field extends AudtiMetadata {
   name: string
-  type: string
+  dataType: string
   length: number
+  fieldType: string
+  formType: string
+  tsType: string
   nullable: boolean
-  unique: boolean
+  queryable: boolean
+  editable: boolean
   comment: string
   description: string
 }
 
-export interface Code extends AudtiMetadata {
+export interface Template extends AudtiMetadata {
   name: string
+  suffix: string
   content: string
+  type?: number
+  version: string
+  enabled?: boolean
 }
 
 export interface Script extends AudtiMetadata {
@@ -184,4 +196,20 @@ export interface Script extends AudtiMetadata {
   icon: string
   version: string
   description: string
+}
+
+export interface TableInfo {
+  tableName: string
+  tableComment: string
+}
+
+export interface ColumnInfo {
+  columnName: string
+  udtName: string
+  dataType: string
+  characterMaximumLength: number
+  identity: string,
+  nullable: string,
+  columnDefault: string,
+  columnComment: string
 }

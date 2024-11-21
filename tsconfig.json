@@ -9,35 +9,23 @@
     "noEmit": true,
     "sourceMap": false,
     "resolveJsonModule": true,
+    // Avoid cross-os errors due to inconsistent file casing
+    "forceConsistentCasingInFileNames": true,
     "esModuleInterop": true,
+    "jsx": "preserve",
     "lib": [
       "esnext",
       "dom"
     ],
     "paths": {
-      "src/*": [
-        "src/*"
-      ],
-      "components/*": [
-        "src/components/*"
-      ],
-      "layouts/*": [
-        "src/layouts/*"
-      ],
-      "pages/*": [
-        "src/pages/*"
-      ],
-      "assets/*": [
-        "src/assets/*"
-      ],
-      "boot/*": [
-        "src/boot/*"
-      ],
-      "stores/*": [
-        "src/stores/*"
-      ]
-    },
-    "skipLibCheck": true
+      "src/*": ["src/*"],
+      "components/*": ["src/components/*"],
+      "layouts/*": ["src/layouts/*"],
+      "pages/*": ["src/pages/*"],
+      "assets/*": ["src/assets/*"],
+      "boot/*": ["src/boot/*" ],
+      "stores/*": ["src/stores/*"]
+    }
   },
   "vueCompilerOptions": {
     "target": 3

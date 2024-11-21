@@ -12,7 +12,6 @@
     "lint:fix": "yarn lint -- --fix"
   },
   "dependencies": {
-    "@badrap/bar-of-progress": "^0.2.2",
     "@iconify-json/material-symbols": "^1.2.3",
     "@vueuse/core": "^11.1.0",
     "animate.css": "^4.1.1",
@@ -24,11 +23,10 @@
     "pinia": "^2.2.2",
     "universal-cookie": "^7",
     "vue": "^3.5.8",
-    "vue-i18n": "^9.14.1",
+    "vue-i18n": "^10.0.4",
     "vue-router": "^4.4.5"
   },
   "devDependencies": {
-    "@types/node": "^22.7.5",
     "@typescript-eslint/eslint-plugin": "^8.2.0",
     "@typescript-eslint/parser": "^8.2.0",
     "@vitejs/plugin-vue": "^5.1.4",
@@ -45,8 +43,8 @@
     "postcss": "^8.4.47",
     "postcss-sass": "^0.5.0",
     "sass": "^1.79.5",
-    "typescript": "^5.4.3",
-    "unocss": "^0.63.4",
+    "typescript": "^5.6.3",
+    "unocss": "^0.64.0",
     "unplugin-vue-components": "^0.27.4",
     "vite": "^5.4.9",
     "vue-tsc": "^2.1.6",
@@ -58,5 +56,5 @@
       "public"
     ]
   },
-  "packageManager": "yarn@4.4.1"
+  "packageManager": "yarn@4.5.1"
 }

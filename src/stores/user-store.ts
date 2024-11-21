@@ -1,8 +1,8 @@
 import { defineStore } from 'pinia'
 import { retrievePrivilegeTree } from 'src/api/privileges'
+import { fetchMe } from 'src/api/users'
 import { signin, signout } from 'src/api/authentication'
 import type { PrivilegeTreeNode } from 'src/models'
-import { fetchMe } from 'src/api/users'
 
 interface User {
   username: string
@@ -18,9 +18,11 @@ export const useUserStore = defineStore('user', {
   }),
   actions: {
     async logout() {
-      // await signout()
-      localStorage.removeItem('access_token')
-      this.$reset()
+      const res = await signout()
+      if (res.status === 200) {
+        localStorage.removeItem('access_token')
+        this.$reset()
+      }
     },
 
     /**
@@ -28,17 +30,15 @@ export const useUserStore = defineStore('user', {
      */
     async login(username: string, password: string) {
       const res = await signin(username, password)
-      localStorage.setItem('access_token', res.data)
-
-      const resp = await fetchMe()
-      this.$patch({
-        user: resp.data
-      })
-      // privileges
-      const response = await retrievePrivilegeTree()
-      this.$patch({
-        privileges: response.data
-      })
+      if (res.status === 200) {
+        localStorage.setItem('access_token', res.data)
+        const [userResp, privilegesResp] = await Promise.all([fetchMe(), retrievePrivilegeTree()])
+        // 执行结果处理
+        this.$patch({
+          user: userResp.data,
+          privileges: privilegesResp.data
+        })
+      }
     }
   },
   persist: {

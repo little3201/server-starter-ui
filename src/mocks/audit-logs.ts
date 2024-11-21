@@ -1,5 +1,5 @@
 import { http, HttpResponse } from 'msw'
-import { SERVER_URL } from 'src/api/paths'
+import { SERVER_URL } from 'src/constants'
 import type { AuditLog } from 'src/models'
 
 const datas: AuditLog[] = [
@@ -8,7 +8,6 @@ const datas: AuditLog[] = [
     operator: 'admin',
     operation: 'Create',
     resource: 'User',
-    oldValue: null,
     newValue: '{"operator:"john", "role:"admin"}',
     ip: '192.168.0.1',
     location: 'New York',
@@ -18,7 +17,7 @@ const datas: AuditLog[] = [
   {
     id: 2,
     operator: 'john',
-    operation: 'Update',
+    operation: 'Modify',
     resource: 'Profile',
     oldValue: '{"email:"old@example.com"}',
     newValue: '{"email:"john@example.com"}',
@@ -30,10 +29,9 @@ const datas: AuditLog[] = [
   {
     id: 3,
     operator: 'alice',
-    operation: 'Delete',
+    operation: 'Remove',
     resource: 'Post',
     oldValue: '{"post_id:123, "content:"Hello World"}',
-    newValue: null,
     ip: '192.168.0.3',
     location: 'San Francisco',
     statusCode: 200,
@@ -44,7 +42,6 @@ const datas: AuditLog[] = [
     operator: 'bob',
     operation: 'Upload',
     resource: 'File',
-    oldValue: null,
     newValue: '{"file_name:"report.pdf"}',
     ip: '192.168.0.4',
     location: 'Berlin',
@@ -56,7 +53,6 @@ const datas: AuditLog[] = [
     operator: 'carol',
     operation: 'Login',
     resource: 'Session',
-    oldValue: null,
     newValue: '{"status:"active"}',
     ip: '192.168.0.5',
     location: 'Paris',
@@ -90,9 +86,8 @@ const datas: AuditLog[] = [
   {
     id: 8,
     operator: 'john',
-    operation: 'View',
+    operation: 'Detail',
     resource: 'Report',
-    oldValue: null,
     newValue: '{"report_id:45}',
     ip: '192.168.0.2',
     location: 'London',
@@ -104,7 +99,6 @@ const datas: AuditLog[] = [
     operator: 'alice',
     operation: 'Download',
     resource: 'File',
-    oldValue: null,
     newValue: '{"file_id:789}',
     ip: '192.168.0.3',
     location: 'San Francisco',
@@ -114,7 +108,7 @@ const datas: AuditLog[] = [
   {
     id: 10,
     operator: 'bob',
-    operation: 'Update',
+    operation: 'Modify',
     resource: 'Settings',
     oldValue: '{"theme:"light"}',
     newValue: '{"theme:"dark"}',
@@ -126,7 +120,7 @@ const datas: AuditLog[] = [
   {
     id: 11,
     operator: 'bob',
-    operation: 'Update',
+    operation: 'Modify',
     resource: 'Settings',
     oldValue: '{"theme:"light"}',
     newValue: '{"theme:"dark"}',
@@ -175,7 +169,7 @@ export const auditLogsHandlers = [
       return new HttpResponse(null, { status: 404 })
     }
 
-    // Delete the Row from the "allRow" map.
+    // Remove the Row from the "allRow" map.
     datas.pop()
 
     // Respond with a "200 OK" response and the deleted Row.

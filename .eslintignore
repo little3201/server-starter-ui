@@ -1,4 +1,8 @@
 /dist
 /node_modules
-env.d.ts
-components.d.ts
+bg.json
+*.d.ts
+.eslintrc.js
+tsconfig.json
+package.json
+README.md
