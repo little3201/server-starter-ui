@@ -1,5 +1,5 @@
 import { http, HttpResponse } from 'msw'
-import { SERVER_URL } from 'src/api/paths'
+import { SERVER_URL } from 'src/constants'
 import type { Privilege, PrivilegeTreeNode } from 'src/models'
 
 const datas: Privilege[] = [
@@ -31,7 +31,7 @@ const datas: Privilege[] = [
     component: 'pages/regions/IndexPage',
     name: 'regions',
     icon: 'location-on-outline-rounded',
-    actions: ['add', 'edit', 'remove', 'import', 'export'],
+    actions: ['create', 'modify', 'remove', 'import', 'export'],
     count: 0,
     enabled: false,
     description: 'this is description for this row'
@@ -67,7 +67,7 @@ const subDatas: Privilege[] = [
     path: 'groups',
     component: 'pages/system/groups/IndexPage',
     name: 'groups',
-    actions: ['add', 'edit', 'remove', 'import', 'export', 'relation'],
+    actions: ['create', 'modify', 'remove', 'import', 'export', 'relation'],
     count: 0,
     enabled: true,
     icon: 'account-tree-outline-rounded',
@@ -79,7 +79,7 @@ const subDatas: Privilege[] = [
     path: 'users',
     component: 'pages/system/users/IndexPage',
     name: 'users',
-    actions: ['add', 'edit', 'remove', 'import', 'export'],
+    actions: ['create', 'modify', 'remove', 'import', 'export'],
     count: 0,
     enabled: true,
     icon: 'person-outline-rounded',
@@ -91,7 +91,7 @@ const subDatas: Privilege[] = [
     path: 'privileges',
     component: 'pages/system/privileges/IndexPage',
     name: 'privileges',
-    actions: ['edit', 'import', 'export'],
+    actions: ['modify', 'import', 'export'],
     count: 0,
     enabled: true,
     icon: 'admin-panel-settings-outline-rounded',
@@ -103,7 +103,7 @@ const subDatas: Privilege[] = [
     path: 'roles',
     component: 'pages/system/roles/IndexPage',
     name: 'roles',
-    actions: ['add', 'edit', 'remove', 'import', 'export', 'relation'],
+    actions: ['create', 'modify', 'remove', 'import', 'export', 'relation'],
     count: 0,
     enabled: true,
     icon: 'shield-person-outline-rounded',
@@ -115,7 +115,7 @@ const subDatas: Privilege[] = [
     path: 'dictionaries',
     component: 'pages/system/dictionaries/IndexPage',
     name: 'dictionaries',
-    actions: ['add', 'edit', 'remove', 'import', 'export'],
+    actions: ['create', 'modify', 'remove', 'import', 'export'],
     count: 0,
     enabled: true,
     icon: 'book-3-outline-rounded',
@@ -175,7 +175,7 @@ const subDatas: Privilege[] = [
     path: 'generators',
     name: 'generators',
     component: 'pages/exploiters/generators/IndexPage',
-    actions: ['add', 'edit', 'remove', 'import', 'export', 'config', 'preview'],
+    actions: ['create', 'modify', 'remove', 'import', 'export', 'config', 'preview'],
     count: 0,
     enabled: true,
     icon: 'genetics-rounded',
@@ -187,7 +187,7 @@ const subDatas: Privilege[] = [
     path: 'scripts',
     name: 'scripts',
     component: 'pages/exploiters/scripts/IndexPage',
-    actions: ['add', 'edit', 'remove', 'import', 'export'],
+    actions: ['create', 'modify', 'remove', 'import', 'export'],
     count: 0,
     enabled: true,
     icon: 'terminal-rounded',
@@ -199,7 +199,7 @@ const subDatas: Privilege[] = [
     path: 'templates',
     name: 'templates',
     component: 'pages/exploiters/templates/IndexPage',
-    actions: ['add', 'edit', 'remove', 'import', 'export'],
+    actions: ['create', 'modify', 'remove', 'import', 'export'],
     count: 0,
     enabled: true,
     icon: 'code-rounded',

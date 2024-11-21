@@ -1,5 +1,5 @@
 import { api } from 'boot/axios'
-import { SERVER_URL } from 'src/api/paths'
+import { SERVER_URL } from 'src/constants'
 import type { Pagination, Dictionary } from 'src/models'
 
 /**
@@ -44,8 +44,8 @@ export const fetchDictionary = (id: number) => {
  * @param name Row name
  * @returns Row data
  */
-export const checkDictionaryExist = (superiorId: number, name: string, id?: number) => {
-  return api.get(`${SERVER_URL.DICTIONARY}/${superiorId}/exist`, { params: { name, id } })
+export const checkDictionaryExists = (superiorId: number, name: string, id?: number) => {
+  return api.get(`${SERVER_URL.DICTIONARY}/${superiorId}/exists`, { params: { name, id } })
 }
 
 /**

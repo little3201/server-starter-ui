@@ -6,7 +6,7 @@ import { dayjs } from 'element-plus'
 import draggable from 'vuedraggable'
 import { useI18n } from 'vue-i18n'
 import DialogView from 'components/DialogView.vue'
-import { retrieveUsers, fetchUser, createUser, modifyUser, removeUser, enableUser, checkUserExist } from 'src/api/users'
+import { retrieveUsers, fetchUser, createUser, modifyUser, removeUser, enableUser, checkUserExists } from 'src/api/users'
 import type { Pagination, User } from 'src/models'
 import { calculate } from 'src/utils'
 
@@ -43,7 +43,7 @@ const form = ref<User>({ ...initialValues })
 const rules = reactive<FormRules<typeof form>>({
   username: [
     { required: true, message: t('inputText', { field: t('uername') }), trigger: 'blur' },
-    { validator: checkNameExistence, trigger: 'blur' }
+    { validator: checkNameExistsence, trigger: 'blur' }
   ],
   fullName: [
     { required: true, message: t('inputText', { field: t('fullName') }), trigger: 'blur' }
@@ -53,8 +53,8 @@ const rules = reactive<FormRules<typeof form>>({
   ]
 })
 
-function checkNameExistence(rule: InternalRuleItem, value: string, callback: (error?: string | Error) => void) {
-  checkUserExist(value, form.value.id).then(res => {
+function checkNameExistsence(rule: InternalRuleItem, value: string, callback: (error?: string | Error) => void) {
+  checkUserExists(value, form.value.id).then(res => {
     if (res.data) {
       callback(new Error(t('alreadyExists', { field: t('username') })))
     } else {

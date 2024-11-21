@@ -1,5 +1,5 @@
 import { api } from 'boot/axios'
-import { SERVER_URL } from 'src/api/paths'
+import { SERVER_URL } from 'src/constants'
 import type { Pagination, Schema, Field } from 'src/models'
 
 /**
@@ -45,8 +45,8 @@ export const createSchema = (row: Schema) => {
  * @param id Row ID
  * @returns Row data
  */
-export const checkSchemaExist = (name: string, id?: number) => {
-  return api.get(`${SERVER_URL.SCHEMA}/exist`, { params: { name, id } })
+export const checkSchemaExists = (name: string, id?: number) => {
+  return api.get(`${SERVER_URL.SCHEMA}/exists`, { params: { name, id } })
 }
 
 /**

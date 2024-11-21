@@ -1,5 +1,5 @@
 import { api } from 'boot/axios'
-import { SERVER_URL } from 'src/api/paths'
+import { SERVER_URL } from 'src/constants'
 import type { Pagination, Group } from 'src/models'
 
 /**
@@ -43,8 +43,8 @@ export const fetchGroup = (id: number) => {
  * @param id Row ID
  * @returns Row data
  */
-export const checkGroupExist = (name: string, id?: number) => {
-  return api.get(`${SERVER_URL.GROUP}/exist`, { params: { name, id } })
+export const checkGroupExists = (name: string, id?: number) => {
+  return api.get(`${SERVER_URL.GROUP}/exists`, { params: { name, id } })
 }
 
 /**

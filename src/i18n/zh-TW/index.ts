@@ -33,6 +33,7 @@ export default {
   order: '順序',
   data: '數據',
   type: '類型',
+  version: '版本號',
   path: '路徑',
   redirect: '跳轉',
   icon: '圖示',
@@ -132,6 +133,8 @@ export default {
   serverError: '伺服器錯誤',
   error: '請求發生錯誤',
   goHome: '返回首頁',
+  tooltipRule: '應用時，將按照規則（具體查看系統說明）進行替換',
+  ruleTooltip: '若需在應用時按照規則進行替換，請以%s開始',
 
   welcome: '嗨！歡迎回來',
   subtitle: '請填寫您的帳號和密碼，讓我們繼續探索',

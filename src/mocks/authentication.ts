@@ -1,5 +1,5 @@
 import { http, HttpResponse } from 'msw'
-import { SERVER_URL } from 'src/api/paths'
+import { SERVER_URL } from 'src/constants'
 
 export const authenticationHandlers = [
   http.post(`/api${SERVER_URL.SIGNIN}`, () => {

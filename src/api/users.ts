@@ -1,5 +1,5 @@
 import { api } from 'boot/axios'
-import { SERVER_URL } from 'src/api/paths'
+import { SERVER_URL } from 'src/constants'
 import type { Pagination, User } from 'src/models'
 
 /**
@@ -37,8 +37,8 @@ export const fetchMe = () => {
  * @param id Row ID
  * @returns Row data
  */
-export const checkUserExist = (username: string, id?: number) => {
-  return api.get(`${SERVER_URL.USER}/exist`, { params: { username, id } })
+export const checkUserExists = (username: string, id?: number) => {
+  return api.get(`${SERVER_URL.USER}/exists`, { params: { username, id } })
 }
 
 /**

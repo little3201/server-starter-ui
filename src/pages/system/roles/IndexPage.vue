@@ -7,7 +7,7 @@ import { useI18n } from 'vue-i18n'
 import DialogView from 'components/DialogView.vue'
 import {
   retrieveRoles, retrieveRoleMembers, retrieveRolePrivileges,
-  fetchRole, createRole, modifyRole, removeRole, enableRole, checkRoleExist
+  fetchRole, createRole, modifyRole, removeRole, enableRole, checkRoleExists
 } from 'src/api/roles'
 import { retrievePrivilegeTree } from 'src/api/privileges'
 import { retrieveUsers } from 'src/api/users'
@@ -52,12 +52,12 @@ const form = ref<Role>({ ...initialValues })
 const rules = reactive<FormRules<typeof form>>({
   name: [
     { required: true, message: t('inputText', { field: t('name') }), trigger: 'blur' },
-    { validator: checkNameExistence, trigger: 'blur' }
+    { validator: checkNameExistsence, trigger: 'blur' }
   ]
 })
 
-function checkNameExistence(rule: InternalRuleItem, value: string, callback: (error?: string | Error) => void) {
-  checkRoleExist(value, form.value.id).then(res => {
+function checkNameExistsence(rule: InternalRuleItem, value: string, callback: (error?: string | Error) => void) {
+  checkRoleExists(value, form.value.id).then(res => {
     if (res.data) {
       callback(new Error(t('alreadyExists', { field: t('name') })))
     } else {

@@ -1,6 +1,6 @@
 import { http, HttpResponse } from 'msw'
 import type { User } from 'src/models'
-import { SERVER_URL } from 'src/api/paths'
+import { SERVER_URL } from 'src/constants'
 import { dayjs } from 'element-plus'
 
 const datas: User[] = []

@@ -1,5 +1,5 @@
 import { http, HttpResponse } from 'msw'
-import { SERVER_URL } from 'src/api/paths'
+import { SERVER_URL } from 'src/constants'
 import type { AuditLog } from 'src/models'
 
 const datas: AuditLog[] = [
@@ -17,7 +17,7 @@ const datas: AuditLog[] = [
   {
     id: 2,
     operator: 'john',
-    operation: 'Update',
+    operation: 'Modify',
     resource: 'Profile',
     oldValue: '{"email:"old@example.com"}',
     newValue: '{"email:"john@example.com"}',
@@ -29,7 +29,7 @@ const datas: AuditLog[] = [
   {
     id: 3,
     operator: 'alice',
-    operation: 'Delete',
+    operation: 'Remove',
     resource: 'Post',
     oldValue: '{"post_id:123, "content:"Hello World"}',
     ip: '192.168.0.3',
@@ -86,7 +86,7 @@ const datas: AuditLog[] = [
   {
     id: 8,
     operator: 'john',
-    operation: 'View',
+    operation: 'Detail',
     resource: 'Report',
     newValue: '{"report_id:45}',
     ip: '192.168.0.2',
@@ -108,7 +108,7 @@ const datas: AuditLog[] = [
   {
     id: 10,
     operator: 'bob',
-    operation: 'Update',
+    operation: 'Modify',
     resource: 'Settings',
     oldValue: '{"theme:"light"}',
     newValue: '{"theme:"dark"}',
@@ -120,7 +120,7 @@ const datas: AuditLog[] = [
   {
     id: 11,
     operator: 'bob',
-    operation: 'Update',
+    operation: 'Modify',
     resource: 'Settings',
     oldValue: '{"theme:"light"}',
     newValue: '{"theme:"dark"}',
@@ -169,7 +169,7 @@ export const auditLogsHandlers = [
       return new HttpResponse(null, { status: 404 })
     }
 
-    // Delete the Row from the "allRow" map.
+    // Remove the Row from the "allRow" map.
     datas.pop()
 
     // Respond with a "200 OK" response and the deleted Row.

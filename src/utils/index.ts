@@ -1,4 +1,5 @@
 import { dayjs } from 'element-plus'
+import type { Dictionary } from 'src/models'
 
 /**
  * Resolve a child path relative to a parent path
@@ -94,6 +95,23 @@ export function formatFileSize(size: number): string {
   return `${size.toFixed(2)}${units[index]}`
 }
 
+/**
+ * 格式化字典数据
+ * @param value 字典值
+ * @param rows  字典列表
+ * @returns 字典名称
+ */
+export function formatDictionary(value: number, rows: Dictionary[]): string {
+  const dictItem = rows.find(item => item.id === value)
+  return dictItem ? dictItem.name : ''
+}
+
+/**
+ * 数组截取、可展示数组长度
+ * @param array 集合、数组
+ * @param count 截取树
+ * @returns 截取后的数组、集合
+ */
 export function visibleArray<T extends string | number>(array: T[], count: number): T[] {
   return array.length > count ? array.slice(0, count) : array
 }

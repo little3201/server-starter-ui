@@ -1,5 +1,5 @@
 import { api } from 'boot/axios'
-import { SERVER_URL } from 'src/api/paths'
+import { SERVER_URL } from 'src/constants'
 import type { Pagination, Template } from 'src/models'
 
 /**
@@ -27,8 +27,8 @@ export const fetchTemplate = (id: number) => {
  * @param id Row ID
  * @returns Row data
  */
-export const checkTemplateExist = (name: string, id?: number) => {
-  return api.get(`${SERVER_URL.TEMPLATE}/exist`, { params: { name, id } })
+export const checkTemplateExists = (name: string, suffix: string, version: string, id?: number) => {
+  return api.get(`${SERVER_URL.TEMPLATE}/exists`, { params: { name, suffix, version, id } })
 }
 
 /**

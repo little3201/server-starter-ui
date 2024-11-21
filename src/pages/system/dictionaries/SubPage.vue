@@ -6,7 +6,7 @@ import { useI18n } from 'vue-i18n'
 import DialogView from 'components/DialogView.vue'
 import {
   retrieveDictionarySubset, fetchDictionary, createDictionary,
-  modifyDictionary, removeDictionary, enableDictionary, checkDictionaryExist
+  modifyDictionary, removeDictionary, enableDictionary, checkDictionaryExists
 } from 'src/api/dictionaries'
 import type { Dictionary } from 'src/models'
 
@@ -32,13 +32,13 @@ const form = ref<Dictionary>({ ...initialValues })
 const rules = reactive<FormRules<typeof form>>({
   name: [
     { required: true, message: t('inputText', { field: t('name') }), trigger: 'blur' },
-    { validator: checkNameExistence, trigger: 'blur' }
+    { validator: checkNameExistsence, trigger: 'blur' }
   ]
 })
 
-function checkNameExistence(rule: InternalRuleItem, value: string, callback: (error?: string | Error) => void) {
+function checkNameExistsence(rule: InternalRuleItem, value: string, callback: (error?: string | Error) => void) {
   if (form.value.superiorId) {
-    checkDictionaryExist(form.value.superiorId, value, form.value.id).then(res => {
+    checkDictionaryExists(form.value.superiorId, value, form.value.id).then(res => {
       if (res.data) {
         callback(new Error(t('alreadyExists', { field: t('name') })))
       } else {

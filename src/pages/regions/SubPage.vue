@@ -4,7 +4,7 @@ import type { FormInstance, FormRules } from 'element-plus'
 import type { InternalRuleItem } from 'async-validator/dist-types/interface'
 import { useI18n } from 'vue-i18n'
 import DialogView from 'components/DialogView.vue'
-import { retrieveRegions, fetchRegion, createRegion, modifyRegion, removeRegion, enableRegion, checkRegionExist } from 'src/api/regions'
+import { retrieveRegions, fetchRegion, createRegion, modifyRegion, removeRegion, enableRegion, checkRegionExists } from 'src/api/regions'
 import type { Pagination, Region } from 'src/models'
 
 const { t } = useI18n()
@@ -35,13 +35,13 @@ const form = ref<Region>({ ...initialValues })
 const rules = reactive<FormRules<typeof form>>({
   name: [
     { required: true, message: t('inputText', { field: t('name') }), trigger: 'blur' },
-    { validator: checkNameExistence, trigger: 'blur' }
+    { validator: checkNameExistsence, trigger: 'blur' }
   ]
 })
 
-function checkNameExistence(rule: InternalRuleItem, value: string, callback: (error?: string | Error) => void) {
+function checkNameExistsence(rule: InternalRuleItem, value: string, callback: (error?: string | Error) => void) {
   if (form.value.superiorId) {
-    checkRegionExist(form.value.superiorId, value, form.value.id).then(res => {
+    checkRegionExists(form.value.superiorId, value, form.value.id).then(res => {
       if (res.data) {
         callback(new Error(t('alreadyExists', { field: t('name') })))
       } else {

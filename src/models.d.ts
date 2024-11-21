@@ -184,8 +184,10 @@ export interface Field extends AudtiMetadata {
 
 export interface Template extends AudtiMetadata {
   name: string
+  suffix: string
   content: string
   type?: number
+  version: string
   enabled?: boolean
 }
 

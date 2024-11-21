@@ -5,6 +5,7 @@ import DialogView from 'components/DialogView.vue'
 import { retrieveAccessLogs, fetchAccessLog, removeAccessLog } from 'src/api/access-logs'
 import type { Pagination, AccessLog } from 'src/models'
 import { formatDuration } from 'src/utils'
+import { httpMethods } from 'src/constants'
 
 const loading = ref<boolean>(false)
 const datas = ref<Array<AccessLog>>([])
@@ -24,14 +25,6 @@ const filters = ref({
   url: null,
   operator: null
 })
-
-const methods: { [key: string]: string } = {
-  GET: 'success',
-  POST: 'warning',
-  PUT: 'primary',
-  PATCH: 'primary',
-  DELETE: 'danger'
-}
 
 const detailLoading = ref<boolean>(false)
 const initialValues: AccessLog = {
@@ -220,7 +213,7 @@ function handleCheckedChange(value: string[]) {
         <ElTableColumn prop="url" :label="$t('url')" />
         <ElTableColumn prop="httpMethod" :label="$t('httpMethod')">
           <template #default="scope">
-            <ElBadge is-dot :type="methods[scope.row.httpMethod]" class="mr-1" />{{ scope.row.httpMethod }}
+            <ElBadge is-dot :type="httpMethods[scope.row.httpMethod]" class="mr-1" />{{ scope.row.httpMethod }}
           </template>
         </ElTableColumn>
         <ElTableColumn show-overflow-tooltip prop="params" :label="$t('params')" />
@@ -267,7 +260,7 @@ function handleCheckedChange(value: string[]) {
     <ElDescriptions v-loading="detailLoading" border>
       <ElDescriptionsItem :label="$t('url')">{{ row.url }}</ElDescriptionsItem>
       <ElDescriptionsItem :label="$t('httpMethod')">
-        <ElBadge is-dot :type="methods[row.httpMethod as string]" />
+        <ElBadge is-dot :type="httpMethods[row.httpMethod as string]" />
         {{ row.httpMethod }}
       </ElDescriptionsItem>
       <ElDescriptionsItem :label="$t('params')">{{ row.params }}</ElDescriptionsItem>

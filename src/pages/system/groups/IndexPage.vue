@@ -7,7 +7,7 @@ import { useI18n } from 'vue-i18n'
 import DialogView from 'components/DialogView.vue'
 import {
   retrieveGroups, retrieveGroupMembers, retrieveGroupTree,
-  fetchGroup, createGroup, modifyGroup, removeGroup, enableGroup, checkGroupExist
+  fetchGroup, createGroup, modifyGroup, removeGroup, enableGroup, checkGroupExists
 } from 'src/api/groups'
 import { retrieveUsers } from 'src/api/users'
 import type { Pagination, Group, TreeNode, GroupMembers } from 'src/models'
@@ -53,12 +53,12 @@ const form = ref<Group>({ ...initialValues })
 const rules = reactive<FormRules<typeof form>>({
   name: [
     { required: true, message: t('inputText', { field: t('name') }), trigger: 'blur' },
-    { validator: checkNameExistence, trigger: 'blur' }
+    { validator: checkNameExistsence, trigger: 'blur' }
   ]
 })
 
-function checkNameExistence(rule: InternalRuleItem, value: string, callback: (error?: string | Error) => void) {
-  checkGroupExist(value, form.value.id).then(res => {
+function checkNameExistsence(rule: InternalRuleItem, value: string, callback: (error?: string | Error) => void) {
+  checkGroupExists(value, form.value.id).then(res => {
     if (res.data) {
       callback(new Error(t('alreadyExists', { field: t('name') })))
     } else {

@@ -5,6 +5,7 @@ import draggable from 'vuedraggable'
 import DialogView from 'components/DialogView.vue'
 import { retrieveAuditLogs, fetchAuditLog } from 'src/api/audit-logs'
 import type { Pagination, AuditLog } from 'src/models'
+import { actions } from 'src/constants'
 
 const loading = ref<boolean>(false)
 const datas = ref<Array<AuditLog>>([])
@@ -24,18 +25,6 @@ const filters = ref({
   resource: null,
   operator: null
 })
-
-const operations: { [key: string]: string } = {
-  Create: 'success',
-  Update: 'primary',
-  DELETE: 'danger',
-  View: 'info',
-  Upload: 'warning',
-  Download: 'info',
-  Login: 'primary',
-  Logout: 'success',
-  'Change Password': 'primary'
-}
 
 const detailLoading = ref<boolean>(false)
 const initialValues: AuditLog = {
@@ -202,7 +191,7 @@ function handleCheckedChange(value: string[]) {
         <ElTableColumn prop="resource" :label="$t('resource')" />
         <ElTableColumn prop="operation" :label="$t('operation')">
           <template #default="scope">
-            <ElBadge is-dot :type="operations[scope.row.operation]" class="mr-1" />{{ scope.row.operation }}
+            <ElBadge is-dot :type="actions[scope.row.operation.toLowerCase()]" class="mr-1" />{{ scope.row.operation }}
           </template>
         </ElTableColumn>
         <ElTableColumn show-overflow-tooltip prop="oldValue" :label="$t('oldValue')" />
@@ -239,7 +228,9 @@ function handleCheckedChange(value: string[]) {
 
   <DialogView v-model="dialogVisible" :title="$t('detail')">
     <ElDescriptions v-loading="detailLoading" border>
-      <ElDescriptionsItem :label="$t('operation')">{{ row.operation }}</ElDescriptionsItem>
+      <ElDescriptionsItem :label="$t('operation')">
+        <ElBadge is-dot :type="actions[row.operation.toLowerCase()]" class="mr-1" />{{ row.operation }}
+      </ElDescriptionsItem>
       <ElDescriptionsItem :label="$t('resource')">{{ row.resource }}</ElDescriptionsItem>
       <ElDescriptionsItem :label="$t('operator')">{{ row.operator }}</ElDescriptionsItem>
       <ElDescriptionsItem :label="$t('oldValue')" :span="3">{{ row.oldValue }}</ElDescriptionsItem>

@@ -1,5 +1,5 @@
 import { api } from 'boot/axios'
-import { SERVER_URL } from 'src/api/paths'
+import { SERVER_URL } from 'src/constants'
 import type { Pagination, Role } from 'src/models'
 
 /**
@@ -44,8 +44,8 @@ export const fetchRole = (id: number) => {
  * @param id Row ID
  * @returns Row data
  */
-export const checkRoleExist = (name: string, id?: number) => {
-  return api.get(`${SERVER_URL.ROLE}/exist`, { params: { name, id } })
+export const checkRoleExists = (name: string, id?: number) => {
+  return api.get(`${SERVER_URL.ROLE}/exists`, { params: { name, id } })
 }
 
 /**

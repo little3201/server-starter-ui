@@ -1,5 +1,5 @@
 import { api } from 'boot/axios'
-import { SERVER_URL } from 'src/api/paths'
+import { SERVER_URL } from 'src/constants'
 import type { Pagination, Region } from 'src/models'
 
 /**
@@ -29,8 +29,8 @@ export const fetchRegion = (id: number) => {
  * @param id Row ID
  * @returns Row data
  */
-export const checkRegionExist = (superiorId: number, name: string, id?: number) => {
-  return api.get(`${SERVER_URL.REGION}/${superiorId}/exist`, { params: { name, id } })
+export const checkRegionExists = (superiorId: number, name: string, id?: number) => {
+  return api.get(`${SERVER_URL.REGION}/${superiorId}/exists`, { params: { name, id } })
 }
 
 /**

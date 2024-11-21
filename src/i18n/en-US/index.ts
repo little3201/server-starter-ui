@@ -33,6 +33,7 @@ export default {
   order: 'Order',
   data: 'Data ',
   type: 'Type',
+  version: 'Version',
   path: 'Path',
   redirect: 'Redirect',
   icon: 'Icon',
@@ -132,6 +133,8 @@ export default {
   serverError: 'Server error',
   error: 'An error occurred on the request',
   goHome: 'Go Home',
+  tooltipRule: 'Applied according to the rules (see system guide for details)',
+  ruleTooltip: 'To apply according to the rule, please start with %s',
 
   welcome: 'Hi! Welcome Back.',
   subtitle: 'Please sign in to continue exploring.',
