@@ -203,7 +203,7 @@ function handleCheckedChange(value: string[]) {
 
   <ElSpace size="large" direction="vertical" fill class="w-full">
     <ElCard shadow="never">
-      <ElForm inline :model="filters">
+      <ElForm inline :model="filters" @submit.prevent>
         <ElFormItem :label="$t('username')" prop="username">
           <ElInput v-model="filters.username" :placeholder="$t('inputText', { field: $t('username') })" />
         </ElFormItem>

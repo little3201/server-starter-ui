@@ -23,13 +23,12 @@ const columns = ref<Array<string>>(['url', 'httpMethod', 'params', 'body', 'ip',
 
 const filters = ref({
   url: null,
-  operator: null
+  statusCode: null
 })
 
 const detailLoading = ref<boolean>(false)
 const initialValues: AccessLog = {
   id: undefined,
-  operator: '',
   url: '',
   httpMethod: '',
   ip: '',
@@ -77,7 +76,7 @@ async function loadOne(id: number) {
 function reset() {
   filters.value = {
     url: null,
-    operator: null
+    statusCode: null
   }
   load()
 }
@@ -141,8 +140,8 @@ function handleCheckedChange(value: string[]) {
         <ElFormItem :label="$t('url')" prop="url">
           <ElInput v-model="filters.url" :placeholder="$t('inputText', { field: $t('url') })" />
         </ElFormItem>
-        <ElFormItem :label="$t('operator')" prop="operator">
-          <ElInput v-model="filters.operator" :placeholder="$t('inputText', { field: $t('operator') })" />
+        <ElFormItem :label="$t('statusCode')" prop="statusCode">
+          <ElInput v-model="filters.statusCode" :placeholder="$t('inputText', { field: $t('statusCode') })" />
         </ElFormItem>
         <ElFormItem>
           <ElButton title="search" type="primary" @click="load">
@@ -218,7 +217,7 @@ function handleCheckedChange(value: string[]) {
         </ElTableColumn>
         <ElTableColumn show-overflow-tooltip prop="params" :label="$t('params')" />
         <ElTableColumn show-overflow-tooltip prop="body" :label="$t('body')" />
-        <ElTableColumn show-overflow-tooltip prop="ip" :label="$t('ip')" />
+        <ElTableColumn prop="ip" :label="$t('ip')" />
         <ElTableColumn show-overflow-tooltip prop="location" :label="$t('location')" />
         <ElTableColumn prop="statusCode" :label="$t('statusCode')">
           <template #default="scope">
@@ -236,7 +235,6 @@ function handleCheckedChange(value: string[]) {
             {{ formatDuration(scope.row.responseTimes) }}
           </template>
         </ElTableColumn>
-        <ElTableColumn prop="operator" :label="$t('operator')" />
         <ElTableColumn :label="$t('actions')" width="160">
           <template #default="scope">
             <ElButton title="detail" size="small" type="info" link @click="showRow(scope.row.id)">

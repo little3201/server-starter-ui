@@ -108,7 +108,7 @@ export interface PrivilegeTreeNode extends TreeNode {
 export interface OperationLog extends AudtiMetadata {
   operation: string
   content: string
-  operator: string
+  operator?: string
   ip: string
   location: string
   referer?: string
@@ -124,7 +124,7 @@ export interface OperationLog extends AudtiMetadata {
 export interface AccessLog extends AudtiMetadata {
   url: string
   httpMethod: string
-  operator: string
+  operator?: string
   params?: string
   body?: string
   ip: string

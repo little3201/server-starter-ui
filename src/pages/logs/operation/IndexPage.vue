@@ -22,7 +22,7 @@ const columns = ref<Array<string>>(['module', 'httpMethod', 'params', 'ip', 'loc
 
 const filters = ref({
   operation: null,
-  operator: null
+  statusCode: null
 })
 
 const detailLoading = ref<boolean>(false)
@@ -31,8 +31,7 @@ const initialValues: OperationLog = {
   operation: '',
   content: '',
   ip: '',
-  location: '',
-  operator: ''
+  location: ''
 }
 const row = ref<OperationLog>({ ...initialValues })
 
@@ -74,7 +73,7 @@ async function loadOne(id: number) {
 function reset() {
   filters.value = {
     operation: null,
-    operator: null
+    statusCode: null
   }
   load()
 }
@@ -138,8 +137,8 @@ function handleCheckedChange(value: string[]) {
         <ElFormItem :label="$t('operation')" prop="operation">
           <ElInput v-model="filters.operation" :placeholder="$t('inputText', { field: $t('operation') })" />
         </ElFormItem>
-        <ElFormItem :label="$t('operator')" prop="operator">
-          <ElInput v-model="filters.operator" :placeholder="$t('inputText', { field: $t('operator') })" />
+        <ElFormItem :label="$t('statusCode')" prop="statusCode">
+          <ElInput v-model="filters.statusCode" :placeholder="$t('inputText', { field: $t('statusCode') })" />
         </ElFormItem>
         <ElFormItem>
           <ElButton title="search" type="primary" @click="load">
@@ -228,7 +227,6 @@ function handleCheckedChange(value: string[]) {
             {{ dayjs(scope.row.operatedTime).format('YYYY-MM-DD HH:mm') }}
           </template>
         </ElTableColumn>
-        <ElTableColumn prop="operator" :label="$t('operator')" />
         <ElTableColumn :label="$t('actions')" width="160">
           <template #default="scope">
             <ElButton title="detail" size="small" type="info" link @click="showRow(scope.row.id)">
