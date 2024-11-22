@@ -150,22 +150,3 @@ export function wordToSingular(word: string) {
   }
   return word
 }
-
-export const actions: { [key: string]: 'primary' | 'success' | 'info' | 'warning' | 'danger' } = {
-  add: 'primary',
-  edit: 'primary',
-  upload: 'primary',
-
-  import: 'warning',
-
-  remove: 'danger',
-  clear: 'danger',
-
-  export: 'success',
-  relation: 'success',
-  config: 'success',
-  download: 'success',
-
-  preview: 'info',
-  detail: 'info'
-}

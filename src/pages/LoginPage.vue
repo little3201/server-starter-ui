@@ -69,7 +69,8 @@ function show() {
 </script>
 
 <template>
-  <ElContainer class="h-screen relative overflow-hidden bg-[#e3f4fa] dark:bg-[var(--el-bg-color-page)]">
+  <ElContainer
+    class="h-screen relative overflow-hidden bg-[var(--el-color-primary-light-9)] dark:bg-[var(--el-bg-color-page)]">
     <figure class="absolute bg-primary-gradient rounded-full"
       style="height: 31em; width: 31em;  top: -14em; right: -12em; " />
     <figure class="absolute bg-success-gradient rounded-full"
@@ -95,8 +96,9 @@ function show() {
       </div>
     </ElHeader>
     <ElMain class="items-center justify-center z-10">
-      <ElCard class="w-2/3" style="height: 70vh;border-radius: 1.5rem;" body-class="flex items-center !p-0 h-full">
-        <div class="hidden lg:flex flex-col items-center h-full w-1/2 bg-white dark:bg-black ">
+      <ElCard class="w-full lg:w-1/2 xl:w-2/3" style="height: 70vh;border-radius: 1.5rem;"
+        body-class="flex items-center !p-0 h-full">
+        <div class="hidden xl:flex flex-col items-center h-full w-1/2  ">
           <div class="inline-flex flex-grow items-center justify-center h-full">
             <Transition appear enter-active-class="animate__animated animate__slideInLeft"
               leave-active-class="animate__animated animate__slideOutLeft">
@@ -114,7 +116,8 @@ function show() {
             </Transition>
           </div>
         </div>
-        <div class="flex flex-row items-center w-full lg:w-1/2 h-full  bg-[#e3f4fa] dark:bg-black">
+        <div
+          class="flex flex-row items-center w-full xl:w-1/2 h-full  bg-[var(--el-color-primary-light-9)] dark:bg-transparent">
           <Transition appear enter-active-class="animate__animated animate__slideInRight"
             leave-active-class="animate__animated animate__slideOutRight">
             <div class="flex flex-col w-full h-full space-y-2xl justify-center items-center">
@@ -156,7 +159,7 @@ function show() {
                         v:model-value="changeRememberMe" />
                     </ElFormItem>
                     <ElFormItem>
-                      <ElButton size="large" type="primary" :loading="loading" class="w-full" title="signin"
+                      <ElButton title="signin" size="large" type="primary" :loading="loading" class="w-full"
                         native-type="submit">
                         {{ $t('signin') }}
                       </ElButton>

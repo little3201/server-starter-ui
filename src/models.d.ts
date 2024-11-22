@@ -195,6 +195,7 @@ export interface Script extends AudtiMetadata {
   name: string
   icon: string
   version: string
+  content: string
   description: string
 }
 

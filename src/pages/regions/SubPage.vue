@@ -81,7 +81,7 @@ onMounted(() => {
  * 弹出框
  * @param id 主键
  */
-function editRow(id?: number) {
+function saveRow(id?: number) {
   form.value = { ...initialValues }
   if (id) {
     loadOne(id)
@@ -158,8 +158,8 @@ function confirmEvent(id: number) {
         <span class="text-xl">{{ title }}</span>
       </ElCol>
       <ElCol :span="12" class="text-right">
-        <ElButton type="primary" @click="editRow()">
-          <div class="i-material-symbols:add-rounded" />{{ $t('add') }}
+        <ElButton type="primary" @click="saveRow()">
+          <div class="i-material-symbols:add-rounded" />{{ $t('create') }}
         </ElButton>
         <ElTooltip class="box-item" effect="dark" :content="$t('refresh')" placement="top">
           <ElButton type="primary" plain circle @click="load">
@@ -188,8 +188,8 @@ function confirmEvent(id: number) {
       <ElTableColumn show-overflow-tooltip prop="description" :label="$t('description')" />
       <ElTableColumn :label="$t('actions')">
         <template #default="scope">
-          <ElButton size="small" type="primary" link @click="editRow(scope.row.id)">
-            <div class="i-material-symbols:edit-outline-rounded" />{{ $t('edit') }}
+          <ElButton size="small" type="primary" link @click="saveRow(scope.row.id)">
+            <div class="i-material-symbols:edit-outline-rounded" />{{ $t('modify') }}
           </ElButton>
           <ElPopconfirm :title="$t('removeConfirm')" :width="240" @confirm="confirmEvent(scope.row.id)">
             <template #reference>

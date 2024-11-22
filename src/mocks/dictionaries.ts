@@ -2,30 +2,198 @@ import { http, HttpResponse } from 'msw'
 import { SERVER_URL } from 'src/constants'
 import type { Dictionary } from 'src/models'
 
-const datas: Dictionary[] = []
-const subDatas: Dictionary[] = []
-
-for (let i = 1; i < 28; i++) {
-  const data: Dictionary = {
-    id: i,
-    name: 'dictionary_' + i,
-    count: i - 1,
-    description: 'this is description for this row',
-    enabled: i % 3 > 0
+const datas: Dictionary[] = [
+  {
+    name: '文件后缀',
+    id: 29,
+    enabled: true,
+    lastModifiedDate: new Date()
+  },
+  {
+    name: '属性类型',
+    description: 'Java属性类型',
+    id: 1,
+    enabled: true,
+    lastModifiedDate: new Date()
+  },
+  {
+    name: '表单组件',
+    description: 'Form表单组件',
+    id: 13,
+    enabled: true,
+    lastModifiedDate: new Date()
+  },
+  {
+    name: '模板类型',
+    description: '代码生成模板类型',
+    id: 25,
+    enabled: true,
+    lastModifiedDate: new Date()
+  },
+  {
+    name: '操作按钮',
+    id: 42,
+    enabled: true
   }
-  for (let j = 1; j < i; j++) {
-    const subData: Dictionary = {
-      id: 100 + i,
-      name: 'dictionary_' + i + '_' + j,
-      count: 0,
-      superiorId: i,
-      enabled: j % 2 > 0,
-      description: 'this is description for this row'
-    }
-    subDatas.push(subData)
+]
+const subDatas: Dictionary[] = [
+  {
+    name: 'BusinessLogic',
+    superiorId: 25,
+    description: '包括Service和Service Implementation，用于业务逻辑处理。',
+    id: 27,
+    enabled: true,
+    lastModifiedDate: new Date()
+  },
+  {
+    name: 'APIDefinition',
+    superiorId: 25,
+    description: '定义API接口。',
+    id: 59,
+    enabled: true,
+    lastModifiedDate: new Date()
+  },
+  {
+    name: 'DataModels',
+    superiorId: 25,
+    description: '包括Entity、DTO、BO和VO，用于定义数据模型。',
+    id: 58,
+    enabled: true,
+    lastModifiedDate: new Date()
+  },
+  {
+    name: 'DataAccess',
+    superiorId: 25,
+    description: '包括Repository和Mapper，用于操作ORM和数据访问。',
+    id: 26,
+    enabled: true,
+    lastModifiedDate: new Date()
+  },
+  {
+    name: 'UIPage',
+    superiorId: 25,
+    description: '用户界面。',
+    id: 56,
+    enabled: true,
+    lastModifiedDate: new Date()
+  },
+  {
+    name: 'APIManager',
+    superiorId: 25,
+    description: '用于前端请求接口的管理。',
+    id: 28,
+    enabled: true,
+    lastModifiedDate: new Date()
+  },
+  {
+    name: 'Model',
+    superiorId: 25,
+    description: 'TypeScript对象类型定义。',
+    id: 57,
+    enabled: true,
+    lastModifiedDate: new Date()
+  },
+  {
+    name: 'Config',
+    superiorId: 25,
+    description: '前端配置。',
+    id: 60,
+    enabled: true,
+    lastModifiedDate: new Date()
+  },
+  {
+    name: 'remove',
+    superiorId: 42,
+    id: 45,
+    enabled: true,
+    lastModifiedDate: new Date()
+  },
+  {
+    name: 'upload',
+    superiorId: 42,
+    id: 46,
+    enabled: true,
+    lastModifiedDate: new Date()
+  },
+  {
+    name: 'download',
+    superiorId: 42,
+    id: 47,
+    enabled: true,
+    lastModifiedDate: new Date()
+  },
+  {
+    name: 'detail',
+    superiorId: 42,
+    id: 48,
+    enabled: true,
+    lastModifiedDate: new Date()
+  },
+  {
+    name: 'preview',
+    superiorId: 42,
+    id: 49,
+    enabled: true,
+    lastModifiedDate: new Date()
+  },
+  {
+    name: 'import',
+    superiorId: 42,
+    id: 50,
+    enabled: true,
+    lastModifiedDate: new Date()
+  },
+  {
+    name: 'export',
+    superiorId: 42,
+    id: 51,
+    enabled: true,
+    lastModifiedDate: new Date()
+  },
+  {
+    name: 'config',
+    superiorId: 42,
+    id: 52,
+    enabled: true,
+    lastModifiedDate: new Date()
+  },
+  {
+    name: 'execute',
+    superiorId: 42,
+    id: 53,
+    enabled: true,
+    lastModifiedDate: new Date()
+  },
+  {
+    name: 'clear',
+    superiorId: 42,
+    id: 54,
+    enabled: true,
+    lastModifiedDate: new Date()
+  },
+  {
+    name: 'relation',
+    superiorId: 42,
+    description: '数据关联',
+    id: 55,
+    enabled: true,
+    lastModifiedDate: new Date()
+  },
+  {
+    name: 'create',
+    superiorId: 42,
+    id: 43,
+    enabled: true,
+    lastModifiedDate: new Date()
+  },
+  {
+    name: 'modify',
+    superiorId: 42,
+    id: 44,
+    enabled: true,
+    lastModifiedDate: new Date()
   }
-  datas.push(data)
-}
+]
 
 export const dictionariesHandlers = [
   http.get(`/api${SERVER_URL.DICTIONARY}/:id`, ({ params }) => {

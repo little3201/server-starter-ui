@@ -66,7 +66,7 @@ function signOut() {
           </ElMenu>
         </ElScrollbar>
       </ElAside>
-      <ElContainer class=" bg-[#F5F7FA] dark:bg-[#303133] h-[calc(100vh-50px)]">
+      <ElContainer class="bg-[var(--el-bg-color-page)] h-[calc(100vh-50px)]">
         <ElMain>
           <RouterView />
         </ElMain>

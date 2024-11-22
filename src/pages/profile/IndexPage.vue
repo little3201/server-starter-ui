@@ -110,7 +110,7 @@ async function onSubmit(formEl: FormInstance | undefined) {
               </ElTableColumn>
               <ElTableColumn width="80">
                 <template #default="scope">
-                  <ElButton size="small" type="primary" link @click="more(scope.row.id)">
+                  <ElButton title="more" size="small" type="primary" link @click="more(scope.row.id)">
                     {{ $t('more') }}
                   </ElButton>
                 </template>
@@ -148,7 +148,7 @@ async function onSubmit(formEl: FormInstance | undefined) {
               </ElFormItem>
 
               <ElFormItem>
-                <ElButton type="primary" @click="onSubmit(formRef)">Submit</ElButton>
+                <ElButton title="submit" type="primary" @click="onSubmit(formRef)">Submit</ElButton>
               </ElFormItem>
             </ElForm>
           </ElTabPane>

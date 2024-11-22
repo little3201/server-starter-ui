@@ -15,7 +15,7 @@ const themeChange = (val: string | number | boolean) => {
 </script>
 
 <template>
-  <ElSwitch v-model="isDark" id="theme" name="theme" aria-label="theme"
+  <ElSwitch v-model="isDark" id="theme" name="theme"
     style="--el-switch-on-color: var(--el-border-color); --el-switch-off-color: var(--el-color-primary-light-3);"
     @change="themeChange">
     <template #active-action>

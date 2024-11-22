@@ -37,7 +37,7 @@ const datas: Privilege[] = [
     description: 'this is description for this row'
   },
   {
-    id: 14,
+    id: 13,
     path: 'files',
     component: 'pages/files/IndexPage',
     name: 'files',

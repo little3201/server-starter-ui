@@ -1,34 +1,31 @@
 <script lang="ts" setup>
-import { ref, watchEffect } from 'vue'
+import { ref, watch, onUnmounted } from 'vue'
 import hljs from 'boot/hljs'
-import { useAppStore } from 'stores/app-store'
+import type { HighlightResult } from 'highlight.js'
+import 'highlight.js/styles/github-dark.min.css'
 
-const appStore = useAppStore()
-
-// 初始化获取是否是暗黑主题
-const isDark = ref(appStore.isDark)
-
-const props = withDefaults(defineProps<{
+const props = defineProps<{
   content: string
-}>(), {
-  content: ''
-})
+}>()
 
-const rendered = ref(hljs.highlightAuto(props.content).value)
+const highlightResult = ref<HighlightResult | null>(null)
 
-watchEffect(() => {
-  if (isDark.value) {
-    import('highlight.js/styles/base16/summerfruit-dark.min.css')
-  } else {
-    import('highlight.js/styles//base16/summerfruit-light.min.css')
+watch(() => props.content, (newVal) => {
+  if (newVal) {
+    highlightResult.value = hljs.highlightAuto(newVal)
   }
-
-  rendered.value = hljs.highlightAuto(props.content).value
 })
+
+onUnmounted(() => { highlightResult.value = null })
 </script>
 
 <template>
   <article>
-    <pre><code class="hljs lang-ts" v-html="rendered"></code></pre>
+    <pre class="relative m-0">
+      <code class="hljs" v-html="highlightResult?.value"></code>
+      <small class="absolute top-2 right-0 px-2 text-white">
+        {{ highlightResult?.language }}
+      </small>
+    </pre>
   </article>
 </template>

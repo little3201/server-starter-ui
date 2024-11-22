@@ -136,10 +136,10 @@ function handleCheckedChange(value: string[]) {
           <ElInput v-model="filters.name" :placeholder="$t('inputText', { field: $t('name') })" />
         </ElFormItem>
         <ElFormItem>
-          <ElButton type="primary" @click="load">
+          <ElButton title="search" type="primary" @click="load">
             <div class="i-material-symbols:search-rounded" />{{ $t('search') }}
           </ElButton>
-          <ElButton @click="reset">
+          <ElButton title="reset" @click="reset">
             <div class="i-material-symbols:replay-rounded" />{{ $t('reset') }}
           </ElButton>
         </ElFormItem>
@@ -149,17 +149,17 @@ function handleCheckedChange(value: string[]) {
     <ElCard shadow="never">
       <ElRow :gutter="20" justify="space-between" class="mb-4">
         <ElCol :span="16" class="text-left">
-          <ElButton type="danger" plain>
+          <ElButton title="clear" type="danger" plain>
             <div class="i-material-symbols:delete-outline-rounded" />{{ $t('clear') }}
           </ElButton>
-          <ElButton type="success" plain>
+          <ElButton title="export" type="success" plain>
             <div class="i-material-symbols:file-export-outline-rounded" />{{ $t('export') }}
           </ElButton>
         </ElCol>
 
         <ElCol :span="8" class="text-right">
           <ElTooltip class="box-item" effect="dark" :content="$t('refresh')" placement="top">
-            <ElButton type="primary" plain circle @click="load">
+            <ElButton title="refresh" type="primary" plain circle @click="load">
               <div class="i-material-symbols:refresh-rounded" />
             </ElButton>
           </ElTooltip>
@@ -168,7 +168,7 @@ function handleCheckedChange(value: string[]) {
             <span class="inline-block ml-3 h-8">
               <ElPopover :width="200" trigger="click">
                 <template #reference>
-                  <ElButton type="success" plain circle>
+                  <ElButton title="setgings" type="success" plain circle>
                     <div class="i-material-symbols:format-list-bulleted" />
                   </ElButton>
                 </template>
@@ -226,12 +226,12 @@ function handleCheckedChange(value: string[]) {
         </ElTableColumn>
         <ElTableColumn :label="$t('actions')" width="160">
           <template #default="scope">
-            <ElButton size="small" type="info" link @click="showRow(scope.row.id)">
+            <ElButton title="detail" size="small" type="info" link @click="showRow(scope.row.id)">
               <div class="i-material-symbols:description-outline-rounded" />{{ $t('detail') }}
             </ElButton>
             <ElPopconfirm :title="$t('removeConfirm')" :width="240" @confirm="confirmEvent(scope.row.id)">
               <template #reference>
-                <ElButton size="small" type="danger" link>
+                <ElButton title="remove" size="small" type="danger" link>
                   <div class="i-material-symbols:delete-outline-rounded" />{{ $t('remove') }}
                 </ElButton>
               </template>
