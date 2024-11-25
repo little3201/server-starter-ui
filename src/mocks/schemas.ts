@@ -9,6 +9,7 @@ for (let i = 1; i < 28; i++) {
   const data: Schema = {
     id: i,
     name: 'table_name' + i,
+    comment: 'table_comment',
     reference: 'package/domain',
     domain: 'TableName' + i,
     enabled: i > 2,

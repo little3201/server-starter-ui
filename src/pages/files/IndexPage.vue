@@ -203,7 +203,7 @@ function handleCheckedChange(value: string[]) {
           </ElCol>
         </ElRow>
 
-        <ElTable v-loading="loading" :data="datas" lazy :load="load" row-key="id" stripe table-layout="auto"
+        <ElTable v-loading="loading" :data="datas" row-key="id" stripe table-layout="auto"
           @sort-change="handleSortChange">
           <ElTableColumn type="index" :label="$t('no')" width="55" />
           <ElTableColumn prop="name" :label="$t('name')" />

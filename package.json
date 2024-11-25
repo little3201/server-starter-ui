@@ -50,6 +50,10 @@
     "vue-tsc": "^2.1.6",
     "vuedraggable": "^4.1.0"
   },
+  "browserslist": [
+    "defaults and fully supports es6-module",
+    "maintained node versions"
+  ],
   "license": "MIT",
   "msw": {
     "workerDirectory": [

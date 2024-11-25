@@ -223,7 +223,7 @@ function handleCheckedChange(value: string[]) {
         </ElCol>
       </ElRow>
 
-      <ElTable v-loading="loading" :data="datas" lazy :load="load" row-key="id" stripe table-layout="auto">
+      <ElTable v-loading="loading" :data="datas" row-key="id" stripe table-layout="auto">
         <ElTableColumn type="selection" width="55" />
         <ElTableColumn type="expand">
           <template #default="props">

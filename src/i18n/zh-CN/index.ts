@@ -75,7 +75,7 @@ export default {
   formType: '表单类型',
   nullable: '可为空',
   unique: '唯一',
-  comment: '描述',
+  comment: '注释',
   queryable: '可查询',
   editable: '可编辑',
   selected: '已选择',

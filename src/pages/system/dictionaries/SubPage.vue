@@ -155,7 +155,7 @@ function confirmEvent(id: number) {
       </ElCol>
     </ElRow>
 
-    <ElTable v-loading="loading" :data="datas" lazy :load="load" row-key="id" stripe table-layout="auto">
+    <ElTable v-loading="loading" :data="datas" row-key="id" stripe table-layout="auto">
       <ElTableColumn type="selection" width="55" />
       <ElTableColumn prop="name" :label="$t('name')" />
       <ElTableColumn prop="enabled" :label="$t('enabled')">

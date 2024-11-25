@@ -203,7 +203,7 @@ function handleCheckedChange(value: string[]) {
         </ElCol>
       </ElRow>
 
-      <ElTable :data="datas" lazy :load="load" row-key="id" stripe table-layout="auto">
+      <ElTable :data="datas" row-key="id" stripe table-layout="auto">
         <ElTableColumn type="selection" width="55" />
         <ElTableColumn type="index" :label="$t('no')" width="55" />
         <ElTableColumn prop="operation" :label="$t('operation')" />

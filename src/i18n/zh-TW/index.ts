@@ -75,7 +75,7 @@ export default {
   formType: '表單類型',
   nullable: '可為空',
   unique: '唯一',
-  comment: '描述',
+  comment: '註釋',
   queryable: '可查詢',
   editable: '可編輯',
   selected: '已選擇',

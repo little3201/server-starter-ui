@@ -162,6 +162,7 @@ export interface FileRecord extends AudtiMetadata {
 
 export interface Schema extends AudtiMetadata {
   name: string
+  comment: string
   reference: string
   domain: string
   enabled?: boolean
