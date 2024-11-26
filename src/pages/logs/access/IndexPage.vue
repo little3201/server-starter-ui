@@ -37,7 +37,7 @@ const initialValues: AccessLog = {
 }
 const row = ref<AccessLog>({ ...initialValues })
 
-const dialogVisible = ref<boolean>(false)
+const visible = ref<boolean>(false)
 /**
  * 分页变化
  * @param value 当前页码
@@ -91,7 +91,7 @@ onMounted(() => {
  */
 function showRow(id: number) {
   row.value = { ...initialValues }
-  dialogVisible.value = true
+  visible.value = true
   loadOne(id)
 }
 
@@ -158,7 +158,7 @@ function handleCheckedChange(value: string[]) {
       <ElRow :gutter="20" justify="space-between" class="mb-4">
         <ElCol :span="16" class="text-left">
           <ElButton title="clear" type="danger" plain>
-            <div class="i-material-symbols:delete-outline-rounded" />{{ $t('clear') }}
+            <div class="i-material-symbols:clear-all-rounded" />{{ $t('clear') }}
           </ElButton>
           <ElButton title="export" type="success" plain>
             <div class="i-material-symbols:file-export-outline-rounded" />{{ $t('export') }}
@@ -254,7 +254,7 @@ function handleCheckedChange(value: string[]) {
     </ElCard>
   </ElSpace>
 
-  <DialogView v-model="dialogVisible" :title="$t('detail')">
+  <DialogView v-model="visible" :title="$t('detail')">
     <ElDescriptions v-loading="detailLoading" border>
       <ElDescriptionsItem :label="$t('url')">{{ row.url }}</ElDescriptionsItem>
       <ElDescriptionsItem :label="$t('httpMethod')">

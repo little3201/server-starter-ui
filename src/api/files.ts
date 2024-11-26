@@ -5,7 +5,7 @@ import type { Pagination, FileRecord } from 'src/models'
 /**
  * Retrieve rows
  * @param pagination Pagination and sort parameters
- * @param filters Optional filter
+ * @param filters Optional filter or sort parameters
  * @returns Rows data
  */
 export const retrieveFiles = (pagination: Pagination, filters?: object) => {

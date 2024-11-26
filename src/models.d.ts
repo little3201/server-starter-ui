@@ -204,14 +204,3 @@ export interface TableInfo {
   tableName: string
   tableComment: string
 }
-
-export interface ColumnInfo {
-  columnName: string
-  udtName: string
-  dataType: string
-  characterMaximumLength: number
-  identity: string,
-  nullable: string,
-  columnDefault: string,
-  columnComment: string
-}

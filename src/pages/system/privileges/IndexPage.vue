@@ -28,7 +28,7 @@ const columns = ref<Array<string>>(['name', 'enabled', 'description'])
 
 const buttonOptions = ref<Array<Dictionary>>([])
 const saveLoading = ref<boolean>(false)
-const dialogVisible = ref<boolean>(false)
+const visible = ref<boolean>(false)
 
 const importVisible = ref<boolean>(false)
 const importLoading = ref<boolean>(false)
@@ -136,7 +136,7 @@ function saveRow(id?: number) {
     loadOne(id)
   }
   loadDictionaries()
-  dialogVisible.value = true
+  visible.value = true
 }
 
 /**
@@ -166,7 +166,7 @@ async function onSubmit(formEl: FormInstance | undefined) {
       if (form.value.id) {
         modifyPrivilege(form.value.id, form.value).then(res => {
           load(res.data)
-          dialogVisible.value = false
+          visible.value = false
         }).finally(() => { saveLoading.value = false })
       }
     }
@@ -243,7 +243,7 @@ function handleCheckedChange(value: string[]) {
       <ElRow :gutter="20" justify="space-between" class="mb-4">
         <ElCol :span="16" class="text-left">
           <ElButton title="import" type="warning" plain @click="importRows">
-            <div class="i-material-symbols:upload-file-outline-rounded" />{{ $t('import') }}
+            <div class="i-material-symbols:database-upload-outline-rounded" />{{ $t('import') }}
           </ElButton>
           <ElButton title="export" type="success" plain>
             <div class="i-material-symbols:file-export-outline-rounded" />{{ $t('export') }}
@@ -340,7 +340,7 @@ function handleCheckedChange(value: string[]) {
     </ElCard>
   </ElSpace>
 
-  <DialogView v-model="dialogVisible" :title="$t('privileges')" width="36%">
+  <DialogView v-model="visible" :title="$t('privileges')" width="36%">
     <ElForm ref="formRef" :model="form" :rules="rules" label-position="top">
       <ElRow :gutter="20" class="w-full !mx-0">
         <ElCol :span="12">
@@ -390,7 +390,7 @@ function handleCheckedChange(value: string[]) {
       </ElRow>
     </ElForm>
     <template #footer>
-      <ElButton title="cancel" @click="dialogVisible = false">
+      <ElButton title="cancel" @click="visible = false">
         <div class="i-material-symbols:close" />{{ $t('cancel') }}
       </ElButton>
       <ElButton title="submit" type="primary" :loading="saveLoading" @click="onSubmit(formRef)">

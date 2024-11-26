@@ -34,7 +34,7 @@ const currentNode = ref('')
 
 const groupTree = ref<TreeNode[]>([])
 const saveLoading = ref<boolean>(false)
-const dialogVisible = ref<boolean>(false)
+const visible = ref<boolean>(false)
 
 const relationVisible = ref<boolean>(false)
 const members = ref([])
@@ -179,7 +179,7 @@ function saveRow(id?: number) {
   if (id) {
     loadOne(id)
   }
-  dialogVisible.value = true
+  visible.value = true
 }
 
 /**
@@ -213,14 +213,14 @@ function onSubmit(formEl: FormInstance | undefined) {
         modifyGroup(form.value.id, form.value).then(() => {
           load()
           loadTree()
-          dialogVisible.value = false
+          visible.value = false
         }).finally(() => { saveLoading.value = false })
       } else {
         form.value.superiorId = currentNodeKey.value
         createGroup(form.value).then(() => {
           load()
           loadTree()
-          dialogVisible.value = false
+          visible.value = false
         }).finally(() => { saveLoading.value = false })
       }
     }
@@ -309,8 +309,8 @@ function handleCheckedChange(value: string[]) {
               <ElButton title="create" type="primary" @click="saveRow()">
                 <div class="i-material-symbols:add-rounded" />{{ $t('create') }}
               </ElButton>
-              <ElButton title="import" type="warning" plain @click="dialogVisible = true">
-                <div class="i-material-symbols:upload-file-outline-rounded" />{{ $t('import') }}
+              <ElButton title="import" type="warning" plain @click="visible = true">
+                <div class="i-material-symbols:database-upload-outline-rounded" />{{ $t('import') }}
               </ElButton>
               <ElButton title="export" type="success" plain>
                 <div class="i-material-symbols:file-export-outline-rounded" />{{ $t('export') }}
@@ -394,7 +394,7 @@ function handleCheckedChange(value: string[]) {
     </div>
   </div>
 
-  <DialogView v-model="dialogVisible" :title="$t('groups')" width="25%">
+  <DialogView v-model="visible" :title="$t('groups')" width="25%">
     <ElForm ref="formRef" :model="form" :rules="rules" label-position="top">
       <ElRow :gutter="20" class="w-full !mx-0">
         <ElCol>
@@ -413,7 +413,7 @@ function handleCheckedChange(value: string[]) {
       </ElRow>
     </ElForm>
     <template #footer>
-      <ElButton title="cancel" @click="dialogVisible = false">
+      <ElButton title="cancel" @click="visible = false">
         <div class="i-material-symbols:close" />{{ $t('cancel') }}
       </ElButton>
       <ElButton title="submit" type="primary" :loading="saveLoading" @click="onSubmit(formRef)">

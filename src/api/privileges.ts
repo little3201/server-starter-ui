@@ -4,9 +4,8 @@ import type { Pagination, Privilege } from 'src/models'
 
 /**
  * Retrieve rows
- * @param page Page number
- * @param size Items per page
- * @param params Optional filter or sort parameters
+ * @param pagination Pagination and sort parameters
+ * @param filters Optional filter or sort parameters
  * @returns Rows data
  */
 export const retrievePrivileges = (pagination: Pagination, filters?: object) => {

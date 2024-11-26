@@ -9,6 +9,8 @@ import type { Pagination, FileRecord } from 'src/models'
 import { formatFileSize } from 'src/utils'
 
 const loading = ref<boolean>(false)
+const uploadLoading = ref<boolean>(false)
+
 const datas = ref<Array<FileRecord>>([])
 const total = ref<number>(0)
 
@@ -17,14 +19,14 @@ const pagination = reactive<Pagination>({
   size: 10
 })
 
+const visible = ref<boolean>(false)
+
 const checkAll = ref<boolean>(true)
 const isIndeterminate = ref<boolean>(false)
 const checkedColumns = ref<Array<string>>(['name', 'type', 'size'])
 const columns = ref<Array<string>>(['name', 'type', 'size'])
 
 const uploadRef = ref<UploadInstance>()
-const uploadLoading = ref<boolean>(false)
-const dialogVisible = ref<boolean>(false)
 
 const filters = ref({
   name: null
@@ -76,7 +78,7 @@ onMounted(() => {
  * 上传
  */
 function uploadRow() {
-  dialogVisible.value = true
+  visible.value = true
 }
 
 /**
@@ -237,7 +239,7 @@ function handleCheckedChange(value: string[]) {
       </ElCard>
     </ElSpace>
 
-    <DialogView v-model="dialogVisible" :title="$t('upload')" width="35%">
+    <DialogView v-model="visible" :title="$t('upload')" width="35%">
       <ElUpload ref="uploadRef" :limit="1" drag action="/api/files/upload">
         <div class="el-icon--upload inline-flex justify-center">
           <div class="i-material-symbols:upload-rounded" />
@@ -252,7 +254,7 @@ function handleCheckedChange(value: string[]) {
         </template>
       </ElUpload>
       <template #footer>
-        <ElButton title="cancel" @click="dialogVisible = false">
+        <ElButton title="cancel" @click="visible = false">
           <div class="i-material-symbols:close" />{{ $t('cancel') }}
         </ElButton>
         <ElButton title="submit" type="primary" :loading="uploadLoading" @click="onSubmit(uploadRef)">

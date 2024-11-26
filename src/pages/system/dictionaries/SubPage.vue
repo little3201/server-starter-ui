@@ -20,7 +20,7 @@ const loading = ref<boolean>(false)
 const datas = ref<Array<Dictionary>>([])
 
 const saveLoading = ref<boolean>(false)
-const dialogVisible = ref<boolean>(false)
+const visible = ref<boolean>(false)
 
 const formRef = ref<FormInstance>()
 const initialValues: Dictionary = {
@@ -71,7 +71,7 @@ function saveRow(id?: number) {
   if (id) {
     loadOne(id)
   }
-  dialogVisible.value = true
+  visible.value = true
 }
 
 /**
@@ -104,12 +104,12 @@ function onSubmit(formEl: FormInstance | undefined) {
       if (form.value.id) {
         modifyDictionary(form.value.id, form.value).then(() => {
           load()
-          dialogVisible.value = false
+          visible.value = false
         }).finally(() => { saveLoading.value = false })
       } else {
         createDictionary(form.value).then(() => {
           load()
-          dialogVisible.value = false
+          visible.value = false
         }).finally(() => { saveLoading.value = false })
       }
     }
@@ -182,7 +182,7 @@ function confirmEvent(id: number) {
     </ElTable>
   </ElCard>
 
-  <DialogView v-model="dialogVisible" :title="$t('dictionaries')" width="25%">
+  <DialogView v-model="visible" :title="$t('dictionaries')" width="25%">
     <ElForm ref="formRef" :model="form" :rules="rules" label-position="top">
       <ElRow :gutter="20" class="w-full !mx-0">
         <ElCol :span="24">
@@ -201,7 +201,7 @@ function confirmEvent(id: number) {
       </ElRow>
     </ElForm>
     <template #footer>
-      <ElButton @click="dialogVisible = false">
+      <ElButton @click="visible = false">
         <div class="i-material-symbols:close" />{{ $t('cancel') }}
       </ElButton>
       <ElButton type="primary" :loading="saveLoading" @click="onSubmit(formRef)">

@@ -23,7 +23,7 @@ const pagination = reactive<Pagination>({
 })
 
 const saveLoading = ref<boolean>(false)
-const dialogVisible = ref<boolean>(false)
+const visible = ref<boolean>(false)
 
 const formRef = ref<FormInstance>()
 const initialValues: Region = {
@@ -86,7 +86,7 @@ function saveRow(id?: number) {
   if (id) {
     loadOne(id)
   }
-  dialogVisible.value = true
+  visible.value = true
 }
 
 /**
@@ -119,13 +119,13 @@ function onSubmit(formEl: FormInstance | undefined) {
       if (form.value.id) {
         modifyRegion(form.value.id, form.value).then(() => {
           load()
-          dialogVisible.value = false
+          visible.value = false
         }).finally(() => { saveLoading.value = false })
       } else {
         form.value.superiorId = props.superiorId
         createRegion(form.value).then(() => {
           load()
-          dialogVisible.value = false
+          visible.value = false
         }).finally(() => { saveLoading.value = false })
       }
     }
@@ -204,7 +204,7 @@ function confirmEvent(id: number) {
     <ElPagination layout="prev, pager, next, sizes, jumper, ->, total" @change="pageChange" :total="total" />
   </ElCard>
 
-  <DialogView v-model="dialogVisible" :title="$t('regions')" width="25%">
+  <DialogView v-model="visible" :title="$t('regions')" width="25%">
     <ElForm ref="formRef" :model="form" :rules="rules" label-position="top">
       <ElRow :gutter="20" class="w-full !mx-0">
         <ElCol>
@@ -237,7 +237,7 @@ function confirmEvent(id: number) {
       </ElRow>
     </ElForm>
     <template #footer>
-      <ElButton @click="dialogVisible = false">
+      <ElButton @click="visible = false">
         <div class="i-material-symbols:close" />{{ $t('cancel') }}
       </ElButton>
       <ElButton type="primary" :loading="saveLoading" @click="onSubmit(formRef)">

@@ -5,7 +5,7 @@ import type { Pagination, Group } from 'src/models'
 /**
  * Retrieve rows
  * @param pagination Pagination and sort parameters
- * @param filters Optional filter
+ * @param filters Optional filter or sort parameters
  * @returns Rows data
  */
 export const retrieveGroups = (pagination: Pagination, filters?: object) => {

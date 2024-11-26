@@ -37,7 +37,7 @@ const initialValues: AuditLog = {
 }
 const row = ref<AuditLog>({ ...initialValues })
 
-const dialogVisible = ref<boolean>(false)
+const visible = ref<boolean>(false)
 
 /**
  * 分页变化
@@ -92,7 +92,7 @@ onMounted(() => {
  */
 function showRow(id: number) {
   row.value = { ...initialValues }
-  dialogVisible.value = true
+  visible.value = true
   loadOne(id)
 }
 
@@ -226,7 +226,7 @@ function handleCheckedChange(value: string[]) {
     </ElCard>
   </ElSpace>
 
-  <DialogView v-model="dialogVisible" :title="$t('detail')">
+  <DialogView v-model="visible" :title="$t('detail')">
     <ElDescriptions v-loading="detailLoading" border>
       <ElDescriptionsItem :label="$t('operation')">
         <ElBadge is-dot :type="actions[row.operation.toLowerCase()]" class="mr-1" />{{ row.operation }}

@@ -18,7 +18,7 @@ for (let i = 1; i < 28; i++) {
   datas.push(data)
 }
 
-const columnDatas: Field[] = []
+const fields: Field[] = []
 
 for (let i = 1; i < 28; i++) {
   const data: Field = {
@@ -35,10 +35,10 @@ for (let i = 1; i < 28; i++) {
     editable: i > 2,
     description: 'this is description for this row'
   }
-  columnDatas.push(data)
+  fields.push(data)
 }
 
-const codes: Template[] = [
+const templates: Template[] = [
   {
     id: 1,
     name: 'IndexPage',
@@ -70,7 +70,7 @@ export const schemasHandlers = [
   http.get(`/api${SERVER_URL.SCHEMA}/:id/preview`, ({ params }) => {
     const { id } = params
     if (id) {
-      return HttpResponse.json(codes)
+      return HttpResponse.json(templates)
     } else {
       return HttpResponse.json(null)
     }
@@ -78,7 +78,7 @@ export const schemasHandlers = [
   http.get(`/api${SERVER_URL.SCHEMA}/:id/fields`, ({ params }) => {
     const { id } = params
     if (id) {
-      return HttpResponse.json(columnDatas)
+      return HttpResponse.json(fields)
     } else {
       return HttpResponse.json(null)
     }

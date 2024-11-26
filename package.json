@@ -12,7 +12,7 @@
     "lint:fix": "yarn lint -- --fix"
   },
   "dependencies": {
-    "@iconify-json/material-symbols": "^1.2.3",
+    "@iconify-json/material-symbols": "^1.2.8",
     "@vueuse/core": "^11.1.0",
     "animate.css": "^4.1.1",
     "apexcharts": "^3.54.0",
