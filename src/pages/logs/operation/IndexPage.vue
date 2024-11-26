@@ -246,7 +246,7 @@ function handleCheckedChange(value: string[]) {
     </ElCard>
   </ElSpace>
 
-  <DialogView v-model="visible" :title="$t('detail')">
+  <DialogView v-model="visible" show-close :title="$t('detail')">
     <ElDescriptions v-loading="detailLoading" :column="2" border>
       <ElDescriptionsItem :label="$t('operation')">{{ row.operation }}</ElDescriptionsItem>
       <ElDescriptionsItem :label="$t('content')">{{ row.content }}</ElDescriptionsItem>

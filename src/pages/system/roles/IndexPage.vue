@@ -423,7 +423,7 @@ function handleCheckedChange(value: string[]) {
     </template>
   </DialogView>
 
-  <DialogView v-model="relationVisible" :title="$t('relation')">
+  <DialogView v-model="relationVisible" show-close :title="$t('relation')">
     <div style="text-align: center">
       <ElTransfer v-model="relations" :props="{ key: 'username', label: 'fullName' }"
         :titles="[$t('unselected'), $t('selected')]" filterable :data="members" />

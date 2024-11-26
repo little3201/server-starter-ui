@@ -249,7 +249,7 @@ function handleCheckedChange(value: string[]) {
     </ElCard>
   </ElSpace>
 
-  <DialogView v-model="visible" :title="$t('detail')">
+  <DialogView v-model="visible" show-close :title="$t('detail')">
     <ElDescriptions v-loading="detailLoading" border>
       <ElDescriptionsItem :label="$t('name')">{{ row.name }}</ElDescriptionsItem>
       <ElDescriptionsItem :label="$t('startTime')">{{ dayjs(row.startTime).format('YYYY-MM-DD HH:mm') }}

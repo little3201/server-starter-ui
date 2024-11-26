@@ -62,6 +62,16 @@ body {
   width: 100% !important;
 }
 
+.el-icon {
+  width: 1.25em;
+  height: 1.25em;
+
+  svg {
+    width: 1.25em;
+    height: 1.25em;
+  }
+}
+
 .search {
   .el-card__body {
     padding-bottom: 0;
