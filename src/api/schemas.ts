@@ -74,7 +74,7 @@ export const syncSchema = (id: number) => {
  * @returns Created row
  */
 export const generateSchema = (id: number) => {
-  return api.post(`${SERVER_URL.SCHEMA}/${id}/download`, { responseType: 'blob' })
+  return api.get(`${SERVER_URL.SCHEMA}/${id}/download`, { responseType: 'blob' })
 }
 
 /**

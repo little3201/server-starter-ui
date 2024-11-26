@@ -150,3 +150,22 @@ export function wordToSingular(word: string) {
   }
   return word
 }
+
+export function downloadFile(data: Blob, filename: string, mimeType?: string): void {
+  // 创建一个新的 Blob 对象，指定 MIME 类型
+  const blob = new Blob([data], { type: mimeType || 'application/octet-stream' })
+
+  // 创建一个临时的下载链接
+  const url = window.URL.createObjectURL(blob)
+
+  // 创建一个 <a> 元素并触发点击事件来启动下载
+  const link = document.createElement('a')
+  link.href = url
+  link.setAttribute('download', filename) // 设置下载的文件名
+  document.body.appendChild(link)
+  link.click() // 执行点击，触发下载
+  document.body.removeChild(link) // 清除临时元素
+
+  // 释放创建的 URL 对象
+  window.URL.revokeObjectURL(url)
+}

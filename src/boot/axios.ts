@@ -9,7 +9,7 @@ const { t } = i18n.global as { t: ComposerTranslation }
 const abortControllerMap: Map<string, AbortController> = new Map()
 
 const api: AxiosInstance = axios.create({
-  baseURL: import.meta.env.VITE_API_BASE_API,
+  baseURL: import.meta.env.VITE_API_BASE_API as string,
   timeout: 5000
 })
 
@@ -40,17 +40,23 @@ api.interceptors.response.use(
     return res
   },
   (error: AxiosError) => {
-    if (error.response?.status === 401) {
-      localStorage.removeItem('access_token')
-      router.replace('/login')
-    } else if (error.response?.status === 403) {
-      ElMessage.error({ message: t('forbidden'), grouping: true })
-    } else if (error.response?.status === 404) {
-      ElMessage.error({ message: t('notFound'), grouping: true })
-    } else if (error.response?.status === 500) {
-      ElMessage.error({ message: t('serverError'), grouping: true })
-    } else {
-      ElMessage.error({ message: t('error'), grouping: true })
+    const status = error.response?.status
+    switch (status) {
+      case 401:
+        localStorage.removeItem('access_token')
+        router.replace('/login')
+        break
+      case 403:
+        ElMessage.error({ message: t('forbidden'), grouping: true })
+        break
+      case 404:
+        ElMessage.error({ message: t('notFound'), grouping: true })
+        break
+      case 500:
+        ElMessage.error({ message: t('serverError'), grouping: true })
+        break
+      default:
+        ElMessage.error({ message: t('error'), grouping: true })
     }
     return Promise.reject(error)
   }
@@ -60,15 +66,15 @@ const cancelRequest = (url: string | string[], method: string = 'get') => {
   const urlList = Array.isArray(url) ? url : [url]
   for (const _url of urlList) {
     const uniqueKey = `${method}:${_url}`
-    abortControllerMap.get(uniqueKey)?.abort()
-    abortControllerMap.delete(uniqueKey)
+    if (abortControllerMap.has(uniqueKey)) {
+      abortControllerMap.get(uniqueKey)?.abort()
+      abortControllerMap.delete(uniqueKey)
+    }
   }
 }
 
 const cancelAllRequest = () => {
-  for (const controller of abortControllerMap.values()) {
-    controller.abort()
-  }
+  abortControllerMap.forEach(controller => controller.abort())
   abortControllerMap.clear()
 }
 
