@@ -11,7 +11,7 @@ const props = defineProps<{
 const highlightResult = ref<HighlightResult | null>(null)
 
 watchEffect(() => {
-  highlightResult.value = hljs.highlightAuto(props.content)
+  highlightResult.value = hljs.highlightAuto(props.content || '')
 })
 
 onUnmounted(() => { highlightResult.value = null })

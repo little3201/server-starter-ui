@@ -17,12 +17,12 @@ withDefaults(defineProps<{
       <div :class="[`i-material-symbols:${essentialLink.meta.icon}`, 'mr-2']" />
       {{ $t(essentialLink.name) }}
     </template>
-    <template v-for="item in essentialLink.children" :key="item.id">
-      <EssentialList v-if="item.children && item.children.length > 0" :essentialLink="item"
-        :parent-path="pathResolve(parentPath, item.meta.path)" />
-      <ElMenuItem v-else :index="`/${pathResolve(parentPath, item.meta.path)}`">
-        <div :class="[`i-material-symbols:${item.meta.icon}`, 'mr-2 ']" />
-        {{ $t(item.name) }}
+    <template v-for="link in essentialLink.children" :key="link.id">
+      <EssentialList v-if="link.children && link.children.length > 0" :essentialLink="link"
+        :parent-path="pathResolve(parentPath, link.meta.path)" />
+      <ElMenuItem v-else :index="`/${pathResolve(parentPath, link.meta.path)}`">
+        <div :class="[`i-material-symbols:${link.meta.icon}`, 'mr-2 ']" />
+        {{ $t(link.name) }}
       </ElMenuItem>
     </template>
   </ElSubMenu>
