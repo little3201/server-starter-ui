@@ -62,7 +62,13 @@ function signOut() {
             <ElMenuItem :index="'/'">
               <div class="i-material-symbols:home-outline-rounded mr-2" />{{ $t('home') }}
             </ElMenuItem>
-            <EssentialList :essentialLinks="essentialLinks" />
+            <template v-for="link in essentialLinks" :key="link.id">
+              <EssentialList v-if="link.children && link.children.length > 0" :essentialLink="link"
+                :parent-path="link.meta.path" />
+              <ElMenuItem v-else :index="`/${link.meta.path}`">
+                <div class="i-material-symbols:home-outline-rounded mr-2" />{{ $t(link.name) }}
+              </ElMenuItem>
+            </template>
           </ElMenu>
         </ElScrollbar>
       </ElAside>

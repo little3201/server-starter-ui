@@ -194,6 +194,7 @@ export interface Template extends AudtiMetadata {
 
 export interface Script extends AudtiMetadata {
   name: string
+  type?: number
   icon: string
   version: string
   content: string
