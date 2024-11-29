@@ -24,6 +24,7 @@ api.interceptors.request.use(
     config.signal = controller.signal
     abortControllerMap.set(uniqueKey, controller)
 
+    removeEmptyParamsFromGetRequest(config)
     return config
   },
   (error: AxiosError) => {
@@ -61,6 +62,31 @@ api.interceptors.response.use(
     return Promise.reject(error)
   }
 )
+
+/**
+ * 拦截并处理axios的请求配置，以便在GET请求时移除空字符串、null和undefined的参数。
+ * @param config - axios请求配置对象
+ * @returns 修改后的axios请求配置对象
+ */
+const removeEmptyParamsFromGetRequest = (config: InternalAxiosRequestConfig) => {
+  // 如果请求方法是 GET 且存在参数
+  if (config.method === 'get' && config.params) {
+    // 将参数对象转换为键值对数组，过滤掉值为 undefined, null 或 空字符串的参数
+    const params = Object.entries(config.params)
+      .filter((entry): entry is [string, string] => {
+        const value = entry[1]
+        return value !== undefined && value !== null && value !== ''
+      })
+      // 对剩余的参数进行编码并转换为查询字符串格式
+      .map(([key, value]) => `${key}=${encodeURIComponent(value)}`)
+      .join('&') // 使用 & 符号连接各个参数
+
+    // 将过滤后的查询字符串附加到 URL 上
+    config.url = `${config.url}?${params}`
+    config.params = {}
+  }
+  return config
+}
 
 const cancelRequest = (url: string | string[], method: string = 'get') => {
   const urlList = Array.isArray(url) ? url : [url]
