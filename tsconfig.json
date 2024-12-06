@@ -42,6 +42,7 @@
     "./../*.config.*",
   ],
   "types": [
-    "element-plus/global"
+    "vite/client",
+    "unplugin-vue-router/client"
   ]
 }

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, reactive, onMounted } from 'vue'
-import lottie from 'lottie-web'
+import { DotLottie } from '@lottiefiles/dotlottie-web'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { ElFormItem, type FormInstance, type FormRules } from 'element-plus'
@@ -15,7 +15,7 @@ const router = useRouter()
 const appStore = useAppStore()
 const userStore = useUserStore()
 
-const lottieRef = ref<HTMLDivElement>()
+const lottieRef = ref<HTMLCanvasElement | null>(null)
 
 const loading = ref<boolean>(false)
 
@@ -38,7 +38,7 @@ const rules = reactive<FormRules<typeof form>>({
 })
 
 onMounted(() => {
-  show()
+  load()
 })
 
 async function onSubmit(formEl: FormInstance | undefined) {
@@ -55,14 +55,16 @@ async function onSubmit(formEl: FormInstance | undefined) {
   })
 }
 
-function show() {
+function load() {
   if (lottieRef.value) {
-    lottie.loadAnimation({
-      container: lottieRef.value,
-      renderer: 'svg',
+    new DotLottie({
+      canvas: lottieRef.value,
       loop: true,
       autoplay: true,
-      path: '/bg.json'
+      src: '/1707289607880.lottie',
+      renderConfig: {
+        autoResize: true
+      }
     })
   }
 }
@@ -103,7 +105,7 @@ function show() {
             <Transition appear enter-active-class="animate__animated animate__slideInLeft"
               leave-active-class="animate__animated animate__slideOutLeft">
               <div class="inline-flex flex-col justify-center items-center" style="margin-top: -40px">
-                <div ref="lottieRef" style="height: 450px; width: 450px" />
+                <canvas ref="lottieRef" style="height: 450px; width: 450px" />
                 <div class="-mt-8">
                   <p class="font-bold text-xl text-left">
                     {{ $t('welcome') }}
