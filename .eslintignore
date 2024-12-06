@@ -1,8 +1,0 @@
-/dist
-/node_modules
-bg.json
-*.d.ts
-.eslintrc.js
-tsconfig.json
-package.json
-README.md
