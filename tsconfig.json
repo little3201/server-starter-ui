@@ -20,17 +20,22 @@
     "exactOptionalPropertyTypes": true,
     "noUncheckedIndexedAccess": true,
     "paths": {
+      
+      "src": ["./../src"],
       "src/*": ["./../src/*"],
+      "components": ["./../src/components"],
       "components/*": ["./../src/components/*"],
+      "layouts": ["./../src/layouts"],
       "layouts/*": ["./../src/layouts/*"],
+      "pages": ["./../src/pages"],
       "pages/*": ["./../src/pages/*"],
+      "assets": ["./../src/assets"],
       "assets/*": ["./../src/assets/*"],
+      "boot": ["./../src/boot" ],
       "boot/*": ["./../src/boot/*" ],
-      "stores/*": ["./../src/stores/*"]
+      "stores": ["./../src/stores"],
+      "stores/*": ["./../src/stores/*"],
     }
-  },
-  "vueCompilerOptions": {
-    "target": 3
   },
   "include": [
     "src/**/*.d.ts",
@@ -40,9 +45,5 @@
     "./../dist",
     "./../node_modules",
     "./../*.config.*",
-  ],
-  "types": [
-    "vite/client",
-    "unplugin-vue-router/client"
   ]
 }

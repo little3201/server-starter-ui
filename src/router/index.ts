@@ -59,10 +59,10 @@ router.beforeEach(async (to, from, next) => {
 export const generateRoutes = (routes: PrivilegeTreeNode[]): RouteRecordRaw[] => {
   const res: RouteRecordRaw[] = []
   for (const route of routes) {
-    const data: RouteRecordRaw = {
+    const item: RouteRecordRaw = {
       path: route.meta.path,
       name: route.name,
-      redirect: route.meta.redirect,
+      redirect: route.meta.redirect as string,
       component: null,
       children: []
     }
@@ -70,15 +70,15 @@ export const generateRoutes = (routes: PrivilegeTreeNode[]): RouteRecordRaw[] =>
       const comModule = modules[`../${route.meta.component}.vue`]
       const component = route.meta.component as string
       if (comModule) {
-        data.component = comModule
+        item.component = comModule
       } else if (component.includes('#')) {
-        data.component = BlankLayout
+        item.component = BlankLayout
       }
     }
     if (route.children) {
-      data.children = generateRoutes(route.children)
+      item.children = generateRoutes(route.children)
     }
-    res.push(data)
+    res.push(item)
   }
   return res
 }
