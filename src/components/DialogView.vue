@@ -17,7 +17,6 @@ const props = withDefaults(defineProps<{
   showClose?: boolean
 }>(), {
   modelValue: false,
-  maxHeight: undefined,
   showFullScreen: false,
   showClose: false
 })
