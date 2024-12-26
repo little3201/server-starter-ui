@@ -1,4 +1,5 @@
-import axios, { AxiosError, AxiosInstance, InternalAxiosRequestConfig, AxiosResponse } from 'axios'
+import type { AxiosError, AxiosInstance, InternalAxiosRequestConfig, AxiosResponse } from 'axios';
+import axios from 'axios'
 import { ElMessage } from 'element-plus'
 import router from 'src/router'
 import { i18n } from 'boot/i18n'
@@ -10,7 +11,8 @@ const abortControllerMap: Map<string, AbortController> = new Map()
 
 const api: AxiosInstance = axios.create({
   baseURL: import.meta.env.VITE_API_BASE_API || '/api',
-  timeout: 5000
+  timeout: 5000,
+  withCredentials: true
 })
 
 // 请求拦截器

@@ -2,6 +2,8 @@ import { createRouter, createWebHistory } from 'vue-router'
 import type { RouteRecordRaw } from 'vue-router'
 import { constantRouterMap } from './routes'
 import { useUserStore } from 'stores/user-store'
+import { fetchMe } from 'src/api/users'
+import { retrievePrivilegeTree } from 'src/api/privileges'
 import type { PrivilegeTreeNode } from 'src/models'
 
 // Lazy load layout
@@ -18,14 +20,27 @@ const router = createRouter({
 // Router guard for authentication and dynamic route registration
 router.beforeEach(async (to, from, next) => {
   const accessToken = localStorage.getItem('access_token')
-  const userStore = useUserStore()
 
-  if (accessToken && accessToken.length > 0 && Object.keys(userStore.user || {}).length > 0) {
+  if (accessToken) {
     if (to.path === '/login') {
       next({ path: '/' })
     } else {
+      // 页面刷新，状态数据丢失，重新获取
+      const userStore = useUserStore()
+      let privileges = userStore.privileges
+      if(!privileges.length) {
+        const [userResp, privilegesResp] = await Promise.all([fetchMe(), retrievePrivilegeTree()])
+        privileges = privilegesResp.data
+        userStore.$patch({ 
+          username: userResp.data.username, 
+          fullName: userResp.data.fullName,
+          email: userResp.data.email,
+          avatar: userResp.data.avatar,
+          privileges 
+        })
+      }
       if (!to.name || !router.hasRoute(to.name)) {
-        const routes = generateRoutes(userStore.privileges as PrivilegeTreeNode[])
+        const routes = generateRoutes(privileges)
         routes.forEach((route) => {
           router.addRoute('home', route as RouteRecordRaw)
         })

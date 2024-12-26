@@ -20,7 +20,6 @@
     "exactOptionalPropertyTypes": true,
     "noUncheckedIndexedAccess": true,
     "paths": {
-      
       "src": ["./../src"],
       "src/*": ["./../src/*"],
       "components": ["./../src/components"],

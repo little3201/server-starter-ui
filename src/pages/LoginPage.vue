@@ -6,13 +6,11 @@ import { useI18n } from 'vue-i18n'
 import { ElFormItem, type FormInstance, type FormRules } from 'element-plus'
 import ThemeToogle from 'components/ThemeToogle.vue'
 import LanguageSelector from 'components/LanguageSelector.vue'
-import { useAppStore } from 'stores/app-store'
 import { useUserStore } from 'stores/user-store'
 
 const { t } = useI18n()
 const router = useRouter()
 
-const appStore = useAppStore()
 const userStore = useUserStore()
 
 const lottieRef = ref<HTMLCanvasElement | null>(null)
@@ -86,7 +84,7 @@ function load() {
       <div class="inline-flex flex-grow justify-between">
         <div class="inline-flex items-center">
           <ElImage src="/svgs/vite.svg" alt="logo" class="w-12 h-12" />
-          <span class="ml-3 text-20px font-bold">{{ appStore.title }}</span>
+          <span class="ml-3 text-20px font-bold">Project Management</span>
         </div>
 
         <div class="inline-flex justify-end items-center space-x-4">

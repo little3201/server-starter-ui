@@ -1,11 +1,10 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { ref } from 'vue'
 import type { FormInstance } from 'element-plus'
 import { useUserStore } from 'stores/user-store'
 
 const userStore = useUserStore()
 
-const user = computed(() => userStore.user)
 
 // 登录历史数据模拟
 const loginHistory = ref([
@@ -65,9 +64,9 @@ async function onSubmit(formEl: FormInstance | undefined) {
     <ElCol :span="6">
       <ElCard shadow="never">
         <div class="text-center">
-          <ElAvatar :size="180" :src="user?.avatar" />
-          <div class="text-lg mt-4 mb-2">{{ user?.fullName }}</div>
-          <div class="text-sm text-[var(--el-text-color-regular)]">{{ user?.username }}</div>
+          <ElAvatar :size="180" :src="userStore.avatar" />
+          <div class="text-lg mt-4 mb-2">{{ userStore.fullName }}</div>
+          <div class="text-sm text-[var(--el-text-color-regular)]">{{ userStore.username }}</div>
         </div>
 
         <ElDivider></ElDivider>
@@ -80,7 +79,7 @@ async function onSubmit(formEl: FormInstance | undefined) {
           </li>
           <li class="flex items-center">
             <div class="i-material-symbols:mail-outline-rounded  mr-2" />
-            <span>{{ user?.email }}</span>
+            <span>{{ userStore.email }}</span>
           </li>
           <li class="flex items-center">
             <div class="i-material-symbols:shield-person-outline-rounded mr-2" />

@@ -16,7 +16,7 @@ async function prepareApp() {
   if (process.env.NODE_ENV !== 'production') {
     const { worker } = await import('boot/msw-browser')
     return worker.start({
-      onUnhandleRequest: 'bypass'
+      onUnhandledRequest: 'bypass'
     })
   }
 
