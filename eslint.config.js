@@ -1,22 +1,21 @@
 import js from '@eslint/js'
 import globals from 'globals'
 import pluginVue from 'eslint-plugin-vue'
-import {
-  defineConfig,
-  createConfig as vueTsEslintConfig,
-} from '@vue/eslint-config-typescript'
+import vueTsEslintConfig from '@vue/eslint-config-typescript'
 
-export default defineConfig(
+export default [
   {
     /**
      * Ignore the following files.
-     * Please note that pluginQuasar.configs.recommended already ignores
-     * the "node_modules" folder for you (and all other Quasar project
-     * relevant folders and files).
      *
      * ESLint requires "ignores" key to be the only one in this object
      */
-    // ignores: []
+    ignores: [
+      'node_modules/',
+      'dist/',
+      '*.d.ts',
+      'mockServiceWorker.js'
+    ]
   },
 
   js.configs.recommended,
@@ -84,14 +83,6 @@ export default defineConfig(
       'no-void': 'off',
       'multiline-ternary': 'off',
 
-      'import/first': 'off',
-      'import/namespace': 'error',
-      'import/default': 'error',
-      'import/export': 'error',
-      'import/extensions': 'off',
-      'import/no-unresolved': 'off',
-      'import/no-extraneous-dependencies': 'off',
-
       // The core 'import/named' rules
       // does not work with type definitions
       'import/named': 'off',
@@ -114,14 +105,11 @@ export default defineConfig(
   },
 
   {
-    files: ["**/*.{js,mjs,cjs,ts,vue}"],
+    files: ['**/*.{js,mjs,cjs,ts,vue}'],
     languageOptions: {
       globals: {
-        ...globals.browser
-      },
-      parserOptions: {
-        parser: tseslint.parser
+        ...globals.serverworker
       }
     }
   }
-)
+]

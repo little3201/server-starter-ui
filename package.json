@@ -8,8 +8,7 @@
     "build": "vite build",
     "preview": "vite preview",
     "typecheck": "vue-tsc --noEmit",
-    "lint": "eslint --ext .ts,.js,.vue,.json,.md .",
-    "lint:fix": "yarn lint -- --fix"
+    "lint": "eslint -c ./eslint.config.js "
   },
   "dependencies": {
     "@iconify-json/material-symbols": "^1.2.12",
