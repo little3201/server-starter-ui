@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, ref, watch, onMounted, onBeforeUnmount, onActivated } from 'vue'
-import { useDark, useEventListener  } from '@vueuse/core'
+import { useDark, useEventListener } from '@vueuse/core'
 import { debounce } from 'lodash-es'
 import ApexCharts from 'apexcharts'
 import { isString } from 'src/utils'
@@ -15,12 +15,11 @@ const props = withDefaults(defineProps<{
 })
 
 const isDark = useDark()
-const theme = computed(() => isDark ? 'dark' : 'light')
 
 const options = computed(() => {
   return Object.assign({}, props.options, {
     theme: {
-      mode: theme.value
+      mode: isDark.value ? 'dark' : 'light'
     }
   })
 })
