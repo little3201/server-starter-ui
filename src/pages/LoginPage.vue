@@ -1,21 +1,19 @@
 <script setup lang="ts">
 import { ref, reactive, onMounted } from 'vue'
-import lottie from 'lottie-web'
+import { DotLottie } from '@lottiefiles/dotlottie-web'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { ElFormItem, type FormInstance, type FormRules } from 'element-plus'
 import ThemeToogle from 'components/ThemeToogle.vue'
 import LanguageSelector from 'components/LanguageSelector.vue'
-import { useAppStore } from 'stores/app-store'
 import { useUserStore } from 'stores/user-store'
 
 const { t } = useI18n()
 const router = useRouter()
 
-const appStore = useAppStore()
 const userStore = useUserStore()
 
-const lottieRef = ref<HTMLDivElement>()
+const lottieRef = ref<HTMLCanvasElement | null>(null)
 
 const loading = ref<boolean>(false)
 
@@ -38,7 +36,7 @@ const rules = reactive<FormRules<typeof form>>({
 })
 
 onMounted(() => {
-  show()
+  load()
 })
 
 async function onSubmit(formEl: FormInstance | undefined) {
@@ -55,21 +53,24 @@ async function onSubmit(formEl: FormInstance | undefined) {
   })
 }
 
-function show() {
+function load() {
   if (lottieRef.value) {
-    lottie.loadAnimation({
-      container: lottieRef.value,
-      renderer: 'svg',
+    new DotLottie({
+      canvas: lottieRef.value,
       loop: true,
       autoplay: true,
-      path: '/bg.json'
+      src: '/1707289607880.lottie',
+      renderConfig: {
+        autoResize: true
+      }
     })
   }
 }
 </script>
 
 <template>
-  <ElContainer class="h-screen relative overflow-hidden bg-[#e3f4fa] dark:bg-[var(--el-bg-color-page)]">
+  <ElContainer
+    class="h-screen relative overflow-hidden bg-[var(--el-color-primary-light-9)] dark:bg-[var(--el-bg-color-page)]">
     <figure class="absolute bg-primary-gradient rounded-full"
       style="height: 31em; width: 31em;  top: -14em; right: -12em; " />
     <figure class="absolute bg-success-gradient rounded-full"
@@ -83,7 +84,7 @@ function show() {
       <div class="inline-flex flex-grow justify-between">
         <div class="inline-flex items-center">
           <ElImage src="/svgs/vite.svg" alt="logo" class="w-12 h-12" />
-          <span class="ml-3 text-20px font-bold">{{ appStore.title }}</span>
+          <span class="ml-3 text-20px font-bold">Project Management</span>
         </div>
 
         <div class="inline-flex justify-end items-center space-x-4">
@@ -95,13 +96,14 @@ function show() {
       </div>
     </ElHeader>
     <ElMain class="items-center justify-center z-10">
-      <ElCard class="w-2/3" style="height: 70vh;border-radius: 1.5rem;" body-class="flex items-center !p-0 h-full">
-        <div class="hidden lg:flex flex-col items-center h-full w-1/2 bg-white dark:bg-black ">
+      <ElCard class="w-full lg:w-1/2 xl:w-2/3" style="height: 70vh;border-radius: 1.5rem;"
+        body-class="flex items-center !p-0 h-full">
+        <div class="hidden xl:flex flex-col items-center h-full w-1/2  ">
           <div class="inline-flex flex-grow items-center justify-center h-full">
             <Transition appear enter-active-class="animate__animated animate__slideInLeft"
               leave-active-class="animate__animated animate__slideOutLeft">
               <div class="inline-flex flex-col justify-center items-center" style="margin-top: -40px">
-                <div ref="lottieRef" style="height: 450px; width: 450px" />
+                <canvas ref="lottieRef" style="height: 450px; width: 450px" />
                 <div class="-mt-8">
                   <p class="font-bold text-xl text-left">
                     {{ $t('welcome') }}
@@ -114,7 +116,8 @@ function show() {
             </Transition>
           </div>
         </div>
-        <div class="flex flex-row items-center w-full lg:w-1/2 h-full  bg-[#e3f4fa] dark:bg-black">
+        <div
+          class="flex flex-row items-center w-full xl:w-1/2 h-full  bg-[var(--el-color-primary-light-9)] dark:bg-transparent">
           <Transition appear enter-active-class="animate__animated animate__slideInRight"
             leave-active-class="animate__animated animate__slideOutRight">
             <div class="flex flex-col w-full h-full space-y-2xl justify-center items-center">
@@ -156,7 +159,7 @@ function show() {
                         v:model-value="changeRememberMe" />
                     </ElFormItem>
                     <ElFormItem>
-                      <ElButton size="large" type="primary" :loading="loading" class="w-full" title="signin"
+                      <ElButton title="signin" size="large" type="primary" :loading="loading" class="w-full"
                         native-type="submit">
                         {{ $t('signin') }}
                       </ElButton>

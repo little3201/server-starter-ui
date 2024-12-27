@@ -20,7 +20,7 @@ const loading = ref<boolean>(false)
 const datas = ref<Array<Dictionary>>([])
 
 const saveLoading = ref<boolean>(false)
-const dialogVisible = ref<boolean>(false)
+const visible = ref<boolean>(false)
 
 const formRef = ref<FormInstance>()
 const initialValues: Dictionary = {
@@ -66,12 +66,12 @@ onMounted(() => {
  * 弹出框
  * @param id 主键
  */
-function editRow(id?: number) {
+function saveRow(id?: number) {
   form.value = { ...initialValues }
   if (id) {
     loadOne(id)
   }
-  dialogVisible.value = true
+  visible.value = true
 }
 
 /**
@@ -104,12 +104,12 @@ function onSubmit(formEl: FormInstance | undefined) {
       if (form.value.id) {
         modifyDictionary(form.value.id, form.value).then(() => {
           load()
-          dialogVisible.value = false
+          visible.value = false
         }).finally(() => { saveLoading.value = false })
       } else {
         createDictionary(form.value).then(() => {
           load()
-          dialogVisible.value = false
+          visible.value = false
         }).finally(() => { saveLoading.value = false })
       }
     }
@@ -144,8 +144,8 @@ function confirmEvent(id: number) {
         <span class="text-xl">{{ title }}</span>
       </ElCol>
       <ElCol :span="12" class="text-right">
-        <ElButton type="primary" @click="editRow()">
-          <div class="i-material-symbols:add-rounded" />{{ $t('add') }}
+        <ElButton type="primary" @click="saveRow()">
+          <div class="i-material-symbols:add-rounded" />{{ $t('create') }}
         </ElButton>
         <ElTooltip class="box-item" effect="dark" :content="$t('refresh')" placement="top">
           <ElButton type="primary" plain circle @click="load">
@@ -155,7 +155,7 @@ function confirmEvent(id: number) {
       </ElCol>
     </ElRow>
 
-    <ElTable v-loading="loading" :data="datas" lazy :load="load" row-key="id" stripe table-layout="auto">
+    <ElTable v-loading="loading" :data="datas" row-key="id" stripe table-layout="auto">
       <ElTableColumn type="selection" width="55" />
       <ElTableColumn prop="name" :label="$t('name')" />
       <ElTableColumn prop="enabled" :label="$t('enabled')">
@@ -167,8 +167,8 @@ function confirmEvent(id: number) {
       <ElTableColumn show-overflow-tooltip prop="description" :label="$t('description')" />
       <ElTableColumn :label="$t('actions')">
         <template #default="scope">
-          <ElButton size="small" type="primary" link @click="editRow(scope.row.id)">
-            <div class="i-material-symbols:edit-outline-rounded" />{{ $t('edit') }}
+          <ElButton size="small" type="primary" link @click="saveRow(scope.row.id)">
+            <div class="i-material-symbols:edit-outline-rounded" />{{ $t('modify') }}
           </ElButton>
           <ElPopconfirm :title="$t('removeConfirm')" :width="240" @confirm="confirmEvent(scope.row.id)">
             <template #reference>
@@ -182,7 +182,7 @@ function confirmEvent(id: number) {
     </ElTable>
   </ElCard>
 
-  <DialogView v-model="dialogVisible" :title="$t('dictionaries')" width="25%">
+  <DialogView v-model="visible" :title="$t('dictionaries')" width="25%">
     <ElForm ref="formRef" :model="form" :rules="rules" label-position="top">
       <ElRow :gutter="20" class="w-full !mx-0">
         <ElCol :span="24">
@@ -201,7 +201,7 @@ function confirmEvent(id: number) {
       </ElRow>
     </ElForm>
     <template #footer>
-      <ElButton @click="dialogVisible = false">
+      <ElButton @click="visible = false">
         <div class="i-material-symbols:close" />{{ $t('cancel') }}
       </ElButton>
       <ElButton type="primary" :loading="saveLoading" @click="onSubmit(formRef)">

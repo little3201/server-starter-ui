@@ -4,8 +4,7 @@ import type { Pagination, Schema, Field } from 'src/models'
 
 /**
  * Retrieve rows
- * @param page Page number
- * @param size Items per page
+ * @param pagination Pagination and sort parameters
  * @param filters Optional filter or sort parameters
  * @returns Rows data
  */
@@ -74,7 +73,7 @@ export const syncSchema = (id: number) => {
  * @returns Created row
  */
 export const generateSchema = (id: number) => {
-  return api.post(`${SERVER_URL.SCHEMA}/${id}/download`, { responseType: 'blob' })
+  return api.get(`${SERVER_URL.SCHEMA}/${id}/download`, { responseType: 'blob' })
 }
 
 /**

@@ -4,9 +4,7 @@ import type { Pagination, User } from 'src/models'
 
 /**
  * Retrieve rows
- * @param page Page number
- * @param size Items per page
- * @param groupId group ID
+ * @param pagination Pagination and sort parameters
  * @param filters Optional filter or sort parameters
  * @returns Rows data
  */

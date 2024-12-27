@@ -21,8 +21,18 @@ for (let i = 1; i < 28; i++) {
 }
 
 export const usersHandlers = [
-  http.get(`/api${SERVER_URL.USER}/me`, () => {
-    return HttpResponse.json(datas[0])
+  http.get(`/api${SERVER_URL.USER}/me`, ({ cookies }) => {
+    // if(!cookies.logged_user) {
+    //   return new HttpResponse(null, { status: 401 })
+    // }
+    console.log(cookies)
+
+    return HttpResponse.json({
+      username: 'username',
+      fullName: 'full name',
+      avatar: '/images/avatar.jpg',
+      email: 'usexxx' + '@test.com'
+    })
   }),
   http.get(`/api${SERVER_URL.USER}/:id`, ({ params }) => {
     const { id } = params

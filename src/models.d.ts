@@ -108,7 +108,7 @@ export interface PrivilegeTreeNode extends TreeNode {
 export interface OperationLog extends AudtiMetadata {
   operation: string
   content: string
-  operator: string
+  operator?: string
   ip: string
   location: string
   referer?: string
@@ -124,7 +124,7 @@ export interface OperationLog extends AudtiMetadata {
 export interface AccessLog extends AudtiMetadata {
   url: string
   httpMethod: string
-  operator: string
+  operator?: string
   params?: string
   body?: string
   ip: string
@@ -162,6 +162,7 @@ export interface FileRecord extends AudtiMetadata {
 
 export interface Schema extends AudtiMetadata {
   name: string
+  comment: string
   reference: string
   domain: string
   enabled?: boolean
@@ -193,23 +194,14 @@ export interface Template extends AudtiMetadata {
 
 export interface Script extends AudtiMetadata {
   name: string
+  type?: number
   icon: string
   version: string
+  content: string
   description: string
 }
 
 export interface TableInfo {
   tableName: string
   tableComment: string
-}
-
-export interface ColumnInfo {
-  columnName: string
-  udtName: string
-  dataType: string
-  characterMaximumLength: number
-  identity: string,
-  nullable: string,
-  columnDefault: string,
-  columnComment: string
 }

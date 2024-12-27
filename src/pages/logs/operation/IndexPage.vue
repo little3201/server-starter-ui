@@ -22,7 +22,7 @@ const columns = ref<Array<string>>(['module', 'httpMethod', 'params', 'ip', 'loc
 
 const filters = ref({
   operation: null,
-  operator: null
+  statusCode: null
 })
 
 const detailLoading = ref<boolean>(false)
@@ -31,12 +31,11 @@ const initialValues: OperationLog = {
   operation: '',
   content: '',
   ip: '',
-  location: '',
-  operator: ''
+  location: ''
 }
 const row = ref<OperationLog>({ ...initialValues })
 
-const dialogVisible = ref<boolean>(false)
+const visible = ref<boolean>(false)
 /**
  * 分页变化
  * @param value 当前页码
@@ -74,7 +73,7 @@ async function loadOne(id: number) {
 function reset() {
   filters.value = {
     operation: null,
-    operator: null
+    statusCode: null
   }
   load()
 }
@@ -89,7 +88,7 @@ onMounted(() => {
  */
 function showRow(id: number) {
   row.value = { ...initialValues }
-  dialogVisible.value = true
+  visible.value = true
   loadOne(id)
 }
 
@@ -138,14 +137,14 @@ function handleCheckedChange(value: string[]) {
         <ElFormItem :label="$t('operation')" prop="operation">
           <ElInput v-model="filters.operation" :placeholder="$t('inputText', { field: $t('operation') })" />
         </ElFormItem>
-        <ElFormItem :label="$t('operator')" prop="operator">
-          <ElInput v-model="filters.operator" :placeholder="$t('inputText', { field: $t('operator') })" />
+        <ElFormItem :label="$t('statusCode')" prop="statusCode">
+          <ElInput v-model="filters.statusCode" :placeholder="$t('inputText', { field: $t('statusCode') })" />
         </ElFormItem>
         <ElFormItem>
-          <ElButton type="primary" @click="load">
+          <ElButton title="search" type="primary" @click="load">
             <div class="i-material-symbols:search-rounded" />{{ $t('search') }}
           </ElButton>
-          <ElButton @click="reset">
+          <ElButton title="reset" @click="reset">
             <div class="i-material-symbols:replay-rounded" />{{ $t('reset') }}
           </ElButton>
         </ElFormItem>
@@ -155,17 +154,17 @@ function handleCheckedChange(value: string[]) {
     <ElCard shadow="never">
       <ElRow :gutter="20" justify="space-between" class="mb-4">
         <ElCol :span="16" class="text-left">
-          <ElButton type="danger" plain>
-            <div class="i-material-symbols:delete-outline-rounded" />{{ $t('clear') }}
+          <ElButton title="clear" type="danger" plain>
+            <div class="i-material-symbols:clear-all-rounded" />{{ $t('clear') }}
           </ElButton>
-          <ElButton type="success" plain>
+          <ElButton title="export" type="success" plain>
             <div class="i-material-symbols:file-export-outline-rounded" />{{ $t('export') }}
           </ElButton>
         </ElCol>
 
         <ElCol :span="8" class="text-right">
           <ElTooltip class="box-item" effect="dark" :content="$t('refresh')" placement="top">
-            <ElButton type="primary" plain circle @click="load">
+            <ElButton title="refresh" type="primary" plain circle @click="load">
               <div class="i-material-symbols:refresh-rounded" />
             </ElButton>
           </ElTooltip>
@@ -174,7 +173,7 @@ function handleCheckedChange(value: string[]) {
             <span class="inline-block ml-3 h-8">
               <ElPopover :width="200" trigger="click">
                 <template #reference>
-                  <ElButton type="success" plain circle>
+                  <ElButton title="settings" type="success" plain circle>
                     <div class="i-material-symbols:format-list-bulleted" />
                   </ElButton>
                 </template>
@@ -204,7 +203,7 @@ function handleCheckedChange(value: string[]) {
         </ElCol>
       </ElRow>
 
-      <ElTable :data="datas" lazy :load="load" row-key="id" stripe table-layout="auto">
+      <ElTable :data="datas" row-key="id" stripe table-layout="auto">
         <ElTableColumn type="selection" width="55" />
         <ElTableColumn type="index" :label="$t('no')" width="55" />
         <ElTableColumn prop="operation" :label="$t('operation')" />
@@ -228,15 +227,14 @@ function handleCheckedChange(value: string[]) {
             {{ dayjs(scope.row.operatedTime).format('YYYY-MM-DD HH:mm') }}
           </template>
         </ElTableColumn>
-        <ElTableColumn prop="operator" :label="$t('operator')" />
         <ElTableColumn :label="$t('actions')" width="160">
           <template #default="scope">
-            <ElButton size="small" type="info" link @click="showRow(scope.row.id)">
+            <ElButton title="detail" size="small" type="info" link @click="showRow(scope.row.id)">
               <div class="i-material-symbols:description-outline-rounded" />{{ $t('detail') }}
             </ElButton>
             <ElPopconfirm :title="$t('removeConfirm')" :width="240" @confirm="confirmEvent(scope.row.id)">
               <template #reference>
-                <ElButton size="small" type="danger" link>
+                <ElButton title="remove" size="small" type="danger" link>
                   <div class="i-material-symbols:delete-outline-rounded" />{{ $t('remove') }}
                 </ElButton>
               </template>
@@ -248,7 +246,7 @@ function handleCheckedChange(value: string[]) {
     </ElCard>
   </ElSpace>
 
-  <DialogView v-model="dialogVisible" :title="$t('detail')">
+  <DialogView v-model="visible" show-close :title="$t('detail')">
     <ElDescriptions v-loading="detailLoading" :column="2" border>
       <ElDescriptionsItem :label="$t('operation')">{{ row.operation }}</ElDescriptionsItem>
       <ElDescriptionsItem :label="$t('content')">{{ row.content }}</ElDescriptionsItem>

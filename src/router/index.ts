@@ -2,6 +2,8 @@ import { createRouter, createWebHistory } from 'vue-router'
 import type { RouteRecordRaw } from 'vue-router'
 import { constantRouterMap } from './routes'
 import { useUserStore } from 'stores/user-store'
+import { fetchMe } from 'src/api/users'
+import { retrievePrivilegeTree } from 'src/api/privileges'
 import type { PrivilegeTreeNode } from 'src/models'
 
 // Lazy load layout
@@ -18,14 +20,27 @@ const router = createRouter({
 // Router guard for authentication and dynamic route registration
 router.beforeEach(async (to, from, next) => {
   const accessToken = localStorage.getItem('access_token')
-  const userStore = useUserStore()
 
-  if (accessToken && accessToken.length > 0 && Object.keys(userStore.user || {}).length > 0) {
+  if (accessToken) {
     if (to.path === '/login') {
       next({ path: '/' })
     } else {
+      // 页面刷新，状态数据丢失，重新获取
+      const userStore = useUserStore()
+      let privileges = userStore.privileges
+      if(!privileges.length) {
+        const [userResp, privilegesResp] = await Promise.all([fetchMe(), retrievePrivilegeTree()])
+        privileges = privilegesResp.data
+        userStore.$patch({ 
+          username: userResp.data.username, 
+          fullName: userResp.data.fullName,
+          email: userResp.data.email,
+          avatar: userResp.data.avatar,
+          privileges 
+        })
+      }
       if (!to.name || !router.hasRoute(to.name)) {
-        const routes = generateRoutes(userStore.privileges as PrivilegeTreeNode[])
+        const routes = generateRoutes(privileges)
         routes.forEach((route) => {
           router.addRoute('home', route as RouteRecordRaw)
         })
@@ -59,10 +74,10 @@ router.beforeEach(async (to, from, next) => {
 export const generateRoutes = (routes: PrivilegeTreeNode[]): RouteRecordRaw[] => {
   const res: RouteRecordRaw[] = []
   for (const route of routes) {
-    const data: RouteRecordRaw = {
+    const item: RouteRecordRaw = {
       path: route.meta.path,
       name: route.name,
-      redirect: route.meta.redirect,
+      redirect: route.meta.redirect as string,
       component: null,
       children: []
     }
@@ -70,15 +85,15 @@ export const generateRoutes = (routes: PrivilegeTreeNode[]): RouteRecordRaw[] =>
       const comModule = modules[`../${route.meta.component}.vue`]
       const component = route.meta.component as string
       if (comModule) {
-        data.component = comModule
+        item.component = comModule
       } else if (component.includes('#')) {
-        data.component = BlankLayout
+        item.component = BlankLayout
       }
     }
     if (route.children) {
-      data.children = generateRoutes(route.children)
+      item.children = generateRoutes(route.children)
     }
-    res.push(data)
+    res.push(item)
   }
   return res
 }

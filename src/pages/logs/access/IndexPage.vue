@@ -23,13 +23,12 @@ const columns = ref<Array<string>>(['url', 'httpMethod', 'params', 'body', 'ip',
 
 const filters = ref({
   url: null,
-  operator: null
+  statusCode: null
 })
 
 const detailLoading = ref<boolean>(false)
 const initialValues: AccessLog = {
   id: undefined,
-  operator: '',
   url: '',
   httpMethod: '',
   ip: '',
@@ -38,7 +37,7 @@ const initialValues: AccessLog = {
 }
 const row = ref<AccessLog>({ ...initialValues })
 
-const dialogVisible = ref<boolean>(false)
+const visible = ref<boolean>(false)
 /**
  * 分页变化
  * @param value 当前页码
@@ -77,7 +76,7 @@ async function loadOne(id: number) {
 function reset() {
   filters.value = {
     url: null,
-    operator: null
+    statusCode: null
   }
   load()
 }
@@ -92,7 +91,7 @@ onMounted(() => {
  */
 function showRow(id: number) {
   row.value = { ...initialValues }
-  dialogVisible.value = true
+  visible.value = true
   loadOne(id)
 }
 
@@ -141,14 +140,14 @@ function handleCheckedChange(value: string[]) {
         <ElFormItem :label="$t('url')" prop="url">
           <ElInput v-model="filters.url" :placeholder="$t('inputText', { field: $t('url') })" />
         </ElFormItem>
-        <ElFormItem :label="$t('operator')" prop="operator">
-          <ElInput v-model="filters.operator" :placeholder="$t('inputText', { field: $t('operator') })" />
+        <ElFormItem :label="$t('statusCode')" prop="statusCode">
+          <ElInput v-model="filters.statusCode" :placeholder="$t('inputText', { field: $t('statusCode') })" />
         </ElFormItem>
         <ElFormItem>
-          <ElButton type="primary" @click="load">
+          <ElButton title="search" type="primary" @click="load">
             <div class="i-material-symbols:search-rounded" />{{ $t('search') }}
           </ElButton>
-          <ElButton @click="reset">
+          <ElButton title="reset" @click="reset">
             <div class="i-material-symbols:replay-rounded" />{{ $t('reset') }}
           </ElButton>
         </ElFormItem>
@@ -158,17 +157,17 @@ function handleCheckedChange(value: string[]) {
     <ElCard shadow="never">
       <ElRow :gutter="20" justify="space-between" class="mb-4">
         <ElCol :span="16" class="text-left">
-          <ElButton type="danger" plain>
-            <div class="i-material-symbols:delete-outline-rounded" />{{ $t('clear') }}
+          <ElButton title="clear" type="danger" plain>
+            <div class="i-material-symbols:clear-all-rounded" />{{ $t('clear') }}
           </ElButton>
-          <ElButton type="success" plain>
+          <ElButton title="export" type="success" plain>
             <div class="i-material-symbols:file-export-outline-rounded" />{{ $t('export') }}
           </ElButton>
         </ElCol>
 
         <ElCol :span="8" class="text-right">
           <ElTooltip class="box-item" effect="dark" :content="$t('refresh')" placement="top">
-            <ElButton type="primary" plain circle @click="load">
+            <ElButton title="refresh" type="primary" plain circle @click="load">
               <div class="i-material-symbols:refresh-rounded" />
             </ElButton>
           </ElTooltip>
@@ -177,7 +176,7 @@ function handleCheckedChange(value: string[]) {
             <span class="inline-block ml-3 h-8">
               <ElPopover :width="200" trigger="click">
                 <template #reference>
-                  <ElButton type="success" plain circle>
+                  <ElButton title="settings" type="success" plain circle>
                     <div class="i-material-symbols:format-list-bulleted" />
                   </ElButton>
                 </template>
@@ -207,7 +206,7 @@ function handleCheckedChange(value: string[]) {
         </ElCol>
       </ElRow>
 
-      <ElTable v-loading="loading" :data="datas" lazy :load="load" row-key="id" stripe table-layout="auto">
+      <ElTable v-loading="loading" :data="datas" row-key="id" stripe table-layout="auto">
         <ElTableColumn type="selection" width="55" />
         <ElTableColumn type="index" :label="$t('no')" width="55" />
         <ElTableColumn prop="url" :label="$t('url')" />
@@ -218,7 +217,7 @@ function handleCheckedChange(value: string[]) {
         </ElTableColumn>
         <ElTableColumn show-overflow-tooltip prop="params" :label="$t('params')" />
         <ElTableColumn show-overflow-tooltip prop="body" :label="$t('body')" />
-        <ElTableColumn show-overflow-tooltip prop="ip" :label="$t('ip')" />
+        <ElTableColumn prop="ip" :label="$t('ip')" />
         <ElTableColumn show-overflow-tooltip prop="location" :label="$t('location')" />
         <ElTableColumn prop="statusCode" :label="$t('statusCode')">
           <template #default="scope">
@@ -236,15 +235,14 @@ function handleCheckedChange(value: string[]) {
             {{ formatDuration(scope.row.responseTimes) }}
           </template>
         </ElTableColumn>
-        <ElTableColumn prop="operator" :label="$t('operator')" />
         <ElTableColumn :label="$t('actions')" width="160">
           <template #default="scope">
-            <ElButton size="small" type="info" link @click="showRow(scope.row.id)">
+            <ElButton title="detail" size="small" type="info" link @click="showRow(scope.row.id)">
               <div class="i-material-symbols:description-outline-rounded" />{{ $t('detail') }}
             </ElButton>
             <ElPopconfirm :title="$t('removeConfirm')" :width="240" @confirm="confirmEvent(scope.row.id)">
               <template #reference>
-                <ElButton size="small" type="danger" link>
+                <ElButton title="remove" size="small" type="danger" link>
                   <div class="i-material-symbols:delete-outline-rounded" />{{ $t('remove') }}
                 </ElButton>
               </template>
@@ -256,7 +254,7 @@ function handleCheckedChange(value: string[]) {
     </ElCard>
   </ElSpace>
 
-  <DialogView v-model="dialogVisible" :title="$t('detail')">
+  <DialogView v-model="visible" show-close :title="$t('detail')">
     <ElDescriptions v-loading="detailLoading" border>
       <ElDescriptionsItem :label="$t('url')">{{ row.url }}</ElDescriptionsItem>
       <ElDescriptionsItem :label="$t('httpMethod')">

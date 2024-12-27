@@ -8,8 +8,9 @@ import {
   fetchPrivilege, modifyPrivilege, enablePrivilege
 } from 'src/api/privileges'
 import { retrieveDictionarySubset } from 'src/api/dictionaries'
+import { visibleArray } from 'src/utils'
+import { actions } from 'src/constants'
 import type { Pagination, Privilege, Dictionary } from 'src/models'
-import { visibleArray, actions } from 'src/utils'
 
 const loading = ref<boolean>(false)
 const datas = ref<Array<Privilege>>([])
@@ -27,7 +28,7 @@ const columns = ref<Array<string>>(['name', 'enabled', 'description'])
 
 const buttonOptions = ref<Array<Dictionary>>([])
 const saveLoading = ref<boolean>(false)
-const dialogVisible = ref<boolean>(false)
+const visible = ref<boolean>(false)
 
 const importVisible = ref<boolean>(false)
 const importLoading = ref<boolean>(false)
@@ -129,13 +130,13 @@ function importRows() {
  * 弹出框
  * @param id 主键
  */
-function editRow(id?: number) {
+function saveRow(id?: number) {
   form.value = { ...initialValues }
   if (id) {
     loadOne(id)
   }
   loadDictionaries()
-  dialogVisible.value = true
+  visible.value = true
 }
 
 /**
@@ -165,7 +166,7 @@ async function onSubmit(formEl: FormInstance | undefined) {
       if (form.value.id) {
         modifyPrivilege(form.value.id, form.value).then(res => {
           load(res.data)
-          dialogVisible.value = false
+          visible.value = false
         }).finally(() => { saveLoading.value = false })
       }
     }
@@ -228,10 +229,10 @@ function handleCheckedChange(value: string[]) {
           <ElInput v-model="filters.path" :placeholder="$t('inputText', { field: $t('path') })" />
         </ElFormItem>
         <ElFormItem>
-          <ElButton type="primary" @click="load">
+          <ElButton title="search" type="primary" @click="load">
             <div class="i-material-symbols:search-rounded" />{{ $t('search') }}
           </ElButton>
-          <ElButton @click="reset">
+          <ElButton title="reset" @click="reset">
             <div class="i-material-symbols:replay-rounded" />{{ $t('reset') }}
           </ElButton>
         </ElFormItem>
@@ -241,16 +242,16 @@ function handleCheckedChange(value: string[]) {
     <ElCard shadow="never">
       <ElRow :gutter="20" justify="space-between" class="mb-4">
         <ElCol :span="16" class="text-left">
-          <ElButton type="warning" plain @click="importRows">
-            <div class="i-material-symbols:upload-file-outline-rounded" />{{ $t('import') }}
+          <ElButton title="import" type="warning" plain @click="importRows">
+            <div class="i-material-symbols:database-upload-outline-rounded" />{{ $t('import') }}
           </ElButton>
-          <ElButton type="success" plain>
+          <ElButton title="export" type="success" plain>
             <div class="i-material-symbols:file-export-outline-rounded" />{{ $t('export') }}
           </ElButton>
         </ElCol>
         <ElCol :span="8" class="text-right">
           <ElTooltip class="box-item" effect="dark" :content="$t('refresh')" placement="top">
-            <ElButton type="primary" plain circle @click="load">
+            <ElButton title="refresh" type="primary" plain circle @click="load">
               <div class="i-material-symbols:refresh-rounded" />
             </ElButton>
           </ElTooltip>
@@ -259,7 +260,7 @@ function handleCheckedChange(value: string[]) {
             <span class="inline-block ml-3 h-8">
               <ElPopover :width="200" trigger="click">
                 <template #reference>
-                  <ElButton type="success" plain circle>
+                  <ElButton title="settings" type="success" plain circle>
                     <div class="i-material-symbols:format-list-bulleted" />
                   </ElButton>
                 </template>
@@ -329,8 +330,8 @@ function handleCheckedChange(value: string[]) {
         <ElTableColumn show-overflow-tooltip prop="description" :label="$t('description')" />
         <ElTableColumn :label="$t('actions')">
           <template #default="scope">
-            <ElButton size="small" type="primary" link @click="editRow(scope.row.id)">
-              <div class="i-material-symbols:edit-outline-rounded" />{{ $t('edit') }}
+            <ElButton title="modify" size="small" type="primary" link @click="saveRow(scope.row.id)">
+              <div class="i-material-symbols:edit-outline-rounded" />{{ $t('modify') }}
             </ElButton>
           </template>
         </ElTableColumn>
@@ -339,7 +340,7 @@ function handleCheckedChange(value: string[]) {
     </ElCard>
   </ElSpace>
 
-  <DialogView v-model="dialogVisible" :title="$t('privileges')" width="36%">
+  <DialogView v-model="visible" :title="$t('privileges')" width="36%">
     <ElForm ref="formRef" :model="form" :rules="rules" label-position="top">
       <ElRow :gutter="20" class="w-full !mx-0">
         <ElCol :span="12">
@@ -389,10 +390,10 @@ function handleCheckedChange(value: string[]) {
       </ElRow>
     </ElForm>
     <template #footer>
-      <ElButton @click="dialogVisible = false">
+      <ElButton title="cancel" @click="visible = false">
         <div class="i-material-symbols:close" />{{ $t('cancel') }}
       </ElButton>
-      <ElButton type="primary" :loading="saveLoading" @click="onSubmit(formRef)">
+      <ElButton title="submit" type="primary" :loading="saveLoading" @click="onSubmit(formRef)">
         <div class="i-material-symbols:check-circle-outline-rounded" /> {{ $t('submit') }}
       </ElButton>
     </template>
@@ -417,10 +418,10 @@ function handleCheckedChange(value: string[]) {
     </ElUpload>
     <p class="text-red">xxxx</p>
     <template #footer>
-      <ElButton @click="importVisible = false">
+      <ElButton title="cancel" @click="importVisible = false">
         <div class="i-material-symbols:close" />{{ $t('cancel') }}
       </ElButton>
-      <ElButton type="primary" :loading="importLoading" @click="onImportSubmit(importRef)">
+      <ElButton title="submit" type="primary" :loading="importLoading" @click="onImportSubmit(importRef)">
         <div class="i-material-symbols:check-circle-outline-rounded" /> {{ $t('submit') }}
       </ElButton>
     </template>
@@ -435,6 +436,7 @@ function handleCheckedChange(value: string[]) {
   }
 }
 </style>
+
 <style lang="scss" scoped>
 .el-badge {
   display: inline-flex;

@@ -37,7 +37,7 @@ const datas: Privilege[] = [
     description: 'this is description for this row'
   },
   {
-    id: 14,
+    id: 13,
     path: 'files',
     component: 'pages/files/IndexPage',
     name: 'files',
@@ -373,7 +373,12 @@ const treeNodes: PrivilegeTreeNode[] = [
 ]
 
 export const privilegesHandlers = [
-  http.get(`/api${SERVER_URL.PRIVILEGE}/tree`, () => {
+  http.get(`/api${SERVER_URL.PRIVILEGE}/tree`, ({ cookies }) => {
+    // if(!cookies.logged_user) {
+    //   return new HttpResponse(null, { status: 401 })
+    // }
+    console.log(cookies)
+
     return HttpResponse.json(treeNodes)
   }),
   http.get(`/api${SERVER_URL.PRIVILEGE}/:id/subset`, ({ params }) => {

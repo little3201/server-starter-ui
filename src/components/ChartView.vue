@@ -1,11 +1,9 @@
 <script setup lang="ts">
 import { computed, ref, watch, onMounted, onBeforeUnmount, onActivated } from 'vue'
+import { useDark, useEventListener } from '@vueuse/core'
 import { debounce } from 'lodash-es'
 import ApexCharts from 'apexcharts'
-import { useAppStore } from 'stores/app-store'
 import { isString } from 'src/utils'
-
-const appStore = useAppStore()
 
 const props = withDefaults(defineProps<{
   options: ApexCharts.ApexOptions // 使用 ApexCharts 的配置类型
@@ -16,12 +14,12 @@ const props = withDefaults(defineProps<{
   height: '400px'
 })
 
-const theme = computed(() => appStore.isDark ? 'dark' : 'light')
+const isDark = useDark()
 
 const options = computed(() => {
   return Object.assign({}, props.options, {
     theme: {
-      mode: theme.value
+      mode: isDark.value ? 'dark' : 'light'
     }
   })
 })
@@ -57,7 +55,8 @@ watch(
   () => options.value,
   (options) => {
     if (chartRef) {
-      chartRef?.updateOptions(options, true, false) // 第二个参数 true 表示对图表强制更新
+      // 第二个参数 true 表示对图表强制更新
+      chartRef?.updateOptions(options, true, false)
     }
   },
   {
@@ -67,8 +66,8 @@ watch(
 
 const resizeHandler = debounce(() => {
   if (chartRef) {
-    chartRef?.destroy() // 销毁旧图表
-    initChart() // 重新初始化图表
+    chartRef?.destroy()
+    initChart()
   }
 }, 100)
 
@@ -84,33 +83,29 @@ const handleContentResize = (e: TransitionEvent): void => {
   }
 }
 
+useEventListener(document, 'transitionend', (evt) => {
+  contentEl.value = document.getElementsByClassName('el-layout-content')[0]
+  if (contentEl.value) {
+    handleContentResize(evt)
+  }
+})
+
 onMounted(() => {
   setTimeout(() => {
     initChart()
   }, 0)
 
-  window.addEventListener('resize', resizeHandler)
-
-  contentEl.value = document.getElementsByClassName('el-layout-content')[0]
-  if (contentEl.value) {
-    (contentEl.value as Element).addEventListener('transitionend', handleContentResize as (event: Event) => void)
-  }
 })
 
 onBeforeUnmount(() => {
-  window.removeEventListener('resize', resizeHandler)
-  if (contentEl.value) {
-    (contentEl.value as Element).removeEventListener('transitionend', handleContentResize as (event: Event) => void)
-  }
-
   if (chartRef) {
-    chartRef.destroy() // 组件卸载时销毁图表
+    chartRef.destroy()
   }
 })
 
 onActivated(() => {
   if (chartRef) {
-    resizeHandler() // 图表重新激活时重新渲染
+    resizeHandler()
   }
 })
 </script>

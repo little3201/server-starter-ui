@@ -1,7 +1,5 @@
 <script setup lang="ts">
-import { computed } from 'vue'
 import { useRouter } from 'vue-router'
-import { useAppStore } from 'stores/app-store'
 import { useUserStore } from 'stores/user-store'
 import ThemeToogle from 'components/ThemeToogle.vue'
 import LanguageSelector from 'components/LanguageSelector.vue'
@@ -9,10 +7,7 @@ import EssentialList from 'components/EssentialList.vue'
 
 const { currentRoute, replace } = useRouter()
 
-const appStore = useAppStore()
 const userStore = useUserStore()
-
-const essentialLinks = computed(() => userStore.privileges)
 
 function signOut() {
   userStore.logout().then(() => replace('/login'))
@@ -25,7 +20,7 @@ function signOut() {
       <div class="inline-flex flex-grow justify-between">
         <div class="inline-flex items-center">
           <ElImage src="/svgs/vite.svg" alt="avatar" class="w-8 h-8" />
-          <span class="ml-3 text-20px font-bold text-white">{{ appStore.title }}</span>
+          <span class="ml-3 text-20px font-bold text-white">Project Management</span>
         </div>
 
         <div class="inline-flex justify-end items-center space-x-4">
@@ -36,8 +31,8 @@ function signOut() {
 
           <ElDropdown trigger="click" class="cursor-pointer">
             <ElSpace>
-              <ElAvatar alt="avatar" :size="28" :src="userStore.user?.avatar" />
-              <span class="text-white">{{ userStore.user?.username }}</span>
+              <ElAvatar alt="avatar" :size="28" :src="userStore.avatar" />
+              <span class="text-white">{{ userStore.username }}</span>
             </ElSpace>
             <template #dropdown>
               <ElDropdownMenu>
@@ -62,11 +57,17 @@ function signOut() {
             <ElMenuItem :index="'/'">
               <div class="i-material-symbols:home-outline-rounded mr-2" />{{ $t('home') }}
             </ElMenuItem>
-            <EssentialList :essentialLinks="essentialLinks" />
+            <template v-for="link in userStore.privileges" :key="link.id">
+              <EssentialList v-if="link.children && link.children.length > 0" :essentialLink="link"
+                :parent-path="`/${link.meta.path}`" />
+              <ElMenuItem v-else :index="`/${link.meta.path}`">
+                <div class="i-material-symbols:home-outline-rounded mr-2" />{{ $t(link.name) }}
+              </ElMenuItem>
+            </template>
           </ElMenu>
         </ElScrollbar>
       </ElAside>
-      <ElContainer class=" bg-[#F5F7FA] dark:bg-[#303133] h-[calc(100vh-50px)]">
+      <ElContainer class="bg-[var(--el-bg-color-page)] h-[calc(100vh-50px)]">
         <ElMain>
           <RouterView />
         </ElMain>

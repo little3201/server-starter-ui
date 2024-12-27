@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed, useAttrs, ref, useSlots } from 'vue'
 import { isNumber } from 'src/utils'
+import { ElButton } from 'element-plus'
 
 const slots = useSlots()
 
@@ -13,10 +14,11 @@ const props = withDefaults(defineProps<{
   title?: string
   maxHeight?: string | number,
   showFullScreen?: boolean
+  showClose?: boolean
 }>(), {
   modelValue: false,
-  maxHeight: undefined,
-  showFullScreen: false
+  showFullScreen: false,
+  showClose: false
 })
 
 const getBindValue = computed(() => {
@@ -49,20 +51,17 @@ const dialogStyle = computed(() => {
 
 <template>
   <ElDialog v-bind="getBindValue" :fullscreen="fullScreen" align-center destroy-on-close lock-scroll draggable
-    append-to-body :close-on-click-modal="false" :show-close="false">
-    <template #header="{ close }">
-      <div class="flex justify-between items-center">
-        <slot name="title">
-          <span>{{ title }}</span>
-        </slot>
-        <div class="inline-flex justify-between items-center space-x-4">
-          <div v-if="showFullScreen"
-            :class="[fullScreen ? 'i-material-symbols:fullscreen-exit-rounded' : 'i-material-symbols:fullscreen-rounded', 'cursor-pointer hover:text-[var(--el-color-primary)]']"
-            @click="toggleFull" />
-          <div class="i-material-symbols:close-rounded cursor-pointer w-6 h-6 hover:text-[var(--el-color-primary)]"
-            @click="close" />
+    append-to-body :close-on-click-modal="false" :show-close="showClose">
+    <template #header>
+      <slot name="title">
+        <span>{{ title }}</span>
+      </slot>
+      <ElButton v-if="showFullScreen" @click="toggleFull"
+        :class="['absolute top-1.5 !border-none !border-0 !bg-transparent', showClose ? 'right-8 ' : 'right-1']">
+        <div
+          :class="[fullScreen ? 'i-material-symbols:fullscreen-exit-rounded' : 'i-material-symbols:fullscreen-rounded', 'el-dialog__close']">
         </div>
-      </div>
+      </ElButton>
     </template>
 
     <ElScrollbar :style="dialogStyle">

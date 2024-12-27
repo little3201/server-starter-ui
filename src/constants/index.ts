@@ -56,13 +56,3 @@ export const httpMethods: { [key: string]: string } = {
   PATCH: 'primary',
   DELETE: 'danger'
 }
-
-// enum
-export enum FormTypeToComoponentEnum {
-  'input-number' = 'ElInputNumber',
-  'select' = 'ElSelect',
-  'switch' = 'ElSwitch',
-  'input' = 'ElInput',
-  'date-picker' = 'ElDatePicker',
-  'time-picker' = 'ElTimePicker'
-}

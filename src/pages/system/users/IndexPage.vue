@@ -26,7 +26,7 @@ const checkedColumns = ref<Array<string>>(['name', 'enabled', 'description'])
 const columns = ref<Array<string>>(['name', 'enabled', 'description'])
 
 const saveLoading = ref<boolean>(false)
-const dialogVisible = ref<boolean>(false)
+const visible = ref<boolean>(false)
 
 const filters = ref({
   username: null
@@ -103,12 +103,12 @@ onMounted(() => {
  * 弹出框
  * @param id 主键
  */
-function editRow(id?: number) {
+function saveRow(id?: number) {
   form.value = { ...initialValues }
   if (id) {
     loadOne(id)
   }
-  dialogVisible.value = true
+  visible.value = true
 }
 
 /**
@@ -141,12 +141,12 @@ function onSubmit(formEl: FormInstance | undefined) {
       if (form.value.id) {
         modifyUser(form.value.id, form.value).then(() => {
           load()
-          dialogVisible.value = false
+          visible.value = false
         }).finally(() => { saveLoading.value = false })
       } else {
         createUser(form.value).then(() => {
           load()
-          dialogVisible.value = false
+          visible.value = false
         }).finally(() => { saveLoading.value = false })
       }
     }
@@ -203,15 +203,15 @@ function handleCheckedChange(value: string[]) {
 
   <ElSpace size="large" direction="vertical" fill class="w-full">
     <ElCard shadow="never">
-      <ElForm inline :model="filters">
+      <ElForm inline :model="filters" @submit.prevent>
         <ElFormItem :label="$t('username')" prop="username">
           <ElInput v-model="filters.username" :placeholder="$t('inputText', { field: $t('username') })" />
         </ElFormItem>
         <ElFormItem>
-          <ElButton type="primary" @click="load">
+          <ElButton title="search" type="primary" @click="load">
             <div class="i-material-symbols:search-rounded" />{{ $t('search') }}
           </ElButton>
-          <ElButton @click="reset">
+          <ElButton title="reset" @click="reset">
             <div class="i-material-symbols:replay-rounded" />{{ $t('reset') }}
           </ElButton>
         </ElFormItem>
@@ -221,20 +221,20 @@ function handleCheckedChange(value: string[]) {
     <ElCard shadow="never">
       <ElRow :gutter="20" justify="space-between" class="mb-4">
         <ElCol :span="16" class="text-left">
-          <ElButton type="primary" @click="editRow()">
-            <div class="i-material-symbols:add-rounded" />{{ $t('add') }}
+          <ElButton title="create" type="primary" @click="saveRow()">
+            <div class="i-material-symbols:add-rounded" />{{ $t('create') }}
           </ElButton>
-          <ElButton type="warning" plain @click="dialogVisible = true">
-            <div class="i-material-symbols:upload-file-outline-rounded" />{{ $t('import') }}
+          <ElButton title="import" type="warning" plain @click="visible = true">
+            <div class="i-material-symbols:database-upload-outline-rounded" />{{ $t('import') }}
           </ElButton>
-          <ElButton type="success" plain>
+          <ElButton title="export" type="success" plain>
             <div class="i-material-symbols:file-export-outline-rounded" />{{ $t('export') }}
           </ElButton>
         </ElCol>
 
         <ElCol :span="8" class="text-right">
           <ElTooltip effect="dark" :content="$t('refresh')" placement="top">
-            <ElButton type="primary" plain circle @click="load">
+            <ElButton title="refresh" type="primary" plain circle @click="load">
               <div class="i-material-symbols:refresh-rounded" />
             </ElButton>
           </ElTooltip>
@@ -243,7 +243,7 @@ function handleCheckedChange(value: string[]) {
             <span class="inline-block ml-3 h-8">
               <ElPopover :width="200" trigger="click">
                 <template #reference>
-                  <ElButton type="success" plain circle>
+                  <ElButton title="settings" type="success" plain circle>
                     <div class="i-material-symbols:format-list-bulleted" />
                   </ElButton>
                 </template>
@@ -273,7 +273,7 @@ function handleCheckedChange(value: string[]) {
         </ElCol>
       </ElRow>
 
-      <ElTable v-loading="loading" :data="datas" lazy :load="load" row-key="id" stripe table-layout="auto">
+      <ElTable v-loading="loading" :data="datas" row-key="id" stripe table-layout="auto">
         <ElTableColumn type="selection" width="55" />
         <ElTableColumn type="index" :label="$t('no')" width="55" />
         <ElTableColumn prop="username" :label="$t('username')">
@@ -319,12 +319,12 @@ function handleCheckedChange(value: string[]) {
         </ElTableColumn>
         <ElTableColumn :label="$t('actions')">
           <template #default="scope">
-            <ElButton size="small" type="primary" link @click="editRow(scope.row.id)">
-              <div class="i-material-symbols:edit-outline-rounded" />{{ $t('edit') }}
+            <ElButton title="modify" size="small" type="primary" link @click="saveRow(scope.row.id)">
+              <div class="i-material-symbols:edit-outline-rounded" />{{ $t('modify') }}
             </ElButton>
             <ElPopconfirm :title="$t('removeConfirm')" :width="240" @confirm="confirmEvent(scope.row.id)">
               <template #reference>
-                <ElButton size="small" type="danger" link>
+                <ElButton title="remove" size="small" type="danger" link>
                   <div class="i-material-symbols:delete-outline-rounded" />{{ $t('remove') }}
                 </ElButton>
               </template>
@@ -336,7 +336,7 @@ function handleCheckedChange(value: string[]) {
     </ElCard>
   </ElSpace>
 
-  <DialogView v-model="dialogVisible" :title="$t('users')" width="36%">
+  <DialogView v-model="visible" :title="$t('users')" width="36%">
     <ElForm ref="formRef" :model="form" :rules="rules" label-position="top">
       <ElRow :gutter="20" class="w-full !mx-0">
         <ElCol :span="12">
@@ -374,10 +374,10 @@ function handleCheckedChange(value: string[]) {
       </ElRow>
     </ElForm>
     <template #footer>
-      <ElButton @click="dialogVisible = false">
+      <ElButton title="cancel" @click="visible = false">
         <div class="i-material-symbols:close" />{{ $t('cancel') }}
       </ElButton>
-      <ElButton type="primary" :loading="saveLoading" @click="onSubmit(formRef)">
+      <ElButton title="submit" type="primary" :loading="saveLoading" @click="onSubmit(formRef)">
         <div class="i-material-symbols:check-circle-outline-rounded" /> {{ $t('submit') }}
       </ElButton>
     </template>
