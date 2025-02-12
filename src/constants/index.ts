@@ -3,7 +3,7 @@ export const SERVER_URL = {
   // hypervisor
   USER: '/users', // 用户
   ROLE: '/roles', // 角色
-  PRIVILEGE: '/privileges', // 权限
+  PRIVILEGE: '/hypervisor/privileges', // 权限
   GROUP: '/groups', // 分组
   DICTIONARY: '/dictionaries', // 字典
   ACCESS_LOG: '/access-logs', // 访问日志
@@ -12,10 +12,13 @@ export const SERVER_URL = {
   SCHEDULER_LOG: '/scheduler-logs', // 调度日志
   FILE: '/files', // 文件
   REGION: '/regions', // 行政区划
+  MESSAGE: '/messages', // 消息
+  USERINFO: '/userinfo', // 用户信息
 
   // authentication
-  SIGNIN: '/signin', // 登录
-  SIGNOUT: '/signout', // 退出
+  LOGIN: '/login', // 登录
+  LOGOUT: '/logout', // 退出
+  TOKEN: '/oauth2/token', // token
 
   // exploiters
   SCRIPT: '/scripts', // 脚本

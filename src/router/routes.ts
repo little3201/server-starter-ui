@@ -44,7 +44,8 @@ export const constantRouterMap: Array<RouteRecordRaw> = [
   },
   {
     path: '/login',
-    name: 'Login',
-    component: () => import('pages/LoginPage.vue')
+    redirect: () => {
+      window.location.href = 'http://localhost:8761'
+    }
   }
 ]

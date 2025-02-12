@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import { signin, signout } from 'src/api/authentication'
+import { login, logout } from 'src/api/authentication'
 import { fetchMe } from 'src/api/users'
 import { retrievePrivilegeTree } from 'src/api/privileges'
 import type { PrivilegeTreeNode } from 'src/models'
@@ -14,10 +14,9 @@ export const useUserStore = defineStore('user', {
     privileges: [] as PrivilegeTreeNode[]
   }),
   actions: {
-    async logout() {
-      const res = await signout()
+    async signout() {
+      const res = await logout()
       if (res.status === 200) {
-        localStorage.removeItem('access_token')
         this.$reset()
       }
     },
@@ -25,20 +24,14 @@ export const useUserStore = defineStore('user', {
     /**
      * Attempt to login a user
      */
-    async login(username: string, password: string) {
-      const res = await signin(username, password)
-      if (res.status === 200) {
-        localStorage.setItem('access_token', res.data)
-        const [userResp, privilegesResp] = await Promise.all([fetchMe(), retrievePrivilegeTree()])
+    async signin(username: string, password: string) {
+      await login(username, password)
+      const [userResp, privilegesResp] = await Promise.all([fetchMe(), retrievePrivilegeTree()])
         // 执行结果处理
         this.$patch({
-          username: userResp.data.username,
-          fullName: userResp.data.fullName,
-          email: userResp.data.email,
-          avatar: userResp.data.avatar,
+          username: userResp.data.sub,
           privileges: privilegesResp.data
         })
-      }
     }
   }
 })

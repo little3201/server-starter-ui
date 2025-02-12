@@ -374,7 +374,7 @@ const treeNodes: PrivilegeTreeNode[] = [
 
 export const privilegesHandlers = [
   http.get(`/api${SERVER_URL.PRIVILEGE}/tree`, ({ cookies }) => {
-    // if(!cookies.logged_user) {
+    // if(!cookies.logged_in) {
     //   return new HttpResponse(null, { status: 401 })
     // }
     console.log(cookies)

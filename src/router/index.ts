@@ -19,49 +19,40 @@ const router = createRouter({
 
 // Router guard for authentication and dynamic route registration
 router.beforeEach(async (to, from, next) => {
-  const accessToken = localStorage.getItem('access_token')
-
-  if (accessToken) {
-    if (to.path === '/login') {
-      next({ path: '/' })
-    } else {
-      // 页面刷新，状态数据丢失，重新获取
-      const userStore = useUserStore()
-      let privileges = userStore.privileges
-      if(!privileges.length) {
-        const [userResp, privilegesResp] = await Promise.all([fetchMe(), retrievePrivilegeTree()])
-        privileges = privilegesResp.data
-        userStore.$patch({ 
-          username: userResp.data.username, 
-          fullName: userResp.data.fullName,
-          email: userResp.data.email,
-          avatar: userResp.data.avatar,
-          privileges 
-        })
-      }
-      if (!to.name || !router.hasRoute(to.name)) {
-        const routes = generateRoutes(privileges)
-        routes.forEach((route) => {
-          router.addRoute('home', route as RouteRecordRaw)
-        })
-        router.addRoute({
-          path: '/:cacheAll(.*)*',
-          name: 'ErrorNotFound',
-          component: () => import('pages/ErrorNotFound.vue')
-        })
-        const redirectPath = from.query.redirect || to.path
-        const redirect = decodeURIComponent(redirectPath as string)
-        const nextData = to.path === redirect ? { ...to, replace: true } : { path: redirect }
-        next(nextData)
-      } else {
-        next()
-      }
-    }
+  // 页面刷新，状态数据丢失，重新获取
+  const userStore = useUserStore()
+  if(!userStore.username || userStore.username === ''){
+    fetchMe().then((res: { data: { sub: string } }) => {
+      userStore.$patch({
+      username: res.data.sub
+      })
+    })
+    next()
   } else {
-    if (to.path === '/login') {
-      next()
+    let privileges = userStore.privileges
+    if(!privileges.length) {
+      const privilegesResp = await retrievePrivilegeTree()
+      privileges = privilegesResp.data
+      userStore.$patch({ 
+        privileges 
+      })
+    }
+    if (!to.name || !router.hasRoute(to.name)) {
+      const routes = generateRoutes(privileges)
+      routes.forEach((route) => {
+        router.addRoute('home', route as RouteRecordRaw)
+      })
+      router.addRoute({
+        path: '/:cacheAll(.*)*',
+        name: 'ErrorNotFound',
+        component: () => import('pages/ErrorNotFound.vue')
+      })
+      const redirectPath = from.query.redirect || to.path
+      const redirect = decodeURIComponent(redirectPath as string)
+      const nextData = to.path === redirect ? { ...to, replace: true } : { path: redirect }
+      next(nextData)
     } else {
-      next(`/login?redirect=${to.path}`)
+      next()
     }
   }
 })

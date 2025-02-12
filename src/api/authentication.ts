@@ -2,19 +2,19 @@ import { api } from 'boot/axios'
 import { SERVER_URL } from 'src/constants'
 
 /**
- * Sign in
+ * login
  * @param username username
  * @param password password
- * @returns token
+ * @returns Promise
  */
-export const signin = (username: string, password: string) => {
-  return api.post(SERVER_URL.SIGNIN, null, { auth: { username, password } })
+export const login = async () => {
+  window.location.href = 'http://127.0.0.1:8760';
 }
 
 /**
- * Sign out
+ * logout
  * @returns Promise
  */
-export const signout = () => {
-  return api.post(SERVER_URL.SIGNOUT)
+export const logout = () => {
+  return api.post(SERVER_URL.LOGOUT)
 }

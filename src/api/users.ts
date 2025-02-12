@@ -26,7 +26,7 @@ export const fetchUser = (id: number) => {
  * @returns Row data
  */
 export const fetchMe = () => {
-  return api.get(`${SERVER_URL.USER}/me`)
+  return api.get(`${SERVER_URL.USERINFO}`)
 }
 
 /**

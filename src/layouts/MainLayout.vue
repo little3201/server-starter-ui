@@ -5,13 +5,10 @@ import ThemeToogle from 'components/ThemeToogle.vue'
 import LanguageSelector from 'components/LanguageSelector.vue'
 import EssentialList from 'components/EssentialList.vue'
 
-const { currentRoute, replace } = useRouter()
+
+const { currentRoute } = useRouter()
 
 const userStore = useUserStore()
-
-function signOut() {
-  userStore.logout().then(() => replace('/login'))
-}
 </script>
 
 <template>
@@ -19,7 +16,7 @@ function signOut() {
     <ElHeader class="flex flex-nowrap bg-[var(--el-color-primary)] z-10" height="50px">
       <div class="inline-flex flex-grow justify-between">
         <div class="inline-flex items-center">
-          <ElImage src="/svgs/vite.svg" alt="avatar" class="w-8 h-8" />
+          <ElImage src="/svgs/logo.svg" alt="avatar" class="w-8 h-8" />
           <span class="ml-3 text-20px font-bold text-white">Project Management</span>
         </div>
 
@@ -41,7 +38,7 @@ function signOut() {
                     <div class="i-material-symbols:manage-accounts-outline-rounded mr-2 " />{{ $t('profile') }}
                   </ElDropdownItem>
                 </RouterLink>
-                <ElDropdownItem divided @click="signOut">
+                <ElDropdownItem divided @click="userStore.signout()">
                   <div class="i-material-symbols:logout-rounded mr-2 " />{{ $t('signout') }}
                 </ElDropdownItem>
               </ElDropdownMenu>
@@ -72,8 +69,23 @@ function signOut() {
           <RouterView />
         </ElMain>
         <ElFooter height="50px">
-          <p class="text-sm text-center">&copy; {{ new Date().getFullYear() }}
-            All Rights Reserved.</p>
+          <div class="text-sm text-center flex items-center justify-between">
+            <span>&copy; {{ new Date().getFullYear() }} All Rights Reserved.</span>
+            <ul class="flex flex-wrap items-center list-none">
+              <li>
+                <a href="/about" class="no-underline hover:underline me-4 md:me-6">About</a>
+              </li>
+              <li>
+                <a href="/privacy-policy" class="no-underline hover:underline me-4 md:me-6">Privacy Policy</a>
+              </li>
+              <li>
+                <a href="/licensing" class="no-underline hover:underline me-4 md:me-6">Licensing</a>
+              </li>
+              <li>
+                <RouterLink to="/help" class="no-underline hover:underline">Help</RouterLink>
+              </li>
+            </ul>
+          </div>
         </ElFooter>
       </ElContainer>
     </ElContainer>
