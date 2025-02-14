@@ -4,7 +4,7 @@ import { dayjs } from 'element-plus'
 import draggable from 'vuedraggable'
 import DialogView from 'components/DialogView.vue'
 import { retrieveOperationLogs, fetchOperationLog, removeOperationLog } from 'src/api/operation-logs'
-import type { Pagination, OperationLog } from 'src/models'
+import type { Pagination, OperationLog } from 'src/types'
 
 const loading = ref<boolean>(false)
 const datas = ref<Array<OperationLog>>([])

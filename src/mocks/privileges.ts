@@ -1,6 +1,6 @@
 import { http, HttpResponse } from 'msw'
 import { SERVER_URL } from 'src/constants'
-import type { Privilege, PrivilegeTreeNode } from 'src/models'
+import type { Privilege, PrivilegeTreeNode } from 'src/types'
 
 const datas: Privilege[] = [
   {

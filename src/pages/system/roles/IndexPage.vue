@@ -11,7 +11,7 @@ import {
 } from 'src/api/roles'
 import { retrievePrivilegeTree } from 'src/api/privileges'
 import { retrieveUsers } from 'src/api/users'
-import type { Pagination, Role, RoleMembers, RolePrivileges, PrivilegeTreeNode } from 'src/models'
+import type { Pagination, Role, RoleMembers, RolePrivileges, PrivilegeTreeNode } from 'src/types'
 
 const { t } = useI18n()
 const loading = ref<boolean>(false)

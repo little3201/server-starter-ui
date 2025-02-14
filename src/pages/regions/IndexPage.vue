@@ -6,7 +6,7 @@ import { useI18n } from 'vue-i18n'
 import DialogView from 'components/DialogView.vue'
 import SubPage from './SubPage.vue'
 import { retrieveRegions, fetchRegion, createRegion, modifyRegion, removeRegion, enableRegion } from 'src/api/regions'
-import type { Pagination, Region } from 'src/models'
+import type { Pagination, Region } from 'src/types'
 
 const { t } = useI18n()
 

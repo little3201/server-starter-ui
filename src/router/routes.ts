@@ -43,9 +43,8 @@ export const constantRouterMap: Array<RouteRecordRaw> = [
     ]
   },
   {
-    path: '/login',
-    redirect: () => {
-      window.location.href = 'http://localhost:8761'
-    }
+    path: '/callback',
+    name: 'callback',
+    component: () => import('pages/CallbackPage.vue')
   }
 ]

@@ -5,7 +5,7 @@ export const authenticationHandlers = [
   http.post(`/api${SERVER_URL.LOGIN}`, () => {
     return new HttpResponse(null, {
       headers: {
-        'Set-Cookie': 'logged_in=true; HttpOnly; Secure; SameSite=Lax; Expires=85400; Path=/'
+        'Set-Cookie': 'logged_in=true; HttpOnly; Secure; SameSite=lax; Expires=85400; Path=/'
       }
     })
   }),

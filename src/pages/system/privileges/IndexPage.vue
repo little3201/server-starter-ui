@@ -10,7 +10,7 @@ import {
 import { retrieveDictionarySubset } from 'src/api/dictionaries'
 import { visibleArray } from 'src/utils'
 import { actions } from 'src/constants'
-import type { Pagination, Privilege, Dictionary } from 'src/models'
+import type { Pagination, Privilege, Dictionary } from 'src/types'
 
 const loading = ref<boolean>(false)
 const datas = ref<Array<Privilege>>([])

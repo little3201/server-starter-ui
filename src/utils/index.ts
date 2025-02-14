@@ -1,5 +1,5 @@
 import { dayjs } from 'element-plus'
-import type { Dictionary } from 'src/models'
+import type { Dictionary } from 'src/types'
 
 /**
  * Resolve a child path relative to a parent path

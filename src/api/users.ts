@@ -1,6 +1,6 @@
 import { api } from 'boot/axios'
 import { SERVER_URL } from 'src/constants'
-import type { Pagination, User } from 'src/models'
+import type { Pagination, User } from 'src/types'
 
 /**
  * Retrieve rows
@@ -19,14 +19,6 @@ export const retrieveUsers = (pagination: Pagination, filters?: object) => {
  */
 export const fetchUser = (id: number) => {
   return api.get(`${SERVER_URL.USER}/${id}`)
-}
-
-/**
- * Fetch me
- * @returns Row data
- */
-export const fetchMe = () => {
-  return api.get(`${SERVER_URL.USERINFO}`)
 }
 
 /**

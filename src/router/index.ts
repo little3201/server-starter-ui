@@ -1,10 +1,11 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import type { RouteRecordRaw } from 'vue-router'
+import type { RouteRecordRaw, RouteLocationNormalized, NavigationGuardNext } from 'vue-router'
 import { constantRouterMap } from './routes'
 import { useUserStore } from 'stores/user-store'
-import { fetchMe } from 'src/api/users'
 import { retrievePrivilegeTree } from 'src/api/privileges'
-import type { PrivilegeTreeNode } from 'src/models'
+import type { PrivilegeTreeNode } from 'src/types'
+import { signIn, getUser } from 'boot/auth-service'
+
 
 // Lazy load layout
 const BlankLayout = () => import('layouts/BlankLayout.vue')
@@ -19,43 +20,63 @@ const router = createRouter({
 
 // Router guard for authentication and dynamic route registration
 router.beforeEach(async (to, from, next) => {
-  // 页面刷新，状态数据丢失，重新获取
   const userStore = useUserStore()
-  if(!userStore.username || userStore.username === ''){
-    fetchMe().then((res: { data: { sub: string } }) => {
-      userStore.$patch({
-      username: res.data.sub
-      })
-    })
+
+  if (to.path === '/callback') {
     next()
   } else {
-    let privileges = userStore.privileges
-    if(!privileges.length) {
-      const privilegesResp = await retrievePrivilegeTree()
-      privileges = privilegesResp.data
-      userStore.$patch({ 
-        privileges 
-      })
-    }
-    if (!to.name || !router.hasRoute(to.name)) {
-      const routes = generateRoutes(privileges)
-      routes.forEach((route) => {
-        router.addRoute('home', route as RouteRecordRaw)
-      })
-      router.addRoute({
-        path: '/:cacheAll(.*)*',
-        name: 'ErrorNotFound',
-        component: () => import('pages/ErrorNotFound.vue')
-      })
-      const redirectPath = from.query.redirect || to.path
-      const redirect = decodeURIComponent(redirectPath as string)
-      const nextData = to.path === redirect ? { ...to, replace: true } : { path: redirect }
-      next(nextData)
+    if (!userStore.username || userStore.username === '') {
+      const user = await getUser()
+      if (user && user.access_token) {
+        userStore.$patch({
+          username: user.profile.sub,
+          accessToken: user.access_token
+        })
+        if (user.expired) {
+          await signIn()
+        }
+      } else {
+        await signIn()
+      }
+      await handleRouteAddition(userStore, to, from, next)
     } else {
-      next()
+      await handleRouteAddition(userStore, to, from, next)
     }
   }
+
 })
+
+/**
+ * 检查权限，并配置路由
+ * @param userStore user store
+ * @param to router to
+ * @param from router from
+ * @param next  router next
+ */
+const handleRouteAddition = async (userStore: ReturnType<typeof useUserStore>, to: RouteLocationNormalized, from: RouteLocationNormalized, next: NavigationGuardNext) => {
+  if (!userStore.privileges.length) {
+    const privilegesResp = await retrievePrivilegeTree();
+    const privileges = privilegesResp.data;
+    userStore.$patch({ privileges });
+  }
+  if (!to.name || !router.hasRoute(to.name)) {
+    const routes = generateRoutes(userStore.privileges)
+    routes.forEach((route) => {
+      router.addRoute('home', route as RouteRecordRaw)
+    })
+    router.addRoute({
+      path: '/:cacheAll(.*)*',
+      name: 'ErrorNotFound',
+      component: () => import('pages/ErrorNotFound.vue')
+    })
+    const redirectPath = from.query.redirect || to.path
+    const redirect = decodeURIComponent(redirectPath as string)
+    const nextData = to.path === redirect ? { ...to, replace: true } : { path: redirect }
+    next(nextData)
+  } else {
+    next()
+  }
+}
 
 /**
  * Generate routes dynamically based on user privileges

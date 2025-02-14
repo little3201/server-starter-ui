@@ -4,10 +4,10 @@ import { useUserStore } from 'stores/user-store'
 import ThemeToogle from 'components/ThemeToogle.vue'
 import LanguageSelector from 'components/LanguageSelector.vue'
 import EssentialList from 'components/EssentialList.vue'
+import { signOut } from 'boot/auth-service'
 
 
 const { currentRoute } = useRouter()
-
 const userStore = useUserStore()
 </script>
 
@@ -38,7 +38,7 @@ const userStore = useUserStore()
                     <div class="i-material-symbols:manage-accounts-outline-rounded mr-2 " />{{ $t('profile') }}
                   </ElDropdownItem>
                 </RouterLink>
-                <ElDropdownItem divided @click="userStore.signout()">
+                <ElDropdownItem divided @click="signOut">
                   <div class="i-material-symbols:logout-rounded mr-2 " />{{ $t('signout') }}
                 </ElDropdownItem>
               </ElDropdownMenu>
@@ -70,19 +70,25 @@ const userStore = useUserStore()
         </ElMain>
         <ElFooter height="50px">
           <div class="text-sm text-center flex items-center justify-between">
-            <span>&copy; {{ new Date().getFullYear() }} All Rights Reserved.</span>
+            <span>Copyright &copy; {{ new Date().getFullYear() }} All Rights Reserved.</span>
             <ul class="flex flex-wrap items-center list-none">
               <li>
-                <a href="/about" class="no-underline hover:underline me-4 md:me-6">About</a>
+                <a href="/about"
+                  class="no-underline hover:underline me-4 md:me-6 text-[var(--el-text-color-primary)]">About</a>
               </li>
               <li>
-                <a href="/privacy-policy" class="no-underline hover:underline me-4 md:me-6">Privacy Policy</a>
+                <a href="/privacy-policy"
+                  class="no-underline hover:underline me-4 md:me-6 text-[var(--el-text-color-primary)]">Privacy
+                  Policy</a>
               </li>
               <li>
-                <a href="/licensing" class="no-underline hover:underline me-4 md:me-6">Licensing</a>
+                <a href="/licensing"
+                  class="no-underline hover:underline me-4 md:me-6 text-[var(--el-text-color-primary)]">Licensing</a>
               </li>
               <li>
-                <RouterLink to="/help" class="no-underline hover:underline">Help</RouterLink>
+                <RouterLink to="/help" class="no-underline hover:underline me-4 text-[var(--el-text-color-primary)]">
+                  Help
+                </RouterLink>
               </li>
             </ul>
           </div>

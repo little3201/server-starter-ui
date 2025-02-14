@@ -7,7 +7,7 @@ import draggable from 'vuedraggable'
 import { useI18n } from 'vue-i18n'
 import DialogView from 'components/DialogView.vue'
 import { retrieveUsers, fetchUser, createUser, modifyUser, removeUser, enableUser, checkUserExists } from 'src/api/users'
-import type { Pagination, User } from 'src/models'
+import type { Pagination, User } from 'src/types'
 import { calculate } from 'src/utils'
 
 const { t } = useI18n()

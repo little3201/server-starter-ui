@@ -4,7 +4,7 @@ import { dayjs } from 'element-plus'
 import draggable from 'vuedraggable'
 import DialogView from 'components/DialogView.vue'
 import { retrieveSchedulerLogs, fetchSchedulerLog } from 'src/api/scheduler-logs'
-import type { Pagination, SchedulerLog } from 'src/models'
+import type { Pagination, SchedulerLog } from 'src/types'
 import { formatDuration } from 'src/utils'
 
 const loading = ref<boolean>(false)

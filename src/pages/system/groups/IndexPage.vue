@@ -10,7 +10,7 @@ import {
   fetchGroup, createGroup, modifyGroup, removeGroup, enableGroup, checkGroupExists
 } from 'src/api/groups'
 import { retrieveUsers } from 'src/api/users'
-import type { Pagination, Group, TreeNode, GroupMembers } from 'src/models'
+import type { Pagination, Group, TreeNode, GroupMembers } from 'src/types'
 
 const { t } = useI18n()
 const loading = ref<boolean>(false)

@@ -6,7 +6,7 @@ import { useI18n } from 'vue-i18n'
 import DialogView from 'components/DialogView.vue'
 import SubPage from './SubPage.vue'
 import { retrieveDictionaries, fetchDictionary, modifyDictionary, enableDictionary } from 'src/api/dictionaries'
-import type { Pagination, Dictionary } from 'src/models'
+import type { Pagination, Dictionary } from 'src/types'
 
 const { t } = useI18n()
 const loading = ref<boolean>(false)

@@ -3,7 +3,7 @@ import { ref, onMounted, reactive } from 'vue'
 import draggable from 'vuedraggable'
 import DialogView from 'components/DialogView.vue'
 import { retrieveAccessLogs, fetchAccessLog, removeAccessLog } from 'src/api/access-logs'
-import type { Pagination, AccessLog } from 'src/models'
+import type { Pagination, AccessLog } from 'src/types'
 import { formatDuration } from 'src/utils'
 import { httpMethods } from 'src/constants'
 
