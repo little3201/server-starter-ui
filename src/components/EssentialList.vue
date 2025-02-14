@@ -27,16 +27,3 @@ withDefaults(defineProps<{
     </template>
   </ElSubMenu>
 </template>
-
-<style lang="scss" scope>
-.el-menu--inline {
-  li {
-    margin: 6px;
-    border-radius: var(--el-border-radius-base);
-  }
-}
-
-.el-menu-link.is-active {
-  background-color: var(--el-menu-hover-bg-color) !important;
-}
-</style>

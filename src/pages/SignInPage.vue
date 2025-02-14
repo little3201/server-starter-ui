@@ -102,7 +102,7 @@ function load() {
     <ElMain class="items-center justify-center z-10">
       <ElCard class="w-full lg:w-1/2 xl:w-2/3" style="height: 70vh;border-radius: 1.5rem;"
         body-class="flex items-center !p-0 h-full">
-        <div class="hidden xl:flex flex-col items-center h-full w-1/2  ">
+        <div class="hidden-lg-and-down flex flex-col items-center h-full w-1/2  ">
           <div class="inline-flex flex-grow items-center justify-center h-full">
             <Transition appear enter-active-class="animate__animated animate__slideInLeft"
               leave-active-class="animate__animated animate__slideOutLeft">

@@ -73,17 +73,19 @@ const userStore = useUserStore()
             <span>Copyright &copy; {{ new Date().getFullYear() }} All Rights Reserved.</span>
             <ul class="flex flex-wrap items-center list-none">
               <li>
-                <a href="/about"
-                  class="no-underline hover:underline me-4 md:me-6 text-[var(--el-text-color-primary)]">About</a>
+                <RouterLink to="/about"
+                  class="no-underline hover:underline me-4 md:me-6 text-[var(--el-text-color-primary)]">About
+                </RouterLink>
               </li>
               <li>
-                <a href="/privacy-policy"
+                <RouterLink to="/privacy-policy"
                   class="no-underline hover:underline me-4 md:me-6 text-[var(--el-text-color-primary)]">Privacy
-                  Policy</a>
+                  Policy</RouterLink>
               </li>
               <li>
-                <a href="/licensing"
-                  class="no-underline hover:underline me-4 md:me-6 text-[var(--el-text-color-primary)]">Licensing</a>
+                <RouterLink to="/licensing"
+                  class="no-underline hover:underline me-4 md:me-6 text-[var(--el-text-color-primary)]">Licensing
+                </RouterLink>
               </li>
               <li>
                 <RouterLink to="/help" class="no-underline hover:underline me-4 text-[var(--el-text-color-primary)]">

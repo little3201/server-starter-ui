@@ -91,10 +91,7 @@ useEventListener(document, 'transitionend', (evt) => {
 })
 
 onMounted(() => {
-  setTimeout(() => {
-    initChart()
-  }, 0)
-
+  initChart()
 })
 
 onBeforeUnmount(() => {

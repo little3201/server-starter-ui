@@ -34,6 +34,18 @@ body {
 
 .el-menu {
   border-right: initial !important;
+  .el-sub-menu.is-active {
+    .el-sub-menu__title {
+      background-color: var(--el-menu-hover-bg-color);
+    }
+  }
+}
+
+.el-menu--inline {
+  li {
+    margin: 6px;
+    border-radius: var(--el-border-radius-base);
+  }
 }
 
 .el-dialog {
@@ -45,12 +57,14 @@ body {
 }
 
 .el-card {
-  --el-card-border-radius: 8px !important;
+  --el-card-border-radius: var(--el-border-radius-base) !important;
 }
 
 .el-card__body {
-  .el-form-item {
-    margin-bottom: 0px;
+  .el-form--inline {
+    .el-form-item {
+      margin-bottom: 0px;
+    }
   }
 }
 

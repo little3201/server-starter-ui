@@ -2,7 +2,7 @@ import { UserManager, WebStorageStateStore } from 'oidc-client-ts'
 import type {User} from 'oidc-client-ts'
 
 const oidcSettings = {
-    authority: 'http://127.0.0.1:8761',
+    authority: import.meta.env.VITE_OIDC_AUTHORITY,
     client_id: 'pkce-client',
     redirect_uri: `${window.location.origin}/callback`,
     post_logout_redirect_uri: `${window.location.origin}`,

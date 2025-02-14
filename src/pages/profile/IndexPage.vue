@@ -72,18 +72,32 @@ async function onSubmit(formEl: FormInstance | undefined) {
         <ElDivider></ElDivider>
 
         <!-- 详细信息 -->
-        <ul class="text-sm text-[var(--el-text-color-regular)] pl-0 space-y-2">
+        <ul class="text-sm text-[var(--el-text-color-regular)] pl-3 space-y-3">
           <li class="flex items-center">
             <div class="i-material-symbols:location-on-outline-rounded mr-2" />
             西安
           </li>
           <li class="flex items-center">
-            <div class="i-material-symbols:mail-outline-rounded  mr-2" />
+            <div class="i-material-symbols:mail-outline-rounded mr-2" />
             <span>{{ userStore.email }}</span>
           </li>
           <li class="flex items-center">
             <div class="i-material-symbols:shield-person-outline-rounded mr-2" />
             角色
+          </li>
+        </ul>
+      </ElCard>
+
+      <ElCard shadow="never" class="mt-4">
+        <ul class="text-sm text-[var(--el-text-color-regular)] pl-0">
+          <li class="flex items-center py-2 px-3 rounded-md hover:bg-[var(--el-fill-color-lighter)] cursor-pointer">
+            <div class="i-material-symbols:notifications-outline mr-2" />Notifications
+          </li>
+          <li class="flex items-center py-2 px-3 rounded-md hover:bg-[var(--el-fill-color-lighter)] cursor-pointer">
+            <div class="i-material-symbols:draw-outline mr-2" />Appearance
+          </li>
+          <li class="flex items-center py-2 px-3 rounded-md hover:bg-[var(--el-fill-color-lighter)] cursor-pointer">
+            <div class="i-material-symbols:notifications-outline mr-2" />Sessions
           </li>
         </ul>
       </ElCard>
@@ -119,6 +133,7 @@ async function onSubmit(formEl: FormInstance | undefined) {
 
           <!-- Activities -->
           <ElTabPane label="Activities" name="activities">
+            <h3>Last 3 days activities</h3>
             <ElTimeline>
               <ElTimelineItem v-for="activity in activities" :key="activity.id" :type="activity.type"
                 :timestamp="activity.lastModifiedDate" placement="top">
@@ -134,17 +149,42 @@ async function onSubmit(formEl: FormInstance | undefined) {
           <ElTabPane label="Change password" name="changePassword">
             <h3>Change Password</h3>
             <ElForm ref="formRef" :model="form" :rules="rules" label-width="auto">
-              <ElFormItem label="Old Password" prop="oldPassword">
-                <ElInput v-model="form.oldPassword" type="password" show-password></ElInput>
-              </ElFormItem>
-
-              <ElFormItem label="New Password" prop="newPassword">
-                <ElInput v-model="form.newPassword" type="password" show-password />
-              </ElFormItem>
-
-              <ElFormItem label="Confirm Password" prop="confirmPassword">
-                <ElInput v-model="form.confirmPassword" type="password" show-password></ElInput>
-              </ElFormItem>
+              <ElRow>
+                <ElCol :span="16">
+                  <ElFormItem label="Old Password" prop="oldPassword">
+                    <ElInput v-model="form.oldPassword" type="password" show-password></ElInput>
+                  </ElFormItem>
+                </ElCol>
+                <ElCol :span="8">
+                  <span class="line-height-[32px] ml-5 text-xs text-[var(--el-text-color-secondary)]">This is a hint for
+                    old
+                    password</span>
+                </ElCol>
+              </ElRow>
+              <ElRow>
+                <ElCol :span="16">
+                  <ElFormItem label="New Password" prop="newPassword">
+                    <ElInput v-model="form.newPassword" type="password" show-password />
+                  </ElFormItem>
+                </ElCol>
+                <ElCol :span="8">
+                  <span class="line-height-[32px] ml-5 text-xs text-[var(--el-text-color-secondary)]">This is a hint for
+                    new
+                    password</span>
+                </ElCol>
+              </ElRow>
+              <ElRow>
+                <ElCol :span="16">
+                  <ElFormItem label="Confirm Password" prop="confirmPassword">
+                    <ElInput v-model="form.confirmPassword" type="password" show-password></ElInput>
+                  </ElFormItem>
+                </ElCol>
+                <ElCol :span="8">
+                  <span class="line-height-[32px] ml-5 text-xs text-[var(--el-text-color-secondary)]">This is a hint for
+                    confirm
+                    password</span>
+                </ElCol>
+              </ElRow>
 
               <ElFormItem>
                 <ElButton title="submit" type="primary" @click="onSubmit(formRef)">Submit</ElButton>
