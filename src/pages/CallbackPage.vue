@@ -1,5 +1,7 @@
 <template>
-  <div v-loading="loading"></div>
+  <ElContainer class="h-screen">
+    <ElMain v-loading="loading"></ElMain>
+  </ElContainer>
 </template>
 
 <script setup lang="ts">
