@@ -84,3 +84,22 @@ export const enableRole = (id: number) => {
 export const removeRole = (id: number) => {
   return api.delete(`${SERVER_URL.ROLE}/${id}`)
 }
+
+/**
+ * Relation privileges for a specific role
+ * @param id Role ID
+ * @returns privilege IDs
+ */
+export const relationRolePrivileges = (id: number, privileges: number[]) => {
+  return api.patch(`${SERVER_URL.ROLE}/${id}/privileges`, privileges)
+}
+
+/**
+ * Remove privileges for a specific role
+ * @param id Role ID
+ * @returns privilege IDs
+ */
+export const removeRolePrivileges = (id: number, privileges: number[]) => {
+  const params = privileges ? { privileges: privileges.join(',') } : {}
+  return api.delete(`${SERVER_URL.ROLE}/${id}/privileges`, { params })
+}

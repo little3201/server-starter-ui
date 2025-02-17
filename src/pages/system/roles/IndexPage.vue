@@ -6,8 +6,8 @@ import draggable from 'vuedraggable'
 import { useI18n } from 'vue-i18n'
 import DialogView from 'components/DialogView.vue'
 import {
-  retrieveRoles, retrieveRoleMembers, retrieveRolePrivileges,
-  fetchRole, createRole, modifyRole, removeRole, enableRole, checkRoleExists
+  retrieveRoles, retrieveRoleMembers, retrieveRolePrivileges, relationRolePrivileges,
+  removeRolePrivileges, fetchRole, createRole, modifyRole, removeRole, enableRole, checkRoleExists
 } from 'src/api/roles'
 import { retrievePrivilegeTree } from 'src/api/privileges'
 import { retrieveUsers } from 'src/api/users'
@@ -37,6 +37,7 @@ const saveLoading = ref<boolean>(false)
 const visible = ref<boolean>(false)
 
 const relationVisible = ref<boolean>(false)
+const selectedRow = ref<Role>({})
 const members = ref([])
 
 const filters = ref({
@@ -211,7 +212,15 @@ function confirmEvent(id: number) {
 /**
  * privilete tree check
  */
-function handlePrivilegeCheckChange() { }
+function handlePrivilegeCheckChange(data: PrivilegeTreeNode, checked: boolean) {
+  const ids = []
+  ids.push(data.id)
+  if (checked) {
+    relationRolePrivileges(selectedRow.value.id, ids)
+  } else {
+    removeRolePrivileges(selectedRow.value.id, ids)
+  }
+}
 
 /**
  * 行选择操作
@@ -220,7 +229,10 @@ function handlePrivilegeCheckChange() { }
 function handleCurrentChange(row: Role | undefined) {
   if (row && row.id) {
     treeEl.value!.setCheckedKeys([])
-    retrieveRolePrivileges(row.id).then(res => { rolePrivileges.value = res.data.map((item: RolePrivileges) => item.privilegeId) })
+    selectedRow.value = row
+    retrieveRolePrivileges(row.id).then(res => {
+      rolePrivileges.value = res.data.map((item: RolePrivileges) => item.privilegeId)
+    })
   }
 }
 
@@ -357,7 +369,7 @@ function handleCheckedChange(value: string[]) {
           <ElTabs stretch>
             <ElTabPane :label="$t('actions') + $t('privileges')">
               <ElTree ref="treeEl" v-loading="privilegeTreeLoading" :data="privilegeTree" :expand-on-click-node="false"
-                node-key="id" :props="{ label: 'name' }" show-checkbox @check-change="handlePrivilegeCheckChange"
+                node-key="id" :props="{ label: 'name' }" show-checkbox @check="handlePrivilegeCheckChange"
                 :default-checked-keys="rolePrivileges">
                 <template #default="{ node, data }">
                   <div class="flex flex-1 items-center justify-between">
