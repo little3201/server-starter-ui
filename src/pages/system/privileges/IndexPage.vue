@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, reactive, onMounted } from 'vue'
-import type { FormInstance, FormRules, UploadInstance } from 'element-plus'
+import type { FormInstance, FormRules, UploadInstance,CheckboxValueType } from 'element-plus'
 import draggable from 'vuedraggable'
 import DialogView from 'components/DialogView.vue'
 import {
@@ -43,6 +43,7 @@ const oldComponent = ref<string>('#')
 
 const formRef = ref<FormInstance>()
 const initialValues: Privilege = {
+  id: undefined,
   name: '',
   path: '',
   component: '',
@@ -201,7 +202,7 @@ function onCheckChange(item: string) {
  * 全选操作
  * @param val 是否全选
  */
-function handleCheckAllChange(val: boolean) {
+function handleCheckAllChange(val: CheckboxValueType) {
   checkedColumns.value = val ? columns.value : []
   isIndeterminate.value = false
 }

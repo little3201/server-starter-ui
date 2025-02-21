@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref, onMounted, reactive } from 'vue'
+import type { CheckboxValueType } from 'element-plus'
 import { dayjs } from 'element-plus'
 import draggable from 'vuedraggable'
 import DialogView from 'components/DialogView.vue'
@@ -100,7 +101,7 @@ function showRow(id: number) {
  * 全选操作
  * @param val 是否全选
  */
-function handleCheckAllChange(val: boolean) {
+function handleCheckAllChange(val: CheckboxValueType) {
   checkedColumns.value = val ? columns.value : []
   isIndeterminate.value = false
 }

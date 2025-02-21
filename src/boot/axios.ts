@@ -48,9 +48,6 @@ api.interceptors.response.use(
   (error: AxiosError) => {
     const status = error.response?.status
     switch (status) {
-      case 401:
-        // signIn()
-        break
       case 403:
         ElMessage.error({ message: t('forbidden'), grouping: true })
         break

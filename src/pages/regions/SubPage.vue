@@ -27,6 +27,7 @@ const visible = ref<boolean>(false)
 
 const formRef = ref<FormInstance>()
 const initialValues: Region = {
+  id: undefined,
   name: '',
   superiorId: props.superiorId
 }

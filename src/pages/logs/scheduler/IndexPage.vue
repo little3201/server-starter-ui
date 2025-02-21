@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref, onMounted, reactive } from 'vue'
 import { dayjs } from 'element-plus'
+import type { CheckboxValueType } from 'element-plus'
 import draggable from 'vuedraggable'
 import DialogView from 'components/DialogView.vue'
 import { retrieveSchedulerLogs, fetchSchedulerLog } from 'src/api/scheduler-logs'
@@ -112,7 +113,7 @@ function confirmEvent(id: number) {
  * 全选操作
  * @param val 是否全选
  */
-function handleCheckAllChange(val: boolean) {
+function handleCheckAllChange(val: CheckboxValueType) {
   checkedColumns.value = val ? columns.value : []
   isIndeterminate.value = false
 }
@@ -230,7 +231,7 @@ function handleCheckedChange(value: string[]) {
             {{ dayjs(scope.row.nextExecuteTime).format('YYYY-MM-DD HH:mm') }}
           </template>
         </ElTableColumn>
-        <ElTableColumn :label="$t('actions')" width="160">
+        <ElTableColumn :label="$t('actions')">
           <template #default="scope">
             <ElButton title="detail" size="small" type="info" link @click="showRow(scope.row.id)">
               <div class="i-material-symbols:description-outline-rounded" />{{ $t('detail') }}

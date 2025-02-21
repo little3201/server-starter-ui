@@ -36,7 +36,6 @@
     "globals": "^15.14.0",
     "lodash-es": "^4.17.21",
     "msw": "^2.7.0",
-    "oidc-client-ts": "^3.1.0",
     "sass": "^1.84.0",
     "typescript": "^5.7.3",
     "unocss": "^0.65.4",

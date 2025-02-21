@@ -24,6 +24,7 @@ const visible = ref<boolean>(false)
 
 const formRef = ref<FormInstance>()
 const initialValues: Dictionary = {
+  id: undefined,
   name: '',
   superiorId: props.superiorId
 }

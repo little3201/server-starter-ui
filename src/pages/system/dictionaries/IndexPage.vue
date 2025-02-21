@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, reactive, onMounted } from 'vue'
-import type { FormInstance, FormRules } from 'element-plus'
+import type { FormInstance, FormRules, CheckboxValueType } from 'element-plus'
 import draggable from 'vuedraggable'
 import { useI18n } from 'vue-i18n'
 import DialogView from 'components/DialogView.vue'
@@ -32,6 +32,7 @@ const filters = ref({
 
 const formRef = ref<FormInstance>()
 const initialValues: Dictionary = {
+  id: undefined,
   name: ''
 }
 const form = ref<Dictionary>({ ...initialValues })
@@ -137,7 +138,7 @@ function onSubmit(formEl: FormInstance | undefined) {
  * 全选操作
  * @param val 是否全选
  */
-function handleCheckAllChange(val: boolean) {
+function handleCheckAllChange(val: CheckboxValueType) {
   checkedColumns.value = val ? columns.value : []
   isIndeterminate.value = false
 }

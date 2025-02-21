@@ -88,18 +88,18 @@ export const removeRole = (id: number) => {
 /**
  * Relation privileges for a specific role
  * @param id Role ID
- * @returns privilege IDs
+ * @param privilegeIds privilege IDs
  */
-export const relationRolePrivileges = (id: number, privileges: number[]) => {
-  return api.patch(`${SERVER_URL.ROLE}/${id}/privileges`, privileges)
+export const relationRolePrivileges = (id: number, privilegeIds: number[]) => {
+  return api.patch(`${SERVER_URL.ROLE}/${id}/privileges`, privilegeIds)
 }
 
 /**
  * Remove privileges for a specific role
  * @param id Role ID
- * @returns privilege IDs
+ * @param privilegeIds privilege IDs
  */
-export const removeRolePrivileges = (id: number, privileges: number[]) => {
-  const params = privileges ? { privileges: privileges.join(',') } : {}
+export const removeRolePrivileges = (id: number, privilegeIds: number[]) => {
+  const params = privilegeIds ? { privilegeIds: privilegeIds.join(',') } : {}
   return api.delete(`${SERVER_URL.ROLE}/${id}/privileges`, { params })
 }

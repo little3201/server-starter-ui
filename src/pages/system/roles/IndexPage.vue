@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, reactive, onMounted } from 'vue'
-import type { FormInstance, FormRules, TreeInstance } from 'element-plus'
+import type { FormInstance, FormRules, TreeInstance,CheckboxValueType } from 'element-plus'
 import type { InternalRuleItem } from 'async-validator/dist-types/interface'
 import draggable from 'vuedraggable'
 import { useI18n } from 'vue-i18n'
@@ -46,6 +46,7 @@ const filters = ref({
 
 const formRef = ref<FormInstance>()
 const initialValues: Role = {
+  id: undefined,
   name: ''
 }
 const form = ref<Role>({ ...initialValues })
@@ -240,7 +241,7 @@ function handleCurrentChange(row: Role | undefined) {
  * 全选操作
  * @param val 是否全选
  */
-function handleCheckAllChange(val: boolean) {
+function handleCheckAllChange(val: CheckboxValueType) {
   checkedColumns.value = val ? columns.value : []
   isIndeterminate.value = false
 }

@@ -4,7 +4,7 @@ import { useUserStore } from 'stores/user-store'
 import ThemeToogle from 'components/ThemeToogle.vue'
 import LanguageSelector from 'components/LanguageSelector.vue'
 import EssentialList from 'components/EssentialList.vue'
-import { signOut } from 'boot/auth-service'
+import { signOut } from 'src/api/authentication'
 
 
 const { currentRoute } = useRouter()

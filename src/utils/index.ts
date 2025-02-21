@@ -1,4 +1,5 @@
 import { dayjs } from 'element-plus'
+import type {EpPropMergeType} from 'element-plus/es/utils/vue/props/types'
 import type { Dictionary } from 'src/types'
 
 /**
@@ -46,7 +47,7 @@ export const isNumber = (val: unknown): val is number => {
  * @param {string} target - The target date
  * @returns {string} - The status ('success', 'warning', 'danger')
  */
-export function calculate(target: string): string {
+export function calculate(target: string): EpPropMergeType<StringConstructor, 'success' | 'warning' | 'info' | 'primary' | 'danger', unknown> | undefined {
   const now = new Date()
   const targetDate = new Date(target)
   const diff = dayjs(targetDate).diff(now, 'days')
@@ -170,22 +171,29 @@ export function downloadFile(data: Blob, filename: string, mimeType?: string): v
   window.URL.revokeObjectURL(url)
 }
 
-export function generateRandomString(length: number): string {
-  const charset = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-._~';
-  let randomString = '';
-  for (let i = 0; i < length; i++) {
-    const randomIndex = Math.floor(Math.random() * charset.length);
-    randomString += charset[randomIndex];
-  }
-  return randomString;
+export function getRandomString(length: number): string {
+  const a = new Uint8Array(Math.ceil(length / 2));
+  crypto.getRandomValues(a);
+  const str = Array.from(a, (dec) => ('0' + dec.toString(16)).slice(-2)).join('');
+  return str.slice(0, length);
 }
 
-export async function generateCodeChallenge(codeVerifier: string): Promise<string> {
+export function generateVerifier(prefix?: string): string {
+  let verifier = prefix || ''
+  if (verifier.length < 43) {
+    verifier = verifier + getRandomString(43 - verifier.length)
+  }
+  return encodeURIComponent(verifier).slice(0, 128)
+}
+
+export function computeChallenge(codeVerifier: string): Promise<string> {
   const encoder = new TextEncoder();
   const data = encoder.encode(codeVerifier);
-  const digest = await crypto.subtle.digest('SHA-256', data);
-  return btoa(String.fromCharCode(...new Uint8Array(digest)))
-    .replace(/\+/g, '-')
-    .replace(/\//g, '_')
-    .replace(/=+$/, '');
+  
+  return crypto.subtle.digest('SHA-256', data).then(digest => {
+    return btoa(String.fromCharCode(...new Uint8Array(digest)))
+      .replace(/\+/g, '-')
+      .replace(/\//g, '_')
+      .replace(/=+$/, '');
+  });
 }

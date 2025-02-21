@@ -1,5 +1,5 @@
 interface AudtiMetadata {
-  id?: number
+  id: number | undefined
   lastModifiedDate?: Date
 }
 

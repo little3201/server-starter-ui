@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, reactive, onMounted } from 'vue'
-import type { FormInstance, FormRules } from 'element-plus'
+import type { FormInstance, FormRules,CheckboxValueType } from 'element-plus'
 import type { InternalRuleItem } from 'async-validator/dist-types/interface'
 import { dayjs } from 'element-plus'
 import draggable from 'vuedraggable'
@@ -34,6 +34,7 @@ const filters = ref({
 
 const formRef = ref<FormInstance>()
 const initialValues: User = {
+  id: undefined,
   username: '',
   fullName: '',
   email: ''
@@ -183,7 +184,7 @@ function lockRow(row: User) {
  * 全选操作
  * @param val 是否全选
  */
-function handleCheckAllChange(val: boolean) {
+function handleCheckAllChange(val: CheckboxValueType) {
   checkedColumns.value = val ? columns.value : []
   isIndeterminate.value = false
 }

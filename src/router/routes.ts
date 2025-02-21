@@ -51,9 +51,9 @@ export const constantRouterMap: Array<RouteRecordRaw> = [
         component: () => import('pages/others/PrivacyPolicy.vue')
       },
       {
-        path: '/licensing',
-        name: 'licensing',
-        component: () => import('pages/others/LicensingPage.vue')
+        path: '/license',
+        name: 'license',
+        component: () => import('pages/others/LicensePage.vue')
       },
       {
         path: '/help',

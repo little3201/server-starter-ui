@@ -45,6 +45,7 @@ export default {
   url: 'URL',
   params: 'Params',
   body: 'Body',
+  operation: 'Operation',
   operator: 'Operator',
   operatedTime: 'Operation',
   content: 'Content',

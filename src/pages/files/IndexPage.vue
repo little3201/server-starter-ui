@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, onMounted, reactive } from 'vue'
-import type { UploadInstance } from 'element-plus'
+import type { UploadInstance, CheckboxValueType } from 'element-plus'
 import draggable from 'vuedraggable'
 import DialogView from 'components/DialogView.vue'
 import { dayjs } from 'element-plus'
@@ -121,7 +121,7 @@ function confirmEvent(id: number) {
  * 全选操作
  * @param val 是否全选
  */
-function handleCheckAllChange(val: boolean) {
+function handleCheckAllChange(val: CheckboxValueType) {
   checkedColumns.value = val ? columns.value : []
   isIndeterminate.value = false
 }
@@ -220,7 +220,7 @@ function handleCheckedChange(value: string[]) {
               {{ dayjs(scope.row.lastModifiedDate).format('YYYY-MM-DD HH:mm') }}
             </template>
           </ElTableColumn>
-          <ElTableColumn :label="$t('actions')" width="160">
+          <ElTableColumn :label="$t('actions')">
             <template #default="scope">
               <ElButton title="download" size="small" type="success" link @click="downloadRow(scope.row.id)">
                 <div class="i-material-symbols:download" />{{ $t('download') }}

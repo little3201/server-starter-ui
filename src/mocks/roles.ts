@@ -8,7 +8,6 @@ for (let i = 1; i < 28; i++) {
   const data: Role = {
     id: i,
     name: 'role_' + i,
-    privileges: i,
     enabled: i % 3 > 0,
     description: 'this is description for this row'
   }
