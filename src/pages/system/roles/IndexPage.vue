@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, reactive, onMounted } from 'vue'
-import type { FormInstance, FormRules, TreeInstance,CheckboxValueType } from 'element-plus'
+import type { FormInstance, FormRules, TreeInstance, CheckboxValueType } from 'element-plus'
 import type { InternalRuleItem } from 'async-validator/dist-types/interface'
 import draggable from 'vuedraggable'
 import { useI18n } from 'vue-i18n'
@@ -37,7 +37,10 @@ const saveLoading = ref<boolean>(false)
 const visible = ref<boolean>(false)
 
 const relationVisible = ref<boolean>(false)
-const selectedRow = ref<Role>({})
+const selectedRow = ref<Role>({
+  id: undefined,
+  name: ''
+})
 const members = ref([])
 
 const filters = ref({
@@ -214,13 +217,16 @@ function confirmEvent(id: number) {
  * privilete tree check
  */
 function handlePrivilegeCheckChange(data: PrivilegeTreeNode, checked: boolean) {
-  const ids = []
-  ids.push(data.id)
-  if (checked) {
-    relationRolePrivileges(selectedRow.value.id, ids)
-  } else {
-    removeRolePrivileges(selectedRow.value.id, ids)
+  const ids: number[] = []
+  if (data.id && selectedRow.value && selectedRow.value.id) {
+    ids.push(data.id)
+    if (checked) {
+      relationRolePrivileges(selectedRow.value.id, ids)
+    } else {
+      removeRolePrivileges(selectedRow.value.id, ids)
+    }
   }
+
 }
 
 /**

@@ -66,7 +66,7 @@ export const actions: { [key: string]: 'primary' | 'success' | 'info' | 'warning
 }
 
 // http method对应tag类型
-export const httpMethods: { [key: string]: string } = {
+export const httpMethods: { [key: string]: 'success' | 'warning' | 'info' | 'primary' | 'danger' } = {
   GET: 'success',
   POST: 'warning',
   PUT: 'primary',

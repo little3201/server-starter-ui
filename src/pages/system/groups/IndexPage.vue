@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, reactive, onMounted, watch } from 'vue'
-import type { FormInstance, FormRules, TreeInstance,CheckboxValueType } from 'element-plus'
+import type { FormInstance, FormRules, TreeInstance, CheckboxValueType } from 'element-plus'
 import type { InternalRuleItem } from 'async-validator/dist-types/interface'
 import draggable from 'vuedraggable'
 import { useI18n } from 'vue-i18n'
@@ -73,9 +73,9 @@ const relations = ref<Array<string>>([])
 /**
  * tree过滤
  */
-const filterNode = (value: string, data: TreeNode) => {
+const filterNode = (value: string, data: { [key: string]: string }) => {
   if (!value) return true
-  return data.name.includes(value)
+  return data.name!.includes(value)
 }
 
 /**

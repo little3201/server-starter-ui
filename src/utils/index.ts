@@ -1,5 +1,4 @@
 import { dayjs } from 'element-plus'
-import type {EpPropMergeType} from 'element-plus/es/utils/vue/props/types'
 import type { Dictionary } from 'src/types'
 
 /**
@@ -47,7 +46,7 @@ export const isNumber = (val: unknown): val is number => {
  * @param {string} target - The target date
  * @returns {string} - The status ('success', 'warning', 'danger')
  */
-export function calculate(target: string): EpPropMergeType<StringConstructor, 'success' | 'warning' | 'info' | 'primary' | 'danger', unknown> | undefined {
+export function calculate(target: string): 'success' | 'warning' | 'info' | 'primary' | 'danger' {
   const now = new Date()
   const targetDate = new Date(target)
   const diff = dayjs(targetDate).diff(now, 'days')
@@ -106,6 +105,18 @@ export function formatDictionary(value: number, rows: Dictionary[]): string {
   const dictItem = rows.find(item => item.id === value)
   return dictItem ? dictItem.name : ''
 }
+
+export function groupByType<T>(array: T[], typeOptions: Dictionary[], typeKey: keyof T): { [key: string]: T[] } {
+  return array.reduce((acc: { [key: string]: T[] }, curr: T) => {
+    const typeValue = curr[typeKey] as number; // 假设类型键的值是一个数字
+    const name = formatDictionary(typeValue, typeOptions);
+    if (!name) { return acc; }
+    if (!acc[name]) { acc[name] = []; }
+    acc[name].push(curr);
+    return acc;
+  }, {} as { [key: string]: T[] });
+}
+
 
 /**
  * 数组截取、可展示数组长度

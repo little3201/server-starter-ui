@@ -2,6 +2,7 @@
 import { ref } from 'vue'
 import type { FormInstance } from 'element-plus'
 import { useUserStore } from 'stores/user-store'
+import { actions } from 'src/constants'
 
 const userStore = useUserStore()
 
@@ -15,10 +16,10 @@ const loginHistory = ref([
 
 // 仓库数据模拟
 const activities = ref([
-  { id: 4, name: 'Create a set of data', description: 'User: username is test', type: 'primary', lastModifiedDate: '2024-09-12' },
-  { id: 3, name: 'Delete the data from user where username is test', description: 'User: username is test', type: 'success', lastModifiedDate: '2024-08-19' },
-  { id: 2, name: 'Update the test user', description: 'User: username is test', type: 'danger', lastModifiedDate: '2024-08-17' },
-  { id: 1, name: 'Enabled the test user', description: 'User: username is test', type: 'warning', lastModifiedDate: '2024-08-16' }
+  { id: 4, name: 'Create a set of data', description: 'User: username is test', action: 'create', lastModifiedDate: '2024-09-12' },
+  { id: 3, name: 'Delete the data from user where username is test', description: 'User: username is test', action: 'remove', lastModifiedDate: '2024-08-19' },
+  { id: 2, name: 'Update the test user', description: 'User: username is test', action: 'modify', lastModifiedDate: '2024-08-17' },
+  { id: 1, name: 'Enabled the test user', description: 'User: username is test', action: 'enable', lastModifiedDate: '2024-08-16' }
   // 更多仓库
 ])
 
@@ -135,7 +136,7 @@ async function onSubmit(formEl: FormInstance | undefined) {
           <ElTabPane label="Activities" name="activities">
             <h3>Last 3 days activities</h3>
             <ElTimeline>
-              <ElTimelineItem v-for="activity in activities" :key="activity.id" :type="activity.type"
+              <ElTimelineItem v-for="activity in activities" :key="activity.id" :type="actions[activity.action]"
                 :timestamp="activity.lastModifiedDate" placement="top">
                 <ElCard shadow="never">
                   <h4 class="my-0">{{ activity.name }}</h4>

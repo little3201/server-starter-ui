@@ -1,17 +1,11 @@
 <script setup lang="ts">
 import { ref, reactive, onMounted } from 'vue'
 import { DotLottie } from '@lottiefiles/dotlottie-web'
-import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { ElFormItem, type FormInstance, type FormRules } from 'element-plus'
 import ThemeToogle from 'components/ThemeToogle.vue'
 import LanguageSelector from 'components/LanguageSelector.vue'
-import { useUserStore } from 'stores/user-store'
-
 const { t } = useI18n()
-const router = useRouter()
-
-const userStore = useUserStore()
 
 const lottieRef = ref<HTMLCanvasElement | null>(null)
 
@@ -45,10 +39,6 @@ async function onSubmit(formEl: FormInstance | undefined) {
   formEl.validate((valid) => {
     if (valid) {
       loading.value = true
-      userStore.signin(form.username, form.password).then(() => {
-        const redirect = router.currentRoute.value.query.redirect as string
-        router.replace(redirect || '/')
-      }).finally(() => { loading.value = false })
     }
   })
 }

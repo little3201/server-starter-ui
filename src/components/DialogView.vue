@@ -1,9 +1,10 @@
 <script setup lang="ts">
 import { computed, useAttrs, ref, useSlots } from 'vue'
+import type { Slot } from 'vue'
 import { isNumber } from 'src/utils'
 import { ElButton } from 'element-plus'
 
-const slots = useSlots()
+const slots: { [key: string]: Slot | undefined } = useSlots()
 
 interface Props {
   [key: string]: string | number | boolean | undefined;
