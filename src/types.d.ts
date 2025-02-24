@@ -118,7 +118,7 @@ export interface OperationLog extends AudtiMetadata {
   userAgent?: string
   browser?: string
   statusCode?: number
-  operatedTime?: Date
+  operatedTimes?: number
 }
 
 export interface AccessLog extends AudtiMetadata {
@@ -143,7 +143,7 @@ export interface AuditLog extends AudtiMetadata {
   ip: string
   location: string
   statusCode?: number
-  operatedTime?: Date
+  operatedTimes?: number
 }
 
 export interface SchedulerLog extends AudtiMetadata {

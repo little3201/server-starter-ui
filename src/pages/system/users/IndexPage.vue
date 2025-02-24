@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, reactive, onMounted } from 'vue'
-import type { FormInstance, FormRules,CheckboxValueType } from 'element-plus'
+import type { FormInstance, FormRules, CheckboxValueType } from 'element-plus'
 import type { InternalRuleItem } from 'async-validator/dist-types/interface'
 import { dayjs } from 'element-plus'
 import draggable from 'vuedraggable'
@@ -43,7 +43,7 @@ const form = ref<User>({ ...initialValues })
 
 const rules = reactive<FormRules<typeof form>>({
   username: [
-    { required: true, message: t('inputText', { field: t('uername') }), trigger: 'blur' },
+    { required: true, message: t('inputText', { field: t('username') }), trigger: 'blur' },
     { validator: checkNameExistsence, trigger: 'blur' }
   ],
   fullName: [

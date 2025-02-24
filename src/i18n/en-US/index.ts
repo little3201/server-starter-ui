@@ -54,7 +54,7 @@ export default {
   status: 'Status',
   startTime: 'Started Time',
   nextExecuteTime: 'Next Execute Time',
-  operationTime: 'Operated Time',
+  operationTimes: 'Operated Times',
   responseTimes: 'Response Times',
   statusCode: 'Response Code',
   responseMessage: 'Response Message',
@@ -103,6 +103,7 @@ export default {
   preview: 'Preview',
   relation: 'Relation',
   more: 'More',
+  enable: 'Enable',
 
   home: 'Home',
   system: 'System',

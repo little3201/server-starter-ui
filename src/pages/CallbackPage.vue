@@ -8,7 +8,7 @@
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useUserStore } from 'stores/user-store'
-import { handleCallback } from 'src/api/authentication'
+import { signIn, handleCallback } from 'src/api/authentication'
 
 
 const { push } = useRouter()
@@ -19,12 +19,17 @@ const loading = ref(true)
 onMounted(() => {
   handleCallback().then(res => {
     if (res) {
+      // 回调成功，删除code_verifier
+      localStorage.removeItem('code_verifier')
       userStore.$patch({
         accessToken: res.data.access_token
       })
       loading.value = false
       push('/')
     }
+  }).catch(() => {
+    // 回调失败，登录
+    signIn()
   })
 })
 </script>

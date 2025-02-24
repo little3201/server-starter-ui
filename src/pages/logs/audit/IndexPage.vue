@@ -1,12 +1,13 @@
 <script setup lang="ts">
 import { ref, onMounted, reactive } from 'vue'
 import type { CheckboxValueType } from 'element-plus'
-import { dayjs } from 'element-plus'
 import draggable from 'vuedraggable'
 import DialogView from 'components/DialogView.vue'
-import { retrieveAuditLogs, fetchAuditLog } from 'src/api/audit-logs'
+import { retrieveAuditLogs, fetchAuditLog, removeAuditLog } from 'src/api/audit-logs'
 import type { Pagination, AuditLog } from 'src/types'
 import { actions } from 'src/constants'
+import { formatDuration } from 'src/utils'
+
 
 const loading = ref<boolean>(false)
 const datas = ref<Array<AuditLog>>([])
@@ -95,6 +96,24 @@ function showRow(id: number) {
   row.value = { ...initialValues }
   visible.value = true
   loadOne(id)
+}
+
+/**
+ * 删除
+ * @param id 主键
+ */
+function removeRow(id: number) {
+  removeAuditLog(id).then(() => load())
+}
+
+/**
+ * 确认
+ * @param id 主键
+ */
+function confirmEvent(id: number) {
+  if (id) {
+    removeRow(id)
+  }
 }
 
 /**
@@ -189,7 +208,13 @@ function handleCheckedChange(value: string[]) {
 
       <ElTable :data="datas" row-key="id" stripe table-layout="auto">
         <ElTableColumn type="index" :label="$t('no')" width="55" />
-        <ElTableColumn prop="resource" :label="$t('resource')" />
+        <ElTableColumn prop="resource" :label="$t('resource')">
+          <template #default="scope">
+            <ElButton title="detail" type="primary" link @click="showRow(scope.row.id)">
+              {{ scope.row.resource }}
+            </ElButton>
+          </template>
+        </ElTableColumn>
         <ElTableColumn prop="operation" :label="$t('operation')">
           <template #default="scope">
             <ElBadge is-dot :type="actions[scope.row.operation.toLowerCase()]" class="mr-1" />{{ scope.row.operation }}
@@ -210,16 +235,20 @@ function handleCheckedChange(value: string[]) {
             <ElTag v-else type="danger" round>{{ scope.row.statusCode }}</ElTag>
           </template>
         </ElTableColumn>
-        <ElTableColumn prop="operatedTime" :label="$t('operatedTime')">
+        <ElTableColumn prop="operatedTimes" :label="$t('operatedTimes')">
           <template #default="scope">
-            {{ dayjs(scope.row.operatedTime).format('YYYY-MM-DD HH:mm') }}
+            {{ formatDuration(scope.row.operatedTimes) }}
           </template>
         </ElTableColumn>
         <ElTableColumn :label="$t('actions')">
           <template #default="scope">
-            <ElButton title="detail" size="small" type="info" link @click="showRow(scope.row.id)">
-              <div class="i-material-symbols:description-outline-rounded" />{{ $t('detail') }}
-            </ElButton>
+            <ElPopconfirm :title="$t('removeConfirm')" :width="240" @confirm="confirmEvent(scope.row.id)">
+              <template #reference>
+                <ElButton title="remove" size="small" type="danger" link>
+                  <div class="i-material-symbols:delete-outline-rounded" />{{ $t('remove') }}
+                </ElButton>
+              </template>
+            </ElPopconfirm>
           </template>
         </ElTableColumn>
       </ElTable>
@@ -247,7 +276,7 @@ function handleCheckedChange(value: string[]) {
         </ElTag>
         <ElTag v-else type="danger" round>{{ row.statusCode }}</ElTag>
       </ElDescriptionsItem>
-      <ElDescriptionsItem :label="$t('operatedTime')">{{ dayjs(row.operatedTime).format('YYYY-MM-DD HH:mm') }}
+      <ElDescriptionsItem :label="$t('operatedTimes')">{{ row.operatedTimes ? formatDuration(row.operatedTimes) : '' }}
       </ElDescriptionsItem>
     </ElDescriptions>
   </DialogView>

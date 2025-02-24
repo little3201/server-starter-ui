@@ -10,10 +10,9 @@ const baserUri = import.meta.env.VITE_AUTHORITY
 export async function signIn() {
   const state = getRandomString(16)
   const codeVerifier = generateVerifier()
-  localStorage.setItem('code', codeVerifier)
+  // 存储code_verifier
+  localStorage.setItem('code_verifier', codeVerifier)
   const codeChallenge = await computeChallenge(codeVerifier)
-  console.log('code_verifier: ', codeVerifier)
-  console.log('code_challenge: ', codeChallenge)
 
   const params = new URLSearchParams({
     response_type: 'code',
@@ -32,27 +31,28 @@ export function handleCallback() {
   const urlParams = new URLSearchParams(window.location.search)
   const code = urlParams.get('code')
   if (!code) {
-    throw Error('code not getted!')
+    throw Error('cannot get code!')
   }
   const state = urlParams.get('state')
   if (!state){
-    throw Error('state not getted!')
+    throw Error('cannot get state!')
   }
 
-  const codeVerifier = localStorage.getItem('code')
+  const codeVerifier = localStorage.getItem('code_verifier')
   if (!codeVerifier){
     throw Error('code_verifier not getted!')
   }
 
-  // Exchange authorization code for access token
-  return api.post(`${baserUri}/${SERVER_URL.TOKEN}`, new URLSearchParams({
+  const params = new URLSearchParams({
     grant_type: 'authorization_code',
     client_id: `${client_id}`,
     code: code,
-    redirect_uri: `${window.location.origin}`,
+    redirect_uri: `${window.location.origin}/callback`,
     code_verifier: codeVerifier,
     state: state
-  }))
+  })
+  // Exchange authorization code for access token
+  return api.post(`${baserUri}/${SERVER_URL.TOKEN}`, params)
 }
 
 export function getUser() {

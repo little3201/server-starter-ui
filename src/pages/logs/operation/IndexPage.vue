@@ -1,11 +1,12 @@
 <script setup lang="ts">
 import { ref, onMounted, reactive } from 'vue'
-import { dayjs } from 'element-plus'
 import type { CheckboxValueType } from 'element-plus'
 import draggable from 'vuedraggable'
 import DialogView from 'components/DialogView.vue'
 import { retrieveOperationLogs, fetchOperationLog, removeOperationLog } from 'src/api/operation-logs'
 import type { Pagination, OperationLog } from 'src/types'
+import { formatDuration } from 'src/utils'
+
 
 const loading = ref<boolean>(false)
 const datas = ref<Array<OperationLog>>([])
@@ -18,8 +19,8 @@ const pagination = reactive<Pagination>({
 
 const checkAll = ref<boolean>(true)
 const isIndeterminate = ref<boolean>(false)
-const checkedColumns = ref<Array<string>>(['module', 'httpMethod', 'params', 'ip', 'location', 'status', 'operatedTime'])
-const columns = ref<Array<string>>(['module', 'httpMethod', 'params', 'ip', 'location', 'status', 'operatedTime'])
+const checkedColumns = ref<Array<string>>(['module', 'httpMethod', 'params', 'ip', 'location', 'statusCode', 'operatedTimes'])
+const columns = ref<Array<string>>(['module', 'httpMethod', 'params', 'ip', 'location', 'statusCode', 'operatedTimes'])
 
 const filters = ref({
   operation: null,
@@ -207,7 +208,13 @@ function handleCheckedChange(value: string[]) {
       <ElTable :data="datas" row-key="id" stripe table-layout="auto">
         <ElTableColumn type="selection" width="55" />
         <ElTableColumn type="index" :label="$t('no')" width="55" />
-        <ElTableColumn prop="operation" :label="$t('operation')" />
+        <ElTableColumn prop="operation" :label="$t('operation')">
+          <template #default="scope">
+            <ElButton title="detail" type="primary" link @click="showRow(scope.row.id)">
+              {{ scope.row.operation }}
+            </ElButton>
+          </template>
+        </ElTableColumn>
         <ElTableColumn show-overflow-tooltip prop="os" :label="$t('os')" />
         <ElTableColumn show-overflow-tooltip prop="browser" :label="$t('browser')" />
         <ElTableColumn show-overflow-tooltip prop="ip" :label="$t('ip')" />
@@ -223,16 +230,13 @@ function handleCheckedChange(value: string[]) {
             <ElTag v-else type="danger" round>{{ scope.row.statusCode }}</ElTag>
           </template>
         </ElTableColumn>
-        <ElTableColumn prop="operatedTime" :label="$t('operatedTime')">
+        <ElTableColumn prop="operatedTimes" :label="$t('operatedTimes')">
           <template #default="scope">
-            {{ dayjs(scope.row.operatedTime).format('YYYY-MM-DD HH:mm') }}
+            {{ formatDuration(scope.row.operatedTimes) }}
           </template>
         </ElTableColumn>
         <ElTableColumn :label="$t('actions')">
           <template #default="scope">
-            <ElButton title="detail" size="small" type="info" link @click="showRow(scope.row.id)">
-              <div class="i-material-symbols:description-outline-rounded" />{{ $t('detail') }}
-            </ElButton>
             <ElPopconfirm :title="$t('removeConfirm')" :width="240" @confirm="confirmEvent(scope.row.id)">
               <template #reference>
                 <ElButton title="remove" size="small" type="danger" link>
@@ -268,7 +272,7 @@ function handleCheckedChange(value: string[]) {
         <ElTag v-else type="danger" round>{{ row.statusCode }}</ElTag>
       </ElDescriptionsItem>
       <ElDescriptionsItem :label="$t('operator')">{{ row.operator }}</ElDescriptionsItem>
-      <ElDescriptionsItem :label="$t('operatedTime')">{{ dayjs(row.operatedTime).format('YYYY-MM-DD HH:mm') }}
+      <ElDescriptionsItem :label="$t('operatedTimes')">{{ row.operatedTimes ? formatDuration(row.operatedTimes) : '' }}
       </ElDescriptionsItem>
     </ElDescriptions>
   </DialogView>

@@ -4,6 +4,8 @@ import { ElMessage } from 'element-plus'
 import { useUserStore } from 'stores/user-store'
 import { i18n } from 'boot/i18n'
 import type { ComposerTranslation } from 'vue-i18n'
+import { signIn } from 'src/api/authentication'
+
 
 const { t } = i18n.global as { t: ComposerTranslation }
 
@@ -48,6 +50,9 @@ api.interceptors.response.use(
   (error: AxiosError) => {
     const status = error.response?.status
     switch (status) {
+      case 401:
+        signIn()
+        return
       case 403:
         ElMessage.error({ message: t('forbidden'), grouping: true })
         break
