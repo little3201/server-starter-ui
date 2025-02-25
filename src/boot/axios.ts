@@ -1,7 +1,7 @@
 import type { AxiosError, AxiosInstance, InternalAxiosRequestConfig, AxiosResponse } from 'axios';
 import axios from 'axios'
 import { ElMessage } from 'element-plus'
-import router from 'src/router'
+import { useUserStore } from 'stores/user-store'
 import { i18n } from 'boot/i18n'
 import type { ComposerTranslation } from 'vue-i18n'
 
@@ -10,15 +10,18 @@ const { t } = i18n.global as { t: ComposerTranslation }
 const abortControllerMap: Map<string, AbortController> = new Map()
 
 const api: AxiosInstance = axios.create({
-  baseURL: import.meta.env.VITE_API_BASE_API || '/api',
+  baseURL: import.meta.env.VITE_ASE_API || '/api',
   timeout: 5000,
   withCredentials: true
 })
 
 // 请求拦截器
 api.interceptors.request.use(
-  (config: InternalAxiosRequestConfig) => {
-    config.headers.Authorization = `Bearer ${localStorage.getItem('access_token')}`
+  async (config: InternalAxiosRequestConfig) => {
+    const userStore = useUserStore()
+    if (userStore.accessToken) {
+      config.headers.Authorization = `Bearer ${userStore.accessToken}`
+    }
 
     // 创建 AbortController 实例
     const controller = new AbortController()
@@ -45,10 +48,6 @@ api.interceptors.response.use(
   (error: AxiosError) => {
     const status = error.response?.status
     switch (status) {
-      case 401:
-        localStorage.removeItem('access_token')
-        router.replace('/login')
-        break
       case 403:
         ElMessage.error({ message: t('forbidden'), grouping: true })
         break

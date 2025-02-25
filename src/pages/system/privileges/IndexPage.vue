@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, reactive, onMounted } from 'vue'
-import type { FormInstance, FormRules, UploadInstance } from 'element-plus'
+import type { FormInstance, FormRules, UploadInstance, CheckboxValueType } from 'element-plus'
 import draggable from 'vuedraggable'
 import DialogView from 'components/DialogView.vue'
 import {
@@ -10,7 +10,7 @@ import {
 import { retrieveDictionarySubset } from 'src/api/dictionaries'
 import { visibleArray } from 'src/utils'
 import { actions } from 'src/constants'
-import type { Pagination, Privilege, Dictionary } from 'src/models'
+import type { Pagination, Privilege, Dictionary } from 'src/types'
 
 const loading = ref<boolean>(false)
 const datas = ref<Array<Privilege>>([])
@@ -43,6 +43,7 @@ const oldComponent = ref<string>('#')
 
 const formRef = ref<FormInstance>()
 const initialValues: Privilege = {
+  id: undefined,
   name: '',
   path: '',
   component: '',
@@ -201,7 +202,7 @@ function onCheckChange(item: string) {
  * 全选操作
  * @param val 是否全选
  */
-function handleCheckAllChange(val: boolean) {
+function handleCheckAllChange(val: CheckboxValueType) {
   checkedColumns.value = val ? columns.value : []
   isIndeterminate.value = false
 }
@@ -229,7 +230,7 @@ function handleCheckedChange(value: string[]) {
           <ElInput v-model="filters.path" :placeholder="$t('inputText', { field: $t('path') })" />
         </ElFormItem>
         <ElFormItem>
-          <ElButton title="search" type="primary" @click="load">
+          <ElButton title="search" type="primary" @click="load()">
             <div class="i-material-symbols:search-rounded" />{{ $t('search') }}
           </ElButton>
           <ElButton title="reset" @click="reset">
@@ -251,7 +252,7 @@ function handleCheckedChange(value: string[]) {
         </ElCol>
         <ElCol :span="8" class="text-right">
           <ElTooltip class="box-item" effect="dark" :content="$t('refresh')" placement="top">
-            <ElButton title="refresh" type="primary" plain circle @click="load">
+            <ElButton title="refresh" type="primary" plain circle @click="load()">
               <div class="i-material-symbols:refresh-rounded" />
             </ElButton>
           </ElTooltip>

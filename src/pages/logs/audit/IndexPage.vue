@@ -1,10 +1,11 @@
 <script setup lang="ts">
 import { ref, onMounted, reactive } from 'vue'
+import type { CheckboxValueType } from 'element-plus'
 import { dayjs } from 'element-plus'
 import draggable from 'vuedraggable'
 import DialogView from 'components/DialogView.vue'
 import { retrieveAuditLogs, fetchAuditLog } from 'src/api/audit-logs'
-import type { Pagination, AuditLog } from 'src/models'
+import type { Pagination, AuditLog } from 'src/types'
 import { actions } from 'src/constants'
 
 const loading = ref<boolean>(false)
@@ -100,7 +101,7 @@ function showRow(id: number) {
  * 全选操作
  * @param val 是否全选
  */
-function handleCheckAllChange(val: boolean) {
+function handleCheckAllChange(val: CheckboxValueType) {
   checkedColumns.value = val ? columns.value : []
   isIndeterminate.value = false
 }

@@ -5,7 +5,7 @@ import type { InternalRuleItem } from 'async-validator/dist-types/interface'
 import { useI18n } from 'vue-i18n'
 import DialogView from 'components/DialogView.vue'
 import { retrieveRegions, fetchRegion, createRegion, modifyRegion, removeRegion, enableRegion, checkRegionExists } from 'src/api/regions'
-import type { Pagination, Region } from 'src/models'
+import type { Pagination, Region } from 'src/types'
 
 const { t } = useI18n()
 
@@ -27,6 +27,7 @@ const visible = ref<boolean>(false)
 
 const formRef = ref<FormInstance>()
 const initialValues: Region = {
+  id: undefined,
   name: '',
   superiorId: props.superiorId
 }

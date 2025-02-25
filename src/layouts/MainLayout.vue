@@ -4,14 +4,11 @@ import { useUserStore } from 'stores/user-store'
 import ThemeToogle from 'components/ThemeToogle.vue'
 import LanguageSelector from 'components/LanguageSelector.vue'
 import EssentialList from 'components/EssentialList.vue'
+import { signOut } from 'src/api/authentication'
 
-const { currentRoute, replace } = useRouter()
 
+const { currentRoute } = useRouter()
 const userStore = useUserStore()
-
-function signOut() {
-  userStore.logout().then(() => replace('/login'))
-}
 </script>
 
 <template>
@@ -19,7 +16,7 @@ function signOut() {
     <ElHeader class="flex flex-nowrap bg-[var(--el-color-primary)] z-10" height="50px">
       <div class="inline-flex flex-grow justify-between">
         <div class="inline-flex items-center">
-          <ElImage src="/svgs/vite.svg" alt="avatar" class="w-8 h-8" />
+          <ElImage src="/svgs/logo.svg" alt="avatar" class="w-8 h-8" />
           <span class="ml-3 text-20px font-bold text-white">Project Management</span>
         </div>
 
@@ -72,8 +69,31 @@ function signOut() {
           <RouterView />
         </ElMain>
         <ElFooter height="50px">
-          <p class="text-sm text-center">&copy; {{ new Date().getFullYear() }}
-            All Rights Reserved.</p>
+          <div class="text-sm text-center flex items-center justify-between">
+            <span>Copyright &copy; {{ new Date().getFullYear() }} All Rights Reserved.</span>
+            <ul class="flex flex-wrap items-center list-none">
+              <li>
+                <RouterLink to="/about"
+                  class="no-underline hover:underline me-4 md:me-6 text-[var(--el-text-color-primary)]">About
+                </RouterLink>
+              </li>
+              <li>
+                <RouterLink to="/privacy-policy"
+                  class="no-underline hover:underline me-4 md:me-6 text-[var(--el-text-color-primary)]">Privacy
+                  Policy</RouterLink>
+              </li>
+              <li>
+                <RouterLink to="/licensing"
+                  class="no-underline hover:underline me-4 md:me-6 text-[var(--el-text-color-primary)]">Licensing
+                </RouterLink>
+              </li>
+              <li>
+                <RouterLink to="/help" class="no-underline hover:underline me-4 text-[var(--el-text-color-primary)]">
+                  Help
+                </RouterLink>
+              </li>
+            </ul>
+          </div>
         </ElFooter>
       </ElContainer>
     </ElContainer>

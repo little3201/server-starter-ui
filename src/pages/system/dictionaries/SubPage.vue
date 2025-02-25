@@ -8,7 +8,7 @@ import {
   retrieveDictionarySubset, fetchDictionary, createDictionary,
   modifyDictionary, removeDictionary, enableDictionary, checkDictionaryExists
 } from 'src/api/dictionaries'
-import type { Dictionary } from 'src/models'
+import type { Dictionary } from 'src/types'
 
 const { t } = useI18n()
 const props = defineProps<{
@@ -24,6 +24,7 @@ const visible = ref<boolean>(false)
 
 const formRef = ref<FormInstance>()
 const initialValues: Dictionary = {
+  id: undefined,
   name: '',
   superiorId: props.superiorId
 }

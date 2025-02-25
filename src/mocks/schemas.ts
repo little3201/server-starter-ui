@@ -1,12 +1,12 @@
 import { http, HttpResponse } from 'msw'
 import { SERVER_URL } from 'src/constants'
-import type { Schema, Field, Template } from 'src/models'
+import type { Schema, Field, Template } from 'src/types'
 
 const datas: Schema[] = [
 ]
 
 for (let i = 1; i < 28; i++) {
-  const data: Schema = {
+  const row: Schema = {
     id: i,
     name: 'table_name' + i,
     comment: 'table_comment',
@@ -15,13 +15,13 @@ for (let i = 1; i < 28; i++) {
     enabled: i > 2,
     templates: i > 3 ? [1, 2] : []
   }
-  datas.push(data)
+  datas.push(row)
 }
 
 const fields: Field[] = []
 
 for (let i = 1; i < 28; i++) {
-  const data: Field = {
+  const field: Field = {
     id: i,
     name: 'column_name' + i,
     comment: '属性名称_' + i,
@@ -35,7 +35,7 @@ for (let i = 1; i < 28; i++) {
     editable: i > 2,
     description: 'this is description for this row'
   }
-  fields.push(data)
+  fields.push(field)
 }
 
 const templates: Template[] = [

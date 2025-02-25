@@ -1,12 +1,12 @@
 import { http, HttpResponse } from 'msw'
-import type { User } from 'src/models'
+import type { User } from 'src/types'
 import { SERVER_URL } from 'src/constants'
 import { dayjs } from 'element-plus'
 
 const datas: User[] = []
 
 for (let i = 1; i < 28; i++) {
-  const data: User = {
+  const row: User = {
     id: i,
     username: 'username' + i,
     fullName: 'full name' + i,
@@ -14,24 +14,16 @@ for (let i = 1; i < 28; i++) {
     email: 'usexxx' + '@test.com',
     accountNonLocked: i % 2 > 0,
     enabled: i % 2 > 0,
-    accountExpiresAt: i > 3 ? dayjs().add(Math.floor(Math.random() * 30), 'day').toDate() : undefined,
-    credentialsExpiresAt: i > 3 ? dayjs().add(Math.floor(Math.random() * 30), 'day').toDate() : undefined
+    accountExpiresAt: dayjs().add(Math.floor(Math.random() * 30), 'day').toDate(),
+    credentialsExpiresAt: dayjs().add(Math.floor(Math.random() * 30), 'day').toDate()
   }
-  datas.push(data)
+  datas.push(row)
 }
 
 export const usersHandlers = [
-  http.get(`/api${SERVER_URL.USER}/me`, ({ cookies }) => {
-    // if(!cookies.logged_user) {
-    //   return new HttpResponse(null, { status: 401 })
-    // }
-    console.log(cookies)
-
+  http.get(`/api${SERVER_URL.USERINFO}`, () => {
     return HttpResponse.json({
-      username: 'username',
-      fullName: 'full name',
-      avatar: '/images/avatar.jpg',
-      email: 'usexxx' + '@test.com'
+      sub: 'username'
     })
   }),
   http.get(`/api${SERVER_URL.USER}/:id`, ({ params }) => {

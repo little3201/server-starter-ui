@@ -1,28 +1,30 @@
-import path from 'path'
+import { fileURLToPath, URL } from 'node:url'
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
+import Unocss from 'unocss/vite'
 import Components from 'unplugin-vue-components/vite'
 import { ElementPlusResolver } from 'unplugin-vue-components/resolvers'
+import checker from 'vite-plugin-checker'
 
-import Unocss from 'unocss/vite'
 
 // https://vitejs.dev/config/
 export default defineConfig({
   resolve: {
     alias: {
-      src: path.resolve(__dirname, 'src'),
-      components: path.resolve(__dirname, 'src/components'),
-      layouts: path.resolve(__dirname, 'src/layouts'),
-      pages: path.resolve(__dirname, 'src/pages'),
-      assets: path.resolve(__dirname, 'src/assets'),
-      boot: path.resolve(__dirname, 'src/boot'),
-      stores: path.resolve(__dirname, 'src/stores')
+      'src': fileURLToPath(new URL('src', import.meta.url)),
+      'components': fileURLToPath(new URL('src/components', import.meta.url)),
+      'layouts': fileURLToPath(new URL('src/layouts', import.meta.url)),
+      'pages': fileURLToPath(new URL('src/pages', import.meta.url)),
+      'assets': fileURLToPath(new URL('src/assets', import.meta.url)),
+      'boot': fileURLToPath(new URL('src/boot', import.meta.url)),
+      'stores': fileURLToPath(new URL('src/stores', import.meta.url))
     }
   },
   css: {
     preprocessorOptions: {
       scss: {
-        additionalData: '@use "src/css/element/index.scss" as *;'
+        additionalData: '@use "src/css/element/index.scss" as *;',
+        api: 'modern-compiler',
       }
     }
   },
@@ -31,16 +33,24 @@ export default defineConfig({
     Components({
       resolvers: [ElementPlusResolver({
         importStyle: 'sass'
-      })]
+      })],
+      dts: 'src/components.d.ts',
     }),
     // https://github.com/antfu/unocss
     // see unocss.config.ts for config
-    Unocss()
+    Unocss(),
+    checker({
+      vueTsc: true,
+      eslint: {
+        lintCommand: 'eslint -c ./eslint.config.js "./src/**/*.{js,mjs,cjs,ts,vue}"',
+        useFlatConfig: true
+      }
+    })
   ],
   server: {
     proxy: {
       '/api': {
-        target: 'http://172.28.96.1:8768',
+        target: 'http://127.0.0.1:8760',
         ws: true,
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api/, '')

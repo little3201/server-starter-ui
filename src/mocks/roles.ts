@@ -1,6 +1,6 @@
 import { http, HttpResponse } from 'msw'
 import { SERVER_URL } from 'src/constants'
-import type { Role, RolePrivileges, RoleMembers } from 'src/models'
+import type { Role, RolePrivileges, RoleMembers } from 'src/types'
 
 const datas: Role[] = []
 
@@ -8,7 +8,6 @@ for (let i = 1; i < 28; i++) {
   const data: Role = {
     id: i,
     name: 'role_' + i,
-    privileges: i,
     enabled: i % 3 > 0,
     description: 'this is description for this row'
   }

@@ -1,6 +1,6 @@
 import { api } from 'boot/axios'
 import { SERVER_URL } from 'src/constants'
-import type { Pagination, Role } from 'src/models'
+import type { Pagination, Role } from 'src/types'
 
 /**
  * Retrieve rows
@@ -83,4 +83,23 @@ export const enableRole = (id: number) => {
  */
 export const removeRole = (id: number) => {
   return api.delete(`${SERVER_URL.ROLE}/${id}`)
+}
+
+/**
+ * Relation privileges for a specific role
+ * @param id Role ID
+ * @param privilegeIds privilege IDs
+ */
+export const relationRolePrivileges = (id: number, privilegeIds: number[]) => {
+  return api.patch(`${SERVER_URL.ROLE}/${id}/privileges`, privilegeIds)
+}
+
+/**
+ * Remove privileges for a specific role
+ * @param id Role ID
+ * @param privilegeIds privilege IDs
+ */
+export const removeRolePrivileges = (id: number, privilegeIds: number[]) => {
+  const params = privilegeIds ? { privilegeIds: privilegeIds.join(',') } : {}
+  return api.delete(`${SERVER_URL.ROLE}/${id}/privileges`, { params })
 }

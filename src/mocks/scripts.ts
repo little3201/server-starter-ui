@@ -1,6 +1,6 @@
 import { http, HttpResponse } from 'msw'
 import { SERVER_URL } from 'src/constants'
-import type { Script } from 'src/models'
+import type { Script } from 'src/types'
 
 const datas: Script[] = [
   {

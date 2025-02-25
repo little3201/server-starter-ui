@@ -4,6 +4,7 @@ import type { ApexOptions } from 'apexcharts'
 import ChartView from 'components/ChartView.vue'
 import { lineOptions } from 'src/mocks/charts-data'
 
+
 const value = ref(new Date())
 // 获取指数
 const lineOptionsData = reactive<ApexOptions | object>(lineOptions) as ApexOptions

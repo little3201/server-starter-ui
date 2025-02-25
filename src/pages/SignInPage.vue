@@ -1,17 +1,11 @@
 <script setup lang="ts">
 import { ref, reactive, onMounted } from 'vue'
 import { DotLottie } from '@lottiefiles/dotlottie-web'
-import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { ElFormItem, type FormInstance, type FormRules } from 'element-plus'
 import ThemeToogle from 'components/ThemeToogle.vue'
 import LanguageSelector from 'components/LanguageSelector.vue'
-import { useUserStore } from 'stores/user-store'
-
 const { t } = useI18n()
-const router = useRouter()
-
-const userStore = useUserStore()
 
 const lottieRef = ref<HTMLCanvasElement | null>(null)
 
@@ -45,10 +39,6 @@ async function onSubmit(formEl: FormInstance | undefined) {
   formEl.validate((valid) => {
     if (valid) {
       loading.value = true
-      userStore.login(form.username, form.password).then(() => {
-        const redirect = router.currentRoute.value.query.redirect as string
-        router.replace(redirect || '/')
-      }).finally(() => { loading.value = false })
     }
   })
 }
@@ -72,18 +62,22 @@ function load() {
   <ElContainer
     class="h-screen relative overflow-hidden bg-[var(--el-color-primary-light-9)] dark:bg-[var(--el-bg-color-page)]">
     <figure class="absolute bg-primary-gradient rounded-full"
-      style="height: 31em; width: 31em;  top: -14em; right: -12em; " />
+      style="height: 31em; width: 31em;  top: -14em; right: -12em; ">
+    </figure>
     <figure class="absolute bg-success-gradient rounded-full"
-      style="height: 19em; width: 19em; bottom: 6em; right: -7em; " />
+      style="height: 19em; width: 19em; bottom: 6em; right: -7em; ">
+    </figure>
     <figure class="absolute bg-warning-gradient rounded-full"
-      style="height: 40em; width: 40em; bottom: -17em; left: -15em;" />
+      style="height: 40em; width: 40em; bottom: -17em; left: -15em;">
+    </figure>
     <figure class="absolute bg-error-gradient rounded-full"
-      style="height: 19em;  width: 19em; bottom: -12em; left: 12em; " />
+      style="height: 19em;  width: 19em; bottom: -12em; left: 12em; ">
+    </figure>
 
     <ElHeader class="flex flex-nowrap items-center z-10" height="50px">
       <div class="inline-flex flex-grow justify-between">
         <div class="inline-flex items-center">
-          <ElImage src="/svgs/vite.svg" alt="logo" class="w-12 h-12" />
+          <ElImage src="/svgs/logo.svg" alt="logo" class="w-12 h-12" />
           <span class="ml-3 text-20px font-bold">Project Management</span>
         </div>
 
@@ -98,7 +92,7 @@ function load() {
     <ElMain class="items-center justify-center z-10">
       <ElCard class="w-full lg:w-1/2 xl:w-2/3" style="height: 70vh;border-radius: 1.5rem;"
         body-class="flex items-center !p-0 h-full">
-        <div class="hidden xl:flex flex-col items-center h-full w-1/2  ">
+        <div class="hidden-lg-and-down flex flex-col items-center h-full w-1/2  ">
           <div class="inline-flex flex-grow items-center justify-center h-full">
             <Transition appear enter-active-class="animate__animated animate__slideInLeft"
               leave-active-class="animate__animated animate__slideOutLeft">
@@ -122,7 +116,7 @@ function load() {
             leave-active-class="animate__animated animate__slideOutRight">
             <div class="flex flex-col w-full h-full space-y-2xl justify-center items-center">
               <div class="text-center">
-                <ElImage src="/svgs/vite.svg" alt="logo" class="w-24 h-24" />
+                <ElImage src="/svgs/logo.svg" alt="logo" class="w-24 h-24" />
               </div>
               <div class="text-lg font-bold text-center mb-xs">
                 {{ $t('signinTo') }}

@@ -1,6 +1,6 @@
 import { http, HttpResponse } from 'msw'
 import { SERVER_URL } from 'src/constants'
-import type { Privilege, PrivilegeTreeNode } from 'src/models'
+import type { Privilege, PrivilegeTreeNode } from 'src/types'
 
 const datas: Privilege[] = [
   {
@@ -374,7 +374,7 @@ const treeNodes: PrivilegeTreeNode[] = [
 
 export const privilegesHandlers = [
   http.get(`/api${SERVER_URL.PRIVILEGE}/tree`, ({ cookies }) => {
-    // if(!cookies.logged_user) {
+    // if(!cookies.logged_in) {
     //   return new HttpResponse(null, { status: 401 })
     // }
     console.log(cookies)

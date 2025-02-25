@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, reactive, onMounted, watch } from 'vue'
-import type { FormInstance, FormRules, TreeInstance } from 'element-plus'
+import type { FormInstance, FormRules, TreeInstance, CheckboxValueType } from 'element-plus'
 import type { InternalRuleItem } from 'async-validator/dist-types/interface'
 import draggable from 'vuedraggable'
 import { useI18n } from 'vue-i18n'
@@ -10,7 +10,7 @@ import {
   fetchGroup, createGroup, modifyGroup, removeGroup, enableGroup, checkGroupExists
 } from 'src/api/groups'
 import { retrieveUsers } from 'src/api/users'
-import type { Pagination, Group, TreeNode, GroupMembers } from 'src/models'
+import type { Pagination, Group, TreeNode, GroupMembers } from 'src/types'
 
 const { t } = useI18n()
 const loading = ref<boolean>(false)
@@ -46,6 +46,7 @@ const filters = ref({
 
 const formRef = ref<FormInstance>()
 const initialValues: Group = {
+  id: undefined,
   name: ''
 }
 const form = ref<Group>({ ...initialValues })
@@ -72,9 +73,9 @@ const relations = ref<Array<string>>([])
 /**
  * tree过滤
  */
-const filterNode = (value: string, data: TreeNode) => {
+const filterNode = (value: string, data: { [key: string]: string }) => {
   if (!value) return true
-  return data.name.includes(value)
+  return data.name!.includes(value)
 }
 
 /**
@@ -252,7 +253,7 @@ function confirmEvent(id: number) {
  * 全选操作
  * @param val 是否全选
  */
-function handleCheckAllChange(val: boolean) {
+function handleCheckAllChange(val: CheckboxValueType) {
   checkedColumns.value = val ? columns.value : []
   isIndeterminate.value = false
 }

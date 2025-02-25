@@ -1,24 +1,25 @@
 import js from '@eslint/js'
 import globals from 'globals'
 import pluginVue from 'eslint-plugin-vue'
-import vueTsEslintConfig from '@vue/eslint-config-typescript'
+import {
+  defineConfigWithVueTs,
+  vueTsConfigs,
+} from '@vue/eslint-config-typescript'
 
-export default [
+
+export default defineConfigWithVueTs(
   {
     /**
      * Ignore the following files.
      *
      * ESLint requires "ignores" key to be the only one in this object
      */
-    ignores: [
-      'node_modules/',
-      'dist/',
-      '*.d.ts',
-      'mockServiceWorker.js'
-    ]
+    files: ['**/*.{js,mjs,cjs,ts,vue}'],
+    ignores: []
   },
 
   js.configs.recommended,
+  vueTsConfigs.recommended,
 
   /**
    * https://eslint.vuejs.org
@@ -34,22 +35,6 @@ export default [
    */
   ...pluginVue.configs['flat/essential'],
 
-  // https://github.com/vuejs/eslint-config-typescript
-  ...vueTsEslintConfig({
-    // Optional: extend additional configurations from typescript-eslint'.
-    // Supports all the configurations in
-    // https://typescript-eslint.io/users/configs#recommended-configurations
-    extends: [
-      // By default, only the recommended rules are enabled.
-      'recommended'
-      // You can also manually enable the stylistic rules.
-      // "stylistic",
-
-      // Other utility configurations, such as 'eslintRecommended', (note that it's in camelCase)
-      // are also extendable here. But we don't recommend using them directly.
-    ]
-  }),
-
   {
     languageOptions: {
       ecmaVersion: 'latest',
@@ -59,9 +44,6 @@ export default [
         ...globals.browser,
         ...globals.node, // SSR, Electron, config files
         process: 'readonly', // process.env.*
-        ga: 'readonly', // Google Analytics
-        cordova: 'readonly',
-        Capacitor: 'readonly',
         chrome: 'readonly', // BEX related
         browser: 'readonly' // BEX related
       }
@@ -102,14 +84,5 @@ export default [
       // allow debugger during development only
       'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off'
     }
-  },
-
-  {
-    files: ['**/*.{js,mjs,cjs,ts,vue}'],
-    languageOptions: {
-      globals: {
-        ...globals.serverworker
-      }
-    }
   }
-]
+)

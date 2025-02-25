@@ -13,27 +13,31 @@
       "dom",
       "dom.iterable"
     ],
+    "types": [
+      "element-plus/global",
+      "vite/client"
+    ],
     "strict": true,
     "allowUnreachableCode": false,
     "allowUnusedLabels": false,
     "noImplicitOverride": true,
-    "exactOptionalPropertyTypes": true,
     "noUncheckedIndexedAccess": true,
+    "baseUrl": "./",
     "paths": {
-      "src": ["./../src"],
-      "src/*": ["./../src/*"],
-      "components": ["./../src/components"],
-      "components/*": ["./../src/components/*"],
-      "layouts": ["./../src/layouts"],
-      "layouts/*": ["./../src/layouts/*"],
-      "pages": ["./../src/pages"],
-      "pages/*": ["./../src/pages/*"],
-      "assets": ["./../src/assets"],
-      "assets/*": ["./../src/assets/*"],
-      "boot": ["./../src/boot" ],
-      "boot/*": ["./../src/boot/*" ],
-      "stores": ["./../src/stores"],
-      "stores/*": ["./../src/stores/*"],
+      "src": ["src"],
+      "src/*": ["src/*"],
+      "components": ["src/components"],
+      "components/*": ["src/components/*"],
+      "layouts": ["src/layouts"],
+      "layouts/*": ["src/layouts/*"],
+      "pages": ["src/pages"],
+      "pages/*": ["src/pages/*"],
+      "assets": ["src/assets"],
+      "assets/*": ["src/assets/*"],
+      "boot": ["src/boot" ],
+      "boot/*": ["src/boot/*" ],
+      "stores": ["src/stores"],
+      "stores/*": ["src/stores/*"],
     }
   },
   "include": [
@@ -42,7 +46,6 @@
   ],
   "exclude": [
     "./../dist",
-    "./../node_modules",
-    "./../*.config.*",
+    "./../node_modules"
   ]
 }

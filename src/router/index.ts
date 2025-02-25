@@ -2,9 +2,10 @@ import { createRouter, createWebHistory } from 'vue-router'
 import type { RouteRecordRaw } from 'vue-router'
 import { constantRouterMap } from './routes'
 import { useUserStore } from 'stores/user-store'
-import { fetchMe } from 'src/api/users'
 import { retrievePrivilegeTree } from 'src/api/privileges'
-import type { PrivilegeTreeNode } from 'src/models'
+import type { PrivilegeTreeNode } from 'src/types'
+import { signIn, getUser } from 'src/api/authentication'
+
 
 // Lazy load layout
 const BlankLayout = () => import('layouts/BlankLayout.vue')
@@ -19,28 +20,27 @@ const router = createRouter({
 
 // Router guard for authentication and dynamic route registration
 router.beforeEach(async (to, from, next) => {
-  const accessToken = localStorage.getItem('access_token')
-
-  if (accessToken) {
-    if (to.path === '/login') {
-      next({ path: '/' })
-    } else {
-      // 页面刷新，状态数据丢失，重新获取
-      const userStore = useUserStore()
-      let privileges = userStore.privileges
-      if(!privileges.length) {
-        const [userResp, privilegesResp] = await Promise.all([fetchMe(), retrievePrivilegeTree()])
-        privileges = privilegesResp.data
-        userStore.$patch({ 
-          username: userResp.data.username, 
-          fullName: userResp.data.fullName,
-          email: userResp.data.email,
-          avatar: userResp.data.avatar,
-          privileges 
+  const userStore = useUserStore()
+  debugger
+  if (to.path === '/callback') {
+    next()
+  } else {
+    if (userStore.accessToken) {
+      // load user info
+      if (!userStore.username) {
+        const res = await getUser()
+        userStore.$patch({
+          username: res.data.sub
         })
       }
+      // load privileges
+      if (!userStore.privileges.length) {
+        const privilegesResp = await retrievePrivilegeTree();
+        const privileges = privilegesResp.data;
+        userStore.$patch({ privileges });
+      }
       if (!to.name || !router.hasRoute(to.name)) {
-        const routes = generateRoutes(privileges)
+        const routes = generateRoutes(userStore.privileges)
         routes.forEach((route) => {
           router.addRoute('home', route as RouteRecordRaw)
         })
@@ -56,14 +56,11 @@ router.beforeEach(async (to, from, next) => {
       } else {
         next()
       }
-    }
-  } else {
-    if (to.path === '/login') {
-      next()
     } else {
-      next(`/login?redirect=${to.path}`)
+      await signIn()
     }
   }
+
 })
 
 /**

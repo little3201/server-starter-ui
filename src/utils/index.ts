@@ -1,5 +1,5 @@
 import { dayjs } from 'element-plus'
-import type { Dictionary } from 'src/models'
+import type { Dictionary } from 'src/types'
 
 /**
  * Resolve a child path relative to a parent path
@@ -46,7 +46,7 @@ export const isNumber = (val: unknown): val is number => {
  * @param {string} target - The target date
  * @returns {string} - The status ('success', 'warning', 'danger')
  */
-export function calculate(target: string): string {
+export function calculate(target: string): 'success' | 'warning' | 'info' | 'primary' | 'danger' {
   const now = new Date()
   const targetDate = new Date(target)
   const diff = dayjs(targetDate).diff(now, 'days')
@@ -105,6 +105,18 @@ export function formatDictionary(value: number, rows: Dictionary[]): string {
   const dictItem = rows.find(item => item.id === value)
   return dictItem ? dictItem.name : ''
 }
+
+export function groupByType<T>(array: T[], typeOptions: Dictionary[], typeKey: keyof T): { [key: string]: T[] } {
+  return array.reduce((acc: { [key: string]: T[] }, curr: T) => {
+    const typeValue = curr[typeKey] as number; // 假设类型键的值是一个数字
+    const name = formatDictionary(typeValue, typeOptions);
+    if (!name) { return acc; }
+    if (!acc[name]) { acc[name] = []; }
+    acc[name].push(curr);
+    return acc;
+  }, {} as { [key: string]: T[] });
+}
+
 
 /**
  * 数组截取、可展示数组长度
@@ -168,4 +180,31 @@ export function downloadFile(data: Blob, filename: string, mimeType?: string): v
 
   // 释放创建的 URL 对象
   window.URL.revokeObjectURL(url)
+}
+
+export function getRandomString(length: number): string {
+  const a = new Uint8Array(Math.ceil(length / 2));
+  crypto.getRandomValues(a);
+  const str = Array.from(a, (dec) => ('0' + dec.toString(16)).slice(-2)).join('');
+  return str.slice(0, length);
+}
+
+export function generateVerifier(prefix?: string): string {
+  let verifier = prefix || ''
+  if (verifier.length < 43) {
+    verifier = verifier + getRandomString(43 - verifier.length)
+  }
+  return encodeURIComponent(verifier).slice(0, 128)
+}
+
+export function computeChallenge(codeVerifier: string): Promise<string> {
+  const encoder = new TextEncoder();
+  const data = encoder.encode(codeVerifier);
+  
+  return crypto.subtle.digest('SHA-256', data).then(digest => {
+    return btoa(String.fromCharCode(...new Uint8Array(digest)))
+      .replace(/\+/g, '-')
+      .replace(/\//g, '_')
+      .replace(/=+$/, '');
+  });
 }
