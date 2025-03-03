@@ -21,7 +21,6 @@ const router = createRouter({
 // Router guard for authentication and dynamic route registration
 router.beforeEach(async (to, from, next) => {
   const userStore = useUserStore()
-  debugger
   if (to.path === '/callback') {
     next()
   } else {

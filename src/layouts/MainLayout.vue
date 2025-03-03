@@ -83,8 +83,8 @@ const userStore = useUserStore()
                   Policy</RouterLink>
               </li>
               <li>
-                <RouterLink to="/licensing"
-                  class="no-underline hover:underline me-4 md:me-6 text-[var(--el-text-color-primary)]">Licensing
+                <RouterLink to="/license"
+                  class="no-underline hover:underline me-4 md:me-6 text-[var(--el-text-color-primary)]">License
                 </RouterLink>
               </li>
               <li>

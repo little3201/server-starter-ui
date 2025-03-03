@@ -12,6 +12,8 @@ import {
 import { retrievePrivilegeTree } from 'src/api/privileges'
 import { retrieveUsers } from 'src/api/users'
 import type { Pagination, Role, RoleMembers, RolePrivileges, PrivilegeTreeNode } from 'src/types'
+import { actions } from 'src/constants'
+
 
 const { t } = useI18n()
 const loading = ref<boolean>(false)
@@ -73,7 +75,7 @@ function checkNameExistsence(rule: InternalRuleItem, value: string, callback: (e
 
 const dataPrivilege = ref<number>(0)
 const relations = ref<Array<string>>([])
-const checkedActions = ref<Array<number>>([])
+// const checkedActions = ref<Array<number>>([])
 
 async function loadUsers() {
   retrieveUsers({ page: 1, size: 99 }).then(res => { members.value = res.data.content })
@@ -384,18 +386,12 @@ function handleCheckedChange(value: string[]) {
                       <div :class="data.icon" />
                       <span class="ml-2">{{ $t(node.label) }}</span>
                     </div>
-
-                    <ElPopover v-if="data.meta.actions && data.meta.actions.length > 0" placement="top-start"
-                      trigger="hover" :width="100">
-                      <template #reference>
-                        {{ $t('actions') }}
-                      </template>
-                      <ElCheckboxGroup v-model="checkedActions">
-                        <ElCheckbox v-for="action in data.meta.actions" :key="action" :value="action" class="mb-2 mr-4">
-                          {{ $t(action) }}
-                        </ElCheckbox>
-                      </ElCheckboxGroup>
-                    </ElPopover>
+                    <div>
+                      <ElCheckTag v-for="(item, index) in data.meta.actions" :key="index" :type="actions[item]"
+                        class="mr-2">
+                        {{ $t(item) }}
+                      </ElCheckTag>
+                    </div>
                   </div>
                 </template>
               </ElTree>

@@ -1,3 +1,4 @@
+<!-- not used -->
 <script setup lang="ts">
 import { ref, reactive, onMounted } from 'vue'
 import { DotLottie } from '@lottiefiles/dotlottie-web'

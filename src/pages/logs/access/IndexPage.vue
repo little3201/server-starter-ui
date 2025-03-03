@@ -210,7 +210,13 @@ function handleCheckedChange(value: string[]) {
       <ElTable v-loading="loading" :data="datas" row-key="id" stripe table-layout="auto">
         <ElTableColumn type="selection" width="55" />
         <ElTableColumn type="index" :label="$t('no')" width="55" />
-        <ElTableColumn prop="url" :label="$t('url')" />
+        <ElTableColumn prop="url" :label="$t('url')">
+          <template #default="scope">
+            <ElButton title="detail" type="primary" link @click="showRow(scope.row.id)">
+              {{ scope.row.url }}
+            </ElButton>
+          </template>
+        </ElTableColumn>
         <ElTableColumn prop="httpMethod" :label="$t('httpMethod')">
           <template #default="scope">
             <ElBadge is-dot :type="httpMethods[scope.row.httpMethod]" class="mr-1" />{{ scope.row.httpMethod }}
@@ -238,9 +244,6 @@ function handleCheckedChange(value: string[]) {
         </ElTableColumn>
         <ElTableColumn :label="$t('actions')">
           <template #default="scope">
-            <ElButton title="detail" size="small" type="info" link @click="showRow(scope.row.id)">
-              <div class="i-material-symbols:description-outline-rounded" />{{ $t('detail') }}
-            </ElButton>
             <ElPopconfirm :title="$t('removeConfirm')" :width="240" @confirm="confirmEvent(scope.row.id)">
               <template #reference>
                 <ElButton title="remove" size="small" type="danger" link>
