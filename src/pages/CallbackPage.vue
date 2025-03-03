@@ -21,6 +21,7 @@ onMounted(() => {
     if (res) {
       // 回调成功，删除code_verifier
       localStorage.removeItem('code_verifier')
+      localStorage.setItem('id_token_hint', res.data.id_token)
       userStore.$patch({
         accessToken: res.data.access_token
       })

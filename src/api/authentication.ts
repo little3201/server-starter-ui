@@ -40,6 +40,7 @@ export function handleCallback() {
 
   const codeVerifier = localStorage.getItem('code_verifier')
   if (!codeVerifier){
+    signIn()
     throw Error('code_verifier not getted!')
   }
 
@@ -60,8 +61,9 @@ export function getUser() {
 }
 
 export function signOut() {
+  const idTokenHint = localStorage.getItem('id_token_hint')
   const params = new URLSearchParams({
-    id_token_hint: 'code',
+    id_token_hint: `${idTokenHint}`,
     client_id: `${client_id}`,
     post_logout_redirect_uri: `${window.location.origin}`
   })
