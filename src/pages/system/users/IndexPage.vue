@@ -10,7 +10,8 @@ import { retrieveUsers, fetchUser, createUser, modifyUser, removeUser, enableUse
 import type { Pagination, User } from 'src/types'
 import { calculate } from 'src/utils'
 
-const { t } = useI18n()
+
+const { t, locale } = useI18n()
 const loading = ref<boolean>(false)
 const datas = ref<Array<User>>([])
 const total = ref<number>(0)
@@ -36,7 +37,8 @@ const formRef = ref<FormInstance>()
 const initialValues: User = {
   id: undefined,
   username: '',
-  fullName: '',
+  givenName: '',
+  familyName: '',
   email: ''
 }
 const form = ref<User>({ ...initialValues })
@@ -46,8 +48,11 @@ const rules = reactive<FormRules<typeof form>>({
     { required: true, message: t('inputText', { field: t('username') }), trigger: 'blur' },
     { validator: checkNameExistsence, trigger: 'blur' }
   ],
-  fullName: [
-    { required: true, message: t('inputText', { field: t('fullName') }), trigger: 'blur' }
+  givenName: [
+    { required: true, message: t('inputText', { field: t('givenName') }), trigger: 'blur' }
+  ],
+  familyName: [
+    { required: true, message: t('inputText', { field: t('familyName') }), trigger: 'blur' }
   ],
   email: [
     { required: true, message: t('inputText', { field: t('email') }), trigger: 'blur' }
@@ -201,8 +206,7 @@ function handleCheckedChange(value: string[]) {
 </script>
 
 <template>
-
-  <ElSpace size="large" direction="vertical" fill class="w-full">
+  <ElSpace size="large" fill>
     <ElCard shadow="never">
       <ElForm inline :model="filters" @submit.prevent>
         <ElFormItem :label="$t('username')" prop="username">
@@ -282,7 +286,12 @@ function handleCheckedChange(value: string[]) {
             <div class="flex items-center">
               <ElAvatar alt="avatar" :size="30" :src="scope.row.avatar" />
               <div class="ml-2 inline-flex flex-col">
-                <span class="text-sm">{{ scope.row.fullName }}</span>
+                <span v-if="locale === 'en-US' || scope.row.middleName" class="text-sm">
+                  {{ scope.row.givenName }} {{ scope.row.middleName }} {{ scope.row.familyName }}
+                </span>
+                <span v-else class="text-sm">
+                  {{ scope.row.familyName }}{{ scope.row.givenName }}
+                </span>
                 <span class="text-xs text-[var(--el-text-color-secondary)]">{{ scope.row.username }}</span>
               </div>
             </div>
@@ -341,8 +350,8 @@ function handleCheckedChange(value: string[]) {
     <ElForm ref="formRef" :model="form" :rules="rules" label-position="top">
       <ElRow :gutter="20" class="w-full !mx-0">
         <ElCol :span="12">
-          <ElFormItem :label="$t('fullName')" prop="fullName">
-            <ElInput type="email" v-model="form.fullName" :placeholder="$t('inputText', { field: $t('fullName') })"
+          <ElFormItem :label="$t('givenName')" prop="givenName">
+            <ElInput type="email" v-model="form.givenName" :placeholder="$t('inputText', { field: $t('givenName') })"
               :maxLength="50" />
           </ElFormItem>
         </ElCol>

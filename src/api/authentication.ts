@@ -30,7 +30,8 @@ export async function signIn() {
 export function handleCallback() {
   const urlParams = new URLSearchParams(window.location.search)
   const code = urlParams.get('code')
-  if (!code) {
+  if (!code) { 
+    signIn()
     throw Error('cannot get code!')
   }
   const state = urlParams.get('state')
@@ -56,7 +57,7 @@ export function handleCallback() {
   return api.post(`${baserUri}/${SERVER_URL.TOKEN}`, params)
 }
 
-export function getUser() {
+export function getSub() {
   return api.get(`${baserUri}/${SERVER_URL.USERINFO}`)
 }
 

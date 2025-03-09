@@ -238,7 +238,7 @@ function handleCheckedChange(value: string[]) {
               style="--el-switch-on-color: var(--el-color-success);" />
           </template>
         </ElTableColumn>
-        <ElTableColumn show-overflow-tooltip prop="description" :label="$t('description')" />
+        <ElTableColumn prop="description" :label="$t('description')" />
         <ElTableColumn :label="$t('actions')">
           <template #default="scope">
             <ElButton title="modify" size="small" type="primary" link @click="saveRow(scope.row.id)">

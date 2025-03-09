@@ -80,6 +80,9 @@ export default {
   editable: '可編輯',
   selected: '已選擇',
   unselected: '未選擇',
+  overview: '概 覽',
+  activities: '活 動',
+  changePassword: '修改密碼',
 
   actions: '操作',
   import: '導入',

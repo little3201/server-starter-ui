@@ -22,6 +22,14 @@ export const fetchUser = (id: number) => {
 }
 
 /**
+ * Fetch me
+ * @returns Row data
+ */
+export const fetchMe = () => {
+  return api.get(`${SERVER_URL.USER}/me`)
+}
+
+/**
  * Check if a specific row exists by username
  * @param username Row username
  * @param id Row ID
