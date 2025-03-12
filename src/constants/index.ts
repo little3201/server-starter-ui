@@ -59,7 +59,6 @@ export const actions: { [key: string]: 'primary' | 'success' | 'info' | 'warning
   download: 'success',
 
   preview: 'info',
-  detail: 'info',
 
   login: 'success',
   logout: 'primary'

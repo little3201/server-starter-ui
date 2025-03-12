@@ -92,7 +92,7 @@ export interface Region extends AudtiMetadata {
 }
 
 export interface TreeNode {
-  id?: number
+  id?: number | string
   name: string
   children?: TreeNode[]
 }

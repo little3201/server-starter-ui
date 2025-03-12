@@ -12,6 +12,7 @@ import {
 import { retrievePrivilegeTree } from 'src/api/privileges'
 import { retrieveUsers } from 'src/api/users'
 import type { Pagination, Role, RoleMembers, RolePrivileges, PrivilegeTreeNode, User } from 'src/types'
+import type { TreeNodeData } from 'element-plus/es/components/tree/src/tree.type'
 
 
 const { t, locale } = useI18n()
@@ -75,7 +76,7 @@ function checkNameExistsence(rule: InternalRuleItem, value: string, callback: (e
 const dataPrivilege = ref<number>(0)
 const relations = ref<Array<string>>([])
 
-const checkedActions = ref<Array<number>>([])
+// const checkedActions = ref<Array<number>>([])
 
 async function loadUsers() {
   retrieveUsers({ page: 1, size: 99 }).then(res => {
@@ -90,13 +91,39 @@ async function loadRoleUsers(id: number) {
   retrieveRoleMembers(id).then(res => { relations.value = res.data.map((item: RoleMembers) => item.username) })
 }
 
+function transformTree(tree: PrivilegeTreeNode[]): PrivilegeTreeNode[] {
+  return tree.map(node => {
+    // 判断条件并处理
+    let isPenultimate = false
+    if (node.meta.actions && !node.children) {
+      isPenultimate = true
+      node.children = node.meta.actions.map(action => ({
+        id: `${node.name}:${action}`,
+        name: action,
+        meta: {
+          path: '',
+          component: '',
+          icon: '',
+          redirect: '',
+        }
+      }))
+    }
+
+    return {
+      ...node,
+      isPenultimate: isPenultimate,
+      children: node.children ? transformTree(node.children) : undefined
+    }
+  })
+}
+
 /**
  * 权限树
  */
 async function loadPrivilegeTree() {
   privilegeTreeLoading.value = true
   retrievePrivilegeTree().then(res => {
-    privilegeTree.value = res.data
+    privilegeTree.value = transformTree(res.data)
   }).finally(() => { privilegeTreeLoading.value = false })
 }
 
@@ -224,7 +251,7 @@ function confirmEvent(id: number) {
  * privilete tree check
  */
 function handlePrivilegeCheckChange(data: PrivilegeTreeNode, checked: boolean) {
-  const ids: number[] = []
+  const ids = []
   if (data.id && selectedRow.value && selectedRow.value.id) {
     ids.push(data.id)
     if (checked) {
@@ -267,6 +294,10 @@ function handleCheckedChange(value: string[]) {
   const checkedCount = value.length
   checkAll.value = checkedCount === columns.value.length
   isIndeterminate.value = checkedCount > 0 && checkedCount < columns.value.length
+}
+
+function customNodeClass({ isPenultimate }: TreeNodeData) {
+  return isPenultimate ? 'is-penultimate' : ''
 }
 </script>
 
@@ -383,30 +414,12 @@ function handleCheckedChange(value: string[]) {
           <ElTabs stretch>
             <ElTabPane :label="$t('actions') + $t('privileges')">
               <ElTree ref="treeEl" v-loading="privilegeTreeLoading" :data="privilegeTree" :expand-on-click-node="false"
-                node-key="id" :props="{ label: 'name' }" show-checkbox @check="handlePrivilegeCheckChange"
-                :default-checked-keys="rolePrivileges">
+                node-key="id" :props="{ label: 'name', class: customNodeClass }" show-checkbox
+                @check="handlePrivilegeCheckChange" :default-checked-keys="rolePrivileges">
                 <template #default="{ node, data }">
-                  <div class="flex flex-1 items-center justify-between">
-                    <div>
-                      <div :class="data.icon" />
-                      <span class="ml-2">{{ $t(node.label) }}</span>
-                    </div>
-
-                    <ElPopover v-if="data.meta.actions.length > 0" :width="100" trigger="hover">
-                      <template #reference>
-                        <ElButton title="actions" type="primary" link size="small">
-                          {{ $t('actions') }}
-                        </ElButton>
-                      </template>
-                      <ElCheckboxGroup v-model="checkedActions">
-                        <ElCheckbox v-for="(action, index) in data.meta.actions" :key="index" :label="action"
-                          :value="`${data.name}:${action}`">
-                          <div class="inline-flex items-center space-x-4">
-                            {{ $t(action) }}
-                          </div>
-                        </ElCheckbox>
-                      </ElCheckboxGroup>
-                    </ElPopover>
+                  <div class="inline-flex items-center">
+                    <div :class="`i-material-symbols:${data.meta.icon}`" />
+                    <span class="ml-2">{{ $t(node.label) }}</span>
                   </div>
                 </template>
               </ElTree>
@@ -416,7 +429,7 @@ function handleCheckedChange(value: string[]) {
                 <ElOption :value="0" :label="$t('all')" />
                 <ElOption :value="1" :label="$t('yourself')" />
                 <ElOption :value="2" :label="$t('yourGroup')" />
-                <!-- <ElOption :value="3" :label="$t('custom')" /> -->
+                <ElOption :value="3" :label="$t('custom')" />
               </ElSelect>
             </ElTabPane>
           </ElTabs>
@@ -460,3 +473,11 @@ function handleCheckedChange(value: string[]) {
     </div>
   </DialogView>
 </template>
+
+<style lang="scss" scoped>
+.is-penultimate {
+  .el-tree-node__children {
+    display: inline-block;
+  }
+}
+</style>

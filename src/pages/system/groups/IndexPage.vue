@@ -86,7 +86,7 @@ function currentChange(data: TreeNode) {
   if (currentNodeKey.value === data.id) {
     return
   }
-  currentNodeKey.value = data.id
+  currentNodeKey.value = data.id as number
   pagination.page = 1
   load()
 }
