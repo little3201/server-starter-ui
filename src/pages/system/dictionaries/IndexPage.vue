@@ -200,7 +200,7 @@ function handleCheckedChange(value: string[]) {
                 </template>
                 <div>
                   <ElCheckbox v-model="checkAll" :indeterminate="isIndeterminate" @change="handleCheckAllChange">
-                    全选
+                    {{ $t('all') }}
                   </ElCheckbox>
                   <ElDivider />
                   <ElCheckboxGroup v-model="checkedColumns" @change="handleCheckedChange">
@@ -238,7 +238,7 @@ function handleCheckedChange(value: string[]) {
               style="--el-switch-on-color: var(--el-color-success);" />
           </template>
         </ElTableColumn>
-        <ElTableColumn prop="description" :label="$t('description')" />
+        <ElTableColumn show-overflow-tooltip prop="description" :label="$t('description')" />
         <ElTableColumn :label="$t('actions')">
           <template #default="scope">
             <ElButton title="modify" size="small" type="primary" link @click="saveRow(scope.row.id)">

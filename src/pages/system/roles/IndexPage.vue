@@ -11,11 +11,10 @@ import {
 } from 'src/api/roles'
 import { retrievePrivilegeTree } from 'src/api/privileges'
 import { retrieveUsers } from 'src/api/users'
-import type { Pagination, Role, RoleMembers, RolePrivileges, PrivilegeTreeNode } from 'src/types'
-import { actions } from 'src/constants'
+import type { Pagination, Role, RoleMembers, RolePrivileges, PrivilegeTreeNode, User } from 'src/types'
 
 
-const { t } = useI18n()
+const { t, locale } = useI18n()
 const loading = ref<boolean>(false)
 const datas = ref<Array<Role>>([])
 const total = ref<number>(0)
@@ -75,10 +74,16 @@ function checkNameExistsence(rule: InternalRuleItem, value: string, callback: (e
 
 const dataPrivilege = ref<number>(0)
 const relations = ref<Array<string>>([])
-// const checkedActions = ref<Array<number>>([])
+
+const checkedActions = ref<Array<number>>([])
 
 async function loadUsers() {
-  retrieveUsers({ page: 1, size: 99 }).then(res => { members.value = res.data.content })
+  retrieveUsers({ page: 1, size: 99 }).then(res => {
+    members.value = res.data.content.map((item: User) => ({
+      ...item,
+      fullName: (locale.value === 'en-US' || item.middleName !== null) ? `${item.givenName} ${item.middleName} ${item.familyName}` : `${item.familyName}${item.givenName}`
+    }))
+  })
 }
 
 async function loadRoleUsers(id: number) {
@@ -316,7 +321,7 @@ function handleCheckedChange(value: string[]) {
                     </template>
                     <div>
                       <ElCheckbox v-model="checkAll" :indeterminate="isIndeterminate" @change="handleCheckAllChange">
-                        全选
+                        {{ $t('all') }}
                       </ElCheckbox>
                       <ElDivider />
                       <ElCheckboxGroup v-model="checkedColumns" @change="handleCheckedChange">
@@ -386,12 +391,22 @@ function handleCheckedChange(value: string[]) {
                       <div :class="data.icon" />
                       <span class="ml-2">{{ $t(node.label) }}</span>
                     </div>
-                    <div>
-                      <ElCheckTag v-for="(item, index) in data.meta.actions" :key="index" :type="actions[item]"
-                        class="mr-2">
-                        {{ $t(item) }}
-                      </ElCheckTag>
-                    </div>
+
+                    <ElPopover v-if="data.meta.actions.length > 0" :width="100" trigger="hover">
+                      <template #reference>
+                        <ElButton title="actions" type="primary" link size="small">
+                          {{ $t('actions') }}
+                        </ElButton>
+                      </template>
+                      <ElCheckboxGroup v-model="checkedActions">
+                        <ElCheckbox v-for="(action, index) in data.meta.actions" :key="index" :label="action"
+                          :value="`${data.name}:${action}`">
+                          <div class="inline-flex items-center space-x-4">
+                            {{ $t(action) }}
+                          </div>
+                        </ElCheckbox>
+                      </ElCheckboxGroup>
+                    </ElPopover>
                   </div>
                 </template>
               </ElTree>

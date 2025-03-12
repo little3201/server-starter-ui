@@ -254,7 +254,7 @@ function handleCheckedChange(value: string[]) {
                 </template>
                 <div>
                   <ElCheckbox v-model="checkAll" :indeterminate="isIndeterminate" @change="handleCheckAllChange">
-                    全选
+                    {{ $t('all') }}
                   </ElCheckbox>
                   <ElDivider />
                   <ElCheckboxGroup v-model="checkedColumns" @change="handleCheckedChange">
@@ -297,7 +297,8 @@ function handleCheckedChange(value: string[]) {
             </div>
           </template>
         </ElTableColumn>
-        <ElTableColumn prop="email" :label="$t('email')" />
+        <ElTableColumn show-overflow-tooltip prop="email" :label="$t('email')" />
+        <ElTableColumn prop="phoneNumber" :label="$t('phoneNumber')"></ElTableColumn>
         <ElTableColumn prop="accountNonLocked" :label="$t('accountNonLocked')">
           <template #default="scope">
             <div
@@ -315,14 +316,14 @@ function handleCheckedChange(value: string[]) {
           <template #default="scope">
             <ElBadge v-if="scope.row.accountExpiresAt" is-dot :type="calculate(scope.row.accountExpiresAt)"
               class="mr-1" />
-            {{ scope.row.accountExpiresAt ? dayjs(scope.row.accountExpiresAt).format('YYYY-MM-DD HH:mm:ss') : '-' }}
+            {{ scope.row.accountExpiresAt ? dayjs(scope.row.accountExpiresAt).format('YYYY-MM-DD HH:mm') : '-' }}
           </template>
         </ElTableColumn>
         <ElTableColumn prop="credentialsExpiresAt" :label="$t('credentialsExpiresAt')">
           <template #default="scope">
             <ElBadge v-if="scope.row.credentialsExpiresAt" is-dot :type="calculate(scope.row.credentialsExpiresAt)"
               class="mr-1" />
-            {{ scope.row.credentialsExpiresAt ? dayjs(scope.row.credentialsExpiresAt).format('YYYY-MM-DD HH:mm:ss') :
+            {{ scope.row.credentialsExpiresAt ? dayjs(scope.row.credentialsExpiresAt).format('YYYY-MM-DD HH:mm') :
               '-'
             }}
           </template>
@@ -349,16 +350,36 @@ function handleCheckedChange(value: string[]) {
   <DialogView v-model="visible" :title="$t('users')" width="36%">
     <ElForm ref="formRef" :model="form" :rules="rules" label-position="top">
       <ElRow :gutter="20" class="w-full !mx-0">
-        <ElCol :span="12">
+        <ElCol :span="8">
           <ElFormItem :label="$t('givenName')" prop="givenName">
             <ElInput type="email" v-model="form.givenName" :placeholder="$t('inputText', { field: $t('givenName') })"
               :maxLength="50" />
           </ElFormItem>
         </ElCol>
+        <ElCol :span="8">
+          <ElFormItem :label="$t('middleName')" prop="middleName">
+            <ElInput type="email" v-model="form.middleName" :placeholder="$t('inputText', { field: $t('middleName') })"
+              :maxLength="50" />
+          </ElFormItem>
+        </ElCol>
+        <ElCol :span="8">
+          <ElFormItem :label="$t('familyName')" prop="familyName">
+            <ElInput v-model="form.familyName" :placeholder="$t('inputText', { field: $t('familyName') })"
+              :maxLength="50" />
+          </ElFormItem>
+        </ElCol>
+      </ElRow>
+      <ElRow :gutter="20" class="w-full !mx-0">
         <ElCol :span="12">
           <ElFormItem :label="$t('username')" prop="username">
             <ElInput v-model="form.username" :placeholder="$t('inputText', { field: $t('username') })" :maxLength="50"
               :disabled="!!form.id" />
+          </ElFormItem>
+        </ElCol>
+        <ElCol :span="12">
+          <ElFormItem :label="$t('phoneNumber')" prop="phoneNumber">
+            <ElInput type="tel" v-model="form.phoneNumber" :placeholder="$t('inputText', { field: $t('phoneNumber') })"
+              :maxLength="20" :disabled="!!form.id" />
           </ElFormItem>
         </ElCol>
       </ElRow>
