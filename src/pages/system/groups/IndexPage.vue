@@ -1,18 +1,18 @@
 <script setup lang="ts">
 import { ref, reactive, onMounted, watch } from 'vue'
-import type { FormInstance, FormRules, TreeInstance, CheckboxValueType } from 'element-plus'
+import type { FormInstance, FormRules, TreeInstance, CheckboxValueType, TransferDirection, TransferKey } from 'element-plus'
 import type { InternalRuleItem } from 'async-validator/dist-types/interface'
 import draggable from 'vuedraggable'
 import { useI18n } from 'vue-i18n'
 import DialogView from 'components/DialogView.vue'
 import {
-  retrieveGroups, retrieveGroupMembers, retrieveGroupTree,
+  retrieveGroups, retrieveGroupMembers, retrieveGroupTree, relationGroupMembers, removeGroupMembers,
   fetchGroup, createGroup, modifyGroup, removeGroup, enableGroup, checkGroupExists
 } from 'src/api/groups'
 import { retrieveUsers } from 'src/api/users'
-import type { Pagination, Group, TreeNode, GroupMembers } from 'src/types'
+import type { Pagination, Group, TreeNode, GroupMembers, User } from 'src/types'
 
-const { t } = useI18n()
+const { t, locale } = useI18n()
 const loading = ref<boolean>(false)
 const datas = ref<Array<Group>>([])
 const total = ref<number>(0)
@@ -36,6 +36,10 @@ const groupTree = ref<TreeNode[]>([])
 const saveLoading = ref<boolean>(false)
 const visible = ref<boolean>(false)
 
+const selectedRow = ref<Group>({
+  id: undefined,
+  name: ''
+})
 const relationVisible = ref<boolean>(false)
 const members = ref([])
 
@@ -92,7 +96,12 @@ function currentChange(data: TreeNode) {
 }
 
 async function loadUsers() {
-  retrieveUsers({ page: 1, size: 99 }).then(res => { members.value = res.data.content })
+  retrieveUsers({ page: 1, size: 99 }).then(res => {
+    members.value = res.data.content.map((item: User) => ({
+      ...item,
+      fullName: (locale.value === 'en-US' || item.middleName !== null) ? `${item.givenName} ${item.middleName} ${item.familyName}` : `${item.familyName}${item.givenName}`
+    }))
+  })
 }
 
 async function loadGroupUsers(id: number) {
@@ -165,10 +174,13 @@ onMounted(() => {
  * 关联弹出框
  * @param id 主键
  */
-function relationRow(id: number) {
+function relationRow(row: Group) {
   relationVisible.value = true
+  selectedRow.value = row
   loadUsers()
-  loadGroupUsers(id)
+  if (row.id) {
+    loadGroupUsers(row.id)
+  }
 }
 
 /**
@@ -266,6 +278,16 @@ function handleCheckedChange(value: string[]) {
   const checkedCount = value.length
   checkAll.value = checkedCount === columns.value.length
   isIndeterminate.value = checkedCount > 0 && checkedCount < columns.value.length
+}
+
+function handleTransferChange(value: TransferKey[], direction: TransferDirection, movedKeys: TransferKey[]) {
+  if (selectedRow.value && selectedRow.value.id) {
+    if (direction === 'right') {
+      relationGroupMembers(selectedRow.value.id, movedKeys as string[])
+    } else {
+      removeGroupMembers(selectedRow.value.id, movedKeys as string[])
+    }
+  }
 }
 </script>
 
@@ -375,7 +397,7 @@ function handleCheckedChange(value: string[]) {
                 <ElButton title="modify" size="small" type="primary" link @click="saveRow(scope.row.id)">
                   <div class="i-material-symbols:edit-outline-rounded" />{{ $t('modify') }}
                 </ElButton>
-                <ElButton title="relation" size="small" type="success" link @click="relationRow(scope.row.id)">
+                <ElButton title="relation" size="small" type="success" link @click="relationRow(scope.row)">
                   <div class="i-material-symbols:link-rounded" />{{ $t('relation') }}
                 </ElButton>
                 <ElPopconfirm v-if="!scope.row.hasChildren" :title="$t('removeConfirm')" :width="240"
@@ -426,7 +448,7 @@ function handleCheckedChange(value: string[]) {
   <DialogView v-model="relationVisible" show-close :title="$t('relation')">
     <div style="text-align: center">
       <ElTransfer v-model="relations" :props="{ key: 'username', label: 'fullName' }"
-        :titles="[$t('unselected'), $t('selected')]" filterable :data="members" />
+        :titles="[$t('unselected'), $t('selected')]" filterable :data="members" @change="handleTransferChange" />
     </div>
   </DialogView>
 </template>
