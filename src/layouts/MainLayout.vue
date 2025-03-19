@@ -58,7 +58,7 @@ const userStore = useUserStore()
               <EssentialList v-if="link.children && link.children.length > 0" :essentialLink="link"
                 :parent-path="`/${link.meta.path}`" />
               <ElMenuItem v-else :index="`/${link.meta.path}`">
-                <div class="i-material-symbols:home-outline-rounded mr-2" />{{ $t(link.name) }}
+                <div :class="`i-material-symbols:${link.meta.icon}-rounded mr-2`" />{{ $t(link.name) }}
               </ElMenuItem>
             </template>
           </ElMenu>

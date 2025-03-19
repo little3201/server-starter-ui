@@ -24,10 +24,10 @@ const router = createRouter({
 
 // Router guard for authentication and dynamic route registration
 router.beforeEach(async (to, from, next) => {
-  const userStore = useUserStore()
   if (to.path === '/callback') {
     next()
   } else {
+    const userStore = useUserStore()
     if (userStore.accessToken) {
       // load user info
       if (!userStore.username) {

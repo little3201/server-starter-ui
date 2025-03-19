@@ -19,7 +19,7 @@ const api: AxiosInstance = axios.create({
 
 // 请求拦截器
 api.interceptors.request.use(
-  async (config: InternalAxiosRequestConfig) => {
+  (config: InternalAxiosRequestConfig) => {
     const userStore = useUserStore()
     if (userStore.accessToken) {
       config.headers.Authorization = `Bearer ${userStore.accessToken}`

@@ -1,18 +1,17 @@
 <script setup lang="ts">
 import { ref, reactive, onMounted } from 'vue'
-import type { FormInstance, FormRules, TreeInstance, CheckboxValueType } from 'element-plus'
+import type { FormInstance, FormRules, TreeInstance, CheckboxValueType, TransferDirection, TransferKey } from 'element-plus'
 import type { InternalRuleItem } from 'async-validator/dist-types/interface'
+import type { Pagination, Role, RoleMembers, RolePrivileges, PrivilegeTreeNode, User } from 'src/types'
 import draggable from 'vuedraggable'
 import { useI18n } from 'vue-i18n'
 import DialogView from 'components/DialogView.vue'
 import {
-  retrieveRoles, retrieveRoleMembers, retrieveRolePrivileges, relationRolePrivileges,
-  removeRolePrivileges, fetchRole, createRole, modifyRole, removeRole, enableRole, checkRoleExists
+  retrieveRoles, retrieveRoleMembers, retrieveRolePrivileges, relationRoleMembers, relationRolePrivileges,
+  removeRoleMembers, removeRolePrivileges, fetchRole, createRole, modifyRole, removeRole, enableRole, checkRoleExists
 } from 'src/api/roles'
 import { retrievePrivilegeTree } from 'src/api/privileges'
 import { retrieveUsers } from 'src/api/users'
-import type { Pagination, Role, RoleMembers, RolePrivileges, PrivilegeTreeNode, User } from 'src/types'
-import type { TreeNodeData } from 'element-plus/es/components/tree/src/tree.type'
 
 
 const { t, locale } = useI18n()
@@ -91,39 +90,13 @@ async function loadRoleUsers(id: number) {
   retrieveRoleMembers(id).then(res => { relations.value = res.data.map((item: RoleMembers) => item.username) })
 }
 
-function transformTree(tree: PrivilegeTreeNode[]): PrivilegeTreeNode[] {
-  return tree.map(node => {
-    // 判断条件并处理
-    let isPenultimate = false
-    if (node.meta.actions && !node.children) {
-      isPenultimate = true
-      node.children = node.meta.actions.map(action => ({
-        id: `${node.name}:${action}`,
-        name: action,
-        meta: {
-          path: '',
-          component: '',
-          icon: '',
-          redirect: '',
-        }
-      }))
-    }
-
-    return {
-      ...node,
-      isPenultimate: isPenultimate,
-      children: node.children ? transformTree(node.children) : undefined
-    }
-  })
-}
-
 /**
  * 权限树
  */
 async function loadPrivilegeTree() {
   privilegeTreeLoading.value = true
   retrievePrivilegeTree().then(res => {
-    privilegeTree.value = transformTree(res.data)
+    privilegeTree.value = res.data
   }).finally(() => { privilegeTreeLoading.value = false })
 }
 
@@ -251,13 +224,11 @@ function confirmEvent(id: number) {
  * privilete tree check
  */
 function handlePrivilegeCheckChange(data: PrivilegeTreeNode, checked: boolean) {
-  const ids = []
   if (data.id && selectedRow.value && selectedRow.value.id) {
-    ids.push(data.id)
     if (checked) {
-      relationRolePrivileges(selectedRow.value.id, ids)
+      relationRolePrivileges(selectedRow.value.id, data.id)
     } else {
-      removeRolePrivileges(selectedRow.value.id, ids)
+      removeRolePrivileges(selectedRow.value.id, new Array(data.id))
     }
   }
 
@@ -296,8 +267,13 @@ function handleCheckedChange(value: string[]) {
   isIndeterminate.value = checkedCount > 0 && checkedCount < columns.value.length
 }
 
-function customNodeClass({ isPenultimate }: TreeNodeData) {
-  return isPenultimate ? 'is-penultimate' : ''
+function handleTransferChange(value: TransferKey[], direction: TransferDirection, movedKeys: TransferKey[]) {
+  console.log(value, direction, movedKeys)
+  if (direction === 'right') {
+    relationRoleMembers(1, movedKeys as string[])
+  } else {
+    removeRoleMembers(1, movedKeys as string[])
+  }
 }
 </script>
 
@@ -414,11 +390,11 @@ function customNodeClass({ isPenultimate }: TreeNodeData) {
           <ElTabs stretch>
             <ElTabPane :label="$t('actions') + $t('privileges')">
               <ElTree ref="treeEl" v-loading="privilegeTreeLoading" :data="privilegeTree" :expand-on-click-node="false"
-                node-key="id" :props="{ label: 'name', class: customNodeClass }" show-checkbox
-                @check="handlePrivilegeCheckChange" :default-checked-keys="rolePrivileges">
+                node-key="id" :props="{ label: 'name' }" show-checkbox @check="handlePrivilegeCheckChange"
+                :default-checked-keys="rolePrivileges">
                 <template #default="{ node, data }">
                   <div class="inline-flex items-center">
-                    <div :class="`i-material-symbols:${data.meta.icon}`" />
+                    <div :class="`i-material-symbols:${data.meta.icon}-rounded`" />
                     <span class="ml-2">{{ $t(node.label) }}</span>
                   </div>
                 </template>
@@ -469,15 +445,7 @@ function customNodeClass({ isPenultimate }: TreeNodeData) {
   <DialogView v-model="relationVisible" show-close :title="$t('relation')">
     <div style="text-align: center">
       <ElTransfer v-model="relations" :props="{ key: 'username', label: 'fullName' }"
-        :titles="[$t('unselected'), $t('selected')]" filterable :data="members" />
+        :titles="[$t('unselected'), $t('selected')]" filterable :data="members" @change="handleTransferChange" />
     </div>
   </DialogView>
 </template>
-
-<style lang="scss" scoped>
-.is-penultimate {
-  .el-tree-node__children {
-    display: inline-block;
-  }
-}
-</style>

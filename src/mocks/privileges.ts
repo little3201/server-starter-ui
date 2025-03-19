@@ -9,7 +9,7 @@ const datas: Privilege[] = [
     component: '#',
     redirect: '/system/users',
     name: 'system',
-    icon: 'settings-outline-rounded',
+    icon: 'settings-outline',
     count: 5,
     enabled: true,
     description: 'this is description for this row'
@@ -20,7 +20,7 @@ const datas: Privilege[] = [
     component: '#',
     redirect: '/logs/operation',
     name: 'logs',
-    icon: 'lab-profile-outline-rounded ',
+    icon: 'lab-profile-outline ',
     count: 3,
     enabled: true,
     description: 'this is description for this row'
@@ -30,7 +30,7 @@ const datas: Privilege[] = [
     path: 'regions',
     component: 'pages/regions/IndexPage',
     name: 'regions',
-    icon: 'location-on-outline-rounded',
+    icon: 'location-on-outline',
     actions: ['create', 'modify', 'remove', 'import', 'export'],
     count: 0,
     enabled: false,
@@ -41,7 +41,7 @@ const datas: Privilege[] = [
     path: 'files',
     component: 'pages/files/IndexPage',
     name: 'files',
-    icon: 'folder-open-outline-rounded',
+    icon: 'folder-open-outline',
     actions: ['upload', 'download', 'remove'],
     count: 0,
     enabled: true,
@@ -53,7 +53,7 @@ const datas: Privilege[] = [
     component: '#',
     name: 'exploiters',
     redirect: '/exploiters',
-    icon: 'build-outline-rounded',
+    icon: 'build-outline',
     count: 1,
     enabled: true,
     description: 'this is description for this row'
@@ -70,7 +70,7 @@ const subDatas: Privilege[] = [
     actions: ['create', 'modify', 'remove', 'import', 'export', 'relation'],
     count: 0,
     enabled: true,
-    icon: 'account-tree-outline-rounded',
+    icon: 'account-tree-outline',
     description: 'this is description for this row'
   },
   {
@@ -82,7 +82,7 @@ const subDatas: Privilege[] = [
     actions: ['create', 'modify', 'remove', 'import', 'export'],
     count: 0,
     enabled: true,
-    icon: 'person-outline-rounded',
+    icon: 'person-outline',
     description: 'this is description for this row'
   },
   {
@@ -94,7 +94,7 @@ const subDatas: Privilege[] = [
     actions: ['modify', 'import', 'export'],
     count: 0,
     enabled: true,
-    icon: 'admin-panel-settings-outline-rounded',
+    icon: 'admin-panel-settings-outline',
     description: 'this is description for this row'
   },
   {
@@ -106,7 +106,7 @@ const subDatas: Privilege[] = [
     actions: ['create', 'modify', 'remove', 'import', 'export', 'relation'],
     count: 0,
     enabled: true,
-    icon: 'shield-person-outline-rounded',
+    icon: 'shield-person-outline',
     description: 'this is description for this row'
   },
   {
@@ -118,7 +118,7 @@ const subDatas: Privilege[] = [
     actions: ['create', 'modify', 'remove', 'import', 'export'],
     count: 0,
     enabled: true,
-    icon: 'book-3-outline-rounded',
+    icon: 'book-3-outline',
     description: 'this is description for this row'
   },
   {
@@ -130,7 +130,7 @@ const subDatas: Privilege[] = [
     actions: ['clear',  'export', 'remove'],
     count: 0,
     enabled: true,
-    icon: 'clinical-notes-outline-rounded',
+    icon: 'clinical-notes-outline',
     description: 'this is description for this row'
   },
   {
@@ -142,7 +142,7 @@ const subDatas: Privilege[] = [
     actions: ['clear',  'export', 'remove'],
     count: 0,
     enabled: true,
-    icon: 'sticky-note-2-outline-rounded',
+    icon: 'sticky-note-2-outline',
     description: 'this is description for this row'
   },
   {
@@ -154,7 +154,7 @@ const subDatas: Privilege[] = [
     actions: [ 'export'],
     count: 0,
     enabled: true,
-    icon: 'note-alt-outline-rounded',
+    icon: 'note-alt-outline',
     description: 'this is description for this row'
   },
   {
@@ -166,7 +166,7 @@ const subDatas: Privilege[] = [
     actions: ['clear',  'export', 'remove'],
     count: 0,
     enabled: true,
-    icon: 'event-note-outline-rounded',
+    icon: 'event-note-outline',
     description: 'this is description for this row'
   },
   {
@@ -178,7 +178,7 @@ const subDatas: Privilege[] = [
     actions: ['create', 'modify', 'remove', 'import', 'export', 'config', 'preview'],
     count: 0,
     enabled: true,
-    icon: 'genetics-rounded',
+    icon: 'genetics',
     description: 'this is description for this row'
   },
   {
@@ -190,7 +190,7 @@ const subDatas: Privilege[] = [
     actions: ['create', 'modify', 'remove', 'import', 'export'],
     count: 0,
     enabled: true,
-    icon: 'terminal-rounded',
+    icon: 'terminal',
     description: 'this is description for this row'
   },
   {
@@ -202,7 +202,7 @@ const subDatas: Privilege[] = [
     actions: ['create', 'modify', 'remove', 'import', 'export'],
     count: 0,
     enabled: true,
-    icon: 'code-rounded',
+    icon: 'code',
     description: 'this is description for this row'
   }
 ]
@@ -215,7 +215,7 @@ const treeNodes: PrivilegeTreeNode[] = [
       path: 'system',
       component: '#',
       redirect: '/system/users',
-      icon: 'settings-outline-rounded'
+      icon: 'settings-outline'
     },
     children: [
       {
@@ -224,7 +224,7 @@ const treeNodes: PrivilegeTreeNode[] = [
         meta: {
           path: 'groups',
           component: 'pages/system/groups/IndexPage',
-          icon: 'account-tree-outline-rounded'
+          icon: 'account-tree-outline'
         }
       },
       {
@@ -233,7 +233,7 @@ const treeNodes: PrivilegeTreeNode[] = [
         meta: {
           path: 'users',
           component: 'pages/system/users/IndexPage',
-          icon: 'person-outline-rounded'
+          icon: 'person-outline'
         }
       },
       {
@@ -242,7 +242,7 @@ const treeNodes: PrivilegeTreeNode[] = [
         meta: {
           path: 'roles',
           component: 'pages/system/roles/IndexPage',
-          icon: 'shield-person-outline-rounded'
+          icon: 'shield-person-outline'
         }
       },
       {
@@ -251,7 +251,7 @@ const treeNodes: PrivilegeTreeNode[] = [
         meta: {
           path: 'dictionaries',
           component: 'pages/system/dictionaries/IndexPage',
-          icon: 'book-3-outline-rounded'
+          icon: 'book-3-outline'
         }
       },
       {
@@ -260,7 +260,7 @@ const treeNodes: PrivilegeTreeNode[] = [
         meta: {
           path: 'privileges',
           component: 'pages/system/privileges/IndexPage',
-          icon: 'admin-panel-settings-outline-rounded'
+          icon: 'admin-panel-settings-outline'
         }
       }
     ]
@@ -272,7 +272,7 @@ const treeNodes: PrivilegeTreeNode[] = [
       path: 'logs',
       component: '#',
       redirect: '/logs/operation',
-      icon: 'lab-profile-outline-rounded'
+      icon: 'lab-profile-outline'
     },
     children: [
       {
@@ -281,7 +281,7 @@ const treeNodes: PrivilegeTreeNode[] = [
         meta: {
           path: 'operation',
           component: 'pages/logs/operation/IndexPage',
-          icon: 'clinical-notes-outline-rounded'
+          icon: 'clinical-notes-outline'
         }
       },
       {
@@ -290,7 +290,7 @@ const treeNodes: PrivilegeTreeNode[] = [
         meta: {
           path: 'access',
           component: 'pages/logs/access/IndexPage',
-          icon: 'sticky-note-2-outline-rounded'
+          icon: 'sticky-note-2-outline'
         }
       },
       {
@@ -299,7 +299,7 @@ const treeNodes: PrivilegeTreeNode[] = [
         meta: {
           path: 'audit',
           component: 'pages/logs/audit/IndexPage',
-          icon: 'note-alt-outline-rounded'
+          icon: 'note-alt-outline'
         }
       },
       {
@@ -308,7 +308,7 @@ const treeNodes: PrivilegeTreeNode[] = [
         meta: {
           path: 'scheduler',
           component: 'pages/logs/scheduler/IndexPage',
-          icon: 'event-note-outline-rounded'
+          icon: 'event-note-outline'
         }
       }
     ]
@@ -319,7 +319,7 @@ const treeNodes: PrivilegeTreeNode[] = [
   //   meta: {
   //     path: 'regions',
   //     component: 'pages/regions/IndexPage',
-  //     icon: 'location-on-outline-rounded'
+  //     icon: 'location-on-outline'
   //   }
   // },
   {
@@ -328,7 +328,7 @@ const treeNodes: PrivilegeTreeNode[] = [
     meta: {
       path: 'files',
       component: 'pages/files/IndexPage',
-      icon: 'folder-open-outline-rounded'
+      icon: 'folder-open-outline'
     }
   },
   {
@@ -338,7 +338,7 @@ const treeNodes: PrivilegeTreeNode[] = [
       path: 'exploiters',
       component: '#',
       redirect: '/exploiters/generators',
-      icon: 'build-outline-rounded'
+      icon: 'build-outline'
     },
     children: [
       {
@@ -347,7 +347,7 @@ const treeNodes: PrivilegeTreeNode[] = [
         meta: {
           path: 'generators',
           component: 'pages/exploiters/generators/IndexPage',
-          icon: 'code-rounded'
+          icon: 'code'
         }
       },
       {
@@ -356,7 +356,7 @@ const treeNodes: PrivilegeTreeNode[] = [
         meta: {
           path: 'scripts',
           component: 'pages/exploiters/scripts/IndexPage',
-          icon: 'terminal-rounded'
+          icon: 'terminal'
         }
       },
       {
@@ -365,7 +365,7 @@ const treeNodes: PrivilegeTreeNode[] = [
         meta: {
           path: 'templates',
           component: 'pages/exploiters/templates/IndexPage',
-          icon: 'terminal-rounded'
+          icon: 'terminal'
         }
       }
     ]
