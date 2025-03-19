@@ -4,24 +4,24 @@ import MainLayout from 'layouts/MainLayout.vue'
 
 // 菜单图标预加载（unocss-icons使用后台数据加载图标，必须定义）
 export const icons: string[] = [
-  'i-material-symbols:settings-outline-rounded',
-  'i-material-symbols:lab-profile-outline-rounded',
-  'i-material-symbols:build-outline-rounded',
-  'i-material-symbols:folder-open-outline-rounded',
-  'i-material-symbols:location-on-outline-rounded',
-  'i-material-symbols:note-alt-outline-rounded',
-  'i-material-symbols:clinical-notes-outline-rounded',
-  'i-material-symbols:event-note-outline-rounded',
-  'i-material-symbols:shield-person-outline-rounded',
-  'i-material-symbols:sticky-note-2-outline-rounded',
-  'i-material-symbols:admin-panel-settings-outline-rounded',
-  'i-material-symbols:book-3-outline-rounded',
-  'i-material-symbols:person-outline-rounded',
-  'i-material-symbols:terminal-rounded',
-  'i-material-symbols:code-rounded',
-  'i-material-symbols:terminal-rounded',
-  'i-material-symbols:account-tree-outline-rounded',
-  'i-material-symbols:genetics-rounded'
+  'icon-[material-symbols--settings-outline-rounded]',
+  'icon-[material-symbols--lab-profile-outline-rounded]',
+  'icon-[material-symbols--build-outline-rounded]',
+  'icon-[material-symbols--folder-open-outline-rounded]',
+  'icon-[material-symbols--location-on-outline-rounded]',
+  'icon-[material-symbols--note-alt-outline-rounded]',
+  'icon-[material-symbols--clinical-notes-outline-rounded]',
+  'icon-[material-symbols--event-note-outline-rounded]',
+  'icon-[material-symbols--shield-person-outline-rounded]',
+  'icon-[material-symbols--sticky-note-2-outline-rounded]',
+  'icon-[material-symbols--admin-panel-settings-outline-rounded]',
+  'icon-[material-symbols--book-3-outline-rounded]',
+  'icon-[material-symbols--person-outline-rounded]',
+  'icon-[material-symbols--terminal-rounded]',
+  'icon-[material-symbols--code-rounded]',
+  'icon-[material-symbols--terminal-rounded]',
+  'icon-[material-symbols--account-tree-outline-rounded]',
+  'icon-[material-symbols--genetics-rounded]'
 ]
 
 export const constantRouterMap: Array<RouteRecordRaw> = [

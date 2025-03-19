@@ -10,10 +10,10 @@ const isDark = useDark()
     style="--el-switch-on-color: var(--el-border-color); --el-switch-off-color: var(--el-color-primary-light-3);"
     @change="useToggle">
     <template #active-action>
-      <div class="i-material-symbols:dark-mode-outline-rounded ma-[3px]" />
+      <div class="icon-[material-symbols--dark-mode-outline-rounded] ma-[3px]" />
     </template>
     <template #inactive-action>
-      <div class="i-material-symbols:light-mode-outline-rounded ma-[3px]" />
+      <div class="icon-[material-symbols--light-mode-outline-rounded] ma-[3px]" />
     </template>
   </ElSwitch>
 </template>

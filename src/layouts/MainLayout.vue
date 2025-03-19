@@ -35,11 +35,11 @@ const userStore = useUserStore()
               <ElDropdownMenu>
                 <RouterLink to="/profile" class="no-underline">
                   <ElDropdownItem>
-                    <div class="i-material-symbols:manage-accounts-outline-rounded mr-2 " />{{ $t('profile') }}
+                    <div class="icon-[material-symbols--manage-accounts-outline-rounded] mr-2 " />{{ $t('profile') }}
                   </ElDropdownItem>
                 </RouterLink>
                 <ElDropdownItem divided @click="signOut">
-                  <div class="i-material-symbols:logout-rounded mr-2 " />{{ $t('signout') }}
+                  <div class="icon-[material-symbols--logout-rounded] mr-2 " />{{ $t('signout') }}
                 </ElDropdownItem>
               </ElDropdownMenu>
             </template>
@@ -52,13 +52,13 @@ const userStore = useUserStore()
         <ElScrollbar>
           <ElMenu router unique-opened :default-active="currentRoute.fullPath">
             <ElMenuItem :index="'/'">
-              <div class="i-material-symbols:home-outline-rounded mr-2" />{{ $t('home') }}
+              <div class="icon-[material-symbols--home-outline-rounded] mr-2" />{{ $t('home') }}
             </ElMenuItem>
             <template v-for="link in userStore.privileges" :key="link.id">
               <EssentialList v-if="link.children && link.children.length > 0" :essentialLink="link"
                 :parent-path="`/${link.meta.path}`" />
               <ElMenuItem v-else :index="`/${link.meta.path}`">
-                <div :class="`i-material-symbols:${link.meta.icon}-rounded mr-2`" />{{ $t(link.name) }}
+                <div :class="`icon-[material-symbols--${link.meta.icon}-rounded] mr-2`" />{{ $t(link.name) }}
               </ElMenuItem>
             </template>
           </ElMenu>

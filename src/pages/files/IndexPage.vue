@@ -147,10 +147,10 @@ function handleCheckedChange(value: string[]) {
           </ElFormItem>
           <ElFormItem>
             <ElButton title="search" type="primary" @click="load">
-              <div class="i-material-symbols:search-rounded" />{{ $t('search') }}
+              <div class="icon-[material-symbols--search-rounded]" />{{ $t('search') }}
             </ElButton>
             <ElButton title="reset" @click="reset">
-              <div class="i-material-symbols:replay-rounded" />{{ $t('reset') }}
+              <div class="icon-[material-symbols--replay-rounded]" />{{ $t('reset') }}
             </ElButton>
           </ElFormItem>
         </ElForm>
@@ -160,14 +160,14 @@ function handleCheckedChange(value: string[]) {
         <ElRow :gutter="20" justify="space-between" class="mb-4">
           <ElCol :span="16" class="text-left">
             <ElButton title="upload" type="primary" plain @click="uploadRow">
-              <div class="i-material-symbols:upload" />{{ $t('upload') }}
+              <div class="icon-[material-symbols--upload" />{{ $t('upload') }}
             </ElButton>
           </ElCol>
 
           <ElCol :span="8" class="text-right">
             <ElTooltip class="box-item" effect="dark" :content="$t('refresh')" placement="top">
               <ElButton title="refresh" type="primary" plain circle @click="load">
-                <div class="i-material-symbols:refresh-rounded" />
+                <div class="icon-[material-symbols--refresh-rounded]" />
               </ElButton>
             </ElTooltip>
 
@@ -176,7 +176,7 @@ function handleCheckedChange(value: string[]) {
                 <ElPopover :width="200" trigger="click">
                   <template #reference>
                     <ElButton title="settings" type="success" plain circle>
-                      <div class="i-material-symbols:format-list-bulleted" />
+                      <div class="icon-[material-symbols--format-list-bulleted" />
                     </ElButton>
                   </template>
                   <div>
@@ -188,7 +188,7 @@ function handleCheckedChange(value: string[]) {
                       <draggable v-model="columns" item-key="simple">
                         <template #item="{ element }">
                           <div class="flex items-center space-x-2">
-                            <div class="i-material-symbols:drag-indicator w-4 h-4 hover:cursor-move" />
+                            <div class="icon-[material-symbols--drag-indicator w-4 h-4 hover:cursor-move" />
                             <ElCheckbox :label="element" :value="element" :disabled="element === columns[0]">
                               <div class="inline-flex items-center space-x-4">
                                 {{ $t(element) }}
@@ -223,12 +223,12 @@ function handleCheckedChange(value: string[]) {
           <ElTableColumn :label="$t('actions')">
             <template #default="scope">
               <ElButton title="download" size="small" type="success" link @click="downloadRow(scope.row.id)">
-                <div class="i-material-symbols:download" />{{ $t('download') }}
+                <div class="icon-[material-symbols--download" />{{ $t('download') }}
               </ElButton>
               <ElPopconfirm :title="$t('removeConfirm')" :width="240" @confirm="confirmEvent(scope.row.id)">
                 <template #reference>
                   <ElButton title="remove" size="small" type="danger" link>
-                    <div class="i-material-symbols:delete-outline-rounded" />{{ $t('remove') }}
+                    <div class="icon-[material-symbols--delete-outline-rounded]" />{{ $t('remove') }}
                   </ElButton>
                 </template>
               </ElPopconfirm>
@@ -242,7 +242,7 @@ function handleCheckedChange(value: string[]) {
     <DialogView v-model="visible" :title="$t('upload')" width="35%">
       <ElUpload ref="uploadRef" :limit="1" drag action="/api/files/upload">
         <div class="el-icon--upload inline-flex justify-center">
-          <div class="i-material-symbols:upload-rounded" />
+          <div class="icon-[material-symbols--upload-rounded]" />
         </div>
         <div class="el-upload__text">
           Drop file here or <em>click to upload</em>
@@ -255,10 +255,10 @@ function handleCheckedChange(value: string[]) {
       </ElUpload>
       <template #footer>
         <ElButton title="cancel" @click="visible = false">
-          <div class="i-material-symbols:close" />{{ $t('cancel') }}
+          <div class="icon-[material-symbols--close" />{{ $t('cancel') }}
         </ElButton>
         <ElButton title="submit" type="primary" :loading="uploadLoading" @click="onSubmit(uploadRef)">
-          <div class="i-material-symbols:check-circle-outline-rounded" /> {{ $t('submit') }}
+          <div class="icon-[material-symbols--check-circle-outline-rounded]" /> {{ $t('submit') }}
         </ElButton>
       </template>
     </DialogView>

@@ -146,11 +146,11 @@ function confirmEvent(id: number) {
       </ElCol>
       <ElCol :span="12" class="text-right">
         <ElButton type="primary" @click="saveRow()">
-          <div class="i-material-symbols:add-rounded" />{{ $t('create') }}
+          <div class="icon-[material-symbols--add-rounded]" />{{ $t('create') }}
         </ElButton>
         <ElTooltip class="box-item" effect="dark" :content="$t('refresh')" placement="top">
           <ElButton type="primary" plain circle @click="load">
-            <div class="i-material-symbols:refresh-rounded" />
+            <div class="icon-[material-symbols--refresh-rounded]" />
           </ElButton>
         </ElTooltip>
       </ElCol>
@@ -169,12 +169,12 @@ function confirmEvent(id: number) {
       <ElTableColumn :label="$t('actions')">
         <template #default="scope">
           <ElButton size="small" type="primary" link @click="saveRow(scope.row.id)">
-            <div class="i-material-symbols:edit-outline-rounded" />{{ $t('modify') }}
+            <div class="icon-[material-symbols--edit-outline-rounded]" />{{ $t('modify') }}
           </ElButton>
           <ElPopconfirm :title="$t('removeConfirm')" :width="240" @confirm="confirmEvent(scope.row.id)">
             <template #reference>
               <ElButton size="small" type="danger" link>
-                <div class="i-material-symbols:delete-outline-rounded" />{{ $t('remove') }}
+                <div class="icon-[material-symbols--delete-outline-rounded]" />{{ $t('remove') }}
               </ElButton>
             </template>
           </ElPopconfirm>
@@ -203,10 +203,10 @@ function confirmEvent(id: number) {
     </ElForm>
     <template #footer>
       <ElButton @click="visible = false">
-        <div class="i-material-symbols:close" />{{ $t('cancel') }}
+        <div class="icon-[material-symbols--close" />{{ $t('cancel') }}
       </ElButton>
       <ElButton type="primary" :loading="saveLoading" @click="onSubmit(formRef)">
-        <div class="i-material-symbols:check-circle-outline-rounded" /> {{ $t('submit') }}
+        <div class="icon-[material-symbols--check-circle-outline-rounded]" /> {{ $t('submit') }}
       </ElButton>
     </template>
   </DialogView>

@@ -2,7 +2,7 @@ import { createApp } from 'vue'
 import App from './App.vue'
 
 import 'src/css/index.scss'
-import 'virtual:uno.css'
+import 'src/css/main.css'
 import 'animate.css'
 
 // If you want to use ElMessage, import it.
