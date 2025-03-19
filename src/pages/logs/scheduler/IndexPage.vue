@@ -6,6 +6,7 @@ import draggable from 'vuedraggable'
 import DialogView from 'components/DialogView.vue'
 import { retrieveSchedulerLogs, fetchSchedulerLog } from 'src/api/scheduler-logs'
 import type { Pagination, SchedulerLog } from 'src/types'
+import { Icon } from '@iconify/vue'
 import { formatDuration } from 'src/utils'
 
 const loading = ref<boolean>(false)
@@ -138,10 +139,10 @@ function handleCheckedChange(value: string[]) {
         </ElFormItem>
         <ElFormItem>
           <ElButton title="search" type="primary" @click="load">
-            <div class="icon-[material-symbols--search-rounded]" />{{ $t('search') }}
+            <Icon icon="material-symbols:search-rounded" width="18" height="18" />{{ $t('search') }}
           </ElButton>
           <ElButton title="reset" @click="reset">
-            <div class="icon-[material-symbols--replay-rounded]" />{{ $t('reset') }}
+            <Icon icon="material-symbols:replay-rounded" width="18" height="18" />{{ $t('reset') }}
           </ElButton>
         </ElFormItem>
       </ElForm>
@@ -151,17 +152,17 @@ function handleCheckedChange(value: string[]) {
       <ElRow :gutter="20" justify="space-between" class="mb-4">
         <ElCol :span="16" class="text-left">
           <ElButton title="clear" type="danger" plain>
-            <div class="icon-[material-symbols--clear-all-rounded]" />{{ $t('clear') }}
+            <Icon icon="material-symbols:clear-all-rounded" width="18" height="18" />{{ $t('clear') }}
           </ElButton>
           <ElButton title="export" type="success" plain>
-            <div class="icon-[material-symbols--file-export-outline-rounded]" />{{ $t('export') }}
+            <Icon icon="material-symbols:file-export-outline-rounded" width="18" height="18" />{{ $t('export') }}
           </ElButton>
         </ElCol>
 
         <ElCol :span="8" class="text-right">
           <ElTooltip class="box-item" effect="dark" :content="$t('refresh')" placement="top">
             <ElButton title="refresh" type="primary" plain circle @click="load">
-              <div class="icon-[material-symbols--refresh-rounded]" />
+              <Icon icon="material-symbols:refresh-rounded" width="18" height="18" />
             </ElButton>
           </ElTooltip>
 
@@ -170,7 +171,7 @@ function handleCheckedChange(value: string[]) {
               <ElPopover :width="200" trigger="click">
                 <template #reference>
                   <ElButton title="setgings" type="success" plain circle>
-                    <div class="icon-[material-symbols--format-list-bulleted" />
+                    <Icon icon="material-symbols:format-list-bulleted" width="18" height="18" />
                   </ElButton>
                 </template>
                 <div>
@@ -182,7 +183,8 @@ function handleCheckedChange(value: string[]) {
                     <draggable v-model="columns" item-key="simple">
                       <template #item="{ element }">
                         <div class="flex items-center space-x-2">
-                          <div class="icon-[material-symbols--drag-indicator w-4 h-4 hover:cursor-move" />
+                          <Icon icon="material-symbols:drag-indicator" width="18" height="18"
+                            class="hover:cursor-move" />
                           <ElCheckbox :label="element" :value="element" :disabled="element === columns[0]">
                             <div class="inline-flex items-center space-x-4">
                               {{ $t(element) }}
@@ -211,13 +213,13 @@ function handleCheckedChange(value: string[]) {
         <ElTableColumn prop="status" :label="$t('status')">
           <template #default="scope">
             <ElTag v-if="scope.row.status === 0" type="primary" round>
-              <div class="icon-[material-symbols--progress-activity spin mr-1" />{{ $t('processing') }}
+              <Icon icon="material-symbols:progress-activity spin mr-1" />{{ $t('processing') }}
             </ElTag>
             <ElTag v-else-if="scope.row.status === 1" type="success" round>
-              <div class="icon-[material-symbols--check-rounded] mr-1" />{{ $t('done') }}
+              <Icon icon="material-symbols:check-rounded mr-1" />{{ $t('done') }}
             </ElTag>
             <ElTag v-else type="danger" round>
-              <div class="icon-[material-symbols--error-outline-rounded] mr-1" />{{ $t('failure') }}
+              <Icon icon="material-symbols:error-outline-rounded mr-1" />{{ $t('failure') }}
             </ElTag>
           </template>
         </ElTableColumn>
@@ -234,12 +236,12 @@ function handleCheckedChange(value: string[]) {
         <ElTableColumn :label="$t('actions')">
           <template #default="scope">
             <ElButton title="detail" size="small" type="info" link @click="showRow(scope.row.id)">
-              <div class="icon-[material-symbols--description-outline-rounded]" />{{ $t('detail') }}
+              <Icon icon="material-symbols:description-outline-rounded" width="18" height="18" />{{ $t('detail') }}
             </ElButton>
             <ElPopconfirm :title="$t('removeConfirm')" :width="240" @confirm="confirmEvent(scope.row.id)">
               <template #reference>
                 <ElButton title="remove" size="small" type="danger" link>
-                  <div class="icon-[material-symbols--delete-outline-rounded]" />{{ $t('remove') }}
+                  <Icon icon="material-symbols:delete-outline-rounded" width="18" height="18" />{{ $t('remove') }}
                 </ElButton>
               </template>
             </ElPopconfirm>

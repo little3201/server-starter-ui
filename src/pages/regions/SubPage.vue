@@ -6,6 +6,8 @@ import { useI18n } from 'vue-i18n'
 import DialogView from 'components/DialogView.vue'
 import { retrieveRegions, fetchRegion, createRegion, modifyRegion, removeRegion, enableRegion, checkRegionExists } from 'src/api/regions'
 import type { Pagination, Region } from 'src/types'
+import { Icon } from '@iconify/vue'
+
 
 const { t } = useI18n()
 
@@ -160,11 +162,11 @@ function confirmEvent(id: number) {
       </ElCol>
       <ElCol :span="12" class="text-right">
         <ElButton type="primary" @click="saveRow()">
-          <div class="icon-[material-symbols--add-rounded]" />{{ $t('create') }}
+          <Icon icon="material-symbols:add-rounded" width="18" height="18" />{{ $t('create') }}
         </ElButton>
         <ElTooltip class="box-item" effect="dark" :content="$t('refresh')" placement="top">
           <ElButton type="primary" plain circle @click="load">
-            <div class="icon-[material-symbols--refresh-rounded]" />
+            <Icon icon="material-symbols:refresh-rounded" width="18" height="18" />
           </ElButton>
         </ElTooltip>
       </ElCol>
@@ -190,12 +192,12 @@ function confirmEvent(id: number) {
       <ElTableColumn :label="$t('actions')">
         <template #default="scope">
           <ElButton size="small" type="primary" link @click="saveRow(scope.row.id)">
-            <div class="icon-[material-symbols--edit-outline-rounded]" />{{ $t('modify') }}
+            <Icon icon="material-symbols:edit-outline-rounded" width="18" height="18" />{{ $t('modify') }}
           </ElButton>
           <ElPopconfirm :title="$t('removeConfirm')" :width="240" @confirm="confirmEvent(scope.row.id)">
             <template #reference>
               <ElButton size="small" type="danger" link>
-                <div class="icon-[material-symbols--delete-outline-rounded]" />{{ $t('remove') }}
+                <Icon icon="material-symbols:delete-outline-rounded" width="18" height="18" />{{ $t('remove') }}
               </ElButton>
             </template>
           </ElPopconfirm>
@@ -239,10 +241,10 @@ function confirmEvent(id: number) {
     </ElForm>
     <template #footer>
       <ElButton @click="visible = false">
-        <div class="icon-[material-symbols--close" />{{ $t('cancel') }}
+        <Icon icon="material-symbols:close" />{{ $t('cancel') }}
       </ElButton>
       <ElButton type="primary" :loading="saveLoading" @click="onSubmit(formRef)">
-        <div class="icon-[material-symbols--check-circle-outline-rounded]" /> {{ $t('submit') }}
+        <Icon icon="material-symbols:check-circle-outline-rounded" width="18" height="18" /> {{ $t('submit') }}
       </ElButton>
     </template>
   </DialogView>

@@ -60,7 +60,7 @@ const dialogStyle = computed(() => {
       <ElButton v-if="showFullScreen" @click="toggleFull"
         :class="['absolute top-1.5 !border-none !border-0 !bg-transparent', showClose ? 'right-8 ' : 'right-1']">
         <div
-          :class="[fullScreen ? 'icon-[material-symbols--fullscreen-exit-rounded]' : 'icon-[material-symbols--fullscreen-rounded]', 'el-dialog__close']">
+          :class="[fullScreen ? 'icon-[material-symbols--fullscreen-exit-rounded' : 'icon-[material-symbols--fullscreen-rounded', 'el-dialog__close']">
         </div>
       </ElButton>
     </template>

@@ -5,6 +5,7 @@ import { useI18n } from 'vue-i18n'
 import { fetchMe } from 'src/api/users'
 import { actions } from 'src/constants'
 import type { User } from 'src/types'
+import { Icon } from '@iconify/vue'
 
 
 const { locale } = useI18n()
@@ -94,15 +95,15 @@ onMounted(() => {
         <!-- 详细信息 -->
         <ul class="text-sm text-[var(--el-text-color-regular)] pl-3 space-y-3">
           <li class="flex items-center">
-            <div class="icon-[material-symbols--location-on-outline-rounded] mr-2" />
+            <Icon icon="material-symbols:location-on-outline-rounded mr-2" />
             西安
           </li>
           <li class="flex items-center">
-            <div class="icon-[material-symbols--mail-outline-rounded] mr-2" />
+            <Icon icon="material-symbols:mail-outline-rounded mr-2" />
             <span>{{ me.email }}</span>
           </li>
           <li class="flex items-center">
-            <div class="icon-[material-symbols--shield-person-outline-rounded] mr-2" />
+            <Icon icon="material-symbols:shield-person-outline-rounded mr-2" />
             角色
           </li>
         </ul>
@@ -111,13 +112,13 @@ onMounted(() => {
       <ElCard shadow="never" class="mt-4">
         <ul class="text-sm text-[var(--el-text-color-regular)] pl-0">
           <li class="flex items-center py-2 px-3 rounded-md hover:bg-[var(--el-fill-color-lighter)] cursor-pointer">
-            <div class="icon-[material-symbols--notifications-outline mr-2" />Notifications
+            <Icon icon="material-symbols:notifications-outline mr-2" />Notifications
           </li>
           <li class="flex items-center py-2 px-3 rounded-md hover:bg-[var(--el-fill-color-lighter)] cursor-pointer">
-            <div class="icon-[material-symbols--draw-outline mr-2" />Appearance
+            <Icon icon="material-symbols:draw-outline mr-2" />Appearance
           </li>
           <li class="flex items-center py-2 px-3 rounded-md hover:bg-[var(--el-fill-color-lighter)] cursor-pointer">
-            <div class="icon-[material-symbols--notifications-outline mr-2" />Sessions
+            <Icon icon="material-symbols:notifications-outline mr-2" />Sessions
           </li>
         </ul>
       </ElCard>

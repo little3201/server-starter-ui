@@ -2,8 +2,3 @@
 @import "tailwindcss/theme.css" layer(theme);
 /* @import "tailwindcss/preflight.css" layer(base); */
 @import "tailwindcss/utilities.css" layer(utilities);
-
-@plugin "@iconify/tailwind4"{
-  square: false;
-  scale: 1.2;
-}

@@ -20,7 +20,7 @@ const datas: Privilege[] = [
     component: '#',
     redirect: '/logs/operation',
     name: 'logs',
-    icon: 'lab-profile-outline ',
+    icon: 'lab-profile-outline',
     count: 3,
     enabled: true,
     description: 'this is description for this row'

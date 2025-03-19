@@ -2,6 +2,7 @@
 import { useI18n } from 'vue-i18n'
 import Cookies from 'universal-cookie'
 import { localeOptions } from 'src/i18n'
+import { Icon } from '@iconify/vue'
 
 
 const { locale } = useI18n({ useScope: 'global' })
@@ -24,7 +25,7 @@ function changeLocale(lang: string) {
 <template>
   <ElDropdown trigger="click" @command="changeLocale">
     <ElButton title="language" type="default" link>
-      <div class="icon-[material-symbols--translate cursor-pointer w-6 h-6 text-white"></div>
+      <Icon icon="material-symbols:translate" class="cursor-pointer w-6 h-6 text-white" />
     </ElButton>
     <template #dropdown>
       <ElDropdownMenu>

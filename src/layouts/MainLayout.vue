@@ -5,6 +5,7 @@ import ThemeToogle from 'components/ThemeToogle.vue'
 import LanguageSelector from 'components/LanguageSelector.vue'
 import EssentialList from 'components/EssentialList.vue'
 import { signOut } from 'src/api/authentication'
+import { Icon } from '@iconify/vue'
 
 
 const { currentRoute } = useRouter()
@@ -35,11 +36,13 @@ const userStore = useUserStore()
               <ElDropdownMenu>
                 <RouterLink to="/profile" class="no-underline">
                   <ElDropdownItem>
-                    <div class="icon-[material-symbols--manage-accounts-outline-rounded] mr-2 " />{{ $t('profile') }}
+                    <Icon icon="material-symbols:manage-accounts-rounded" width="18" height="18" class="mr-2" />{{
+                    $t('profile') }}
                   </ElDropdownItem>
                 </RouterLink>
                 <ElDropdownItem divided @click="signOut">
-                  <div class="icon-[material-symbols--logout-rounded] mr-2 " />{{ $t('signout') }}
+                  <Icon icon="material-symbols:logout-rounded" width="18" height="18" class="mr-2" />
+                  {{ $t('signout') }}
                 </ElDropdownItem>
               </ElDropdownMenu>
             </template>
@@ -52,13 +55,14 @@ const userStore = useUserStore()
         <ElScrollbar>
           <ElMenu router unique-opened :default-active="currentRoute.fullPath">
             <ElMenuItem :index="'/'">
-              <div class="icon-[material-symbols--home-outline-rounded] mr-2" />{{ $t('home') }}
+              <Icon icon="material-symbols:home-outline-rounded" width="18" height="18" class="mr-2" />{{ $t('home') }}
             </ElMenuItem>
             <template v-for="link in userStore.privileges" :key="link.id">
               <EssentialList v-if="link.children && link.children.length > 0" :essentialLink="link"
                 :parent-path="`/${link.meta.path}`" />
               <ElMenuItem v-else :index="`/${link.meta.path}`">
-                <div :class="`icon-[material-symbols--${link.meta.icon}-rounded] mr-2`" />{{ $t(link.name) }}
+                <Icon :icon="`material-symbols:${link.meta.icon}-rounded`" width="18" height="18" class="mr-2" />{{
+                  $t(link.name) }}
               </ElMenuItem>
             </template>
           </ElMenu>
