@@ -335,7 +335,7 @@ function handleCheckedChange(value: string[]) {
         <ElTableColumn :label="$t('actions')">
           <template #default="scope">
             <ElButton title="modify" size="small" type="primary" link @click="saveRow(scope.row.id)">
-              <Icon icon="material-symbols:edit-outline-rounded" width="18" height="18" />{{ $t('modify') }}
+              <Icon icon="material-symbols:edit-outline-rounded" width="16" height="16" />{{ $t('modify') }}
             </ElButton>
           </template>
         </ElTableColumn>
@@ -409,7 +409,7 @@ function handleCheckedChange(value: string[]) {
     <ElUpload ref="importRef" :limit="1" drag action="/api/privileges/import"
       accept=".xls,.xlsx,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-excel">
       <div class="el-icon--upload inline-flex justify-center">
-        <Icon icon="material-symbols:upload-rounded" width="18" height="18" />
+        <Icon icon="material-symbols:upload-rounded" width="48" height="48" />
       </div>
       <div class="el-upload__text">
         Drop file here or <em>click to upload</em>

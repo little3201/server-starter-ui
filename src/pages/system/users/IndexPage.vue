@@ -303,9 +303,10 @@ function handleCheckedChange(value: string[]) {
         <ElTableColumn prop="phoneNumber" :label="$t('phoneNumber')"></ElTableColumn>
         <ElTableColumn prop="accountNonLocked" :label="$t('accountNonLocked')">
           <template #default="scope">
-            <div
-              :class="['cursor-pointer', scope.row.accountNonLocked ? 'icon-[material-symbols--lock-open-right-outline-rounded text-[var(--el-color-success)]' : 'icon-[material-symbols--lock-outline text-[var(--el-color-warning)]']"
-              @click="lockRow(scope.row)" />
+            <Icon
+              :icon="`material-symbols:${scope.row.accountNonLocked ? 'lock-open-right-outline-rounded' : 'lock-outline'}`"
+              width="16" height="16" @click="lockRow(scope.row)"
+              :class="['cursor-pointer', scope.row.accountNonLocked ? 'text-[var(--el-color-success)]' : 'text-[var(--el-color-warning)]']" />
           </template>
         </ElTableColumn>
         <ElTableColumn prop="enabled" :label="$t('enabled')">
@@ -333,12 +334,12 @@ function handleCheckedChange(value: string[]) {
         <ElTableColumn :label="$t('actions')">
           <template #default="scope">
             <ElButton title="modify" size="small" type="primary" link @click="saveRow(scope.row.id)">
-              <Icon icon="material-symbols:edit-outline-rounded" width="18" height="18" />{{ $t('modify') }}
+              <Icon icon="material-symbols:edit-outline-rounded" width="16" height="16" />{{ $t('modify') }}
             </ElButton>
             <ElPopconfirm :title="$t('removeConfirm')" :width="240" @confirm="confirmEvent(scope.row.id)">
               <template #reference>
                 <ElButton title="remove" size="small" type="danger" link>
-                  <Icon icon="material-symbols:delete-outline-rounded" width="18" height="18" />{{ $t('remove') }}
+                  <Icon icon="material-symbols:delete-outline-rounded" width="16" height="16" />{{ $t('remove') }}
                 </ElButton>
               </template>
             </ElPopconfirm>

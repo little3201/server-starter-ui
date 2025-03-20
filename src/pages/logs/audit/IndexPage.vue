@@ -247,7 +247,7 @@ function handleCheckedChange(value: string[]) {
             <ElPopconfirm :title="$t('removeConfirm')" :width="240" @confirm="confirmEvent(scope.row.id)">
               <template #reference>
                 <ElButton title="remove" size="small" type="danger" link>
-                  <Icon icon="material-symbols:delete-outline-rounded" width="18" height="18" />{{ $t('remove') }}
+                  <Icon icon="material-symbols:delete-outline-rounded" width="16" height="16" />{{ $t('remove') }}
                 </ElButton>
               </template>
             </ElPopconfirm>

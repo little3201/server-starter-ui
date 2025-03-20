@@ -3,6 +3,7 @@ import { computed, useAttrs, ref, useSlots } from 'vue'
 import type { Slot } from 'vue'
 import { isNumber } from 'src/utils'
 import { ElButton } from 'element-plus'
+import { Icon } from '@iconify/vue'
 
 const slots: { [key: string]: Slot | undefined } = useSlots()
 
@@ -59,9 +60,8 @@ const dialogStyle = computed(() => {
       </slot>
       <ElButton v-if="showFullScreen" @click="toggleFull"
         :class="['absolute top-1.5 !border-none !border-0 !bg-transparent', showClose ? 'right-8 ' : 'right-1']">
-        <div
-          :class="[fullScreen ? 'icon-[material-symbols--fullscreen-exit-rounded' : 'icon-[material-symbols--fullscreen-rounded', 'el-dialog__close']">
-        </div>
+        <Icon :icon="`material-symbols:${fullScreen ? 'fullscreen-exit-rounded' : 'fullscreen-rounded'}`" width="18"
+          height="18" class="el-dialog__close" />
       </ElButton>
     </template>
 

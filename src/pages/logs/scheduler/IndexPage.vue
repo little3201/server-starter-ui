@@ -236,12 +236,12 @@ function handleCheckedChange(value: string[]) {
         <ElTableColumn :label="$t('actions')">
           <template #default="scope">
             <ElButton title="detail" size="small" type="info" link @click="showRow(scope.row.id)">
-              <Icon icon="material-symbols:description-outline-rounded" width="18" height="18" />{{ $t('detail') }}
+              <Icon icon="material-symbols:description-outline-rounded" width="16" height="16" />{{ $t('detail') }}
             </ElButton>
             <ElPopconfirm :title="$t('removeConfirm')" :width="240" @confirm="confirmEvent(scope.row.id)">
               <template #reference>
                 <ElButton title="remove" size="small" type="danger" link>
-                  <Icon icon="material-symbols:delete-outline-rounded" width="18" height="18" />{{ $t('remove') }}
+                  <Icon icon="material-symbols:delete-outline-rounded" width="16" height="16" />{{ $t('remove') }}
                 </ElButton>
               </template>
             </ElPopconfirm>

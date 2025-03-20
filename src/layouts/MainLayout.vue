@@ -36,8 +36,8 @@ const userStore = useUserStore()
               <ElDropdownMenu>
                 <RouterLink to="/profile" class="no-underline">
                   <ElDropdownItem>
-                    <Icon icon="material-symbols:manage-accounts-rounded" width="18" height="18" class="mr-2" />{{
-                    $t('profile') }}
+                    <Icon icon="material-symbols:manage-accounts-rounded" width="18" height="18" class="mr-2" />
+                    {{ $t('profile') }}
                   </ElDropdownItem>
                 </RouterLink>
                 <ElDropdownItem divided @click="signOut">
@@ -61,8 +61,8 @@ const userStore = useUserStore()
               <EssentialList v-if="link.children && link.children.length > 0" :essentialLink="link"
                 :parent-path="`/${link.meta.path}`" />
               <ElMenuItem v-else :index="`/${link.meta.path}`">
-                <Icon :icon="`material-symbols:${link.meta.icon}-rounded`" width="18" height="18" class="mr-2" />{{
-                  $t(link.name) }}
+                <Icon :icon="`material-symbols:${link.meta.icon}-rounded`" width="18" height="18" class="mr-2" />
+                {{ $t(link.name) }}
               </ElMenuItem>
             </template>
           </ElMenu>

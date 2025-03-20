@@ -226,12 +226,12 @@ function handleCheckedChange(value: string[]) {
           <ElTableColumn :label="$t('actions')">
             <template #default="scope">
               <ElButton title="download" size="small" type="success" link @click="downloadRow(scope.row.id)">
-                <Icon icon="material-symbols:download" />{{ $t('download') }}
+                <Icon icon="material-symbols:download" width="16" height="16" />{{ $t('download') }}
               </ElButton>
               <ElPopconfirm :title="$t('removeConfirm')" :width="240" @confirm="confirmEvent(scope.row.id)">
                 <template #reference>
                   <ElButton title="remove" size="small" type="danger" link>
-                    <Icon icon="material-symbols:delete-outline-rounded" width="18" height="18" />{{ $t('remove') }}
+                    <Icon icon="material-symbols:delete-outline-rounded" width="16" height="16" />{{ $t('remove') }}
                   </ElButton>
                 </template>
               </ElPopconfirm>
@@ -245,7 +245,7 @@ function handleCheckedChange(value: string[]) {
     <DialogView v-model="visible" :title="$t('upload')" width="35%">
       <ElUpload ref="uploadRef" :limit="1" drag action="/api/files/upload">
         <div class="el-icon--upload inline-flex justify-center">
-          <Icon icon="material-symbols:upload-rounded" width="18" height="18" />
+          <Icon icon="material-symbols:upload-rounded" width="48" height="48" />
         </div>
         <div class="el-upload__text">
           Drop file here or <em>click to upload</em>
