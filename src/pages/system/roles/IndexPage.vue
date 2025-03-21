@@ -224,12 +224,12 @@ function confirmEvent(id: number) {
 /**
  * privilete tree check
  */
-function handlePrivilegeCheckChange(data: PrivilegeTreeNode, checked: boolean) {
+function handlePrivilegeCheckChange(data: PrivilegeTreeNode, checked: { checkedKeys: (string | number)[] }) {
   if (data.id && selectedRow.value && selectedRow.value.id) {
-    if (checked) {
-      relationRolePrivileges(selectedRow.value.id, data.id)
+    if (checked.checkedKeys.includes(data.id)) {
+      relationRolePrivileges(selectedRow.value.id, data.id, [])
     } else {
-      removeRolePrivileges(selectedRow.value.id, new Array(data.id))
+      removeRolePrivileges(selectedRow.value.id, data.id, [])
     }
   }
 
@@ -393,8 +393,8 @@ function handleTransferChange(value: TransferKey[], direction: TransferDirection
           <ElTabs stretch>
             <ElTabPane :label="$t('actions') + $t('privileges')">
               <ElTree ref="treeEl" v-loading="privilegeTreeLoading" :data="privilegeTree" :expand-on-click-node="false"
-                node-key="id" :props="{ label: 'name' }" show-checkbox @check="handlePrivilegeCheckChange"
-                :default-checked-keys="rolePrivileges">
+                node-key="id" :props="{ label: 'name' }" show-checkbox :default-checked-keys="rolePrivileges"
+                @check="handlePrivilegeCheckChange">
                 <template #default="{ node, data }">
                   <div class="inline-flex items-center">
                     <Icon :icon="`material-symbols:${data.meta.icon}-rounded`" width="18" height="18" class="mr-2" />
