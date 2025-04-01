@@ -213,7 +213,7 @@ function handleCheckAllChange(val: CheckboxValueType) {
  * 选中操作
  * @param value 选中的值
  */
-function handleCheckedChange(value: string[]) {
+function handleCheckedChange(value: CheckboxValueType[]) {
   const checkedCount = value.length
   checkAll.value = checkedCount === columns.value.length
   isIndeterminate.value = checkedCount > 0 && checkedCount < columns.value.length

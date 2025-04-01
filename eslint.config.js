@@ -33,7 +33,7 @@ export default defineConfigWithVueTs(
    * pluginVue.configs["flat/recommended"]
    *   -> Above, plus rules to enforce subjective community defaults to ensure consistency.
    */
-  ...pluginVue.configs['flat/recommended'],
+  ...pluginVue.configs['flat/essential'],
 
   {
     languageOptions: {
