@@ -9,7 +9,8 @@ for (let i = 1; i < 28; i++) {
   const row: User = {
     id: i,
     username: 'username' + i,
-    fullName: 'full name' + i,
+    givenName: 'given name' + i,
+    familyName: 'family name' + i,
     avatar: '/images/avatar.jpg',
     email: 'usexxx' + '@test.com',
     accountNonLocked: i % 2 > 0,

@@ -129,7 +129,7 @@ function load() {
                     <ElFormItem prop="username">
                       <ElInput size="large" :disable="loading" v-model="form.username" :placeholder="$t('username')">
                         <template #prefix>
-                          <div class="i-material-symbols:person-outline-rounded" />
+                          <Icon icon="material-symbols:person-outline-rounded" width="18" height="18" />
                         </template>
                       </ElInput>
                     </ElFormItem>
@@ -141,7 +141,7 @@ function load() {
                       <ElInput size="large" :disable="loading" type="password" v-model="form.password"
                         :placeholder="$t('password')" show-password>
                         <template #prefix>
-                          <div class="i-material-symbols:key-vertical-outline-rounded" />
+                          <Icon icon="material-symbols:key-vertical-outline-rounded" width="18" height="18" />
                         </template>
                       </ElInput>
                     </ElFormItem>

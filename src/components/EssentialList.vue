@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { PrivilegeTreeNode } from 'src/types'
 import { pathResolve } from 'src/utils'
+import { Icon } from '@iconify/vue'
 
 withDefaults(defineProps<{
   essentialLink: PrivilegeTreeNode
@@ -14,14 +15,14 @@ withDefaults(defineProps<{
 <template>
   <ElSubMenu :index="essentialLink.meta.path">
     <template #title>
-      <div :class="[`i-material-symbols:${essentialLink.meta.icon}`, 'mr-2']" />
+      <Icon :icon="`material-symbols:${essentialLink.meta.icon}-rounded`" width="18" height="18" class="mr-2" />
       {{ $t(essentialLink.name) }}
     </template>
     <template v-for="link in essentialLink.children" :key="link.id">
       <EssentialList v-if="link.children && link.children.length > 0" :essentialLink="link"
         :parent-path="pathResolve(parentPath, link.meta.path)" />
       <ElMenuItem v-else :index="pathResolve(parentPath, link.meta.path)">
-        <div :class="[`i-material-symbols:${link.meta.icon}`, 'mr-2 ']" />
+        <Icon :icon="`material-symbols:${link.meta.icon}-rounded`" width="18" height="18" class="mr-2" />
         {{ $t(link.name) }}
       </ElMenuItem>
     </template>

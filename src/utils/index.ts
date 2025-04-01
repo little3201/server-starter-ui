@@ -106,18 +106,6 @@ export function formatDictionary(value: number, rows: Dictionary[]): string {
   return dictItem ? dictItem.name : ''
 }
 
-export function groupByType<T>(array: T[], typeOptions: Dictionary[], typeKey: keyof T): { [key: string]: T[] } {
-  return array.reduce((acc: { [key: string]: T[] }, curr: T) => {
-    const typeValue = curr[typeKey] as number; // 假设类型键的值是一个数字
-    const name = formatDictionary(typeValue, typeOptions);
-    if (!name) { return acc; }
-    if (!acc[name]) { acc[name] = []; }
-    acc[name].push(curr);
-    return acc;
-  }, {} as { [key: string]: T[] });
-}
-
-
 /**
  * 数组截取、可展示数组长度
  * @param array 集合、数组
@@ -180,6 +168,17 @@ export function downloadFile(data: Blob, filename: string, mimeType?: string): v
 
   // 释放创建的 URL 对象
   window.URL.revokeObjectURL(url)
+}
+
+export function groupByType<T>(array: T[], typeOptions: Dictionary[], typeKey: keyof T): { [key: string]: T[] } {
+  return array.reduce((acc: { [key: string]: T[] }, curr: T) => {
+    const typeValue = curr[typeKey] as number; // 假设类型键的值是一个数字
+    const name = formatDictionary(typeValue, typeOptions);
+    if (!name) { return acc; }
+    if (!acc[name]) { acc[name] = []; }
+    acc[name].push(curr);
+    return acc;
+  }, {} as { [key: string]: T[] });
 }
 
 export function getRandomString(length: number): string {

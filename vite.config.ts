@@ -1,7 +1,7 @@
 import { fileURLToPath, URL } from 'node:url'
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
-import Unocss from 'unocss/vite'
+import tailwindcss from '@tailwindcss/vite'
 import Components from 'unplugin-vue-components/vite'
 import { ElementPlusResolver } from 'unplugin-vue-components/resolvers'
 import checker from 'vite-plugin-checker'
@@ -36,9 +36,8 @@ export default defineConfig({
       })],
       dts: 'src/components.d.ts',
     }),
-    // https://github.com/antfu/unocss
-    // see unocss.config.ts for config
-    Unocss(),
+    // https://tailwindcss.com/docs/installation/using-vite
+    tailwindcss(),
     checker({
       vueTsc: true,
       eslint: {

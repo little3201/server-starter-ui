@@ -8,9 +8,11 @@ import { useI18n } from 'vue-i18n'
 import DialogView from 'components/DialogView.vue'
 import { retrieveUsers, fetchUser, createUser, modifyUser, removeUser, enableUser, checkUserExists } from 'src/api/users'
 import type { Pagination, User } from 'src/types'
+import { Icon } from '@iconify/vue'
 import { calculate } from 'src/utils'
 
-const { t } = useI18n()
+
+const { t, locale } = useI18n()
 const loading = ref<boolean>(false)
 const datas = ref<Array<User>>([])
 const total = ref<number>(0)
@@ -36,7 +38,8 @@ const formRef = ref<FormInstance>()
 const initialValues: User = {
   id: undefined,
   username: '',
-  fullName: '',
+  givenName: '',
+  familyName: '',
   email: ''
 }
 const form = ref<User>({ ...initialValues })
@@ -46,8 +49,11 @@ const rules = reactive<FormRules<typeof form>>({
     { required: true, message: t('inputText', { field: t('username') }), trigger: 'blur' },
     { validator: checkNameExistsence, trigger: 'blur' }
   ],
-  fullName: [
-    { required: true, message: t('inputText', { field: t('fullName') }), trigger: 'blur' }
+  givenName: [
+    { required: true, message: t('inputText', { field: t('givenName') }), trigger: 'blur' }
+  ],
+  familyName: [
+    { required: true, message: t('inputText', { field: t('familyName') }), trigger: 'blur' }
   ],
   email: [
     { required: true, message: t('inputText', { field: t('email') }), trigger: 'blur' }
@@ -201,8 +207,7 @@ function handleCheckedChange(value: string[]) {
 </script>
 
 <template>
-
-  <ElSpace size="large" direction="vertical" fill class="w-full">
+  <ElSpace size="large" fill>
     <ElCard shadow="never">
       <ElForm inline :model="filters" @submit.prevent>
         <ElFormItem :label="$t('username')" prop="username">
@@ -210,10 +215,10 @@ function handleCheckedChange(value: string[]) {
         </ElFormItem>
         <ElFormItem>
           <ElButton title="search" type="primary" @click="load">
-            <div class="i-material-symbols:search-rounded" />{{ $t('search') }}
+            <Icon icon="material-symbols:search-rounded" width="18" height="18" />{{ $t('search') }}
           </ElButton>
           <ElButton title="reset" @click="reset">
-            <div class="i-material-symbols:replay-rounded" />{{ $t('reset') }}
+            <Icon icon="material-symbols:replay-rounded" width="18" height="18" />{{ $t('reset') }}
           </ElButton>
         </ElFormItem>
       </ElForm>
@@ -223,20 +228,20 @@ function handleCheckedChange(value: string[]) {
       <ElRow :gutter="20" justify="space-between" class="mb-4">
         <ElCol :span="16" class="text-left">
           <ElButton title="create" type="primary" @click="saveRow()">
-            <div class="i-material-symbols:add-rounded" />{{ $t('create') }}
+            <Icon icon="material-symbols:add-rounded" width="18" height="18" />{{ $t('create') }}
           </ElButton>
           <ElButton title="import" type="warning" plain @click="visible = true">
-            <div class="i-material-symbols:database-upload-outline-rounded" />{{ $t('import') }}
+            <Icon icon="material-symbols:database-upload-outline-rounded" width="18" height="18" />{{ $t('import') }}
           </ElButton>
           <ElButton title="export" type="success" plain>
-            <div class="i-material-symbols:file-export-outline-rounded" />{{ $t('export') }}
+            <Icon icon="material-symbols:file-export-outline-rounded" width="18" height="18" />{{ $t('export') }}
           </ElButton>
         </ElCol>
 
         <ElCol :span="8" class="text-right">
           <ElTooltip effect="dark" :content="$t('refresh')" placement="top">
             <ElButton title="refresh" type="primary" plain circle @click="load">
-              <div class="i-material-symbols:refresh-rounded" />
+              <Icon icon="material-symbols:refresh-rounded" width="18" height="18" />
             </ElButton>
           </ElTooltip>
 
@@ -245,19 +250,20 @@ function handleCheckedChange(value: string[]) {
               <ElPopover :width="200" trigger="click">
                 <template #reference>
                   <ElButton title="settings" type="success" plain circle>
-                    <div class="i-material-symbols:format-list-bulleted" />
+                    <Icon icon="material-symbols:format-list-bulleted" width="18" height="18" />
                   </ElButton>
                 </template>
                 <div>
                   <ElCheckbox v-model="checkAll" :indeterminate="isIndeterminate" @change="handleCheckAllChange">
-                    全选
+                    {{ $t('all') }}
                   </ElCheckbox>
                   <ElDivider />
                   <ElCheckboxGroup v-model="checkedColumns" @change="handleCheckedChange">
                     <draggable v-model="columns" item-key="simple">
                       <template #item="{ element }">
                         <div class="flex items-center space-x-2">
-                          <div class="i-material-symbols:drag-indicator w-4 h-4 hover:cursor-move" />
+                          <Icon icon="material-symbols:drag-indicator" width="18" height="18"
+                            class="hover:cursor-move" />
                           <ElCheckbox :label="element" :value="element" :disabled="element === columns[0]">
                             <div class="inline-flex items-center space-x-4">
                               {{ $t(element) }}
@@ -282,18 +288,25 @@ function handleCheckedChange(value: string[]) {
             <div class="flex items-center">
               <ElAvatar alt="avatar" :size="30" :src="scope.row.avatar" />
               <div class="ml-2 inline-flex flex-col">
-                <span class="text-sm">{{ scope.row.fullName }}</span>
+                <span v-if="locale === 'en-US' || scope.row.middleName" class="text-sm">
+                  {{ scope.row.givenName }} {{ scope.row.middleName }} {{ scope.row.familyName }}
+                </span>
+                <span v-else class="text-sm">
+                  {{ scope.row.familyName }}{{ scope.row.givenName }}
+                </span>
                 <span class="text-xs text-[var(--el-text-color-secondary)]">{{ scope.row.username }}</span>
               </div>
             </div>
           </template>
         </ElTableColumn>
-        <ElTableColumn prop="email" :label="$t('email')" />
+        <ElTableColumn show-overflow-tooltip prop="email" :label="$t('email')" />
+        <ElTableColumn prop="phoneNumber" :label="$t('phoneNumber')"></ElTableColumn>
         <ElTableColumn prop="accountNonLocked" :label="$t('accountNonLocked')">
           <template #default="scope">
-            <div
-              :class="['cursor-pointer', scope.row.accountNonLocked ? 'i-material-symbols:lock-open-right-outline-rounded text-[var(--el-color-success)]' : 'i-material-symbols:lock-outline text-[var(--el-color-warning)]']"
-              @click="lockRow(scope.row)" />
+            <Icon
+              :icon="`material-symbols:${scope.row.accountNonLocked ? 'lock-open-right-outline-rounded' : 'lock-outline'}`"
+              width="16" height="16" @click="lockRow(scope.row)"
+              :class="['cursor-pointer', scope.row.accountNonLocked ? 'text-[var(--el-color-success)]' : 'text-[var(--el-color-warning)]']" />
           </template>
         </ElTableColumn>
         <ElTableColumn prop="enabled" :label="$t('enabled')">
@@ -306,14 +319,14 @@ function handleCheckedChange(value: string[]) {
           <template #default="scope">
             <ElBadge v-if="scope.row.accountExpiresAt" is-dot :type="calculate(scope.row.accountExpiresAt)"
               class="mr-1" />
-            {{ scope.row.accountExpiresAt ? dayjs(scope.row.accountExpiresAt).format('YYYY-MM-DD HH:mm:ss') : '-' }}
+            {{ scope.row.accountExpiresAt ? dayjs(scope.row.accountExpiresAt).format('YYYY-MM-DD HH:mm') : '-' }}
           </template>
         </ElTableColumn>
         <ElTableColumn prop="credentialsExpiresAt" :label="$t('credentialsExpiresAt')">
           <template #default="scope">
             <ElBadge v-if="scope.row.credentialsExpiresAt" is-dot :type="calculate(scope.row.credentialsExpiresAt)"
               class="mr-1" />
-            {{ scope.row.credentialsExpiresAt ? dayjs(scope.row.credentialsExpiresAt).format('YYYY-MM-DD HH:mm:ss') :
+            {{ scope.row.credentialsExpiresAt ? dayjs(scope.row.credentialsExpiresAt).format('YYYY-MM-DD HH:mm') :
               '-'
             }}
           </template>
@@ -321,12 +334,12 @@ function handleCheckedChange(value: string[]) {
         <ElTableColumn :label="$t('actions')">
           <template #default="scope">
             <ElButton title="modify" size="small" type="primary" link @click="saveRow(scope.row.id)">
-              <div class="i-material-symbols:edit-outline-rounded" />{{ $t('modify') }}
+              <Icon icon="material-symbols:edit-outline-rounded" width="16" height="16" />{{ $t('modify') }}
             </ElButton>
             <ElPopconfirm :title="$t('removeConfirm')" :width="240" @confirm="confirmEvent(scope.row.id)">
               <template #reference>
                 <ElButton title="remove" size="small" type="danger" link>
-                  <div class="i-material-symbols:delete-outline-rounded" />{{ $t('remove') }}
+                  <Icon icon="material-symbols:delete-outline-rounded" width="16" height="16" />{{ $t('remove') }}
                 </ElButton>
               </template>
             </ElPopconfirm>
@@ -340,16 +353,36 @@ function handleCheckedChange(value: string[]) {
   <DialogView v-model="visible" :title="$t('users')" width="36%">
     <ElForm ref="formRef" :model="form" :rules="rules" label-position="top">
       <ElRow :gutter="20" class="w-full !mx-0">
-        <ElCol :span="12">
-          <ElFormItem :label="$t('fullName')" prop="fullName">
-            <ElInput type="email" v-model="form.fullName" :placeholder="$t('inputText', { field: $t('fullName') })"
+        <ElCol :span="8">
+          <ElFormItem :label="$t('givenName')" prop="givenName">
+            <ElInput type="email" v-model="form.givenName" :placeholder="$t('inputText', { field: $t('givenName') })"
               :maxLength="50" />
           </ElFormItem>
         </ElCol>
+        <ElCol :span="8">
+          <ElFormItem :label="$t('middleName')" prop="middleName">
+            <ElInput type="email" v-model="form.middleName" :placeholder="$t('inputText', { field: $t('middleName') })"
+              :maxLength="50" />
+          </ElFormItem>
+        </ElCol>
+        <ElCol :span="8">
+          <ElFormItem :label="$t('familyName')" prop="familyName">
+            <ElInput v-model="form.familyName" :placeholder="$t('inputText', { field: $t('familyName') })"
+              :maxLength="50" />
+          </ElFormItem>
+        </ElCol>
+      </ElRow>
+      <ElRow :gutter="20" class="w-full !mx-0">
         <ElCol :span="12">
           <ElFormItem :label="$t('username')" prop="username">
             <ElInput v-model="form.username" :placeholder="$t('inputText', { field: $t('username') })" :maxLength="50"
               :disabled="!!form.id" />
+          </ElFormItem>
+        </ElCol>
+        <ElCol :span="12">
+          <ElFormItem :label="$t('phoneNumber')" prop="phoneNumber">
+            <ElInput type="tel" v-model="form.phoneNumber" :placeholder="$t('inputText', { field: $t('phoneNumber') })"
+              :maxLength="20" :disabled="!!form.id" />
           </ElFormItem>
         </ElCol>
       </ElRow>
@@ -376,10 +409,10 @@ function handleCheckedChange(value: string[]) {
     </ElForm>
     <template #footer>
       <ElButton title="cancel" @click="visible = false">
-        <div class="i-material-symbols:close" />{{ $t('cancel') }}
+        <Icon icon="material-symbols:close" />{{ $t('cancel') }}
       </ElButton>
       <ElButton title="submit" type="primary" :loading="saveLoading" @click="onSubmit(formRef)">
-        <div class="i-material-symbols:check-circle-outline-rounded" /> {{ $t('submit') }}
+        <Icon icon="material-symbols:check-circle-outline-rounded" width="18" height="18" /> {{ $t('submit') }}
       </ElButton>
     </template>
   </DialogView>
