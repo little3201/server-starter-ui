@@ -22,7 +22,7 @@ export const retrieveRoleMembers = (id: number) => {
 
 /**
  * Retrieve privileges for a specific role
- * @param id Role ID
+ * @param id Row ID
  * @returns Role privileges
  */
 export const retrieveRolePrivileges = (id: number) => {
@@ -86,20 +86,41 @@ export const removeRole = (id: number) => {
 }
 
 /**
- * Relation privileges for a specific role
- * @param id Role ID
- * @param privilegeIds privilege IDs
+ * Relation members for a specific role
+ * @param id Row ID
+ * @param usernames usernames
  */
-export const relationRolePrivileges = (id: number, privilegeIds: number[]) => {
-  return api.patch(`${SERVER_URL.ROLE}/${id}/privileges`, privilegeIds)
+export const relationRoleMembers = (id: number, usernames: string[]) => {
+  return api.patch(`${SERVER_URL.ROLE}/${id}/members`, usernames)
+}
+
+/**
+ * Remove members for a specific role
+ * @param id Row ID
+ * @param usernames usernames
+ */
+export const removeRoleMembers = (id: number, usernames: string[]) => {
+  const params = usernames ? { usernames: usernames.join(',') } : {}
+  return api.delete(`${SERVER_URL.ROLE}/${id}/members`, { params })
+}
+
+/**
+ * Relation privileges for a specific role
+ * @param id Row ID
+ * @param privilegeIds Privilege id
+ * @param actions Actions
+ */
+export const relationRolePrivileges = (id: number, privilegeId: number, actions?: string[]) => {
+  return api.patch(`${SERVER_URL.ROLE}/${id}/privileges/${privilegeId}`, actions)
 }
 
 /**
  * Remove privileges for a specific role
- * @param id Role ID
- * @param privilegeIds privilege IDs
+ * @param id Row ID
+ * @param privilegeIds Privilege id
+ * @param actions Actions
  */
-export const removeRolePrivileges = (id: number, privilegeIds: number[]) => {
-  const params = privilegeIds ? { privilegeIds: privilegeIds.join(',') } : {}
-  return api.delete(`${SERVER_URL.ROLE}/${id}/privileges`, { params })
+export const removeRolePrivileges = (id: number, privilegeId: number, actions?: string[]) => {
+  const params = actions ? { actions: actions.join(',') } : {}
+  return api.delete(`${SERVER_URL.ROLE}/${id}/privileges/${privilegeId}`, { params })
 }

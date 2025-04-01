@@ -4,7 +4,7 @@ import { getRandomString, generateVerifier, computeChallenge } from 'src/utils'
 
 
 const client_id = import.meta.env.VITE_CLIENT_ID
-const baserUri = import.meta.env.VITE_AUTHORITY
+const authorityUrl = import.meta.env.VITE_AUTHORITY_URL
  
 
 export async function signIn() {
@@ -24,13 +24,14 @@ export async function signIn() {
     code_challenge_method: 'S256'
   })
 
-  window.location.href = `${baserUri}/${SERVER_URL.AUTHORIZE}?${params}`
+  window.location.href = `${authorityUrl}/${SERVER_URL.AUTHORIZE}?${params}`
 }
 
 export function handleCallback() {
   const urlParams = new URLSearchParams(window.location.search)
   const code = urlParams.get('code')
-  if (!code) {
+  if (!code) { 
+    signIn()
     throw Error('cannot get code!')
   }
   const state = urlParams.get('state')
@@ -53,11 +54,11 @@ export function handleCallback() {
     state: state
   })
   // Exchange authorization code for access token
-  return api.post(`${baserUri}/${SERVER_URL.TOKEN}`, params)
+  return api.post(`${authorityUrl}/${SERVER_URL.TOKEN}`, params)
 }
 
-export function getUser() {
-  return api.get(`${baserUri}/${SERVER_URL.USERINFO}`)
+export function getSub() {
+  return api.get(`${authorityUrl}/${SERVER_URL.USERINFO}`)
 }
 
 export function signOut() {
@@ -68,5 +69,5 @@ export function signOut() {
     post_logout_redirect_uri: `${window.location.origin}`
   })
 
-  window.location.href = `${baserUri}/${SERVER_URL.LOGOUT}?${params}`
+  window.location.href = `${authorityUrl}/${SERVER_URL.LOGOUT}?${params}`
 }

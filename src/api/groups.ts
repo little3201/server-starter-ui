@@ -83,3 +83,41 @@ export const enableGroup = (id: number) => {
 export const removeGroup = (id: number) => {
   return api.delete(`${SERVER_URL.GROUP}/${id}`)
 }
+
+/**
+ * Relation members for a specific role
+ * @param id Row ID
+ * @param usernames usernames
+ */
+export const relationGroupMembers = (id: number, usernames: string[]) => {
+  return api.patch(`${SERVER_URL.GROUP}/${id}/members`, usernames)
+}
+
+/**
+ * Remove members for a specific role
+ * @param id Row ID
+ * @param usernames usernames
+ */
+export const removeGroupMembers = (id: number, usernames: string[]) => {
+  const params = usernames ? { usernames: usernames.join(',') } : {}
+  return api.delete(`${SERVER_URL.GROUP}/${id}/members`, { params })
+}
+
+/**
+ * Relation roles for a specific role
+ * @param id Row ID
+ * @param roleIds Role ids
+ */
+export const relationGroupRoles = (id: number, roleIds: number[]) => {
+  return api.patch(`${SERVER_URL.GROUP}/${id}/roles`, roleIds)
+}
+
+/**
+ * Remove members for a specific role
+ * @param id Row ID
+ * @param roleIds Role ids
+ */
+export const removeGroupRoles = (id: number, roleIds: number[]) => {
+  const params = roleIds ? { roleIds: roleIds.join(',') } : {}
+  return api.delete(`${SERVER_URL.GROUP}/${id}/roles`, { params })
+}

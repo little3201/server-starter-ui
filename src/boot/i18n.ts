@@ -3,6 +3,7 @@ import Cookies from 'universal-cookie'
 import type { I18n } from 'vue-i18n'
 import { messages } from 'src/i18n'
 
+
 const cookies = new Cookies(null, { path: '/' })
 export const i18n = createI18n({
   legacy: false,

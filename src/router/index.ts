@@ -2,11 +2,15 @@ import { createRouter, createWebHistory } from 'vue-router'
 import type { RouteRecordRaw } from 'vue-router'
 import { constantRouterMap } from './routes'
 import { useUserStore } from 'stores/user-store'
+import Cookies from 'universal-cookie'
 import { retrievePrivilegeTree } from 'src/api/privileges'
+import { signIn, getSub } from 'src/api/authentication'
+import { fetchMe } from 'src/api/users'
 import type { PrivilegeTreeNode } from 'src/types'
-import { signIn, getUser } from 'src/api/authentication'
 
 
+
+const cookies = new Cookies(null, { path: '/' })
 // Lazy load layout
 const BlankLayout = () => import('layouts/BlankLayout.vue')
 const modules = import.meta.glob('../pages/**/*.{vue,tsx}')
@@ -20,17 +24,19 @@ const router = createRouter({
 
 // Router guard for authentication and dynamic route registration
 router.beforeEach(async (to, from, next) => {
-  const userStore = useUserStore()
   if (to.path === '/callback') {
     next()
   } else {
+    const userStore = useUserStore()
     if (userStore.accessToken) {
       // load user info
       if (!userStore.username) {
-        const res = await getUser()
+        const [subRes, userRes] = await Promise.all([getSub(), fetchMe()])
         userStore.$patch({
-          username: res.data.sub
+          username: subRes.data.sub,
+          avatar: userRes.data.avatar
         })
+
       }
       // load privileges
       if (!userStore.privileges.length) {
@@ -51,8 +57,10 @@ router.beforeEach(async (to, from, next) => {
         const redirectPath = from.query.redirect || to.path
         const redirect = decodeURIComponent(redirectPath as string)
         const nextData = to.path === redirect ? { ...to, replace: true } : { path: redirect }
+        cookies.set('redirect', nextData.path)
         next(nextData)
       } else {
+        cookies.set('redirect', decodeURIComponent(to.fullPath as string))
         next()
       }
     } else {

@@ -1,12 +1,21 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { onMounted, ref } from 'vue'
 import type { FormInstance } from 'element-plus'
-import { useUserStore } from 'stores/user-store'
+import { useI18n } from 'vue-i18n'
+import { fetchMe } from 'src/api/users'
 import { actions } from 'src/constants'
+import type { User } from 'src/types'
+import { Icon } from '@iconify/vue'
 
-const userStore = useUserStore()
 
-
+const { locale } = useI18n()
+const me = ref<User>({
+  id: undefined,
+  username: '',
+  givenName: '',
+  familyName: '',
+  email: ''
+})
 // 登录历史数据模拟
 const loginHistory = ref([
   { id: 1, device: 'Chrome on Windows', location: 'New York, USA', ip: '192.168.0.112', status: 'online' },
@@ -58,6 +67,10 @@ async function onSubmit(formEl: FormInstance | undefined) {
     }
   })
 }
+
+onMounted(() => {
+  fetchMe().then(res => { me.value = res.data })
+})
 </script>
 
 <template>
@@ -65,9 +78,16 @@ async function onSubmit(formEl: FormInstance | undefined) {
     <ElCol :span="6">
       <ElCard shadow="never">
         <div class="text-center">
-          <ElAvatar :size="180" :src="userStore.avatar" />
-          <div class="text-lg mt-4 mb-2">{{ userStore.fullName }}</div>
-          <div class="text-sm text-[var(--el-text-color-regular)]">{{ userStore.username }}</div>
+          <ElAvatar :size="180" :src="me.avatar" />
+          <div class="text-lg mt-4 mb-2">
+            <span v-if="locale === 'en-US' || me.middleName" class="text-sm">
+              {{ me.givenName }} {{ me.middleName }} {{ me.familyName }}
+            </span>
+            <span v-else class="text-sm">
+              {{ me.familyName }}{{ me.givenName }}
+            </span>
+          </div>
+          <div class="text-sm text-[var(--el-text-color-regular)]">@{{ me.username }}</div>
         </div>
 
         <ElDivider></ElDivider>
@@ -75,15 +95,15 @@ async function onSubmit(formEl: FormInstance | undefined) {
         <!-- 详细信息 -->
         <ul class="text-sm text-[var(--el-text-color-regular)] pl-3 space-y-3">
           <li class="flex items-center">
-            <div class="i-material-symbols:location-on-outline-rounded mr-2" />
+            <Icon icon="material-symbols:location-on-outline-rounded" class="mr-2" />
             西安
           </li>
           <li class="flex items-center">
-            <div class="i-material-symbols:mail-outline-rounded mr-2" />
-            <span>{{ userStore.email }}</span>
+            <Icon icon="material-symbols:mail-outline-rounded" class="mr-2" />
+            <span>{{ me.email }}</span>
           </li>
           <li class="flex items-center">
-            <div class="i-material-symbols:shield-person-outline-rounded mr-2" />
+            <Icon icon="material-symbols:shield-person-outline-rounded" class="mr-2" />
             角色
           </li>
         </ul>
@@ -92,13 +112,13 @@ async function onSubmit(formEl: FormInstance | undefined) {
       <ElCard shadow="never" class="mt-4">
         <ul class="text-sm text-[var(--el-text-color-regular)] pl-0">
           <li class="flex items-center py-2 px-3 rounded-md hover:bg-[var(--el-fill-color-lighter)] cursor-pointer">
-            <div class="i-material-symbols:notifications-outline mr-2" />Notifications
+            <Icon icon="material-symbols:notifications-outline" class="mr-2" />Notifications
           </li>
           <li class="flex items-center py-2 px-3 rounded-md hover:bg-[var(--el-fill-color-lighter)] cursor-pointer">
-            <div class="i-material-symbols:draw-outline mr-2" />Appearance
+            <Icon icon="material-symbols:draw-outline" class="mr-2" />Appearance
           </li>
           <li class="flex items-center py-2 px-3 rounded-md hover:bg-[var(--el-fill-color-lighter)] cursor-pointer">
-            <div class="i-material-symbols:notifications-outline mr-2" />Sessions
+            <Icon icon="material-symbols:notifications-outline" class="mr-2" />Sessions
           </li>
         </ul>
       </ElCard>
@@ -108,7 +128,7 @@ async function onSubmit(formEl: FormInstance | undefined) {
       <ElCard shadow="never">
         <ElTabs stretch v-model="activeTab">
           <!-- Overview -->
-          <ElTabPane label="Overview" name="overview">
+          <ElTabPane :label="$t('overview')" name="overview">
             <h3>Login Information</h3>
             <ElTable :data="loginHistory" :show-header=false stripe table-layout="auto">
               <ElTableColumn prop="device">
@@ -133,7 +153,7 @@ async function onSubmit(formEl: FormInstance | undefined) {
           </ElTabPane>
 
           <!-- Activities -->
-          <ElTabPane label="Activities" name="activities">
+          <ElTabPane :label="$t('activities')" name="activities">
             <h3>Last 3 days activities</h3>
             <ElTimeline>
               <ElTimelineItem v-for="activity in activities" :key="activity.id" :type="actions[activity.action]"
@@ -147,7 +167,7 @@ async function onSubmit(formEl: FormInstance | undefined) {
           </ElTabPane>
 
           <!-- Change password -->
-          <ElTabPane label="Change password" name="changePassword">
+          <ElTabPane :label="$t('changePassword')" name="changePassword">
             <h3>Change Password</h3>
             <ElForm ref="formRef" :model="form" :rules="rules" label-width="auto">
               <ElRow>

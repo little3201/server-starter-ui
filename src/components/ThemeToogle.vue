@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { useDark, useToggle } from '@vueuse/core'
+import { Icon } from '@iconify/vue'
 
 
 const isDark = useDark()
@@ -10,10 +11,10 @@ const isDark = useDark()
     style="--el-switch-on-color: var(--el-border-color); --el-switch-off-color: var(--el-color-primary-light-3);"
     @change="useToggle">
     <template #active-action>
-      <div class="i-material-symbols:dark-mode-outline-rounded ma-[3px]" />
+      <Icon icon="material-symbols:dark-mode-outline-rounded" width="18" height="18" />
     </template>
     <template #inactive-action>
-      <div class="i-material-symbols:light-mode-outline-rounded ma-[3px]" />
+      <Icon icon="material-symbols:light-mode-outline-rounded" width="18" height="18" />
     </template>
   </ElSwitch>
 </template>
