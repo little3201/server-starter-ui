@@ -56,10 +56,10 @@ router.beforeEach(async (to, from, next) => {
         const redirectPath = from.query.redirect || to.path
         const redirect = decodeURIComponent(redirectPath as string)
         const nextData = to.path === redirect ? { ...to, replace: true } : { path: redirect }
-        cookies.set('redirect', nextData.path)
+        cookies.set('current_page', nextData.path)
         next(nextData)
       } else {
-        cookies.set('redirect', decodeURIComponent(to.fullPath as string))
+        cookies.set('current_page', decodeURIComponent(to.fullPath as string))
         next()
       }
     } else if (to.fullPath === '/login') {

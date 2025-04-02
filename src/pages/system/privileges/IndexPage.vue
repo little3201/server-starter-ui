@@ -303,7 +303,7 @@ function handleCheckedChange(value: CheckboxValueType[]) {
           </template>
         </ElTableColumn>
         <ElTableColumn prop="path" :label="$t('path')" />
-        <ElTableColumn prop="redirect" :label="$t('redirect')" />
+        <ElTableColumn prop="redirect" :label="$t('current_page')" />
         <ElTableColumn prop="actions" :label="$t('actions')">
           <template #default="scope">
             <template v-if="scope.row.actions && scope.row.actions.length > 0">
@@ -369,8 +369,8 @@ function handleCheckedChange(value: CheckboxValueType[]) {
           </ElFormItem>
         </ElCol>
         <ElCol :span="12">
-          <ElFormItem :label="$t('redirect')" prop="redirect">
-            <ElInput v-model="form.redirect" :placeholder="$t('inputText', { field: $t('redirect') })"
+          <ElFormItem :label="$t('current_page')" prop="redirect">
+            <ElInput v-model="form.redirect" :placeholder="$t('inputText', { field: $t('current_page') })"
               :disabled="!!form.superiorId" />
           </ElFormItem>
         </ElCol>

@@ -22,7 +22,7 @@ export async function signIn() {
     code_challenge_method: 'S256'
   })
 
-  api.get(`${SERVER_URL.AUTHORIZE}?${params}`).then(res => {
+  api.get(SERVER_URL.AUTHORIZE, { params }).then(res => {
     window.location.replace(res.request.responseURL)
   })
 }
@@ -54,22 +54,21 @@ export function handleCallback() {
     grant_type: 'authorization_code'
   })
   // Exchange authorization code for access token
-  return api.post(`${SERVER_URL.TOKEN}`, params)
+  return api.post(SERVER_URL.TOKEN, params)
 }
 
 export function getSub() {
-  return api.get(`${SERVER_URL.USERINFO}`)
+  return api.get(SERVER_URL.USERINFO)
 }
 
-export function signOut() {
-  const idTokenHint = localStorage.getItem('id_token_hint')
+export function signOut(idToken: string) {
   const params = new URLSearchParams({
-    id_token_hint: `${idTokenHint}`,
+    id_token_hint: idToken,
     client_id: `${client_id}`,
     post_logout_redirect_uri: `${window.location.origin}`
   })
 
-  api.get(`${SERVER_URL.LOGOUT}?${params}`).then(res => {
+  api.get(SERVER_URL.LOGOUT, { params }).then(res => {
     window.location.replace(res.request.responseURL)
   })
 }

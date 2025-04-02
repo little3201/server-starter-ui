@@ -40,7 +40,7 @@ const userStore = useUserStore()
                     {{ $t('profile') }}
                   </ElDropdownItem>
                 </RouterLink>
-                <ElDropdownItem divided @click="signOut">
+                <ElDropdownItem divided @click="signOut(userStore.idToken)">
                   <Icon icon="material-symbols:logout-rounded" width="18" height="18" class="mr-2" />
                   {{ $t('signout') }}
                 </ElDropdownItem>
