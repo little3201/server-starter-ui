@@ -2,7 +2,7 @@ import { http, HttpResponse } from 'msw'
 import { SERVER_URL } from 'src/constants'
 
 
-localStorage.setItem('logged_in', 'true')
+localStorage.setItem('logged_in', 'false')
 
 export const authenticationHandlers = [
   http.get(`/api${SERVER_URL.USERINFO}`, () => {
@@ -45,6 +45,12 @@ export const authenticationHandlers = [
   }),
 
   http.post(`/api${SERVER_URL.LOGOUT}`, () => {
-    return new HttpResponse(null, { status: 200 })
+    localStorage.setItem('logged_in', 'false')
+    return new HttpResponse(null, {
+      status: 302,
+      headers: {
+        Location: '/login',
+      },
+    })
   })
 ]
