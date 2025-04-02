@@ -1,17 +1,20 @@
-<!-- not used -->
 <script setup lang="ts">
 import { ref, reactive, onMounted } from 'vue'
-import { DotLottie } from '@lottiefiles/dotlottie-web'
 import { useI18n } from 'vue-i18n'
 import { ElFormItem, type FormInstance, type FormRules } from 'element-plus'
+import { Icon } from '@iconify/vue'
+import { DotLottie } from '@lottiefiles/dotlottie-web'
+import { api } from 'boot/axios'
+import { SERVER_URL } from 'src/constants'
 import ThemeToogle from 'components/ThemeToogle.vue'
 import LanguageSelector from 'components/LanguageSelector.vue'
-const { t } = useI18n()
+import { getRandomString, generateVerifier, computeChallenge } from 'src/utils'
 
+
+const { t } = useI18n()
 const lottieRef = ref<HTMLCanvasElement | null>(null)
 
 const loading = ref<boolean>(false)
-
 const formRef = ref<FormInstance>()
 const form = reactive({
   username: '',
@@ -40,6 +43,21 @@ async function onSubmit(formEl: FormInstance | undefined) {
   formEl.validate((valid) => {
     if (valid) {
       loading.value = true
+      
+      const state = getRandomString(16)
+      const codeVerifier = generateVerifier()
+      // 存储code_verifier
+      localStorage.setItem('code_verifier', codeVerifier)
+      computeChallenge(codeVerifier).then(codeChallenge => {
+        const params = new URLSearchParams({
+          state: state, 
+          code_challenge: codeChallenge
+        })
+        api.get(`${SERVER_URL.AUTHORIZE}?${params}`).then(res => {
+          loading.value= false
+          window.location.replace(res.request.responseURL)
+        })
+      })
     }
   })
 }

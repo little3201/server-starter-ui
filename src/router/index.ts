@@ -7,12 +7,11 @@ import { retrievePrivilegeTree } from 'src/api/privileges'
 import { signIn, getSub } from 'src/api/authentication'
 import { fetchMe } from 'src/api/users'
 import type { PrivilegeTreeNode } from 'src/types'
-
+// Lazy load layout
+const BlankLayout = () => import('layouts/BlankLayout.vue')
 
 
 const cookies = new Cookies(null, { path: '/' })
-// Lazy load layout
-const BlankLayout = () => import('layouts/BlankLayout.vue')
 const modules = import.meta.glob('../pages/**/*.{vue,tsx}')
 
 // Create router instance
@@ -63,6 +62,8 @@ router.beforeEach(async (to, from, next) => {
         cookies.set('redirect', decodeURIComponent(to.fullPath as string))
         next()
       }
+    } else if (to.fullPath === '/login') {
+      next()
     } else {
       await signIn()
     }
