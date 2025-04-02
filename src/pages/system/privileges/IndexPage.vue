@@ -213,7 +213,7 @@ function handleCheckAllChange(val: CheckboxValueType) {
  * 选中操作
  * @param value 选中的值
  */
-function handleCheckedChange(value: string[]) {
+function handleCheckedChange(value: CheckboxValueType[]) {
   const checkedCount = value.length
   checkAll.value = checkedCount === columns.value.length
   isIndeterminate.value = checkedCount > 0 && checkedCount < columns.value.length
@@ -303,7 +303,7 @@ function handleCheckedChange(value: string[]) {
           </template>
         </ElTableColumn>
         <ElTableColumn prop="path" :label="$t('path')" />
-        <ElTableColumn prop="redirect" :label="$t('redirect')" />
+        <ElTableColumn prop="redirect" :label="$t('current_page')" />
         <ElTableColumn prop="actions" :label="$t('actions')">
           <template #default="scope">
             <template v-if="scope.row.actions && scope.row.actions.length > 0">
@@ -369,8 +369,8 @@ function handleCheckedChange(value: string[]) {
           </ElFormItem>
         </ElCol>
         <ElCol :span="12">
-          <ElFormItem :label="$t('redirect')" prop="redirect">
-            <ElInput v-model="form.redirect" :placeholder="$t('inputText', { field: $t('redirect') })"
+          <ElFormItem :label="$t('current_page')" prop="redirect">
+            <ElInput v-model="form.redirect" :placeholder="$t('inputText', { field: $t('current_page') })"
               :disabled="!!form.superiorId" />
           </ElFormItem>
         </ElCol>

@@ -27,6 +27,22 @@ export const usersHandlers = [
       sub: 'username'
     })
   }),
+  http.get(`/api${SERVER_URL.USER}/me`, () => {
+    return HttpResponse.json({
+      id: 1,
+      enabled: true,
+      lastModifiedDate: null,
+      username: 'admin',
+      givenName: '勒布朗',
+      familyName: '詹姆斯',
+      middleName: '雷蒙',
+      avatar: '/images/avatar.jpg',
+      email: 'test@test.com',
+      accountExpiresAt: null,
+      accountNonLocked: true,
+      credentialsExpiresAt: null
+    })
+  }),
   http.get(`/api${SERVER_URL.USER}/:id`, ({ params }) => {
     const { id } = params
     if (id) {
