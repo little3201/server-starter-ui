@@ -68,7 +68,7 @@ export function signOut(idToken: string) {
     post_logout_redirect_uri: `${window.location.origin}`
   })
 
-  api.get(SERVER_URL.LOGOUT, { params }).then(res => {
+  api.post(SERVER_URL.LOGOUT, params).then(res => {
     window.location.replace(res.request.responseURL)
   })
 }
