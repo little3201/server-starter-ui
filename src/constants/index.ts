@@ -53,6 +53,7 @@ export const actions: { [key: string]: 'primary' | 'success' | 'info' | 'warning
   clear: 'danger',
 
   relation: 'success',
+  authorize: 'warning',
   config: 'success',
 
   upload: 'primary',

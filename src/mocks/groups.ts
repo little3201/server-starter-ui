@@ -119,6 +119,22 @@ export const groupsHandlers = [
     // response and send back the newly created Row!
     return HttpResponse.json(newData, { status: 201 })
   }),
+  http.patch(`/api${SERVER_URL.GROUP}/:id/members`, ({ params }) => {
+    const { id } = params
+    if (id) {
+      return HttpResponse.json()
+    } else {
+      return HttpResponse.error()
+    }
+  }),
+  http.delete(`/api${SERVER_URL.GROUP}/:id/members`, ({ params }) => {
+    const { id } = params
+    if (id) {
+      return HttpResponse.json()
+    } else {
+      return HttpResponse.error()
+    }
+  }),
   http.delete(`/api${SERVER_URL.GROUP}/:id`, ({ params }) => {
     // All request path params are provided in the "params"
     // argument of the response resolver.
