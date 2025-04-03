@@ -105,7 +105,7 @@ export default {
   config: '配置',
   execute: '執行',
   sync: '同步',
-  preveiw: '預覽',
+  preview: '預覽',
   relation: '關聯',
   authorize: '授權',
   more: '更多',

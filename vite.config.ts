@@ -47,10 +47,12 @@ export default defineConfig({
     })
   ],
   server: {
+    // https: true,
+    // open: true,
     proxy: {
       '/api': {
         target: 'http://127.0.0.1:8760',
-        ws: true,
+        // ws: true,
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api/, '')
       }

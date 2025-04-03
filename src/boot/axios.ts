@@ -1,4 +1,4 @@
-import type { AxiosError, AxiosInstance, InternalAxiosRequestConfig, AxiosResponse } from 'axios';
+import type { AxiosError, AxiosInstance, InternalAxiosRequestConfig, AxiosResponse } from 'axios'
 import axios from 'axios'
 import { ElMessage } from 'element-plus'
 import { useUserStore } from 'stores/user-store'
@@ -12,7 +12,7 @@ const { t } = i18n.global as { t: ComposerTranslation }
 const abortControllerMap: Map<string, AbortController> = new Map()
 
 const api: AxiosInstance = axios.create({
-  baseURL: import.meta.env.VITE_ASE_API || '/api',
+  baseURL: import.meta.env.VITE_BASE_API || '/api',
   timeout: 5000,
   withCredentials: true
 })

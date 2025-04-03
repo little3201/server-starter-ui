@@ -8,7 +8,7 @@ import { Icon } from '@iconify/vue'
 const slots: { [key: string]: Slot | undefined } = useSlots()
 
 interface Props {
-  [key: string]: string | number | boolean | undefined;
+  [key: string]: string | number | boolean | undefined
 }
 
 const props = withDefaults(defineProps<{
