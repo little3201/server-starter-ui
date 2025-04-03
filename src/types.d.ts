@@ -56,6 +56,7 @@ export interface RolePrivileges {
   id: number
   roleId: number
   privilegeId: number
+  actions?: string[]
 }
 
 export interface Privilege extends AudtiMetadata {

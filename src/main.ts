@@ -3,7 +3,6 @@ import App from './App.vue'
 
 import 'src/css/index.scss'
 import 'src/css/main.css'
-import 'animate.css'
 
 // If you want to use ElMessage, import it.
 import 'element-plus/theme-chalk/src/message.scss'

@@ -224,7 +224,8 @@ const treeNodes: PrivilegeTreeNode[] = [
         meta: {
           path: 'groups',
           component: 'pages/system/groups/IndexPage',
-          icon: 'account-tree-outline'
+          icon: 'account-tree-outline',
+          actions: ['create', 'modify', 'remove', 'import', 'export']
         }
       },
       {
@@ -233,7 +234,8 @@ const treeNodes: PrivilegeTreeNode[] = [
         meta: {
           path: 'users',
           component: 'pages/system/users/IndexPage',
-          icon: 'person-outline'
+          icon: 'person-outline',
+          actions: ['create', 'modify', 'remove', 'import', 'export']
         }
       },
       {
@@ -242,7 +244,8 @@ const treeNodes: PrivilegeTreeNode[] = [
         meta: {
           path: 'roles',
           component: 'pages/system/roles/IndexPage',
-          icon: 'shield-person-outline'
+          icon: 'shield-person-outline',
+          actions: ['create', 'modify', 'remove', 'import', 'export']
         }
       },
       {
@@ -251,7 +254,8 @@ const treeNodes: PrivilegeTreeNode[] = [
         meta: {
           path: 'dictionaries',
           component: 'pages/system/dictionaries/IndexPage',
-          icon: 'book-3-outline'
+          icon: 'book-3-outline',
+          actions: ['create', 'modify', 'remove', 'import', 'export']
         }
       },
       {
@@ -260,7 +264,8 @@ const treeNodes: PrivilegeTreeNode[] = [
         meta: {
           path: 'privileges',
           component: 'pages/system/privileges/IndexPage',
-          icon: 'admin-panel-settings-outline'
+          icon: 'admin-panel-settings-outline',
+          actions: ['modify', 'import', 'export']
         }
       }
     ]
@@ -313,22 +318,24 @@ const treeNodes: PrivilegeTreeNode[] = [
       }
     ]
   },
-  // {
-  //   id: 12,
-  //   name: 'regions',
-  //   meta: {
-  //     path: 'regions',
-  //     component: 'pages/regions/IndexPage',
-  //     icon: 'location-on-outline'
-  //   }
-  // },
+  {
+    id: 12,
+    name: 'regions',
+    meta: {
+      path: 'regions',
+      component: 'pages/regions/IndexPage',
+      icon: 'location-on-outline',
+      actions: ['create', 'modify', 'remove', 'import', 'export']
+    }
+  },
   {
     id: 13,
     name: 'files',
     meta: {
       path: 'files',
       component: 'pages/files/IndexPage',
-      icon: 'folder-open-outline'
+      icon: 'folder-open-outline',
+      actions: ['download', 'upload', 'remove']
     }
   },
   {
@@ -347,7 +354,8 @@ const treeNodes: PrivilegeTreeNode[] = [
         meta: {
           path: 'generators',
           component: 'pages/exploiters/generators/IndexPage',
-          icon: 'code'
+          icon: 'code',
+          actions: ['create', 'modify', 'remove', 'import', 'export']
         }
       },
       {
@@ -356,7 +364,8 @@ const treeNodes: PrivilegeTreeNode[] = [
         meta: {
           path: 'scripts',
           component: 'pages/exploiters/scripts/IndexPage',
-          icon: 'terminal'
+          icon: 'terminal',
+          actions: ['create', 'modify', 'remove', 'import', 'export']
         }
       },
       {
@@ -365,7 +374,8 @@ const treeNodes: PrivilegeTreeNode[] = [
         meta: {
           path: 'templates',
           component: 'pages/exploiters/templates/IndexPage',
-          icon: 'terminal'
+          icon: 'terminal',
+          actions: ['create', 'modify', 'remove', 'import', 'export']
         }
       }
     ]

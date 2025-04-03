@@ -107,6 +107,7 @@ export default {
   sync: 'Sync',
   preview: 'Preview',
   relation: 'Relation',
+  authorize: 'Authorize',
   more: 'More',
   enable: 'Enable',
 

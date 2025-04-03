@@ -43,18 +43,18 @@ async function onSubmit(formEl: FormInstance | undefined) {
   formEl.validate((valid) => {
     if (valid) {
       loading.value = true
-      
+
       const state = getRandomString(16)
       const codeVerifier = generateVerifier()
       // 存储code_verifier
       localStorage.setItem('code_verifier', codeVerifier)
       computeChallenge(codeVerifier).then(codeChallenge => {
         const params = new URLSearchParams({
-          state: state, 
+          state: state,
           code_challenge: codeChallenge
         })
         api.get(`${SERVER_URL.AUTHORIZE}?${params}`).then(res => {
-          loading.value= false
+          loading.value = false
           window.location.replace(res.request.responseURL)
         })
       })
@@ -109,12 +109,11 @@ function load() {
       </div>
     </ElHeader>
     <ElMain class="items-center justify-center z-10">
-      <ElCard class="w-full lg:w-1/2 xl:w-2/3" style="height: 70vh;border-radius: 1.5rem;"
-        body-class="flex items-center !p-0 h-full">
-        <div class="hidden-lg-and-down flex flex-col items-center h-full w-1/2  ">
-          <div class="inline-flex flex-grow items-center justify-center h-full">
-            <Transition appear enter-active-class="animate__animated animate__slideInLeft"
-              leave-active-class="animate__animated animate__slideOutLeft">
+      <Transition appear name="el-zoom-in-center">
+        <ElCard class="w-full lg:w-1/2 xl:w-2/3" style="height: 70vh;border-radius: 1.5rem;"
+          body-class="flex items-center !p-0 h-full">
+          <div class="hidden-lg-and-down flex flex-col items-center h-full w-1/2  ">
+            <div class="inline-flex flex-grow items-center justify-center h-full">
               <div class="inline-flex flex-col justify-center items-center" style="margin-top: -40px">
                 <canvas ref="lottieRef" style="height: 450px; width: 450px" />
                 <div class="-mt-8">
@@ -126,13 +125,10 @@ function load() {
                   </p>
                 </div>
               </div>
-            </Transition>
+            </div>
           </div>
-        </div>
-        <div
-          class="flex flex-row items-center w-full xl:w-1/2 h-full  bg-[var(--el-color-primary-light-9)] dark:bg-transparent">
-          <Transition appear enter-active-class="animate__animated animate__slideInRight"
-            leave-active-class="animate__animated animate__slideOutRight">
+          <div
+            class="flex flex-row items-center w-full xl:w-1/2 h-full  bg-[var(--el-color-primary-light-9)] dark:bg-transparent">
             <div class="flex flex-col w-full h-full space-y-2xl justify-center items-center">
               <div class="text-center">
                 <ElImage src="/svgs/logo.svg" alt="logo" class="w-24 h-24" />
@@ -181,9 +177,9 @@ function load() {
                 </ElRow>
               </ElForm>
             </div>
-          </Transition>
-        </div>
-      </ElCard>
+          </div>
+        </ElCard>
+      </Transition>
     </ElMain>
     <ElFooter class="z-10" height="50px">
       <p class="text-sm text-center">&copy; {{ new Date().getFullYear() }}

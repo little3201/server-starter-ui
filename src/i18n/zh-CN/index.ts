@@ -107,6 +107,7 @@ export default {
   sync: '同步',
   preview: '预览',
   relation: '关联',
+  authorize: '授权',
   more: '更多',
   enable: '启用',
 
