@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { ref, reactive, onMounted } from 'vue'
 import type { FormInstance, FormRules, TreeInstance, CheckboxValueType, TransferDirection, TransferKey } from 'element-plus'
-import type { InternalRuleItem } from 'async-validator/dist-types/interface'
 import type { Pagination, Role, RoleMembers, RolePrivileges, PrivilegeTreeNode, User } from 'src/types'
 import draggable from 'vuedraggable'
 import { useI18n } from 'vue-i18n'
@@ -63,7 +62,7 @@ const rules = reactive<FormRules<typeof form>>({
   ]
 })
 
-function checkNameExistsence(rule: InternalRuleItem, value: string, callback: (error?: string | Error) => void) {
+function checkNameExistsence(rule: unknown, value: string, callback: (error?: string | Error) => void) {
   checkRoleExists(value, form.value.id).then(res => {
     if (res.data) {
       callback(new Error(t('alreadyExists', { field: t('name') })))

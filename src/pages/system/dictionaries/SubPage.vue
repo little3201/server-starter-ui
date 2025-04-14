@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { ref, reactive, onMounted } from 'vue'
 import type { FormInstance, FormRules } from 'element-plus'
-import type { InternalRuleItem } from 'async-validator/dist-types/interface'
 import { useI18n } from 'vue-i18n'
 import DialogView from 'components/DialogView.vue'
 import {
@@ -39,7 +38,7 @@ const rules = reactive<FormRules<typeof form>>({
   ]
 })
 
-function checkNameExistsence(rule: InternalRuleItem, value: string, callback: (error?: string | Error) => void) {
+function checkNameExistsence(rule: unknown, value: string, callback: (error?: string | Error) => void) {
   if (form.value.superiorId) {
     checkDictionaryExists(form.value.superiorId, value, form.value.id).then(res => {
       if (res.data) {
