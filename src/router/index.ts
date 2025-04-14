@@ -25,6 +25,8 @@ const router = createRouter({
 router.beforeEach(async (to, from, next) => {
   if (to.path === '/callback') {
     next()
+  } else if (to.fullPath === '/login') {
+    next()
   } else {
     const userStore = useUserStore()
     if (userStore.accessToken) {
@@ -62,8 +64,6 @@ router.beforeEach(async (to, from, next) => {
         cookies.set('current_page', decodeURIComponent(to.fullPath as string))
         next()
       }
-    } else if (to.fullPath === '/login') {
-      next()
     } else {
       await signIn()
     }
