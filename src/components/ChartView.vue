@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { computed, ref, watch, onMounted, onBeforeUnmount, onActivated } from 'vue'
 import { useDark, useEventListener } from '@vueuse/core'
-import { debounce } from 'lodash-es'
 import ApexCharts from 'apexcharts'
 import { isString } from 'src/utils'
 
@@ -64,12 +63,12 @@ watch(
   }
 )
 
-const resizeHandler = debounce(() => {
+const resizeHandler = () => {
   if (chartRef) {
     chartRef?.destroy()
     initChart()
   }
-}, 100)
+}
 
 const contentResizeHandler = async (e: TransitionEvent) => {
   if (e.propertyName === 'width') {

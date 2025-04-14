@@ -72,9 +72,6 @@ importers:
       globals:
         specifier: ^15.15.0
         version: 15.15.0
-      lodash-es:
-        specifier: ^4.17.21
-        version: 4.17.21
       msw:
         specifier: ^2.7.4
         version: 2.7.4(@types/node@22.14.1)(typescript@5.8.3)
