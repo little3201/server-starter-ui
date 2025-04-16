@@ -75,3 +75,24 @@ export const enableUser = (id: number) => {
 export const removeUser = (id: number) => {
   return api.delete(`${SERVER_URL.USER}/${id}`)
 }
+
+/**
+ * Relation privileges for a specific row
+ * @param ids Row IDs
+ * @param privilegeIds Privilege id
+ * @param actions Actions
+ */
+export const relationUsersPrivileges = (ids: number[], privilegeId: number, actions: string[]) => {
+  return api.patch(`${SERVER_URL.USER}/privileges/${privilegeId}`, { ids, actions })
+}
+
+/**
+ * Remove privileges for a specific row
+ * @param ids Row IDs
+ * @param privilegeIds Privilege id
+ * @param actions Actions
+ */
+export const removeUsersPrivileges = (ids: number[], privilegeId: number, actions: string[]) => {
+  const params = { ids: ids.join(','), actions: actions.join(',') }
+  return api.delete(`${SERVER_URL.USER}/privileges/${privilegeId}`, { params })
+}

@@ -21,7 +21,7 @@ export const retrieveGroupTree = () => {
 }
 
 /**
- * Retrieve members for a specific group
+ * Retrieve members for a specific row
  * @returns tree data
  */
 export const retrieveGroupMembers = (id: number) => {
@@ -85,7 +85,7 @@ export const removeGroup = (id: number) => {
 }
 
 /**
- * Relation members for a specific role
+ * Relation members for a specific row
  * @param id Row ID
  * @param usernames usernames
  */
@@ -94,7 +94,7 @@ export const relationGroupMembers = (id: number, usernames: string[]) => {
 }
 
 /**
- * Remove members for a specific role
+ * Remove members for a specific row
  * @param id Row ID
  * @param usernames usernames
  */
@@ -104,7 +104,7 @@ export const removeGroupMembers = (id: number, usernames: string[]) => {
 }
 
 /**
- * Relation roles for a specific role
+ * Relation roles for a specific row
  * @param id Row ID
  * @param roleIds Role ids
  */
@@ -113,11 +113,32 @@ export const relationGroupRoles = (id: number, roleIds: number[]) => {
 }
 
 /**
- * Remove members for a specific role
+ * Remove members for a specific row
  * @param id Row ID
  * @param roleIds Role ids
  */
 export const removeGroupRoles = (id: number, roleIds: number[]) => {
   const params = roleIds ? { roleIds: roleIds.join(',') } : {}
   return api.delete(`${SERVER_URL.GROUP}/${id}/roles`, { params })
+}
+
+/**
+ * Relation privileges for a specific row
+ * @param ids Row IDs
+ * @param privilegeIds Privilege id
+ * @param actions Actions
+ */
+export const relationGroupsPrivileges = (ids: number[], privilegeId: number, actions: string[]) => {
+  return api.patch(`${SERVER_URL.GROUP}/privileges/${privilegeId}`, { ids, actions })
+}
+
+/**
+ * Remove privileges for a specific row
+ * @param ids Row IDs
+ * @param privilegeIds Privilege id
+ * @param actions Actions
+ */
+export const removeGroupsPrivileges = (ids: number[], privilegeId: number, actions: string[]) => {
+  const params = { ids: ids.join(','), actions: actions.join(',') }
+  return api.delete(`${SERVER_URL.GROUP}/privileges/${privilegeId}`, { params })
 }

@@ -106,17 +106,21 @@ export const rolesHandlers = [
       return HttpResponse.error()
     }
   }),
-  http.patch(`/api${SERVER_URL.ROLE}/:id/privileges/:privilegeId`, ({ params }) => {
-    const { id, privilegeId } = params
-    if (id && privilegeId) {
+  http.patch(`/api${SERVER_URL.ROLE}/privileges/:privilegeId`, async({ params, request }) => {
+    const { ids, actions } = await request.json() as {ids:'', actions:''}
+    const { privilegeId } = params
+    if (privilegeId && ids.length && actions.length) {
       return HttpResponse.json()
     } else {
       return HttpResponse.error()
     }
   }),
-  http.delete(`/api${SERVER_URL.ROLE}/:id/privileges/:privilegeId`, ({ params }) => {
-    const { id, privilegeId } = params
-    if (id && privilegeId) {
+  http.delete(`/api${SERVER_URL.ROLE}/privileges/:privilegeId`, async({ params, request }) => {
+    const searchParams = new URLSearchParams(request.url)
+    const ids = searchParams.get('ids')
+  
+    const { privilegeId } = params
+    if (privilegeId && ids && ids.length) {
       return HttpResponse.json()
     } else {
       return HttpResponse.error()

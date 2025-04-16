@@ -24,6 +24,13 @@ export interface User extends AudtiMetadata {
   enabled?: boolean
 }
 
+export interface UserPrivileges {
+  id: number
+  username: string
+  privilegeId: number
+  actions?: string[]
+}
+
 export interface Group extends AudtiMetadata {
   name: string
   superiorId?: number
@@ -37,6 +44,13 @@ export interface GroupMembers {
   id: number
   groupId: number
   username: string
+}
+
+export interface GroupPrivileges {
+  id: number
+  groupId: number
+  privilegeId: number
+  actions?: string[]
 }
 
 export interface Role extends AudtiMetadata {

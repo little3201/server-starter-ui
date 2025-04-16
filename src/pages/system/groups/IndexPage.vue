@@ -37,11 +37,8 @@ const groupTree = ref<TreeNode[]>([])
 const saveLoading = ref<boolean>(false)
 const visible = ref<boolean>(false)
 
-const selectedRow = ref<Group>({
-  id: undefined,
-  name: ''
-})
 const relationVisible = ref<boolean>(false)
+const relations = ref<Array<string>>([])
 const members = ref([])
 
 const filters = ref({
@@ -73,8 +70,6 @@ function checkNameExistsence(rule: unknown, value: string, callback: (error?: st
   })
 }
 
-const relations = ref<Array<string>>([])
-
 /**
  * tree过滤
  */
@@ -100,7 +95,7 @@ async function loadUsers() {
   retrieveUsers({ page: 1, size: 99 }).then(res => {
     members.value = res.data.content.map((item: User) => ({
       ...item,
-      fullName: (locale.value === 'en-US' || item.middleName !== null) ? `${item.givenName} ${item.middleName} ${item.familyName}` : `${item.familyName}${item.givenName}`
+      fullName: (locale.value === 'en-US' || item.middleName) ? `${item.givenName} ${item.middleName} ${item.familyName}` : `${item.familyName}${item.givenName}`
     }))
   })
 }
@@ -175,12 +170,12 @@ onMounted(() => {
  * 关联弹出框
  * @param id 主键
  */
-function relationRow(row: Group) {
+function relationRow(id: number) {
   relationVisible.value = true
-  selectedRow.value = row
   loadUsers()
-  if (row.id) {
-    loadGroupUsers(row.id)
+  if (id) {
+    form.value.id = id
+    loadGroupUsers(id)
   }
 }
 
@@ -281,12 +276,12 @@ function handleCheckedChange(value: CheckboxValueType[]) {
   isIndeterminate.value = checkedCount > 0 && checkedCount < columns.value.length
 }
 
-function handleTransferChange(value: TransferKey[], direction: TransferDirection, movedKeys: TransferKey[]) {
-  if (selectedRow.value && selectedRow.value.id) {
+function handleTransferChange(value: TransferKey[], direction: TransferDirection) {
+  if (form.value.id) {
     if (direction === 'right') {
-      relationGroupMembers(selectedRow.value.id, movedKeys as string[])
+      relationGroupMembers(form.value.id, value as string[])
     } else {
-      removeGroupMembers(selectedRow.value.id, movedKeys as string[])
+      removeGroupMembers(form.value.id, value as string[])
     }
   }
 }
@@ -400,7 +395,7 @@ function handleTransferChange(value: TransferKey[], direction: TransferDirection
                 <ElButton title="modify" size="small" type="primary" link @click="saveRow(scope.row.id)">
                   <Icon icon="material-symbols:edit-outline-rounded" width="16" height="16" />{{ $t('modify') }}
                 </ElButton>
-                <ElButton title="relation" size="small" type="success" link @click="relationRow(scope.row)">
+                <ElButton title="relation" size="small" type="success" link @click="relationRow(scope.row.id)">
                   <Icon icon="material-symbols:link-rounded" width="16" height="16" />{{ $t('relation') }}
                 </ElButton>
                 <ElPopconfirm v-if="!scope.row.hasChildren" :title="$t('removeConfirm')" :width="240"
@@ -440,7 +435,7 @@ function handleTransferChange(value: TransferKey[], direction: TransferDirection
     </ElForm>
     <template #footer>
       <ElButton title="cancel" @click="visible = false">
-        <Icon icon="material-symbols:close" />{{ $t('cancel') }}
+        <Icon icon="material-symbols:close" width="18" height="18" />{{ $t('cancel') }}
       </ElButton>
       <ElButton title="submit" type="primary" :loading="saveLoading" @click="onSubmit(formRef)">
         <Icon icon="material-symbols:check-circle-outline-rounded" width="18" height="18" /> {{ $t('submit') }}

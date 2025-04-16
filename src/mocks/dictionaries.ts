@@ -36,6 +36,7 @@ const datas: Dictionary[] = [
     enabled: true
   }
 ]
+
 const subDatas: Dictionary[] = [
   {
     name: 'BusinessLogic',
@@ -102,9 +103,37 @@ const subDatas: Dictionary[] = [
     lastModifiedDate: new Date()
   },
   {
+    name: 'create',
+    superiorId: 42,
+    id: 43,
+    enabled: true,
+    lastModifiedDate: new Date()
+  },
+  {
+    name: 'modify',
+    superiorId: 42,
+    id: 44,
+    enabled: true,
+    lastModifiedDate: new Date()
+  },
+  {
     name: 'remove',
     superiorId: 42,
     id: 45,
+    enabled: true,
+    lastModifiedDate: new Date()
+  },
+  {
+    name: 'import',
+    superiorId: 42,
+    id: 50,
+    enabled: true,
+    lastModifiedDate: new Date()
+  },
+  {
+    name: 'export',
+    superiorId: 42,
+    id: 51,
     enabled: true,
     lastModifiedDate: new Date()
   },
@@ -126,20 +155,6 @@ const subDatas: Dictionary[] = [
     name: 'preview',
     superiorId: 42,
     id: 49,
-    enabled: true,
-    lastModifiedDate: new Date()
-  },
-  {
-    name: 'import',
-    superiorId: 42,
-    id: 50,
-    enabled: true,
-    lastModifiedDate: new Date()
-  },
-  {
-    name: 'export',
-    superiorId: 42,
-    id: 51,
     enabled: true,
     lastModifiedDate: new Date()
   },
@@ -173,19 +188,13 @@ const subDatas: Dictionary[] = [
     lastModifiedDate: new Date()
   },
   {
-    name: 'create',
+    name: 'authorize',
     superiorId: 42,
-    id: 43,
+    description: '授权',
+    id: 56,
     enabled: true,
     lastModifiedDate: new Date()
   },
-  {
-    name: 'modify',
-    superiorId: 42,
-    id: 44,
-    enabled: true,
-    lastModifiedDate: new Date()
-  }
 ]
 
 export const dictionariesHandlers = [

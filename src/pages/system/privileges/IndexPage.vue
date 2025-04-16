@@ -1,23 +1,29 @@
 <script setup lang="ts">
 import { ref, reactive, onMounted } from 'vue'
-import type { FormInstance, FormRules, UploadInstance, CheckboxValueType } from 'element-plus'
+import type { TableInstance, FormInstance, FormRules, UploadInstance, CheckboxValueType, TabsPaneContext, TransferDirection, TransferKey } from 'element-plus'
 import draggable from 'vuedraggable'
+import { useI18n } from 'vue-i18n'
 import DialogView from 'components/DialogView.vue'
 import {
-  retrievePrivileges, retrievePrivilegeSubset,
-  fetchPrivilege, modifyPrivilege, enablePrivilege
+  retrievePrivileges, retrievePrivilegeSubset, retrievePrivilegeRoles, retrievePrivilegeGroups,
+  retrievePrivilegeUsers, fetchPrivilege, modifyPrivilege, enablePrivilege
 } from 'src/api/privileges'
 import { retrieveDictionarySubset } from 'src/api/dictionaries'
+import { retrieveRoles, relationRolesPrivileges, removeRolesPrivileges } from 'src/api/roles'
+import { retrieveGroups, relationGroupsPrivileges, removeGroupsPrivileges } from 'src/api/groups'
+import { retrieveUsers, relationUsersPrivileges, removeUsersPrivileges } from 'src/api/users'
 import { visibleArray } from 'src/utils'
 import { actions } from 'src/constants'
-import type { Pagination, Privilege, Dictionary } from 'src/types'
+import type { Pagination, Privilege, Role, Group, User, Dictionary, RolePrivileges, GroupPrivileges, UserPrivileges } from 'src/types'
 import { Icon } from '@iconify/vue'
 
 
+const { locale } = useI18n()
 const loading = ref<boolean>(false)
 const datas = ref<Array<Privilege>>([])
 const total = ref<number>(0)
 
+const tableRef = ref<TableInstance>()
 const pagination = reactive<Pagination>({
   page: 1,
   size: 10
@@ -32,6 +38,15 @@ const buttonOptions = ref<Array<Dictionary>>([])
 const saveLoading = ref<boolean>(false)
 const visible = ref<boolean>(false)
 
+const hasNext = ref<boolean>(true)
+const checkedActions = ref<Array<string>>([])
+const authorizeVisible = ref<boolean>(false)
+const relations = ref<Array<number | string>>([])
+const activeName = ref<string>('roles')
+const roles = ref<Array<Role>>([])
+const groups = ref<Array<Group>>([])
+const users = ref<Array<User>>([])
+
 const importVisible = ref<boolean>(false)
 const importLoading = ref<boolean>(false)
 const importRef = ref<UploadInstance>()
@@ -40,8 +55,6 @@ const filters = ref({
   name: null,
   path: null
 })
-
-const oldComponent = ref<string>('#')
 
 const formRef = ref<FormInstance>()
 const initialValues: Privilege = {
@@ -52,6 +65,7 @@ const initialValues: Privilege = {
   icon: ''
 }
 const form = ref<Privilege>({ ...initialValues })
+const subset = ref<Array<Privilege>>()
 
 const rules = reactive<FormRules<typeof form>>({
   name: [
@@ -107,6 +121,23 @@ async function loadDictionaries() {
   })
 }
 
+async function loadRoles() {
+  retrieveRoles({ page: 1, size: 99 }).then(res => { roles.value = res.data.content })
+}
+
+async function loadGroups() {
+  retrieveGroups({ page: 1, size: 99 }).then(res => { groups.value = res.data.content })
+}
+
+async function loadUsers() {
+  retrieveUsers({ page: 1, size: 99 }).then(res => {
+    users.value = res.data.content.map((item: User) => ({
+      ...item,
+      fullName: (locale.value === 'en-US' || item.middleName) ? `${item.givenName} ${item.middleName} ${item.familyName}` : `${item.familyName}${item.givenName}`
+    }))
+  })
+}
+
 /**
  * reset
  */
@@ -130,6 +161,14 @@ function importRows() {
 }
 
 /**
+ * 导出
+ */
+function exportRows() {
+  const selectedRows = tableRef.value?.getSelectionRows()
+  console.log('selected rows: ', selectedRows)
+}
+
+/**
  * 弹出框
  * @param id 主键
  */
@@ -137,6 +176,7 @@ function saveRow(id?: number) {
   form.value = { ...initialValues }
   if (id) {
     loadOne(id)
+    retrievePrivilegeSubset(id).then(res => { subset.value = res.data })
   }
   loadDictionaries()
   visible.value = true
@@ -149,8 +189,19 @@ function saveRow(id?: number) {
 async function loadOne(id: number) {
   fetchPrivilege(id).then(res => {
     form.value = res.data
-    oldComponent.value = res.data.component
   })
+}
+
+async function loadPrivilegeRoles(id: number) {
+  retrievePrivilegeRoles(id).then(res => { relations.value = res.data.map((item: RolePrivileges) => item.roleId) })
+}
+
+async function loadPrivilegeGroups(id: number) {
+  retrievePrivilegeGroups(id).then(res => { relations.value = res.data.map((item: GroupPrivileges) => item.groupId) })
+}
+
+async function loadPrivilegeUsers(id: number) {
+  retrievePrivilegeUsers(id).then(res => { relations.value = res.data.map((item: UserPrivileges) => item.username) })
 }
 
 async function enableChange(id: number) {
@@ -177,12 +228,37 @@ async function onSubmit(formEl: FormInstance | undefined) {
 }
 
 /**
- * 表单提交
+ * 导入提交
  */
 async function onImportSubmit(importEl: UploadInstance | undefined) {
   if (!importEl) return
 
   importLoading.value = true
+}
+
+/**
+ * 授权
+ * @param val 选中行
+ */
+function authorizeRow(id: number) {
+  hasNext.value = true
+  checkedActions.value = []
+  loadOne(id)
+  switch (activeName.value) {
+    case 'roles':
+      loadRoles()
+      loadPrivilegeRoles(id)
+      break
+    case 'groups':
+      loadGroups()
+      loadPrivilegeGroups(id)
+      break
+    case 'users':
+      loadUsers()
+      loadPrivilegeUsers(id)
+      break
+  }
+  authorizeVisible.value = true
 }
 
 /**
@@ -200,6 +276,18 @@ function onCheckChange(item: string) {
   }
 }
 
+/**
+ * handle action check
+ * @param item checked item
+ */
+function onActionCheck(item: string) {
+  const index = checkedActions.value.indexOf(item)
+  if (index > 0) {
+    checkedActions.value.splice(index, 1)
+  } else {
+    checkedActions.value.push(item)
+  }
+}
 /**
  * 全选操作
  * @param val 是否全选
@@ -219,6 +307,66 @@ function handleCheckedChange(value: CheckboxValueType[]) {
   isIndeterminate.value = checkedCount > 0 && checkedCount < columns.value.length
 }
 
+const handleClick = (tab: TabsPaneContext) => {
+  switch (tab.paneName) {
+    case 'roles':
+      loadRoles()
+      if (form.value.id) {
+        loadPrivilegeRoles(form.value.id)
+      }
+      break
+    case 'groups':
+      loadGroups()
+      if (form.value.id) {
+        loadPrivilegeGroups(form.value.id)
+      }
+      break
+    case 'users':
+      loadUsers()
+      if (form.value.id) {
+        loadPrivilegeUsers(form.value.id)
+      }
+      break
+  }
+}
+
+function handleRolesTransferChange(value: TransferKey[], direction: TransferDirection) {
+  if (form.value.id) {
+    if (direction === 'right') {
+      relationRolesPrivileges(value as number[], form.value.id, checkedActions.value)
+    } else {
+      removeRolesPrivileges(value as number[], form.value.id, checkedActions.value)
+    }
+  }
+}
+
+function handleGroupsTransferChange(value: TransferKey[], direction: TransferDirection) {
+  if (form.value.id) {
+    if (direction === 'right') {
+      relationGroupsPrivileges(value as number[], form.value.id, checkedActions.value)
+    } else {
+      removeGroupsPrivileges(value as number[], form.value.id, checkedActions.value)
+    }
+  }
+}
+
+function handleUsersTransferChange(value: TransferKey[], direction: TransferDirection) {
+  if (form.value.id) {
+    if (direction === 'right') {
+      relationUsersPrivileges(value as number[], form.value.id, checkedActions.value)
+    } else {
+      removeUsersPrivileges(value as number[], form.value.id, checkedActions.value)
+    }
+  }
+}
+
+function handlcConfirm() {
+  if (hasNext.value) {
+    hasNext.value = false
+  } else {
+    authorizeVisible.value = false
+  }
+}
 </script>
 
 <template>
@@ -248,7 +396,7 @@ function handleCheckedChange(value: CheckboxValueType[]) {
           <ElButton title="import" type="warning" plain @click="importRows">
             <Icon icon="material-symbols:database-upload-outline-rounded" width="18" height="18" />{{ $t('import') }}
           </ElButton>
-          <ElButton title="export" type="success" plain>
+          <ElButton title="export" type="success" plain @click="exportRows">
             <Icon icon="material-symbols:file-export-outline-rounded" width="18" height="18" />{{ $t('export') }}
           </ElButton>
         </ElCol>
@@ -294,7 +442,8 @@ function handleCheckedChange(value: CheckboxValueType[]) {
         </ElCol>
       </ElRow>
 
-      <ElTable v-loading="loading" :data="datas" lazy :load="load" row-key="id" stripe table-layout="auto">
+      <ElTable ref="tableRef" v-loading="loading" :data="datas" lazy :load="load" row-key="id" stripe
+        table-layout="auto">
         <ElTableColumn type="selection" width="55" />
         <ElTableColumn prop="name" :label="$t('name')" class-name="name-cell">
           <template #default="scope">
@@ -337,6 +486,10 @@ function handleCheckedChange(value: CheckboxValueType[]) {
             <ElButton title="modify" size="small" type="primary" link @click="saveRow(scope.row.id)">
               <Icon icon="material-symbols:edit-outline-rounded" width="16" height="16" />{{ $t('modify') }}
             </ElButton>
+            <ElButton v-if="!scope.row.redirect && scope.row.enabled" title="authorize" size="small" type="success" link
+              @click="authorizeRow(scope.row.id)">
+              <Icon icon="material-symbols:privacy-tip-outline-rounded" width="16" height="16" />{{ $t('authorize') }}
+            </ElButton>
           </template>
         </ElTableColumn>
       </ElTable>
@@ -351,7 +504,7 @@ function handleCheckedChange(value: CheckboxValueType[]) {
           <ElFormItem :label="$t('name')" prop="name">
             <ElInput v-model="form.name" :placeholder="$t('inputText', { field: $t('name') })" disabled>
               <template #prefix>
-                <div :class="form.icon" />
+                <Icon :icon="`material-symbols:${form.icon}-rounded`" />
               </template>
             </ElInput>
           </ElFormItem>
@@ -370,12 +523,13 @@ function handleCheckedChange(value: CheckboxValueType[]) {
         </ElCol>
         <ElCol :span="12">
           <ElFormItem :label="$t('redirect')" prop="redirect">
-            <ElInput v-model="form.redirect" :placeholder="$t('inputText', { field: $t('redirect') })"
-              :disabled="!!form.superiorId" />
+            <ElSelect v-model="form.redirect" :placeholder="$t('selectText', { field: $t('redirect') })">
+              <ElOption v-for="item in subset" :key="item.id" :label="$t(item.name)" :value="item.path" />
+            </ElSelect>
           </ElFormItem>
         </ElCol>
       </ElRow>
-      <ElRow :gutter="20" class="w-full !mx-0">
+      <ElRow :gutter="20" v-if="!form.redirect" class="w-full !mx-0">
         <ElCol>
           <ElFormItem :label="$t('actions')" prop="meta.actions">
             <ElCheckTag v-for="item in buttonOptions" :key="item.id" :checked="form.actions?.includes(item.name)"
@@ -395,10 +549,48 @@ function handleCheckedChange(value: CheckboxValueType[]) {
     </ElForm>
     <template #footer>
       <ElButton title="cancel" @click="visible = false">
-        <Icon icon="material-symbols:close" />{{ $t('cancel') }}
+        <Icon icon="material-symbols:close" width="18" height="18" />{{ $t('cancel') }}
       </ElButton>
       <ElButton title="submit" type="primary" :loading="saveLoading" @click="onSubmit(formRef)">
         <Icon icon="material-symbols:check-circle-outline-rounded" width="18" height="18" /> {{ $t('submit') }}
+      </ElButton>
+    </template>
+  </DialogView>
+
+  <DialogView v-model="authorizeVisible" :title="$t('authorize')">
+    <ElDescriptions v-if="hasNext">
+      <ElDescriptionsItem :label="$t('name')">{{ form.name }}</ElDescriptionsItem>
+      <ElDescriptionsItem :label="$t('description')" :span="2">{{ form.description }}</ElDescriptionsItem>
+
+      <ElDescriptionsItem :label="$t('actions')" :span="3">
+        <ElCheckTag v-for="item in form.actions" :key="item" :checked="checkedActions.includes(item)"
+          :type="actions[item]" class="mr-2 mb-2" @change="onActionCheck(item)">
+          {{ $t(item) }}
+        </ElCheckTag>
+      </ElDescriptionsItem>
+    </ElDescriptions>
+
+    <ElTabs v-else stretch v-model="activeName" @tab-click="handleClick">
+      <ElTabPane :label="$t('roles')" name="roles" class="text-center">
+        <ElTransfer v-model="relations" :props="{ key: 'id', label: 'name' }"
+          :titles="[$t('unselected'), $t('selected')]" filterable :data="roles" @change="handleRolesTransferChange" />
+      </ElTabPane>
+      <ElTabPane :label="$t('groups')" name="groups" class="text-center">
+        <ElTransfer v-model="relations" :props="{ key: 'id', label: 'name' }"
+          :titles="[$t('unselected'), $t('selected')]" filterable :data="groups" @change="handleGroupsTransferChange" />
+      </ElTabPane>
+      <ElTabPane :label="$t('users')" name="users" class="text-center">
+        <ElTransfer v-model="relations" :props="{ key: 'username', label: 'fullName' }"
+          :titles="[$t('unselected'), $t('selected')]" filterable :data="users" @change="handleUsersTransferChange" />
+      </ElTabPane>
+    </ElTabs>
+
+    <template #footer>
+      <ElButton title="cancel" @click="authorizeVisible = false">
+        <Icon icon="material-symbols:close" width="18" height="18" />{{ $t('cancel') }}
+      </ElButton>
+      <ElButton title="submit" type="primary" @click="handlcConfirm">
+        <Icon icon="material-symbols:check-circle-outline-rounded" width="18" height="18" /> {{ $t('confirm') }}
       </ElButton>
     </template>
   </DialogView>
@@ -423,7 +615,7 @@ function handleCheckedChange(value: CheckboxValueType[]) {
     <p class="text-red">xxxx</p>
     <template #footer>
       <ElButton title="cancel" @click="importVisible = false">
-        <Icon icon="material-symbols:close" />{{ $t('cancel') }}
+        <Icon icon="material-symbols:close" width="18" height="18" />{{ $t('cancel') }}
       </ElButton>
       <ElButton title="submit" type="primary" :loading="importLoading" @click="onImportSubmit(importRef)">
         <Icon icon="material-symbols:check-circle-outline-rounded" width="18" height="18" /> {{ $t('submit') }}

@@ -408,7 +408,7 @@ function handleCheckedChange(value: CheckboxValueType[]) {
     </ElForm>
     <template #footer>
       <ElButton title="cancel" @click="visible = false">
-        <Icon icon="material-symbols:close" />{{ $t('cancel') }}
+        <Icon icon="material-symbols:close" width="18" height="18" />{{ $t('cancel') }}
       </ElButton>
       <ElButton title="submit" type="primary" :loading="saveLoading" @click="onSubmit(formRef)">
         <Icon icon="material-symbols:check-circle-outline-rounded" width="18" height="18" /> {{ $t('submit') }}

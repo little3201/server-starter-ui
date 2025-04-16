@@ -96,15 +96,26 @@ export const groupsHandlers = [
     const page = url.searchParams.get('page')
     const size = url.searchParams.get('size')
     const superiorId = url.searchParams.get('superiorId')
-    // Construct a JSON response with the list of all Row
-    // as the response body.
-    const filtered = datas.filter(item => item.superiorId === Number(superiorId))
-    const data = {
-      content: Array.from(filtered.slice(Number(page) * Number(size), (Number(page) + 1) * Number(size))),
+
+    let data = {
+      content: datas,
       page: {
         totalElements: datas.length
       }
     }
+    
+    if (superiorId) {
+      const filtered = datas.filter(item => item.superiorId === Number(superiorId))
+      data = {
+        content: Array.from(filtered.slice(Number(page) * Number(size), (Number(page) + 1) * Number(size))),
+        page: {
+          totalElements: filtered.length
+        }
+      }
+    }
+    // Construct a JSON response with the list of all Row
+    // as the response body.
+    
 
     return HttpResponse.json(data)
   }),
