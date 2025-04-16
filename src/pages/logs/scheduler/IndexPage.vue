@@ -204,7 +204,13 @@ function handleCheckedChange(value: CheckboxValueType[]) {
       <ElTable :data="datas" row-key="id" stripe table-layout="auto">
         <ElTableColumn type="selection" width="55" />
         <ElTableColumn type="index" :label="$t('no')" width="55" />
-        <ElTableColumn prop="name" :label="$t('name')" />
+        <ElTableColumn prop="name" :label="$t('name')">
+          <template #default="scope">
+            <ElButton title="detail" type="primary" link @click="showRow(scope.row.id)">
+              {{ scope.row.name }}
+            </ElButton>
+          </template>
+        </ElTableColumn>
         <ElTableColumn prop="startTime" :label="$t('startTime')">
           <template #default="scope">
             {{ dayjs(scope.row.startTime).format('YYYY-MM-DD HH:mm') }}
@@ -235,9 +241,6 @@ function handleCheckedChange(value: CheckboxValueType[]) {
         </ElTableColumn>
         <ElTableColumn :label="$t('actions')">
           <template #default="scope">
-            <ElButton title="detail" size="small" type="info" link @click="showRow(scope.row.id)">
-              <Icon icon="material-symbols:description-outline-rounded" width="16" height="16" />{{ $t('detail') }}
-            </ElButton>
             <ElPopconfirm :title="$t('removeConfirm')" :width="240" @confirm="confirmEvent(scope.row.id)">
               <template #reference>
                 <ElButton title="remove" size="small" type="danger" link>
@@ -257,14 +260,19 @@ function handleCheckedChange(value: CheckboxValueType[]) {
       <ElDescriptionsItem :label="$t('name')">{{ row.name }}</ElDescriptionsItem>
       <ElDescriptionsItem :label="$t('startTime')">{{ dayjs(row.startTime).format('YYYY-MM-DD HH:mm') }}
       </ElDescriptionsItem>
+      <ElDescriptionsItem :label="$t('executedTimes')">
+        {{ row.executedTimes ? formatDuration(row.executedTimes) : '-' }}
+      </ElDescriptionsItem>
       <ElDescriptionsItem :label="$t('status')">
         <ElTag v-if="row.status === 0" type="primary" round>{{ $t('processing') }}</ElTag>
         <ElTag v-else-if="row.status === 1" type="success" round>{{ $t('done') }}</ElTag>
         <ElTag v-else type="danger" round>{{ $t('failure') }}</ElTag>
       </ElDescriptionsItem>
-      <ElDescriptionsItem :label="$t('executedTimes')">{{ row.executedTimes ? formatDuration(row.executedTimes) : '-' }}
+      <ElDescriptionsItem :label="$t('nextExecuteTime')" :span="2">
+        {{ dayjs(row.nextExecuteTime).format('YYYY-MM-DD HH:mm') }}
       </ElDescriptionsItem>
-      <ElDescriptionsItem :label="$t('nextExecuteTime')">{{ dayjs(row.nextExecuteTime).format('YYYY-MM-DD HH:mm') }}
+      <ElDescriptionsItem :label="$t('logs')" :span="3">
+        {{ row.record }}
       </ElDescriptionsItem>
     </ElDescriptions>
   </DialogView>

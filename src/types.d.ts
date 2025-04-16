@@ -170,6 +170,7 @@ export interface SchedulerLog extends AudtiMetadata {
   executedTimes?: number
   nextExecuteTime?: Date
   status?: number
+  record?: string 
 }
 
 export interface FileRecord extends AudtiMetadata {

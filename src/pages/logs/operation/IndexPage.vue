@@ -254,16 +254,19 @@ function handleCheckedChange(value: CheckboxValueType[]) {
   </ElSpace>
 
   <DialogView v-model="visible" show-close :title="$t('detail')">
-    <ElDescriptions v-loading="detailLoading" :column="2" border>
+    <ElDescriptions v-loading="detailLoading" border>
       <ElDescriptionsItem :label="$t('operation')">{{ row.operation }}</ElDescriptionsItem>
-      <ElDescriptionsItem :label="$t('content')">{{ row.content }}</ElDescriptionsItem>
       <ElDescriptionsItem :label="$t('ip')">{{ row.ip }}</ElDescriptionsItem>
       <ElDescriptionsItem :label="$t('location')">{{ row.location }}</ElDescriptionsItem>
       <ElDescriptionsItem :label="$t('os')">{{ row.os }}</ElDescriptionsItem>
+      <ElDescriptionsItem :label="$t('userAgent')" :span="2">{{ row.userAgent }}</ElDescriptionsItem>
       <ElDescriptionsItem :label="$t('browser')">{{ row.browser }}</ElDescriptionsItem>
       <ElDescriptionsItem :label="$t('referer')">{{ row.referer }}</ElDescriptionsItem>
       <ElDescriptionsItem :label="$t('sessionId')">{{ row.sessionId }}</ElDescriptionsItem>
-      <ElDescriptionsItem :label="$t('userAgent')">{{ row.userAgent }}</ElDescriptionsItem>
+      <ElDescriptionsItem :label="$t('operator')">{{ row.operator }}</ElDescriptionsItem>
+      <ElDescriptionsItem :label="$t('operatedTimes')">
+        {{ row.operatedTimes ? formatDuration(row.operatedTimes) : '' }}
+      </ElDescriptionsItem>
       <ElDescriptionsItem :label="$t('statusCode')">
         <ElTag v-if="row.statusCode && (row.statusCode >= 200 && row.statusCode < 300)" type="success" round>
           {{ row.statusCode }}
@@ -273,9 +276,7 @@ function handleCheckedChange(value: CheckboxValueType[]) {
         </ElTag>
         <ElTag v-else type="danger" round>{{ row.statusCode }}</ElTag>
       </ElDescriptionsItem>
-      <ElDescriptionsItem :label="$t('operator')">{{ row.operator }}</ElDescriptionsItem>
-      <ElDescriptionsItem :label="$t('operatedTimes')">{{ row.operatedTimes ? formatDuration(row.operatedTimes) : '' }}
-      </ElDescriptionsItem>
+      <ElDescriptionsItem :label="$t('content')" :span="3">{{ row.content }}</ElDescriptionsItem>
     </ElDescriptions>
   </DialogView>
 </template>

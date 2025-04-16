@@ -40,7 +40,8 @@ const datas: SchedulerLog[] = [
     startTime: new Date(),
     nextExecuteTime: new Date(),
     executedTimes: 33,
-    status: 2
+    status: 2,
+    record: '数据库执行错误：数据库表xx缺少字段'
   },
   {
     id: 6,

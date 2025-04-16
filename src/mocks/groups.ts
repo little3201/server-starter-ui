@@ -2,35 +2,18 @@ import { http, HttpResponse } from 'msw'
 import { SERVER_URL } from 'src/constants'
 import type { Group, TreeNode, GroupMembers } from 'src/types'
 
-const datas: Group[] = [
-  {
-    id: 1,
-    name: 'group_1',
-    enabled: true,
-    description: 'This is region description about xxx'
-  },
-  {
-    id: 2,
-    superiorId: 1,
-    name: 'group_2',
-    enabled: true,
-    description: 'This is region description about xxx'
-  },
-  {
-    id: 3,
-    superiorId: 1,
-    name: 'group_3',
-    enabled: true,
-    description: 'This is region description about xxx'
-  },
-  {
-    id: 4,
+const datas: Group[] = []
+
+for (let i = 1; i < 28; i++) {
+  const row: Group = {
+    id: i,
     superiorId: 3,
-    name: 'group_4',
+    name: 'group_' + i,
     enabled: true,
     description: 'This is region description about xxx'
   }
-]
+  datas.push(row)
+}
 
 const treeNodes: TreeNode[] = [
   {
@@ -61,7 +44,7 @@ const treeNodes: TreeNode[] = [
 
 const members: GroupMembers[] = []
 
-for (let i = 1; i < 4; i++) {
+for (let i = 1; i < 14; i++) {
   const row: GroupMembers = {
     id: i,
     username: 'username' + i,
@@ -103,7 +86,7 @@ export const groupsHandlers = [
         totalElements: datas.length
       }
     }
-    
+
     if (superiorId) {
       const filtered = datas.filter(item => item.superiorId === Number(superiorId))
       data = {
