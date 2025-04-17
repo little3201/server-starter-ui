@@ -267,11 +267,6 @@ function handleCheckedChange(value: CheckboxValueType[]) {
         <ElBadge is-dot :type="httpMethods[row.httpMethod as string]" />
         {{ row.httpMethod }}
       </ElDescriptionsItem>
-      <ElDescriptionsItem :label="$t('params')">{{ row.params }}</ElDescriptionsItem>
-      <ElDescriptionsItem v-if="row.body" :span="3" :label="$t('body')">{{ row.body }}</ElDescriptionsItem>
-      <ElDescriptionsItem :label="$t('ip')">{{ row.ip }}</ElDescriptionsItem>
-      <ElDescriptionsItem :label="$t('location')">{{ row.location }}</ElDescriptionsItem>
-      <ElDescriptionsItem :label="$t('operator')">{{ row.operator }}</ElDescriptionsItem>
       <ElDescriptionsItem :label="$t('statusCode')">
         <ElTag v-if="row.statusCode && (row.statusCode >= 200 && row.statusCode < 300)" type="success" round>
           {{ row.statusCode }}
@@ -281,6 +276,11 @@ function handleCheckedChange(value: CheckboxValueType[]) {
         </ElTag>
         <ElTag v-else type="danger" round>{{ row.statusCode }}</ElTag>
       </ElDescriptionsItem>
+      <ElDescriptionsItem :label="$t('params')" :span="3">{{ row.params }}</ElDescriptionsItem>
+      <ElDescriptionsItem v-if="row.body" :label="$t('body')" :span="3">{{ row.body }}</ElDescriptionsItem>
+      <ElDescriptionsItem :label="$t('ip')">{{ row.ip }}</ElDescriptionsItem>
+      <ElDescriptionsItem :label="$t('location')">{{ row.location }}</ElDescriptionsItem>
+      <ElDescriptionsItem :label="$t('operator')">{{ row.operator }}</ElDescriptionsItem>
       <ElDescriptionsItem :label="$t('responseTimes')">{{ row.responseTimes ? formatDuration(row.responseTimes) : '-' }}
       </ElDescriptionsItem>
       <ElDescriptionsItem :label="$t('responseMessage')">{{ row.responseMessage }}</ElDescriptionsItem>

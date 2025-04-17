@@ -42,6 +42,9 @@ const hasNext = ref<boolean>(true)
 const checkedActions = ref<Array<string>>([])
 const authorizeVisible = ref<boolean>(false)
 const relations = ref<Array<number | string>>([])
+const selectedRows = ref<Array<Role | Group | User>>([])
+
+const relationRows = ref<Array<RolePrivileges | GroupPrivileges | UserPrivileges>>([])
 const activeName = ref<string>('roles')
 const roles = ref<Array<Role>>([])
 const groups = ref<Array<Group>>([])
@@ -133,7 +136,7 @@ async function loadUsers() {
   retrieveUsers({ page: 1, size: 99 }).then(res => {
     users.value = res.data.content.map((item: User) => ({
       ...item,
-      fullName: (locale.value === 'en-US' || item.middleName) ? `${item.givenName} ${item.middleName} ${item.familyName}` : `${item.familyName}${item.givenName}`
+      fullName: (locale.value === 'en-US' || item.middleName) ? `${item.givenName} ${item.middleName} ${item.familyName}` : `${item.familyName} ${item.givenName}`
     }))
   })
 }
@@ -193,15 +196,24 @@ async function loadOne(id: number) {
 }
 
 async function loadPrivilegeRoles(id: number) {
-  retrievePrivilegeRoles(id).then(res => { relations.value = res.data.map((item: RolePrivileges) => item.roleId) })
+  retrievePrivilegeRoles(id).then(res => {
+    relationRows.value = res.data
+    relations.value = res.data.map((item: RolePrivileges) => item.roleId)
+  })
 }
 
 async function loadPrivilegeGroups(id: number) {
-  retrievePrivilegeGroups(id).then(res => { relations.value = res.data.map((item: GroupPrivileges) => item.groupId) })
+  retrievePrivilegeGroups(id).then(res => {
+    relationRows.value = res.data
+    relations.value = res.data.map((item: GroupPrivileges) => item.groupId)
+  })
 }
 
 async function loadPrivilegeUsers(id: number) {
-  retrievePrivilegeUsers(id).then(res => { relations.value = res.data.map((item: UserPrivileges) => item.username) })
+  retrievePrivilegeUsers(id).then(res => {
+    relationRows.value = res.data
+    relations.value = res.data.map((item: UserPrivileges) => item.username)
+  })
 }
 
 async function enableChange(id: number) {
@@ -362,10 +374,35 @@ function handleUsersTransferChange(value: TransferKey[], direction: TransferDire
 
 function handlcConfirm() {
   if (hasNext.value) {
+    switch (activeName.value) {
+      case 'roles':
+        selectedRows.value = roles.value.filter(item => relations.value.includes(item.id as number))
+        break
+      case 'groups':
+        selectedRows.value = groups.value.filter(item => relations.value.includes(item.id as number))
+        break
+      case 'users':
+        selectedRows.value = users.value.filter(item => relations.value.includes(item.username))
+        break
+    }
+
     hasNext.value = false
   } else {
     authorizeVisible.value = false
   }
+}
+
+function selectedRelationRow(row: Role | Group | User) {
+  return relationRows.value.filter(item => {
+    if ('username' in item && 'username' in row) {
+      return item.username === row.username
+    } else if ('roleId' in item) {
+      return item.roleId === row.id
+    } else if ('groupId' in item) {
+      return item.groupId === row.id
+    }
+    return false
+  })
 }
 </script>
 
@@ -557,20 +594,8 @@ function handlcConfirm() {
     </template>
   </DialogView>
 
-  <DialogView v-model="authorizeVisible" :title="$t('authorize')">
-    <ElDescriptions v-if="hasNext">
-      <ElDescriptionsItem :label="$t('name')">{{ form.name }}</ElDescriptionsItem>
-      <ElDescriptionsItem :label="$t('description')" :span="2">{{ form.description }}</ElDescriptionsItem>
-
-      <ElDescriptionsItem :label="$t('actions')" :span="3">
-        <ElCheckTag v-for="item in form.actions" :key="item" :checked="checkedActions.includes(item)"
-          :type="actions[item]" class="mr-2 mb-2" @change="onActionCheck(item)">
-          {{ $t(item) }}
-        </ElCheckTag>
-      </ElDescriptionsItem>
-    </ElDescriptions>
-
-    <ElTabs v-else stretch v-model="activeName" @tab-click="handleClick">
+  <DialogView v-model="authorizeVisible" :title="`${$t('authorize')} (${$t(form.name)})`">
+    <ElTabs v-if="hasNext" stretch v-model="activeName" @tab-click="handleClick">
       <ElTabPane :label="$t('roles')" name="roles" class="text-center">
         <ElTransfer v-model="relations" :props="{ key: 'id', label: 'name' }"
           :titles="[$t('unselected'), $t('selected')]" filterable :data="roles" @change="handleRolesTransferChange" />
@@ -584,6 +609,27 @@ function handlcConfirm() {
           :titles="[$t('unselected'), $t('selected')]" filterable :data="users" @change="handleUsersTransferChange" />
       </ElTabPane>
     </ElTabs>
+
+    <ElRow :gutter="20" v-else v-for="row in selectedRows" :key="row.id" class="w-full items-baseline">
+      <ElCol :span="5">
+        <div v-if="'name' in row">
+          <span class="mr-2">{{ $t('name') }}: </span>
+          <span>{{ row.name }}</span>
+        </div>
+        <div v-else-if="'username' in row">
+          <span class="mr-2">{{ $t('username') }}:</span>
+          <span>{{ row.username }}</span>
+        </div>
+      </ElCol>
+      <ElCol :span="19">
+        <span class="mr-2">{{ $t('actions') }}: </span>
+        <ElCheckTag v-for="item in form.actions" :key="item"
+          :checked="(selectedRelationRow(row)[0]?.actions ?? []).includes(item)" :type="actions[item]" class="mr-2 mb-2"
+          @change="onActionCheck(item)">
+          {{ $t(item) }}
+        </ElCheckTag>
+      </ElCol>
+    </ElRow>
 
     <template #footer>
       <ElButton title="cancel" @click="authorizeVisible = false">

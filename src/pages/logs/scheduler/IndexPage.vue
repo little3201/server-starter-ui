@@ -219,13 +219,13 @@ function handleCheckedChange(value: CheckboxValueType[]) {
         <ElTableColumn prop="status" :label="$t('status')">
           <template #default="scope">
             <ElTag v-if="scope.row.status === 0" type="primary" round>
-              <Icon icon="material-symbols:progress-activity spin mr-1" />{{ $t('processing') }}
+              <Icon icon="material-symbols:progress-activity" class="spin mr-1" />{{ $t('processing') }}
             </ElTag>
             <ElTag v-else-if="scope.row.status === 1" type="success" round>
-              <Icon icon="material-symbols:check-rounded mr-1" />{{ $t('done') }}
+              <Icon icon="material-symbols:check-rounded" class="mr-1" />{{ $t('done') }}
             </ElTag>
             <ElTag v-else type="danger" round>
-              <Icon icon="material-symbols:error-outline-rounded mr-1" />{{ $t('failure') }}
+              <Icon icon="material-symbols:error-outline-rounded" class="mr-1" />{{ $t('failure') }}
             </ElTag>
           </template>
         </ElTableColumn>
@@ -258,7 +258,8 @@ function handleCheckedChange(value: CheckboxValueType[]) {
   <DialogView v-model="visible" show-close :title="$t('detail')">
     <ElDescriptions v-loading="detailLoading" border>
       <ElDescriptionsItem :label="$t('name')">{{ row.name }}</ElDescriptionsItem>
-      <ElDescriptionsItem :label="$t('startTime')">{{ dayjs(row.startTime).format('YYYY-MM-DD HH:mm') }}
+      <ElDescriptionsItem :label="$t('startTime')">
+        {{ dayjs(row.startTime).format('YYYY-MM-DD HH:mm') }}
       </ElDescriptionsItem>
       <ElDescriptionsItem :label="$t('executedTimes')">
         {{ row.executedTimes ? formatDuration(row.executedTimes) : '-' }}

@@ -389,7 +389,8 @@ for (let i = 1; i < 28; i++) {
   const row: RolePrivileges = {
     id: i,
     privilegeId: i < 15 ? i : i - 14,
-    roleId: i
+    roleId: i,
+    actions: ['create', 'modify', 'remove', 'import', 'export']
   }
   roles.push(row)
 }
@@ -401,7 +402,8 @@ for (let i = 1; i < 28; i++) {
   const row: GroupPrivileges = {
     id: i,
     privilegeId: i < 15 ? i : i - 14,
-    groupId: i
+    groupId: i,
+    actions: ['create', 'modify', 'remove', 'import', 'export']
   }
   groups.push(row)
 }
@@ -413,7 +415,8 @@ for (let i = 1; i < 28; i++) {
   const row: UserPrivileges = {
     id: i,
     privilegeId: i < 15 ? i : i - 14,
-    username: 'username' + i
+    username: 'username' + i,
+    actions: ['create', 'modify', 'remove', 'import', 'export']
   }
   users.push(row)
 }
