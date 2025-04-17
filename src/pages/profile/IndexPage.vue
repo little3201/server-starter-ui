@@ -170,40 +170,42 @@ onMounted(() => {
           <ElTabPane :label="$t('changePassword')" name="changePassword">
             <h3>Change Password</h3>
             <ElForm ref="formRef" :model="form" :rules="rules" label-width="auto">
-              <ElRow>
-                <ElCol :span="16">
+              <ElRow class="items-baseline">
+                <ElCol :span="14">
                   <ElFormItem label="Old Password" prop="oldPassword">
-                    <ElInput v-model="form.oldPassword" type="password" show-password></ElInput>
+                    <ElInput v-model="form.oldPassword" type="password" minlength="8" maxlength="32" show-password>
+                    </ElInput>
                   </ElFormItem>
                 </ElCol>
-                <ElCol :span="8">
-                  <span class="line-height-[32px] ml-5 text-xs text-[var(--el-text-color-secondary)]">This is a hint for
-                    old
-                    password</span>
+                <ElCol :span="10">
+                  <span class="ml-5 text-xs text-[var(--el-text-color-secondary)]">
+                    This is a hint for old password
+                  </span>
                 </ElCol>
               </ElRow>
-              <ElRow>
-                <ElCol :span="16">
+              <ElRow class="items-baseline">
+                <ElCol :span="14">
                   <ElFormItem label="New Password" prop="newPassword">
-                    <ElInput v-model="form.newPassword" type="password" show-password />
+                    <ElInput v-model="form.newPassword" type="password" minlength="8" maxlength="32" show-password />
                   </ElFormItem>
                 </ElCol>
-                <ElCol :span="8">
-                  <span class="line-height-[32px] ml-5 text-xs text-[var(--el-text-color-secondary)]">This is a hint for
-                    new
-                    password</span>
+                <ElCol :span="10">
+                  <span class="ml-5 text-xs text-[var(--el-text-color-secondary)]">
+                    This is a hint for new password
+                  </span>
                 </ElCol>
               </ElRow>
-              <ElRow>
-                <ElCol :span="16">
+              <ElRow class="items-baseline">
+                <ElCol :span="14">
                   <ElFormItem label="Confirm Password" prop="confirmPassword">
-                    <ElInput v-model="form.confirmPassword" type="password" show-password></ElInput>
+                    <ElInput v-model="form.confirmPassword" type="password" minlength="8" maxlength="32" show-password>
+                    </ElInput>
                   </ElFormItem>
                 </ElCol>
-                <ElCol :span="8">
-                  <span class="line-height-[32px] ml-5 text-xs text-[var(--el-text-color-secondary)]">This is a hint for
-                    confirm
-                    password</span>
+                <ElCol :span="10">
+                  <span class="ml-5 text-xs text-[var(--el-text-color-secondary)]">
+                    This is a hint for confirm password
+                  </span>
                 </ElCol>
               </ElRow>
 

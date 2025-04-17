@@ -96,10 +96,6 @@ export const groupsHandlers = [
         }
       }
     }
-    // Construct a JSON response with the list of all Row
-    // as the response body.
-    
-
     return HttpResponse.json(data)
   }),
   http.post(`/api${SERVER_URL.GROUP}`, async ({ request }) => {
@@ -116,6 +112,23 @@ export const groupsHandlers = [
   http.patch(`/api${SERVER_URL.GROUP}/:id/members`, ({ params }) => {
     const { id } = params
     if (id) {
+      return HttpResponse.json()
+    } else {
+      return HttpResponse.error()
+    }
+  }),
+  http.patch(`/api${SERVER_URL.GROUP}/privileges/:privilegeId`, async({ params, request }) => {
+    const data = await request.json()
+    const { privilegeId } = params
+    if (privilegeId && data) {
+      return HttpResponse.json()
+    } else {
+      return HttpResponse.error()
+    }
+  }),
+  http.delete(`/api${SERVER_URL.GROUP}/:groupId/privileges/:privilegeId`, async({ params }) => {
+    const { groupId, privilegeId } = params
+    if (groupId && privilegeId) {
       return HttpResponse.json()
     } else {
       return HttpResponse.error()

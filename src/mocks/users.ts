@@ -77,6 +77,23 @@ export const usersHandlers = [
     // response and send back the newly created Row!
     return HttpResponse.json(newData, { status: 201 })
   }),
+  http.patch(`/api${SERVER_URL.USER}/privileges/:privilegeId`, async({ params, request }) => {
+    const data = await request.json()
+    const { privilegeId } = params
+    if (privilegeId && data) {
+      return HttpResponse.json()
+    } else {
+      return HttpResponse.error()
+    }
+  }),
+  http.delete(`/api${SERVER_URL.USER}/:username/privileges/:privilegeId`, async({ params }) => {
+    const { username, privilegeId } = params
+    if (username && privilegeId) {
+      return HttpResponse.json()
+    } else {
+      return HttpResponse.error()
+    }
+  }),
   http.delete(`/api${SERVER_URL.USER}/:id`, ({ params }) => {
     // All request path params are provided in the "params"
     // argument of the response resolver.

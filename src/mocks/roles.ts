@@ -20,7 +20,8 @@ for (let i = 1; i < 28; i++) {
   const row: RolePrivileges = {
     id: i,
     privilegeId: i,
-    roleId: i
+    roleId: i,
+    actions: ['create', 'modify', 'remove', 'import', 'export']
   }
   privileges.push(row)
 }
@@ -107,20 +108,17 @@ export const rolesHandlers = [
     }
   }),
   http.patch(`/api${SERVER_URL.ROLE}/privileges/:privilegeId`, async({ params, request }) => {
-    const { ids, actions } = await request.json() as {ids:'', actions:''}
+    const data = await request.json()
     const { privilegeId } = params
-    if (privilegeId && ids.length && actions.length) {
+    if (privilegeId && data) {
       return HttpResponse.json()
     } else {
       return HttpResponse.error()
     }
   }),
-  http.delete(`/api${SERVER_URL.ROLE}/privileges/:privilegeId`, async({ params, request }) => {
-    const searchParams = new URLSearchParams(request.url)
-    const ids = searchParams.get('ids')
-  
-    const { privilegeId } = params
-    if (privilegeId && ids && ids.length) {
+  http.delete(`/api${SERVER_URL.ROLE}/:roleId/privileges/:privilegeId`, async({ params }) => {
+    const { roleId, privilegeId } = params
+    if (roleId && privilegeId) {
       return HttpResponse.json()
     } else {
       return HttpResponse.error()

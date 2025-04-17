@@ -125,20 +125,24 @@ export const removeGroupRoles = (id: number, roleIds: number[]) => {
 /**
  * Relation privileges for a specific row
  * @param ids Row IDs
- * @param privilegeIds Privilege id
- * @param actions Actions
+ * @param relations Actions
  */
-export const relationGroupsPrivileges = (ids: number[], privilegeId: number, actions: string[]) => {
-  return api.patch(`${SERVER_URL.GROUP}/privileges/${privilegeId}`, { ids, actions })
+export const relationGroupsPrivileges = (privilegeId: number, relations: { key: number | string, actions: string[] }[]) => {
+  const datas = relations.map(item => { return { id: item.key, actions: item.actions } })
+  return api.patch(`${SERVER_URL.GROUP}/privileges/${privilegeId}`, datas)
 }
 
 /**
  * Remove privileges for a specific row
- * @param ids Row IDs
+ * @param id Row ID
  * @param privilegeIds Privilege id
  * @param actions Actions
  */
-export const removeGroupsPrivileges = (ids: number[], privilegeId: number, actions: string[]) => {
-  const params = { ids: ids.join(','), actions: actions.join(',') }
-  return api.delete(`${SERVER_URL.GROUP}/privileges/${privilegeId}`, { params })
+export const removeGroupsPrivileges = (id: number, privilegeId: number, actions?: string[]) => {
+  if (actions && actions.length > 0) {
+    const params = { actions: actions.join(',') }
+    return api.delete(`${SERVER_URL.GROUP}/${id}/privileges/${privilegeId}`, { params })
+  } else {
+    return api.delete(`${SERVER_URL.GROUP}/${id}/privileges/${privilegeId}`)
+  }
 }
