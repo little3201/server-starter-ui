@@ -144,6 +144,10 @@ export default {
   tooltipRule: '应用时，将按照规则（具体查看系统说明）进行替换',
   ruleTooltip: '若需在应用时按照规则进行替换，请以%s开始',
 
+  drop2Here: '将文件拖放到此处，或',
+  click2Upload: '点击上传',
+  fileSizeLimit: '文件大小小于 {size}。',
+
   welcome: '嗨！欢迎回来',
   subtitle: '请填写您的账号和密码，让我们继续探索',
   rememberMe: '记住我 ？'

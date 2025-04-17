@@ -144,6 +144,10 @@ export default {
   tooltipRule: 'Applied according to the rules (see system guide for details)',
   ruleTooltip: 'To apply according to the rule, please start with %s',
 
+  drop2Here: 'Drop file here or ',
+  click2Upload: 'click to upload',
+  fileSizeLimit: 'File with a size less than {size}.',
+
   welcome: 'Hi! Welcome Back.',
   subtitle: 'Please sign in to continue exploring.',
   rememberMe: 'Remember me ?'

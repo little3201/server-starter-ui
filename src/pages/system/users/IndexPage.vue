@@ -1,9 +1,10 @@
 <script setup lang="ts">
 import { ref, reactive, onMounted } from 'vue'
-import type { FormInstance, FormRules, CheckboxValueType } from 'element-plus'
+import type { TableInstance, FormInstance, FormRules, UploadInstance, CheckboxValueType } from 'element-plus'
 import { dayjs } from 'element-plus'
 import draggable from 'vuedraggable'
 import { useI18n } from 'vue-i18n'
+import { useUserStore } from 'stores/user-store'
 import DialogView from 'components/DialogView.vue'
 import { retrieveUsers, fetchUser, createUser, modifyUser, removeUser, enableUser, checkUserExists } from 'src/api/users'
 import type { Pagination, User } from 'src/types'
@@ -12,10 +13,13 @@ import { calculate } from 'src/utils'
 
 
 const { t, locale } = useI18n()
+const userStore = useUserStore()
+
 const loading = ref<boolean>(false)
 const datas = ref<Array<User>>([])
 const total = ref<number>(0)
 
+const tableRef = ref<TableInstance>()
 const pagination = reactive<Pagination>({
   page: 1,
   size: 10
@@ -28,6 +32,10 @@ const columns = ref<Array<string>>(['name', 'enabled', 'description'])
 
 const saveLoading = ref<boolean>(false)
 const visible = ref<boolean>(false)
+
+const importVisible = ref<boolean>(false)
+const importLoading = ref<boolean>(false)
+const importRef = ref<UploadInstance>()
 
 const filters = ref({
   username: null
@@ -106,6 +114,21 @@ onMounted(() => {
 })
 
 /**
+ * 导入
+ */
+function importRows() {
+  importVisible.value = true
+}
+
+/**
+ * 导出
+ */
+function exportRows() {
+  const selectedRows = tableRef.value?.getSelectionRows()
+  console.log('selected rows: ', selectedRows)
+}
+
+/**
  * 弹出框
  * @param id 主键
  */
@@ -157,6 +180,15 @@ function onSubmit(formEl: FormInstance | undefined) {
       }
     }
   })
+}
+
+/**
+ * 导入提交
+ */
+async function onImportSubmit(importEl: UploadInstance | undefined) {
+  if (!importEl) return
+
+  importLoading.value = true
 }
 
 /**
@@ -229,10 +261,10 @@ function handleCheckedChange(value: CheckboxValueType[]) {
           <ElButton title="create" type="primary" @click="saveRow()">
             <Icon icon="material-symbols:add-rounded" width="18" height="18" />{{ $t('create') }}
           </ElButton>
-          <ElButton title="import" type="warning" plain @click="visible = true">
+          <ElButton title="import" type="warning" plain @click="importRows">
             <Icon icon="material-symbols:database-upload-outline-rounded" width="18" height="18" />{{ $t('import') }}
           </ElButton>
-          <ElButton title="export" type="success" plain>
+          <ElButton title="export" type="success" plain @click="exportRows">
             <Icon icon="material-symbols:file-export-outline-rounded" width="18" height="18" />{{ $t('export') }}
           </ElButton>
         </ElCol>
@@ -279,7 +311,7 @@ function handleCheckedChange(value: CheckboxValueType[]) {
         </ElCol>
       </ElRow>
 
-      <ElTable v-loading="loading" :data="datas" row-key="id" stripe table-layout="auto">
+      <ElTable ref="tableRef" v-loading="loading" :data="datas" row-key="id" stripe table-layout="auto">
         <ElTableColumn type="selection" width="55" />
         <ElTableColumn type="index" :label="$t('no')" width="55" />
         <ElTableColumn prop="username" :label="$t('username')">
@@ -411,6 +443,39 @@ function handleCheckedChange(value: CheckboxValueType[]) {
         <Icon icon="material-symbols:close" width="18" height="18" />{{ $t('cancel') }}
       </ElButton>
       <ElButton title="submit" type="primary" :loading="saveLoading" @click="onSubmit(formRef)">
+        <Icon icon="material-symbols:check-circle-outline-rounded" width="18" height="18" /> {{ $t('submit') }}
+      </ElButton>
+    </template>
+  </DialogView>
+
+  <!-- import -->
+  <DialogView v-model="importVisible" :title="$t('import')" width="36%">
+    <p>{{ $t('templates') + ' ' + $t('download') }}：
+      <a :href="`templates/users.xlsx`" :download="$t('users') + '.xlsx'">
+        {{ $t('users') }}.xlsx
+      </a>
+    </p>
+    <ElUpload ref="importRef" :limit="1" drag action="/api/users/import"
+      accept=".xls,.xlsx,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-excel"
+      :headers="{ Authorization: `Bearer ${userStore.accessToken}` }">
+      <div class="el-icon--upload inline-flex justify-center">
+        <Icon icon="material-symbols:upload-rounded" width="48" height="48" />
+      </div>
+      <div class="el-upload__text">
+        Drop file here or <em>click to upload</em>
+      </div>
+      <template #tip>
+        <div class="el-upload__tip">
+          File with a size less than 50MB.
+        </div>
+      </template>
+    </ElUpload>
+    <p class="text-red">xxxx</p>
+    <template #footer>
+      <ElButton title="cancel" @click="importVisible = false">
+        <Icon icon="material-symbols:close" width="18" height="18" />{{ $t('cancel') }}
+      </ElButton>
+      <ElButton title="submit" type="primary" :loading="importLoading" @click="onImportSubmit(importRef)">
         <Icon icon="material-symbols:check-circle-outline-rounded" width="18" height="18" /> {{ $t('submit') }}
       </ElButton>
     </template>

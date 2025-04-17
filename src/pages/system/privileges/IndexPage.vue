@@ -3,6 +3,7 @@ import { ref, reactive, onMounted } from 'vue'
 import type { TableInstance, FormInstance, FormRules, UploadInstance, CheckboxValueType, TabsPaneContext, TransferDirection, TransferKey } from 'element-plus'
 import draggable from 'vuedraggable'
 import { useI18n } from 'vue-i18n'
+import { useUserStore } from 'stores/user-store'
 import DialogView from 'components/DialogView.vue'
 import {
   retrievePrivileges, retrievePrivilegeSubset, retrievePrivilegeRoles, retrievePrivilegeGroups,
@@ -19,6 +20,8 @@ import { Icon } from '@iconify/vue'
 
 
 const { locale } = useI18n()
+const userStore = useUserStore()
+
 const loading = ref<boolean>(false)
 const datas = ref<Array<Privilege>>([])
 const total = ref<number>(0)
@@ -659,22 +662,27 @@ function rowName(key: number | string) {
 
   <!-- import -->
   <DialogView v-model="importVisible" :title="$t('import')" width="36%">
-    <p>模版下载：<a :href="`templates/equipments.xlsx`" download="仪器设备模版.xlsx">仪器设备模版.xlsx</a></p>
+    <p>{{ $t('templates') + ' ' + $t('download') }}：
+      <a :href="`templates/privileges.xlsx`" :download="$t('privileges') + '.xlsx'">
+        {{ $t('privileges') }}.xlsx
+      </a>
+    </p>
     <ElUpload ref="importRef" :limit="1" drag action="/api/privileges/import"
-      accept=".xls,.xlsx,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-excel">
+      accept=".xls,.xlsx,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-excel"
+      :headers="{ Authorization: `Bearer ${userStore.accessToken}` }">
       <div class="el-icon--upload inline-flex justify-center">
         <Icon icon="material-symbols:upload-rounded" width="48" height="48" />
       </div>
       <div class="el-upload__text">
-        Drop file here or <em>click to upload</em>
+        {{ $t('drop2Here') }}<em>{{ $t('click2Upload') }}</em>
       </div>
       <template #tip>
         <div class="el-upload__tip">
-          File with a size less than 50MB.
+          {{ $t('fileSizeLimit', { size: '50MB' }) }}
         </div>
       </template>
     </ElUpload>
-    <p class="text-red">xxxx</p>
+    <p class="text-red-600">xxxx</p>
     <template #footer>
       <ElButton title="cancel" @click="importVisible = false">
         <Icon icon="material-symbols:close" width="18" height="18" />{{ $t('cancel') }}
