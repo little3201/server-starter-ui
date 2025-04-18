@@ -9,8 +9,9 @@ for (let i = 1; i < 28; i++) {
   const row: User = {
     id: i,
     username: 'username' + i,
-    givenName: 'given' + i,
-    familyName: 'family' + i,
+    givenName: '三' + i,
+    middleName: i % 3 > 0 ? '五' : '',
+    familyName: '张',
     avatar: '/images/avatar.jpg',
     email: 'usexxx' + '@test.com',
     accountNonLocked: i % 2 > 0,
@@ -48,7 +49,7 @@ export const usersHandlers = [
     if (id) {
       return HttpResponse.json(datas.filter(item => item.id === Number(id))[0])
     } else {
-      return HttpResponse.json(null)
+      return HttpResponse.json()
     }
   }),
   http.get(`/api${SERVER_URL.USER}`, ({ request }) => {
@@ -76,6 +77,20 @@ export const usersHandlers = [
     // Don't forget to declare a semantic "201 Created"
     // response and send back the newly created Row!
     return HttpResponse.json(newData, { status: 201 })
+  }),
+  http.put(`/api${SERVER_URL.USER}/:id`, async ({ params, request }) => {
+    const { id } = params
+    // Read the intercepted request body as JSON.
+    const newData = await request.json() as User
+
+    if (id && newData) {
+      // Don't forget to declare a semantic "201 Created"
+      // response and send back the newly created Row!
+      return HttpResponse.json({...newData, id: id}, { status: 202 })
+    } else {
+      return HttpResponse.error()
+    }
+
   }),
   http.patch(`/api${SERVER_URL.USER}/privileges/:privilegeId`, async({ params, request }) => {
     const data = await request.json()

@@ -1,5 +1,7 @@
 import { dayjs } from 'element-plus'
-import type { Dictionary } from 'src/types'
+import { useUserStore } from 'stores/user-store'
+import type { Dictionary, PrivilegeTreeNode } from 'src/types'
+import type {RouteRecordNameGeneric} from 'vue-router'
 
 /**
  * Resolve a child path relative to a parent path
@@ -199,11 +201,36 @@ export function generateVerifier(prefix?: string): string {
 export function computeChallenge(codeVerifier: string): Promise<string> {
   const encoder = new TextEncoder()
   const data = encoder.encode(codeVerifier)
-  
+
   return crypto.subtle.digest('SHA-256', data).then(digest => {
     return btoa(String.fromCharCode(...new Uint8Array(digest)))
       .replace(/\+/g, '-')
       .replace(/\//g, '_')
       .replace(/=+$/, '')
   })
+}
+
+// 递归查找权限节点
+export function findNodeByPath(privileges: PrivilegeTreeNode[], path: string): string[] {
+  for (const node of privileges) {
+    if (node.meta.path === path) {
+      return node.meta.actions || [];
+    }
+    if (node.children) {
+      const result = findNodeByPath(node.children, path);
+      if (result.length > 0) return result;
+    }
+  }
+  return [];
+}
+
+export function hasAction(page: RouteRecordNameGeneric, action: string) {
+  if (page) {
+    const userStore = useUserStore()
+    const privileges = userStore.privileges
+    const actions = findNodeByPath(privileges, page as string)
+  
+    return actions.includes(action)
+  }
+  return false
 }

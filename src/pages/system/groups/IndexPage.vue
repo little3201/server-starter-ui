@@ -12,6 +12,7 @@ import {
 import { retrieveUsers } from 'src/api/users'
 import type { Pagination, Group, TreeNode, GroupMembers, User } from 'src/types'
 import { Icon } from '@iconify/vue'
+import { hasAction } from 'src/utils'
 
 
 const { t, locale } = useI18n()
@@ -357,14 +358,16 @@ function handleTransferChange(value: TransferKey[], direction: TransferDirection
         <ElCard shadow="never">
           <ElRow :gutter="20" justify="space-between" class="mb-4">
             <ElCol :span="16" class="text-left">
-              <ElButton title="create" type="primary" @click="saveRow()">
+              <ElButton v-if="hasAction($route.name, 'create')" title=" create" type="primary" @click="saveRow()">
                 <Icon icon="material-symbols:add-rounded" width="18" height="18" />{{ $t('create') }}
               </ElButton>
-              <ElButton title="import" type="warning" plain @click="importRows">
+              <ElButton v-if="hasAction($route.name, 'import')" title=" import" type="warning" plain
+                @click="importRows">
                 <Icon icon="material-symbols:database-upload-outline-rounded" width="18" height="18" />{{ $t('import')
                 }}
               </ElButton>
-              <ElButton title="export" type="success" plain @click="exportRows">
+              <ElButton v-if="hasAction($route.name, 'export')" title=" export" type="success" plain
+                @click="exportRows">
                 <Icon icon="material-symbols:file-export-outline-rounded" width="18" height="18" />{{ $t('export') }}
               </ElButton>
             </ElCol>
@@ -418,22 +421,25 @@ function handleTransferChange(value: TransferKey[], direction: TransferDirection
             <ElTableColumn prop="enabled" :label="$t('enabled')">
               <template #default="scope">
                 <ElSwitch size="small" v-model="scope.row.enabled" @change="enableChange(scope.row.id)"
-                  style="--el-switch-on-color: var(--el-color-success);" />
+                  style="--el-switch-on-color: var(--el-color-success);"
+                  :disabled="!hasAction($route.name, 'enable')" />
               </template>
             </ElTableColumn>
             <ElTableColumn show-overflow-tooltip prop="description" :label="$t('description')" />
             <ElTableColumn :label="$t('actions')">
               <template #default="scope">
-                <ElButton title="modify" size="small" type="primary" link @click="saveRow(scope.row.id)">
+                <ElButton v-if="hasAction($route.name, 'modify')" title=" modify" size="small" type="primary" link
+                  @click="saveRow(scope.row.id)">
                   <Icon icon="material-symbols:edit-outline-rounded" width="16" height="16" />{{ $t('modify') }}
                 </ElButton>
-                <ElButton title="relation" size="small" type="success" link @click="relationRow(scope.row.id)">
+                <ElButton v-if="hasAction($route.name, 'relation')" title=" relation" size="small" type="success" link
+                  @click="relationRow(scope.row.id)">
                   <Icon icon="material-symbols:link-rounded" width="16" height="16" />{{ $t('relation') }}
                 </ElButton>
                 <ElPopconfirm v-if="!scope.row.hasChildren" :title="$t('removeConfirm')" :width="240"
                   @confirm="confirmEvent(scope.row.id)">
                   <template #reference>
-                    <ElButton title="remove" size="small" type="danger" link>
+                    <ElButton v-if="hasAction($route.name, 'remove')" title=" remove" size="small" type="danger" link>
                       <Icon icon="material-symbols:delete-outline-rounded" width="16" height="16" />{{ $t('remove') }}
                     </ElButton>
                   </template>

@@ -207,8 +207,16 @@ export const dictionariesHandlers = [
       }
       return HttpResponse.json(array[0])
     } else {
-      return HttpResponse.json(null)
+      return HttpResponse.json()
     }
+  }),
+  http.get(`/api${SERVER_URL.DICTIONARY}/:id/exists`, ({ params }) => {
+    const { id, name } = params
+    let filtered = datas.filter(item => item.name === name)
+    if (id) {
+      filtered = datas.filter(item => item.name === name && item.id !== Number(id))
+    }
+    return HttpResponse.json(filtered.length > 0)
   }),
   http.get(`/api${SERVER_URL.DICTIONARY}/:id/subset`, ({ params }) => {
     const { id } = params
@@ -241,6 +249,20 @@ export const dictionariesHandlers = [
     // Don't forget to declare a semantic "201 Created"
     // response and send back the newly created Row!
     return HttpResponse.json(newData, { status: 201 })
+  }),
+  http.put(`/api${SERVER_URL.DICTIONARY}/:id`, async ({ params, request }) => {
+    const { id } = params
+    // Read the intercepted request body as JSON.
+    const newData = await request.json() as Dictionary
+
+    if (id && newData) {
+      // Don't forget to declare a semantic "201 Created"
+      // response and send back the newly created Row!
+      return HttpResponse.json({ ...newData, id: id }, { status: 202 })
+    } else {
+      return HttpResponse.error()
+    }
+
   }),
   http.delete('/api/dictionaries/:id', ({ params }) => {
     // All request path params are provided in the "params"

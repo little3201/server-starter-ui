@@ -277,7 +277,8 @@ const treeNodes: PrivilegeTreeNode[] = [
       path: 'logs',
       component: '#',
       redirect: 'operation',
-      icon: 'lab-profile-outline'
+      icon: 'lab-profile-outline',
+      actions: ['clear', 'remove', 'export']
     },
     children: [
       {
@@ -286,7 +287,8 @@ const treeNodes: PrivilegeTreeNode[] = [
         meta: {
           path: 'operation',
           component: 'logs/operation',
-          icon: 'clinical-notes-outline'
+          icon: 'clinical-notes-outline',
+          actions: ['clear', 'remove', 'export']
         }
       },
       {
@@ -295,7 +297,8 @@ const treeNodes: PrivilegeTreeNode[] = [
         meta: {
           path: 'access',
           component: 'logs/access',
-          icon: 'sticky-note-2-outline'
+          icon: 'sticky-note-2-outline',
+          actions: ['clear', 'remove', 'export']
         }
       },
       {
@@ -304,7 +307,8 @@ const treeNodes: PrivilegeTreeNode[] = [
         meta: {
           path: 'audit',
           component: 'logs/audit',
-          icon: 'note-alt-outline'
+          icon: 'note-alt-outline',
+          actions: ['clear', 'remove', 'export']
         }
       },
       {
@@ -313,7 +317,8 @@ const treeNodes: PrivilegeTreeNode[] = [
         meta: {
           path: 'scheduler',
           component: 'logs/scheduler',
-          icon: 'event-note-outline'
+          icon: 'event-note-outline',
+          actions: ['clear', 'remove', 'export']
         }
       }
     ]
@@ -355,7 +360,7 @@ const treeNodes: PrivilegeTreeNode[] = [
           path: 'generators',
           component: 'exploiters/generators',
           icon: 'code',
-          actions: ['create', 'modify', 'remove', 'import', 'export']
+          actions: ['create', 'modify', 'remove', 'import', 'export', 'sync', 'config', 'execute']
         }
       },
       {
@@ -462,7 +467,7 @@ export const privilegesHandlers = [
       }
       return HttpResponse.json(res)
     } else {
-      return HttpResponse.json(null)
+      return HttpResponse.json()
     }
   }),
   http.get(`/api${SERVER_URL.PRIVILEGE}`, ({ request }) => {
@@ -480,16 +485,19 @@ export const privilegesHandlers = [
 
     return HttpResponse.json(data)
   }),
-  http.post(`/api${SERVER_URL.PRIVILEGE}`, async ({ request }) => {
+  http.put(`/api${SERVER_URL.PRIVILEGE}/:id`, async ({ params, request }) => {
+    const { id } = params
     // Read the intercepted request body as JSON.
-    const newData = await request.json() as PrivilegeTreeNode
+    const newData = await request.json() as Privilege
 
-    // Push the new Row to the map of all Dictionarys.
-    treeNodes.push(newData)
+    if (id && newData) {
+      // Don't forget to declare a semantic "201 Created"
+      // response and send back the newly created Row!
+      return HttpResponse.json({ ...newData, id: id }, { status: 202 })
+    } else {
+      return HttpResponse.error()
+    }
 
-    // Don't forget to declare a semantic "201 Created"
-    // response and send back the newly created Row!
-    return HttpResponse.json(newData, { status: 201 })
   }),
   http.delete(`/api${SERVER_URL.PRIVILEGE}/:id`, ({ params }) => {
     // All request path params are provided in the "params"

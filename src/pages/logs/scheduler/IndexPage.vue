@@ -7,7 +7,7 @@ import DialogView from 'components/DialogView.vue'
 import { retrieveSchedulerLogs, fetchSchedulerLog } from 'src/api/scheduler-logs'
 import type { Pagination, SchedulerLog } from 'src/types'
 import { Icon } from '@iconify/vue'
-import { formatDuration } from 'src/utils'
+import { formatDuration, hasAction } from 'src/utils'
 
 const loading = ref<boolean>(false)
 const datas = ref<Array<SchedulerLog>>([])
@@ -166,10 +166,10 @@ function handleCheckedChange(value: CheckboxValueType[]) {
     <ElCard shadow="never">
       <ElRow :gutter="20" justify="space-between" class="mb-4">
         <ElCol :span="16" class="text-left">
-          <ElButton title="clear" type="danger" plain @click="clearRows">
+          <ElButton v-if="hasAction($route.name, 'clear')" title="clear" type="danger" plain @click="clearRows">
             <Icon icon="material-symbols:clear-all-rounded" width="18" height="18" />{{ $t('clear') }}
           </ElButton>
-          <ElButton title="export" type="success" plain @click="exportRows">
+          <ElButton v-if="hasAction($route.name, 'export')" title="export" type="success" plain @click="exportRows">
             <Icon icon="material-symbols:file-export-outline-rounded" width="18" height="18" />{{ $t('export') }}
           </ElButton>
         </ElCol>
@@ -258,7 +258,7 @@ function handleCheckedChange(value: CheckboxValueType[]) {
           <template #default="scope">
             <ElPopconfirm :title="$t('removeConfirm')" :width="240" @confirm="confirmEvent(scope.row.id)">
               <template #reference>
-                <ElButton title="remove" size="small" type="danger" link>
+                <ElButton v-if="hasAction($route.name, 'remove')" title="remove" size="small" type="danger" link>
                   <Icon icon="material-symbols:delete-outline-rounded" width="16" height="16" />{{ $t('remove') }}
                 </ElButton>
               </template>

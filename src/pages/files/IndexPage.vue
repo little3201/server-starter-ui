@@ -7,7 +7,7 @@ import { dayjs } from 'element-plus'
 import { retrieveFiles, fetchFile } from 'src/api/files'
 import type { Pagination, FileRecord } from 'src/types'
 import { Icon } from '@iconify/vue'
-import { formatFileSize } from 'src/utils'
+import { formatFileSize, hasAction } from 'src/utils'
 
 
 const loading = ref<boolean>(false)
@@ -161,7 +161,7 @@ function handleCheckedChange(value: CheckboxValueType[]) {
       <ElCard shadow="never">
         <ElRow :gutter="20" justify="space-between" class="mb-4">
           <ElCol :span="16" class="text-left">
-            <ElButton title="upload" type="primary" plain @click="uploadRow">
+            <ElButton v-if="hasAction($route.name, 'upload')" title="upload" type="primary" plain @click="uploadRow">
               <Icon icon="material-symbols:upload" />{{ $t('upload') }}
             </ElButton>
           </ElCol>
@@ -225,12 +225,13 @@ function handleCheckedChange(value: CheckboxValueType[]) {
           </ElTableColumn>
           <ElTableColumn :label="$t('actions')">
             <template #default="scope">
-              <ElButton title="download" size="small" type="success" link @click="downloadRow(scope.row.id)">
+              <ElButton v-if="hasAction($route.name, 'download')" title="download" size="small" type="success" link
+                @click="downloadRow(scope.row.id)">
                 <Icon icon="material-symbols:download" width="16" height="16" />{{ $t('download') }}
               </ElButton>
               <ElPopconfirm :title="$t('removeConfirm')" :width="240" @confirm="confirmEvent(scope.row.id)">
                 <template #reference>
-                  <ElButton title="remove" size="small" type="danger" link>
+                  <ElButton v-if="hasAction($route.name, 'remove')" title="remove" size="small" type="danger" link>
                     <Icon icon="material-symbols:delete-outline-rounded" width="16" height="16" />{{ $t('remove') }}
                   </ElButton>
                 </template>

@@ -99,7 +99,7 @@ export const schedulerLogsHandlers = [
     if (id) {
       return HttpResponse.json(datas.filter(item => item.id === Number(id))[0])
     } else {
-      return HttpResponse.json(null)
+      return HttpResponse.json()
     }
   }),
   http.get(`/api${SERVER_URL.SCHEDULER_LOG}`, ({ request }) => {

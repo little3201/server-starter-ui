@@ -6,6 +6,7 @@ import DialogView from 'components/DialogView.vue'
 import { retrieveRegions, fetchRegion, createRegion, modifyRegion, removeRegion, enableRegion, checkRegionExists } from 'src/api/regions'
 import type { Pagination, Region } from 'src/types'
 import { Icon } from '@iconify/vue'
+import { hasAction } from 'src/utils'
 
 
 const { t } = useI18n()
@@ -160,7 +161,7 @@ function confirmEvent(id: number) {
         <span class="text-xl">{{ title }}</span>
       </ElCol>
       <ElCol :span="12" class="text-right">
-        <ElButton type="primary" @click="saveRow()">
+        <ElButton v-if="hasAction($route.name, 'create')" type="primary" @click="saveRow()">
           <Icon icon="material-symbols:add-rounded" width="18" height="18" />{{ $t('create') }}
         </ElButton>
         <ElTooltip class="box-item" effect="dark" :content="$t('refresh')" placement="top">
@@ -184,18 +185,19 @@ function confirmEvent(id: number) {
       <ElTableColumn prop="enabled" :label="$t('enabled')">
         <template #default="scope">
           <ElSwitch size="small" v-model="scope.row.enabled" @change="enableChange(scope.row.id)"
-            style="--el-switch-on-color: var(--el-color-success);" />
+            style="--el-switch-on-color: var(--el-color-success);" :disabled="!hasAction($route.name, 'enable')" />
         </template>
       </ElTableColumn>
       <ElTableColumn show-overflow-tooltip prop="description" :label="$t('description')" />
       <ElTableColumn :label="$t('actions')">
         <template #default="scope">
-          <ElButton size="small" type="primary" link @click="saveRow(scope.row.id)">
+          <ElButton v-if="hasAction($route.name, 'modify')" size="small" type="primary" link
+            @click="saveRow(scope.row.id)">
             <Icon icon="material-symbols:edit-outline-rounded" width="16" height="16" />{{ $t('modify') }}
           </ElButton>
           <ElPopconfirm :title="$t('removeConfirm')" :width="240" @confirm="confirmEvent(scope.row.id)">
             <template #reference>
-              <ElButton size="small" type="danger" link>
+              <ElButton v-if="hasAction($route.name, 'remove')" size="small" type="danger" link>
                 <Icon icon="material-symbols:delete-outline-rounded" width="16" height="16" />{{ $t('remove') }}
               </ElButton>
             </template>

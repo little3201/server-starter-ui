@@ -13,7 +13,7 @@ import { retrieveDictionarySubset } from 'src/api/dictionaries'
 import { retrieveRoles, relationRolesPrivileges, removeRolesPrivileges } from 'src/api/roles'
 import { retrieveGroups, relationGroupsPrivileges, removeGroupsPrivileges } from 'src/api/groups'
 import { retrieveUsers, relationUsersPrivileges, removeUsersPrivileges } from 'src/api/users'
-import { isString, visibleArray } from 'src/utils'
+import { isString, visibleArray, hasAction } from 'src/utils'
 import { actions } from 'src/constants'
 import type { Pagination, Privilege, Role, Group, User, Dictionary, RolePrivileges, GroupPrivileges, UserPrivileges } from 'src/types'
 import { Icon } from '@iconify/vue'
@@ -140,7 +140,7 @@ async function loadUsers() {
   retrieveUsers({ page: 1, size: 99 }).then(res => {
     users.value = res.data.content.map((item: User) => ({
       ...item,
-      fullName: (locale.value === 'en-US' || item.middleName) ? `${item.givenName} ${item.middleName} ${item.familyName}` : `${item.familyName} ${item.givenName}`
+      fullName: (locale.value === 'en-US' || item.middleName) ? `${item.givenName} ${item.middleName} ${item.familyName}` : `${item.familyName}${item.givenName}`
     }))
   })
 }
@@ -455,10 +455,10 @@ function rowName(key: number | string) {
     <ElCard shadow="never">
       <ElRow :gutter="20" justify="space-between" class="mb-4">
         <ElCol :span="16" class="text-left">
-          <ElButton title="import" type="warning" plain @click="importRows">
+          <ElButton v-if="hasAction($route.name, 'import')" title=" import" type="warning" plain @click="importRows">
             <Icon icon="material-symbols:database-upload-outline-rounded" width="18" height="18" />{{ $t('import') }}
           </ElButton>
-          <ElButton title="export" type="success" plain @click="exportRows">
+          <ElButton v-if="hasAction($route.name, 'export')" title=" export" type="success" plain @click="exportRows">
             <Icon icon="material-symbols:file-export-outline-rounded" width="18" height="18" />{{ $t('export') }}
           </ElButton>
         </ElCol>
@@ -539,17 +539,18 @@ function rowName(key: number | string) {
         <ElTableColumn prop="enabled" :label="$t('enabled')">
           <template #default="scope">
             <ElSwitch size="small" v-model="scope.row.enabled" @change="enableChange(scope.row.id)"
-              style="--el-switch-on-color: var(--el-color-success);" />
+              style="--el-switch-on-color: var(--el-color-success);" :disabled="!hasAction($route.name, 'enable')" />
           </template>
         </ElTableColumn>
         <ElTableColumn show-overflow-tooltip prop="description" :label="$t('description')" />
         <ElTableColumn :label="$t('actions')">
           <template #default="scope">
-            <ElButton title="modify" size="small" type="primary" link @click="saveRow(scope.row.id)">
+            <ElButton v-if="hasAction($route.name, 'modify')" title=" modify" size="small" type="primary" link
+              @click="saveRow(scope.row.id)">
               <Icon icon="material-symbols:edit-outline-rounded" width="16" height="16" />{{ $t('modify') }}
             </ElButton>
-            <ElButton v-if="!scope.row.redirect && scope.row.enabled" title="authorize" size="small" type="success" link
-              @click="authorizeRow(scope.row.id)">
+            <ElButton v-if="hasAction($route.name, 'authorize') && !scope.row.redirect && scope.row.enabled"
+              title="authorize" size="small" type="success" link @click="authorizeRow(scope.row.id)">
               <Icon icon="material-symbols:privacy-tip-outline-rounded" width="16" height="16" />{{ $t('authorize') }}
             </ElButton>
           </template>

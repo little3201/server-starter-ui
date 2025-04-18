@@ -37,13 +37,12 @@ router.beforeEach(async (to, from, next) => {
           username: subRes.data.sub,
           avatar: userRes.data.avatar
         })
-
       }
       // load privileges
       if (!userStore.privileges.length) {
-        const privilegesResp = await retrievePrivilegeTree();
-        const privileges = privilegesResp.data;
-        userStore.$patch({ privileges });
+        const privilegesResp = await retrievePrivilegeTree()
+        const privileges = privilegesResp.data
+        userStore.$patch({ privileges })
       }
       if (!to.name || !router.hasRoute(to.name)) {
         const routes = generateRoutes(userStore.privileges)

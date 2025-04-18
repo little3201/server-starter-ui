@@ -5,6 +5,7 @@ import { useUserStore } from 'stores/user-store'
 import { i18n } from 'boot/i18n'
 import type { ComposerTranslation } from 'vue-i18n'
 import { signIn } from 'src/api/authentication'
+import { SERVER_URL } from 'src/constants'
 
 
 const { t } = i18n.global as { t: ComposerTranslation }
@@ -46,6 +47,11 @@ api.interceptors.response.use(
   (res: AxiosResponse) => {
     const uniqueKey = generateUniqueKey(res.config)
     abortControllerMap.delete(uniqueKey)
+
+    const { config, status } = res
+    if (status >= 200 && status < 300 && config.method !== 'get' && config.url !== SERVER_URL.TOKEN) {
+      ElMessage.success({ message: t('successful'), grouping: true })
+    }
     return res
   },
   (error: AxiosError) => {

@@ -39,7 +39,7 @@ export const regionsHandlers = [
       }
       return HttpResponse.json(res)
     } else {
-      return HttpResponse.json(null)
+      return HttpResponse.json()
     }
   }),
   http.get(`/api${SERVER_URL.REGION}`, ({ request }) => {
@@ -74,6 +74,20 @@ export const regionsHandlers = [
     // Don't forget to declare a semantic "201 Created"
     // response and send back the newly created Row!
     return HttpResponse.json(newData, { status: 201 })
+  }),
+  http.put(`/api${SERVER_URL.REGION}/:id`, async ({ params, request }) => {
+    const { id } = params
+    // Read the intercepted request body as JSON.
+    const newData = await request.json() as Region
+
+    if (id && newData) {
+      // Don't forget to declare a semantic "201 Created"
+      // response and send back the newly created Row!
+      return HttpResponse.json({ ...newData, id: id }, { status: 202 })
+    } else {
+      return HttpResponse.error()
+    }
+
   }),
   http.delete(`/api${SERVER_URL.REGION}/:id`, ({ params }) => {
     // All request path params are provided in the "params"

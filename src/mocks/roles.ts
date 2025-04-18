@@ -59,7 +59,7 @@ export const rolesHandlers = [
     if (id) {
       return HttpResponse.json(datas.filter(item => item.id === Number(id))[0])
     } else {
-      return HttpResponse.json(null)
+      return HttpResponse.json()
     }
   }),
   http.get(`/api${SERVER_URL.ROLE}`, ({ request }) => {
@@ -90,6 +90,20 @@ export const rolesHandlers = [
     // Don't forget to declare a semantic "201 Created"
     // response and send back the newly created Row!
     return HttpResponse.json(newData, { status: 201 })
+  }),
+  http.put(`/api${SERVER_URL.ROLE}/:id`, async ({ params, request }) => {
+    const { id } = params
+    // Read the intercepted request body as JSON.
+    const newData = await request.json() as Role
+
+    if (id && newData) {
+      // Don't forget to declare a semantic "201 Created"
+      // response and send back the newly created Row!
+      return HttpResponse.json({ ...newData, id: id }, { status: 202 })
+    } else {
+      return HttpResponse.error()
+    }
+
   }),
   http.patch(`/api${SERVER_URL.ROLE}/:id/members`, ({ params }) => {
     const { id } = params
