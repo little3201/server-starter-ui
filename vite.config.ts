@@ -20,14 +20,6 @@ export default defineConfig({
       'stores': fileURLToPath(new URL('src/stores', import.meta.url))
     }
   },
-  css: {
-    preprocessorOptions: {
-      scss: {
-        additionalData: '@use "src/css/element/index.scss" as *;',
-        api: 'modern-compiler',
-      }
-    }
-  },
   plugins: [
     vue(),
     Components({
