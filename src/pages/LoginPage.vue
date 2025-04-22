@@ -94,13 +94,11 @@ function load() {
     </figure>
 
     <ElHeader class="flex flex-nowrap items-center z-10" height="50px">
-      <div class="inline-flex flex-grow justify-end">
-        <div class="inline-flex justify-end items-center space-x-4">
-          <!-- language -->
-          <LanguageSelector />
-          <!-- theme -->
-          <ThemeToogle />
-        </div>
+      <div class="inline-flex flex-1 justify-end items-center space-x-4">
+        <!-- language -->
+        <LanguageSelector />
+        <!-- theme -->
+        <ThemeToogle />
       </div>
     </ElHeader>
     <ElMain class="items-center justify-center z-10">
