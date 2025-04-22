@@ -1,6 +1,6 @@
 import { api } from 'boot/axios'
 import { SERVER_URL } from 'src/constants'
-import type { Pagination, FileRecord } from 'src/types'
+import type { Pagination } from 'src/types'
 
 /**
  * Retrieve rows
@@ -23,11 +23,13 @@ export const fetchFile = (id: number) => {
 
 /**
  * Upload
- * @param row Row data
+ * @param file file
  * @returns Uploaded row
  */
-export const uploadFile = (row: FileRecord) => {
-  return api.post(`${SERVER_URL.FILE}/upload`, row)
+export const uploadFile = (file: File) => {
+  const formData = new FormData()
+  formData.append('file', file)
+  return api.post(`${SERVER_URL.FILE}/upload`, formData)
 }
 
 /**

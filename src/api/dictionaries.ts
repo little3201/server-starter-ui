@@ -84,3 +84,14 @@ export const enableDictionary = (id: number) => {
 export const removeDictionary = (id: number) => {
   return api.delete(`${SERVER_URL.DICTIONARY}/${id}`)
 }
+
+/**
+ * Import rows
+ * @param file file
+ * @returns
+ */
+export const importDictionaries = (file: File) => {
+  const formData = new FormData()
+  formData.append('file', file)
+  return api.post(`${SERVER_URL.DICTIONARY}/import`, formData)
+}

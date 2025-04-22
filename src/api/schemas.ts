@@ -97,11 +97,12 @@ export const configSchemaFields = (id: number, rows: Array<Field>) => {
 }
 
 /**
- * Export rows
- * @param ids Rows ID
+ * Import rows
+ * @param file file
  * @returns
  */
-export const exprotSchemas = (ids?: number[]) => {
-  const params = ids ? { ids: ids.join(',') } : {}
-  return api.get(`${SERVER_URL.SCHEMA}/export`, { params, responseType: 'blob' })
+export const importSchemas = (file: File) => {
+  const formData = new FormData()
+  formData.append('file', file)
+  return api.post(`${SERVER_URL.SCHEMA}/import`, formData)
 }

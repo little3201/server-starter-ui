@@ -239,6 +239,22 @@ export const dictionariesHandlers = [
 
     return HttpResponse.json(data)
   }),
+  http.post(`/api${SERVER_URL.DICTIONARY}/import`, async ({ request }) => {
+    // Read the intercepted request body as JSON.
+    const data = await request.formData()
+    const file = data.get('file')
+
+    if (!file) {
+      return new HttpResponse('Missing document', { status: 400 })
+    }
+
+    if (!(file instanceof File)) {
+      return new HttpResponse('Uploaded document is not a File', {
+        status: 400,
+      })
+    }
+    return HttpResponse.json()
+  }),
   http.post(`/api${SERVER_URL.DICTIONARY}`, async ({ request }) => {
     // Read the intercepted request body as JSON.
     const newData = await request.json() as Dictionary
@@ -263,6 +279,14 @@ export const dictionariesHandlers = [
       return HttpResponse.error()
     }
 
+  }),
+  http.patch(`/api${SERVER_URL.DICTIONARY}/:id`, async ({ params }) => {
+    const { id } = params
+    if (id) {
+      return HttpResponse.json()
+    } else {
+      return HttpResponse.error()
+    }
   }),
   http.delete('/api/dictionaries/:id', ({ params }) => {
     // All request path params are provided in the "params"

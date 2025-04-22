@@ -67,7 +67,7 @@ const subDatas: Privilege[] = [
     path: 'groups',
     component: 'system/groups',
     name: 'groups',
-    actions: ['create', 'modify', 'remove', 'import', 'export', 'relation'],
+    actions: ['create', 'modify', 'remove', 'import', 'export', 'relation', 'enable'],
     count: 0,
     enabled: true,
     icon: 'account-tree-outline',
@@ -79,7 +79,7 @@ const subDatas: Privilege[] = [
     path: 'users',
     component: 'system/users',
     name: 'users',
-    actions: ['create', 'modify', 'remove', 'import', 'export'],
+    actions: ['create', 'modify', 'remove', 'import', 'export', 'enable'],
     count: 0,
     enabled: true,
     icon: 'person-outline',
@@ -91,7 +91,7 @@ const subDatas: Privilege[] = [
     path: 'privileges',
     component: 'system/privileges',
     name: 'privileges',
-    actions: ['modify', 'authorize', 'import', 'export'],
+    actions: ['modify', 'authorize', 'import', 'export', 'enable'],
     count: 0,
     enabled: true,
     icon: 'admin-panel-settings-outline',
@@ -103,7 +103,7 @@ const subDatas: Privilege[] = [
     path: 'roles',
     component: 'system/roles',
     name: 'roles',
-    actions: ['create', 'modify', 'remove', 'import', 'export', 'relation'],
+    actions: ['create', 'modify', 'remove', 'import', 'export', 'relation', 'enable'],
     count: 0,
     enabled: true,
     icon: 'shield-person-outline',
@@ -115,7 +115,7 @@ const subDatas: Privilege[] = [
     path: 'dictionaries',
     component: 'system/dictionaries',
     name: 'dictionaries',
-    actions: ['create', 'modify', 'remove', 'import', 'export'],
+    actions: ['create', 'modify', 'remove', 'import', 'export', 'enable'],
     count: 0,
     enabled: true,
     icon: 'book-3-outline',
@@ -151,7 +151,7 @@ const subDatas: Privilege[] = [
     path: 'audit',
     component: 'logs/audit',
     name: 'auditLog',
-    actions: ['export'],
+    actions: ['remove', 'export'],
     count: 0,
     enabled: true,
     icon: 'note-alt-outline',
@@ -175,7 +175,7 @@ const subDatas: Privilege[] = [
     path: 'generators',
     name: 'generators',
     component: 'exploiters/generators',
-    actions: ['create', 'modify', 'remove', 'import', 'export', 'config', 'preview'],
+    actions: ['create', 'modify', 'remove', 'import', 'export', 'config', 'preview', 'enable'],
     count: 0,
     enabled: true,
     icon: 'genetics',
@@ -199,7 +199,7 @@ const subDatas: Privilege[] = [
     path: 'templates',
     name: 'templates',
     component: 'exploiters/templates',
-    actions: ['create', 'modify', 'remove', 'import', 'export'],
+    actions: ['create', 'modify', 'remove', 'import', 'export', 'enable'],
     count: 0,
     enabled: true,
     icon: 'code',
@@ -225,7 +225,7 @@ const treeNodes: PrivilegeTreeNode[] = [
           path: 'groups',
           component: 'system/groups',
           icon: 'account-tree-outline',
-          actions: ['create', 'modify', 'remove', 'import', 'export']
+          actions: ['create', 'modify', 'remove', 'import', 'export', 'relation', 'enable']
         }
       },
       {
@@ -235,7 +235,7 @@ const treeNodes: PrivilegeTreeNode[] = [
           path: 'users',
           component: 'system/users',
           icon: 'person-outline',
-          actions: ['create', 'modify', 'remove', 'import', 'export']
+          actions: ['create', 'modify', 'remove', 'import', 'export', 'enable']
         }
       },
       {
@@ -245,7 +245,7 @@ const treeNodes: PrivilegeTreeNode[] = [
           path: 'roles',
           component: 'system/roles',
           icon: 'shield-person-outline',
-          actions: ['create', 'modify', 'remove', 'import', 'export', 'relation']
+          actions: ['create', 'modify', 'remove', 'import', 'export', 'relation', 'enable']
         }
       },
       {
@@ -255,7 +255,7 @@ const treeNodes: PrivilegeTreeNode[] = [
           path: 'dictionaries',
           component: 'system/dictionaries',
           icon: 'book-3-outline',
-          actions: ['create', 'modify', 'remove', 'import', 'export']
+          actions: ['create', 'modify', 'remove', 'import', 'export', 'enable']
         }
       },
       {
@@ -265,7 +265,7 @@ const treeNodes: PrivilegeTreeNode[] = [
           path: 'privileges',
           component: 'system/privileges',
           icon: 'admin-panel-settings-outline',
-          actions: ['modify', 'authorize', 'import', 'export']
+          actions: ['modify', 'authorize', 'import', 'export', 'enable']
         }
       }
     ]
@@ -308,7 +308,7 @@ const treeNodes: PrivilegeTreeNode[] = [
           path: 'audit',
           component: 'logs/audit',
           icon: 'note-alt-outline',
-          actions: ['clear', 'remove', 'export']
+          actions: ['remove', 'export']
         }
       },
       {
@@ -330,7 +330,7 @@ const treeNodes: PrivilegeTreeNode[] = [
       path: 'regions',
       component: 'regions',
       icon: 'location-on-outline',
-      actions: ['create', 'modify', 'remove', 'import', 'export']
+      actions: ['create', 'modify', 'remove', 'import', 'export', 'enable']
     }
   },
   {
@@ -360,7 +360,7 @@ const treeNodes: PrivilegeTreeNode[] = [
           path: 'generators',
           component: 'exploiters/generators',
           icon: 'code',
-          actions: ['create', 'modify', 'remove', 'import', 'export', 'sync', 'config', 'execute']
+          actions: ['create', 'modify', 'remove', 'import', 'export', 'sync', 'config', 'execute', 'enable']
         }
       },
       {
@@ -370,7 +370,7 @@ const treeNodes: PrivilegeTreeNode[] = [
           path: 'scripts',
           component: 'exploiters/scripts',
           icon: 'terminal',
-          actions: ['create', 'modify', 'remove', 'import', 'export']
+          actions: ['create', 'modify', 'remove', 'import', 'export', 'enable']
         }
       },
       {
@@ -380,7 +380,7 @@ const treeNodes: PrivilegeTreeNode[] = [
           path: 'templates',
           component: 'exploiters/templates',
           icon: 'terminal',
-          actions: ['create', 'modify', 'remove', 'import', 'export']
+          actions: ['create', 'modify', 'remove', 'import', 'export', 'enable']
         }
       }
     ]
@@ -454,6 +454,26 @@ export const privilegesHandlers = [
   http.get(`/api${SERVER_URL.PRIVILEGE}/tree`, () => {
     return HttpResponse.json(treeNodes)
   }),
+  http.get(`/api${SERVER_URL.PRIVILEGE}/:id`, ({ params }) => {
+    const { id } = params
+    if (id) {
+      let res = datas.filter(item => item.id === Number(id))[0]
+      if (!res) {
+        res = subDatas.filter(item => item.id === Number(id))[0]
+      }
+      return HttpResponse.json(res)
+    } else {
+      return HttpResponse.json()
+    }
+  }),
+  http.get(`/api${SERVER_URL.PRIVILEGE}/:id/exists`, ({ params }) => {
+    const { id, name } = params
+    let filtered = datas.filter(item => item.name === name)
+    if (id) {
+      filtered = datas.filter(item => item.name === name && item.id !== Number(id))
+    }
+    return HttpResponse.json(filtered.length > 0)
+  }),
   http.get(`/api${SERVER_URL.PRIVILEGE}/:id/subset`, ({ params }) => {
     const { id } = params
     return HttpResponse.json(subDatas.filter(item => item.superiorId === Number(id)))
@@ -485,6 +505,22 @@ export const privilegesHandlers = [
 
     return HttpResponse.json(data)
   }),
+  http.post(`/api${SERVER_URL.PRIVILEGE}/import`, async ({ request }) => {
+    // Read the intercepted request body as JSON.
+    const data = await request.formData()
+    const file = data.get('file')
+
+    if (!file) {
+      return new HttpResponse('Missing document', { status: 400 })
+    }
+
+    if (!(file instanceof File)) {
+      return new HttpResponse('Uploaded document is not a File', {
+        status: 400,
+      })
+    }
+    return HttpResponse.json()
+  }),
   http.put(`/api${SERVER_URL.PRIVILEGE}/:id`, async ({ params, request }) => {
     const { id } = params
     // Read the intercepted request body as JSON.
@@ -498,6 +534,14 @@ export const privilegesHandlers = [
       return HttpResponse.error()
     }
 
+  }),
+  http.patch(`/api${SERVER_URL.PRIVILEGE}/:id`, async ({ params }) => {
+    const { id } = params
+    if (id) {
+      return HttpResponse.json()
+    } else {
+      return HttpResponse.error()
+    }
   }),
   http.delete(`/api${SERVER_URL.PRIVILEGE}/:id`, ({ params }) => {
     // All request path params are provided in the "params"

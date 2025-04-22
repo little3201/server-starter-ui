@@ -52,6 +52,14 @@ export const usersHandlers = [
       return HttpResponse.json()
     }
   }),
+  http.get(`/api${SERVER_URL.USER}/:id/exists`, ({ params }) => {
+    const { id, username } = params
+    let filtered = datas.filter(item => item.username === username)
+    if (id) {
+      filtered = datas.filter(item => item.username === username && item.id !== Number(id))
+    }
+    return HttpResponse.json(filtered.length > 0)
+  }),
   http.get(`/api${SERVER_URL.USER}`, ({ request }) => {
     const url = new URL(request.url)
     const page = url.searchParams.get('page')
@@ -66,6 +74,22 @@ export const usersHandlers = [
     }
 
     return HttpResponse.json(data)
+  }),
+  http.post(`/api${SERVER_URL.USER}/import`, async ({ request }) => {
+    // Read the intercepted request body as JSON.
+    const data = await request.formData()
+    const file = data.get('file')
+    
+    if (!file) {
+      return new HttpResponse('Missing document', { status: 400 })
+    }
+  
+    if (!(file instanceof File)) {
+      return new HttpResponse('Uploaded document is not a File', {
+        status: 400,
+      })
+    }
+    return HttpResponse.json()
   }),
   http.post(`/api${SERVER_URL.USER}`, async ({ request }) => {
     // Read the intercepted request body as JSON.
@@ -90,7 +114,14 @@ export const usersHandlers = [
     } else {
       return HttpResponse.error()
     }
-
+  }),
+  http.patch(`/api${SERVER_URL.USER}/:id`, async({ params }) => {
+    const { id } = params
+    if (id) {
+      return HttpResponse.json()
+    } else {
+      return HttpResponse.error()
+    }
   }),
   http.patch(`/api${SERVER_URL.USER}/privileges/:privilegeId`, async({ params, request }) => {
     const data = await request.json()

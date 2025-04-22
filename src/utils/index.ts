@@ -16,31 +16,12 @@ export function pathResolve(parentPath: string, path: string): string {
 }
 
 /**
- * Check if a value matches a specific type
- * @param {unknown} val - The value to check
- * @param {string} type - The type to match
- * @returns {boolean} - True if the value matches the type, otherwise false
- */
-function is(val: unknown, type: string): boolean {
-  return Object.prototype.toString.call(val) === `[object ${type}]`
-}
-
-/**
- * Check if a value is a string
- * @param {unknown} val - The value to check
- * @returns {boolean} - True if the value is a string, otherwise false
- */
-export function isString(val: unknown): val is string {
-  return is(val, 'String')
-}
-
-/**
  * Check if a value is a number
  * @param {unknown} val - The value to check
  * @returns {boolean} - True if the value is a number, otherwise false
  */
 export const isNumber = (val: unknown): val is number => {
-  return is(val, 'Number')
+  return typeof val === 'number' && isFinite(val)
 }
 
 /**
@@ -211,13 +192,13 @@ export function computeChallenge(codeVerifier: string): Promise<string> {
 }
 
 // 递归查找权限节点
-export function findNodeByPath(privileges: PrivilegeTreeNode[], path: string): string[] {
+export function findNodeByPath(privileges: PrivilegeTreeNode[], name: string): string[] {
   for (const node of privileges) {
-    if (node.meta.path === path) {
+    if (node.name === name) {
       return node.meta.actions || [];
     }
     if (node.children) {
-      const result = findNodeByPath(node.children, path);
+      const result = findNodeByPath(node.children, name);
       if (result.length > 0) return result;
     }
   }

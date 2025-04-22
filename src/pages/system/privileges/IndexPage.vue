@@ -1,19 +1,19 @@
 <script setup lang="ts">
 import { ref, reactive, onMounted } from 'vue'
-import type { TableInstance, FormInstance, FormRules, UploadInstance, CheckboxValueType, TabsPaneContext, TransferDirection, TransferKey } from 'element-plus'
+import type { TableInstance, FormInstance, FormRules, UploadInstance, UploadRequestOptions, CheckboxValueType, TabsPaneContext, TransferDirection, TransferKey } from 'element-plus'
 import draggable from 'vuedraggable'
 import { useI18n } from 'vue-i18n'
 import { useUserStore } from 'stores/user-store'
 import DialogView from 'components/DialogView.vue'
 import {
   retrievePrivileges, retrievePrivilegeSubset, retrievePrivilegeRoles, retrievePrivilegeGroups,
-  retrievePrivilegeUsers, fetchPrivilege, modifyPrivilege, enablePrivilege
+  retrievePrivilegeUsers, fetchPrivilege, modifyPrivilege, enablePrivilege, importPrivileges
 } from 'src/api/privileges'
 import { retrieveDictionarySubset } from 'src/api/dictionaries'
 import { retrieveRoles, relationRolesPrivileges, removeRolesPrivileges } from 'src/api/roles'
 import { retrieveGroups, relationGroupsPrivileges, removeGroupsPrivileges } from 'src/api/groups'
 import { retrieveUsers, relationUsersPrivileges, removeUsersPrivileges } from 'src/api/users'
-import { isString, visibleArray, hasAction } from 'src/utils'
+import { isNumber, visibleArray, hasAction } from 'src/utils'
 import { actions } from 'src/constants'
 import type { Pagination, Privilege, Role, Group, User, Dictionary, RolePrivileges, GroupPrivileges, UserPrivileges } from 'src/types'
 import { Icon } from '@iconify/vue'
@@ -56,6 +56,7 @@ const users = ref<Array<User>>([])
 
 const importVisible = ref<boolean>(false)
 const importLoading = ref<boolean>(false)
+const exportLoading = ref<boolean>(false)
 const importRef = ref<UploadInstance>()
 
 const filters = ref({
@@ -171,8 +172,12 @@ function importRows() {
  * 导出
  */
 function exportRows() {
+  exportLoading.value = true
+
   const selectedRows = tableRef.value?.getSelectionRows()
-  console.log('selected rows: ', selectedRows)
+  if (selectedRows) {
+    console.log('selectedRows: ', selectedRows)
+  }
 }
 
 /**
@@ -248,8 +253,16 @@ async function onSubmit(formEl: FormInstance | undefined) {
  */
 async function onImportSubmit(importEl: UploadInstance | undefined) {
   if (!importEl) return
-
   importLoading.value = true
+
+  importEl.submit()
+
+  importLoading.value = false
+  importVisible.value = false
+}
+
+function onUpload(options: UploadRequestOptions) {
+  return importPrivileges(options.file)
 }
 
 /**
@@ -345,7 +358,7 @@ function handleCheckedChange(value: CheckboxValueType[]) {
   isIndeterminate.value = checkedCount > 0 && checkedCount < columns.value.length
 }
 
-const hancleTabClick = (tab: TabsPaneContext) => {
+function hancleTabClick(tab: TabsPaneContext) {
   switch (tab.paneName) {
     case 'roles':
       loadRoles()
@@ -458,7 +471,8 @@ function rowName(key: number | string) {
           <ElButton v-if="hasAction($route.name, 'import')" title=" import" type="warning" plain @click="importRows">
             <Icon icon="material-symbols:database-upload-outline-rounded" width="18" height="18" />{{ $t('import') }}
           </ElButton>
-          <ElButton v-if="hasAction($route.name, 'export')" title=" export" type="success" plain @click="exportRows">
+          <ElButton v-if="hasAction($route.name, 'export')" title=" export" type="success" plain @click="exportRows"
+            :loading="exportLoading">
             <Icon icon="material-symbols:file-export-outline-rounded" width="18" height="18" />{{ $t('export') }}
           </ElButton>
         </ElCol>
@@ -638,8 +652,8 @@ function rowName(key: number | string) {
 
     <ElRow :gutter="20" v-else v-for="row in checkedActions" :key="row.key" class="w-full items-baseline">
       <ElCol :span="6">
-        <span v-if="isString(row)" class="mr-2">{{ $t('username') }}:</span>
-        <span v-else class="mr-2">{{ $t('name') }}: </span>
+        <span v-if="isNumber(row.key)" class="mr-2">{{ $t('name') }}:</span>
+        <span v-else class="mr-2">{{ $t('username') }}: </span>
         <span>{{ rowName(row.key) }}</span>
       </ElCol>
       <ElCol :span="18">
@@ -668,7 +682,7 @@ function rowName(key: number | string) {
         {{ $t('privileges') }}.xlsx
       </a>
     </p>
-    <ElUpload ref="importRef" :limit="1" drag action="/api/privileges/import"
+    <ElUpload ref="importRef" :limit="1" drag :auto-upload="false" :http-request="onUpload"
       accept=".xls,.xlsx,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-excel"
       :headers="{ Authorization: `Bearer ${userStore.accessToken}` }">
       <div class="el-icon--upload inline-flex justify-center">

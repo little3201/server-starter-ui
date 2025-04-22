@@ -74,6 +74,14 @@ export const groupsHandlers = [
       return HttpResponse.json()
     }
   }),
+  http.get(`/api${SERVER_URL.GROUP}/:id/exists`, ({ params }) => {
+    const { id, name } = params
+    let filtered = datas.filter(item => item.name === name)
+    if (id) {
+      filtered = datas.filter(item => item.name === name && item.id !== Number(id))
+    }
+    return HttpResponse.json(filtered.length > 0)
+  }),
   http.get(`/api${SERVER_URL.GROUP}`, ({ request }) => {
     const url = new URL(request.url)
     const page = url.searchParams.get('page')
@@ -97,6 +105,22 @@ export const groupsHandlers = [
       }
     }
     return HttpResponse.json(data)
+  }),
+  http.post(`/api${SERVER_URL.GROUP}/import`, async ({ request }) => {
+    // Read the intercepted request body as JSON.
+    const data = await request.formData()
+    const file = data.get('file')
+
+    if (!file) {
+      return new HttpResponse('Missing document', { status: 400 })
+    }
+
+    if (!(file instanceof File)) {
+      return new HttpResponse('Uploaded document is not a File', {
+        status: 400,
+      })
+    }
+    return HttpResponse.json()
   }),
   http.post(`/api${SERVER_URL.GROUP}`, async ({ request }) => {
     // Read the intercepted request body as JSON.
@@ -123,6 +147,14 @@ export const groupsHandlers = [
     }
 
   }),
+  http.patch(`/api${SERVER_URL.GROUP}/:id`, async ({ params }) => {
+    const { id } = params
+    if (id) {
+      return HttpResponse.json()
+    } else {
+      return HttpResponse.error()
+    }
+  }),
   http.patch(`/api${SERVER_URL.GROUP}/:id/members`, ({ params }) => {
     const { id } = params
     if (id) {
@@ -131,7 +163,7 @@ export const groupsHandlers = [
       return HttpResponse.error()
     }
   }),
-  http.patch(`/api${SERVER_URL.GROUP}/privileges/:privilegeId`, async({ params, request }) => {
+  http.patch(`/api${SERVER_URL.GROUP}/privileges/:privilegeId`, async ({ params, request }) => {
     const data = await request.json()
     const { privilegeId } = params
     if (privilegeId && data) {
@@ -140,7 +172,7 @@ export const groupsHandlers = [
       return HttpResponse.error()
     }
   }),
-  http.delete(`/api${SERVER_URL.GROUP}/:groupId/privileges/:privilegeId`, async({ params }) => {
+  http.delete(`/api${SERVER_URL.GROUP}/:groupId/privileges/:privilegeId`, async ({ params }) => {
     const { groupId, privilegeId } = params
     if (groupId && privilegeId) {
       return HttpResponse.json()

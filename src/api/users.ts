@@ -101,3 +101,14 @@ export const removeUsersPrivileges = (username: string, privilegeId: number, act
     return api.delete(`${SERVER_URL.USER}/${username}/privileges/${privilegeId}`)
   }
 }
+
+/**
+ * Import rows
+ * @param file file
+ * @returns
+ */
+export const importUsers = (file: File) => {
+  const formData = new FormData()
+  formData.append('file', file)
+  return api.post(`${SERVER_URL.USER}/import`, formData)
+}

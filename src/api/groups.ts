@@ -146,3 +146,14 @@ export const removeGroupsPrivileges = (id: number, privilegeId: number, actions?
     return api.delete(`${SERVER_URL.GROUP}/${id}/privileges/${privilegeId}`)
   }
 }
+
+/**
+ * Import rows
+ * @param file file
+ * @returns
+ */
+export const importGroups = (file: File) => {
+  const formData = new FormData()
+  formData.append('file', file)
+  return api.post(`${SERVER_URL.GROUP}/import`, formData)
+}

@@ -128,3 +128,14 @@ export const removeRolesPrivileges = (id: number, privilegeId: number, actions?:
     return api.delete(`${SERVER_URL.ROLE}/${id}/privileges/${privilegeId}`)
   }
 }
+
+/**
+ * Import rows
+ * @param file file
+ * @returns
+ */
+export const importRoles = (file: File) => {
+  const formData = new FormData()
+  formData.append('file', file)
+  return api.post(`${SERVER_URL.ROLE}/import`, formData)
+}

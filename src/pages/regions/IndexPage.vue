@@ -1,12 +1,14 @@
 <script setup lang="ts">
 import { ref, reactive, onMounted } from 'vue'
-import type { TableInstance, FormInstance, FormRules, UploadInstance, CheckboxValueType } from 'element-plus'
+import type { TableInstance, FormInstance, FormRules, UploadInstance, UploadRequestOptions, CheckboxValueType } from 'element-plus'
 import draggable from 'vuedraggable'
 import { useI18n } from 'vue-i18n'
 import { useUserStore } from 'stores/user-store'
 import DialogView from 'components/DialogView.vue'
 import SubPage from './SubPage.vue'
-import { retrieveRegions, fetchRegion, createRegion, modifyRegion, removeRegion, enableRegion } from 'src/api/regions'
+import {
+  retrieveRegions, fetchRegion, createRegion, modifyRegion, removeRegion, enableRegion, importRegions
+} from 'src/api/regions'
 import type { Pagination, Region } from 'src/types'
 import { Icon } from '@iconify/vue'
 import { hasAction } from 'src/utils'
@@ -35,6 +37,7 @@ const visible = ref<boolean>(false)
 
 const importVisible = ref<boolean>(false)
 const importLoading = ref<boolean>(false)
+const exportLoading = ref<boolean>(false)
 const importRef = ref<UploadInstance>()
 
 const filters = ref({
@@ -101,8 +104,12 @@ function importRows() {
  * 导出
  */
 function exportRows() {
+  exportLoading.value = true
+
   const selectedRows = tableRef.value?.getSelectionRows()
-  console.log('selected rows: ', selectedRows)
+  if (selectedRows) {
+    console.log('selectedRows: ', selectedRows)
+  }
 }
 
 /**
@@ -164,8 +171,16 @@ function onSubmit(formEl: FormInstance | undefined) {
  */
 async function onImportSubmit(importEl: UploadInstance | undefined) {
   if (!importEl) return
-
   importLoading.value = true
+
+  importEl.submit()
+
+  importLoading.value = false
+  importVisible.value = false
+}
+
+function onUpload(options: UploadRequestOptions) {
+  return importRegions(options.file)
 }
 
 /**
@@ -233,7 +248,8 @@ function handleCheckedChange(value: CheckboxValueType[]) {
           <ElButton v-if="hasAction($route.name, 'import')" title=" import" type="warning" plain @click="importRows">
             <Icon icon="material-symbols:database-upload-outline-rounded" width="18" height="18" />{{ $t('import') }}
           </ElButton>
-          <ElButton v-if="hasAction($route.name, 'export')" title=" export" type="success" plain @click="exportRows">
+          <ElButton v-if="hasAction($route.name, 'export')" title=" export" type="success" plain @click="exportRows"
+            :loading="exportLoading">
             <Icon icon="material-symbols:file-export-outline-rounded" width="18" height="18" />{{ $t('export') }}
           </ElButton>
         </ElCol>
@@ -367,18 +383,18 @@ function handleCheckedChange(value: CheckboxValueType[]) {
         {{ $t('regions') }}.xlsx
       </a>
     </p>
-    <ElUpload ref="importRef" :limit="1" drag action="/api/regions/import"
+    <ElUpload ref="importRef" :limit="1" drag :auto-upload="false" :http-request="onUpload" :on-success="load"
       accept=".xls,.xlsx,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-excel"
       :headers="{ Authorization: `Bearer ${userStore.accessToken}` }">
       <div class="el-icon--upload inline-flex justify-center">
         <Icon icon="material-symbols:upload-rounded" width="48" height="48" />
       </div>
       <div class="el-upload__text">
-        Drop file here or <em>click to upload</em>
+        {{ $t('drop2Here') }}<em>{{ $t('click2Upload') }}</em>
       </div>
       <template #tip>
         <div class="el-upload__tip">
-          File with a size less than 50MB.
+          {{ $t('fileSizeLimit', { size: '50MB' }) }}
         </div>
       </template>
     </ElUpload>

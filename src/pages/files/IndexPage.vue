@@ -1,13 +1,13 @@
 <script setup lang="ts">
 import { ref, onMounted, reactive } from 'vue'
-import type { UploadInstance, CheckboxValueType } from 'element-plus'
+import type { UploadInstance, CheckboxValueType, UploadRequestOptions } from 'element-plus'
 import draggable from 'vuedraggable'
 import DialogView from 'components/DialogView.vue'
 import { dayjs } from 'element-plus'
-import { retrieveFiles, fetchFile } from 'src/api/files'
+import { retrieveFiles, fetchFile, uploadFile } from 'src/api/files'
 import type { Pagination, FileRecord } from 'src/types'
 import { Icon } from '@iconify/vue'
-import { formatFileSize, hasAction } from 'src/utils'
+import { formatFileSize, downloadFile, hasAction } from 'src/utils'
 
 
 const loading = ref<boolean>(false)
@@ -87,9 +87,9 @@ function uploadRow() {
  * 下载
  * @param id 主键
  */
-function downloadRow(id: number) {
+function downloadRow(id: number, name: string, mimeType: string) {
   fetchFile(id).then(res => {
-    console.log(res.data)
+    downloadFile(res.data, name, mimeType)
   })
 }
 
@@ -99,6 +99,15 @@ function downloadRow(id: number) {
 function onSubmit(uploadEl: UploadInstance | undefined) {
   if (!uploadEl) return
   uploadLoading.value = true
+
+  uploadRef.value!.submit()
+
+  uploadLoading.value = false
+  visible.value = false
+}
+
+function onUpload(options: UploadRequestOptions) {
+  return uploadFile(options.file)
 }
 
 /**
@@ -212,7 +221,7 @@ function handleCheckedChange(value: CheckboxValueType[]) {
           @sort-change="handleSortChange">
           <ElTableColumn type="index" :label="$t('no')" width="55" />
           <ElTableColumn prop="name" :label="$t('name')" />
-          <ElTableColumn prop="type" :label="$t('type')" />
+          <ElTableColumn prop="mimeType" :label="$t('type')" />
           <ElTableColumn prop="size" :label="$t('size')" sortable="custom">
             <template #default="scope">
               {{ formatFileSize(scope.row.size) }}
@@ -226,7 +235,7 @@ function handleCheckedChange(value: CheckboxValueType[]) {
           <ElTableColumn :label="$t('actions')">
             <template #default="scope">
               <ElButton v-if="hasAction($route.name, 'download')" title="download" size="small" type="success" link
-                @click="downloadRow(scope.row.id)">
+                @click="downloadRow(scope.row.id, scope.row.name, scope.row.mimeType)">
                 <Icon icon="material-symbols:download" width="16" height="16" />{{ $t('download') }}
               </ElButton>
               <ElPopconfirm :title="$t('removeConfirm')" :width="240" @confirm="confirmEvent(scope.row.id)">
@@ -244,16 +253,16 @@ function handleCheckedChange(value: CheckboxValueType[]) {
     </ElSpace>
 
     <DialogView v-model="visible" :title="$t('upload')" width="35%">
-      <ElUpload ref="uploadRef" :limit="1" drag action="/api/files/upload">
+      <ElUpload ref="uploadRef" multiple drag :auto-upload="false" :http-request="onUpload" :on-success="load">
         <div class="el-icon--upload inline-flex justify-center">
           <Icon icon="material-symbols:upload-rounded" width="48" height="48" />
         </div>
         <div class="el-upload__text">
-          Drop file here or <em>click to upload</em>
+          {{ $t('drop2Here') }}<em>{{ $t('click2Upload') }}</em>
         </div>
         <template #tip>
           <div class="el-upload__tip">
-            file with a size less than 50mb
+            {{ $t('fileSizeLimit', { size: '50MB' }) }}
           </div>
         </template>
       </ElUpload>

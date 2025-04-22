@@ -83,3 +83,14 @@ export const retrievePrivilegeGroups = (id: number) => {
 export const retrievePrivilegeUsers = (id: number) => {
   return api.get(`${SERVER_URL.PRIVILEGE}/${id}/users`)
 }
+
+/**
+ * Import rows
+ * @param file file
+ * @returns
+ */
+export const importPrivileges = (file: File) => {
+  const formData = new FormData()
+  formData.append('file', file)
+  return api.post(`${SERVER_URL.PRIVILEGE}/import`, formData)
+}
