@@ -1,18 +1,19 @@
 <script setup lang="ts">
 import { ref, onMounted, reactive } from 'vue'
 import { dayjs } from 'element-plus'
-import type { CheckboxValueType } from 'element-plus'
+import type { TableInstance, CheckboxValueType } from 'element-plus'
 import draggable from 'vuedraggable'
 import DialogView from 'components/DialogView.vue'
 import { retrieveSchedulerLogs, fetchSchedulerLog } from 'src/api/scheduler-logs'
 import type { Pagination, SchedulerLog } from 'src/types'
 import { Icon } from '@iconify/vue'
-import { formatDuration } from 'src/utils'
+import { formatDuration, hasAction } from 'src/utils'
 
 const loading = ref<boolean>(false)
 const datas = ref<Array<SchedulerLog>>([])
 const total = ref<number>(0)
 
+const tableRef = ref<TableInstance>()
 const pagination = reactive<Pagination>({
   page: 1,
   size: 10
@@ -83,6 +84,14 @@ onMounted(() => {
 })
 
 /**
+ * 导出
+ */
+async function exportRows() {
+  const selectedRows = tableRef.value?.getSelectionRows()
+  console.log('selectedRows:', selectedRows)
+}
+
+/**
  * 详情
  * @param id 主键
  */
@@ -98,6 +107,12 @@ function showRow(id: number) {
  */
 function removeRow(id: number) {
   datas.value = datas.value.filter(item => item.id !== id)
+}
+
+/**
+ * 清空
+ */
+function clearRows() {
 }
 
 /**
@@ -151,10 +166,10 @@ function handleCheckedChange(value: CheckboxValueType[]) {
     <ElCard shadow="never">
       <ElRow :gutter="20" justify="space-between" class="mb-4">
         <ElCol :span="16" class="text-left">
-          <ElButton title="clear" type="danger" plain>
+          <ElButton v-if="hasAction($route.name, 'clear')" title="clear" type="danger" plain @click="clearRows">
             <Icon icon="material-symbols:clear-all-rounded" width="18" height="18" />{{ $t('clear') }}
           </ElButton>
-          <ElButton title="export" type="success" plain>
+          <ElButton v-if="hasAction($route.name, 'export')" title="export" type="success" plain @click="exportRows">
             <Icon icon="material-symbols:file-export-outline-rounded" width="18" height="18" />{{ $t('export') }}
           </ElButton>
         </ElCol>
@@ -201,10 +216,16 @@ function handleCheckedChange(value: CheckboxValueType[]) {
         </ElCol>
       </ElRow>
 
-      <ElTable :data="datas" row-key="id" stripe table-layout="auto">
+      <ElTable ref="tableRef" v-loading="loading" :data="datas" row-key="id" stripe table-layout="auto">
         <ElTableColumn type="selection" width="55" />
         <ElTableColumn type="index" :label="$t('no')" width="55" />
-        <ElTableColumn prop="name" :label="$t('name')" />
+        <ElTableColumn prop="name" :label="$t('name')">
+          <template #default="scope">
+            <ElButton title="detail" type="primary" link @click="showRow(scope.row.id)">
+              {{ scope.row.name }}
+            </ElButton>
+          </template>
+        </ElTableColumn>
         <ElTableColumn prop="startTime" :label="$t('startTime')">
           <template #default="scope">
             {{ dayjs(scope.row.startTime).format('YYYY-MM-DD HH:mm') }}
@@ -213,13 +234,13 @@ function handleCheckedChange(value: CheckboxValueType[]) {
         <ElTableColumn prop="status" :label="$t('status')">
           <template #default="scope">
             <ElTag v-if="scope.row.status === 0" type="primary" round>
-              <Icon icon="material-symbols:progress-activity spin mr-1" />{{ $t('processing') }}
+              <Icon icon="material-symbols:progress-activity" class="spin mr-1" />{{ $t('processing') }}
             </ElTag>
             <ElTag v-else-if="scope.row.status === 1" type="success" round>
-              <Icon icon="material-symbols:check-rounded mr-1" />{{ $t('done') }}
+              <Icon icon="material-symbols:check-rounded" class="mr-1" />{{ $t('done') }}
             </ElTag>
             <ElTag v-else type="danger" round>
-              <Icon icon="material-symbols:error-outline-rounded mr-1" />{{ $t('failure') }}
+              <Icon icon="material-symbols:error-outline-rounded" class="mr-1" />{{ $t('failure') }}
             </ElTag>
           </template>
         </ElTableColumn>
@@ -235,12 +256,9 @@ function handleCheckedChange(value: CheckboxValueType[]) {
         </ElTableColumn>
         <ElTableColumn :label="$t('actions')">
           <template #default="scope">
-            <ElButton title="detail" size="small" type="info" link @click="showRow(scope.row.id)">
-              <Icon icon="material-symbols:description-outline-rounded" width="16" height="16" />{{ $t('detail') }}
-            </ElButton>
             <ElPopconfirm :title="$t('removeConfirm')" :width="240" @confirm="confirmEvent(scope.row.id)">
               <template #reference>
-                <ElButton title="remove" size="small" type="danger" link>
+                <ElButton v-if="hasAction($route.name, 'remove')" title="remove" size="small" type="danger" link>
                   <Icon icon="material-symbols:delete-outline-rounded" width="16" height="16" />{{ $t('remove') }}
                 </ElButton>
               </template>
@@ -255,16 +273,22 @@ function handleCheckedChange(value: CheckboxValueType[]) {
   <DialogView v-model="visible" show-close :title="$t('detail')">
     <ElDescriptions v-loading="detailLoading" border>
       <ElDescriptionsItem :label="$t('name')">{{ row.name }}</ElDescriptionsItem>
-      <ElDescriptionsItem :label="$t('startTime')">{{ dayjs(row.startTime).format('YYYY-MM-DD HH:mm') }}
+      <ElDescriptionsItem :label="$t('startTime')">
+        {{ dayjs(row.startTime).format('YYYY-MM-DD HH:mm') }}
+      </ElDescriptionsItem>
+      <ElDescriptionsItem :label="$t('executedTimes')">
+        {{ row.executedTimes ? formatDuration(row.executedTimes) : '-' }}
       </ElDescriptionsItem>
       <ElDescriptionsItem :label="$t('status')">
         <ElTag v-if="row.status === 0" type="primary" round>{{ $t('processing') }}</ElTag>
         <ElTag v-else-if="row.status === 1" type="success" round>{{ $t('done') }}</ElTag>
         <ElTag v-else type="danger" round>{{ $t('failure') }}</ElTag>
       </ElDescriptionsItem>
-      <ElDescriptionsItem :label="$t('executedTimes')">{{ row.executedTimes ? formatDuration(row.executedTimes) : '-' }}
+      <ElDescriptionsItem :label="$t('nextExecuteTime')" :span="2">
+        {{ dayjs(row.nextExecuteTime).format('YYYY-MM-DD HH:mm') }}
       </ElDescriptionsItem>
-      <ElDescriptionsItem :label="$t('nextExecuteTime')">{{ dayjs(row.nextExecuteTime).format('YYYY-MM-DD HH:mm') }}
+      <ElDescriptionsItem :label="$t('logs')" :span="3">
+        {{ row.record }}
       </ElDescriptionsItem>
     </ElDescriptions>
   </DialogView>

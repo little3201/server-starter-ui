@@ -21,7 +21,7 @@ export const retrieveGroupTree = () => {
 }
 
 /**
- * Retrieve members for a specific group
+ * Retrieve members for a specific row
  * @returns tree data
  */
 export const retrieveGroupMembers = (id: number) => {
@@ -85,7 +85,7 @@ export const removeGroup = (id: number) => {
 }
 
 /**
- * Relation members for a specific role
+ * Relation members for a specific row
  * @param id Row ID
  * @param usernames usernames
  */
@@ -94,7 +94,7 @@ export const relationGroupMembers = (id: number, usernames: string[]) => {
 }
 
 /**
- * Remove members for a specific role
+ * Remove members for a specific row
  * @param id Row ID
  * @param usernames usernames
  */
@@ -104,7 +104,7 @@ export const removeGroupMembers = (id: number, usernames: string[]) => {
 }
 
 /**
- * Relation roles for a specific role
+ * Relation roles for a specific row
  * @param id Row ID
  * @param roleIds Role ids
  */
@@ -113,11 +113,47 @@ export const relationGroupRoles = (id: number, roleIds: number[]) => {
 }
 
 /**
- * Remove members for a specific role
+ * Remove members for a specific row
  * @param id Row ID
  * @param roleIds Role ids
  */
 export const removeGroupRoles = (id: number, roleIds: number[]) => {
   const params = roleIds ? { roleIds: roleIds.join(',') } : {}
   return api.delete(`${SERVER_URL.GROUP}/${id}/roles`, { params })
+}
+
+/**
+ * Relation privileges for a specific row
+ * @param ids Row IDs
+ * @param relations Actions
+ */
+export const relationGroupsPrivileges = (privilegeId: number, relations: { key: number | string, actions: string[] }[]) => {
+  const datas = relations.map(item => { return { id: item.key, actions: item.actions } })
+  return api.patch(`${SERVER_URL.GROUP}/privileges/${privilegeId}`, datas)
+}
+
+/**
+ * Remove privileges for a specific row
+ * @param id Row ID
+ * @param privilegeIds Privilege id
+ * @param actions Actions
+ */
+export const removeGroupsPrivileges = (id: number, privilegeId: number, actions?: string[]) => {
+  if (actions && actions.length > 0) {
+    const params = { actions: actions.join(',') }
+    return api.delete(`${SERVER_URL.GROUP}/${id}/privileges/${privilegeId}`, { params })
+  } else {
+    return api.delete(`${SERVER_URL.GROUP}/${id}/privileges/${privilegeId}`)
+  }
+}
+
+/**
+ * Import rows
+ * @param file file
+ * @returns
+ */
+export const importGroups = (file: File) => {
+  const formData = new FormData()
+  formData.append('file', file)
+  return api.post(`${SERVER_URL.GROUP}/import`, formData)
 }

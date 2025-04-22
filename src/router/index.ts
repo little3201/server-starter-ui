@@ -25,6 +25,8 @@ const router = createRouter({
 router.beforeEach(async (to, from, next) => {
   if (to.path === '/callback') {
     next()
+  } else if (to.fullPath === '/login') {
+    next()
   } else {
     const userStore = useUserStore()
     if (userStore.accessToken) {
@@ -35,13 +37,12 @@ router.beforeEach(async (to, from, next) => {
           username: subRes.data.sub,
           avatar: userRes.data.avatar
         })
-
       }
       // load privileges
       if (!userStore.privileges.length) {
-        const privilegesResp = await retrievePrivilegeTree();
-        const privileges = privilegesResp.data;
-        userStore.$patch({ privileges });
+        const privilegesResp = await retrievePrivilegeTree()
+        const privileges = privilegesResp.data
+        userStore.$patch({ privileges })
       }
       if (!to.name || !router.hasRoute(to.name)) {
         const routes = generateRoutes(userStore.privileges)
@@ -62,8 +63,6 @@ router.beforeEach(async (to, from, next) => {
         cookies.set('current_page', decodeURIComponent(to.fullPath as string))
         next()
       }
-    } else if (to.fullPath === '/login') {
-      next()
     } else {
       await signIn()
     }
@@ -87,7 +86,7 @@ export const generateRoutes = (routes: PrivilegeTreeNode[]): RouteRecordRaw[] =>
       children: []
     }
     if (route.meta.component) {
-      const comModule = modules[`../${route.meta.component}.vue`]
+      const comModule = modules[`../pages/${route.meta.component}/IndexPage.vue`]
       const component = route.meta.component as string
       if (comModule) {
         item.component = comModule

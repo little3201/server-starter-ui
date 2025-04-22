@@ -8,7 +8,7 @@ const isDark = useDark()
 
 <template>
   <ElSwitch v-model="isDark" id="theme" name="theme"
-    style="--el-switch-on-color: var(--el-border-color); --el-switch-off-color: var(--el-color-primary-light-3);"
+    style="--el-switch-on-color: var(--el-color-primary-light-5); --el-switch-off-color: var(--el-color-primary-light-3);"
     @change="useToggle">
     <template #active-action>
       <Icon icon="material-symbols:dark-mode-outline-rounded" width="18" height="18" />

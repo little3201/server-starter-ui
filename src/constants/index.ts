@@ -45,24 +45,22 @@ export const SERVER_URL = {
 export const actions: { [key: string]: 'primary' | 'success' | 'info' | 'warning' | 'danger' } = {
   create: 'primary',
   modify: 'primary',
+  upload: 'primary',
+  logout: 'primary',
 
   import: 'warning',
-  export: 'success',
 
   remove: 'danger',
   clear: 'danger',
 
   relation: 'success',
-  authorize: 'warning',
-  config: 'success',
-
-  upload: 'primary',
+  authorize: 'success',
   download: 'success',
-
-  preview: 'info',
-
+  config: 'success',
+  export: 'success',
   login: 'success',
-  logout: 'primary'
+
+  preview: 'info'
 }
 
 // http method对应tag类型

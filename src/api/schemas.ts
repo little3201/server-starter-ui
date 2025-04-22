@@ -63,8 +63,9 @@ export const modifySchema = (id: number, row: Schema) => {
  * @param id Row ID
  * @returns Created row
  */
-export const syncSchema = (id: number) => {
-  return api.patch(`${SERVER_URL.SCHEMA}/${id}/sync`)
+export const syncSchema = (ids: number[]) => {
+  const params = { ids: ids.join(',') }
+  return api.patch(`${SERVER_URL.SCHEMA}/sync`, { params })
 }
 
 /**
@@ -96,11 +97,12 @@ export const configSchemaFields = (id: number, rows: Array<Field>) => {
 }
 
 /**
- * Export rows
- * @param ids Rows ID
+ * Import rows
+ * @param file file
  * @returns
  */
-export const exprotSchemas = (ids?: number[]) => {
-  const params = ids ? { ids: ids.join(',') } : {}
-  return api.get(`${SERVER_URL.SCHEMA}/export`, { params, responseType: 'blob' })
+export const importSchemas = (file: File) => {
+  const formData = new FormData()
+  formData.append('file', file)
+  return api.post(`${SERVER_URL.SCHEMA}/import`, formData)
 }

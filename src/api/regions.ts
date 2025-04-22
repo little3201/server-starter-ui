@@ -68,3 +68,14 @@ export const enableRegion = (id: number) => {
 export const removeRegion = (id: number) => {
   return api.delete(`${SERVER_URL.REGION}/${id}`)
 }
+
+/**
+ * Import rows
+ * @param file file
+ * @returns
+ */
+export const importRegions = (file: File) => {
+  const formData = new FormData()
+  formData.append('file', file)
+  return api.post(`${SERVER_URL.REGION}/import`, formData)
+}

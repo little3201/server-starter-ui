@@ -9,7 +9,7 @@ export const localeOptions = [
   { value: 'zh-TW', label: '中文（繁體）' }
 ]
 
-export const messages = {
+export default {
   'en-US': enUS,
   'zh-CN': zhCN,
   'zh-TW': zhTW

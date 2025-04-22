@@ -39,8 +39,16 @@ export const regionsHandlers = [
       }
       return HttpResponse.json(res)
     } else {
-      return HttpResponse.json(null)
+      return HttpResponse.json()
     }
+  }),
+  http.get(`/api${SERVER_URL.REGION}/:id/exists`, ({ params }) => {
+    const { id, name } = params
+    let filtered = datas.filter(item => item.name === name)
+    if (id) {
+      filtered = datas.filter(item => item.name === name && item.id !== Number(id))
+    }
+    return HttpResponse.json(filtered.length > 0)
   }),
   http.get(`/api${SERVER_URL.REGION}`, ({ request }) => {
     const url = new URL(request.url)
@@ -64,6 +72,22 @@ export const regionsHandlers = [
 
     return HttpResponse.json(data)
   }),
+  http.post(`/api${SERVER_URL.REGION}/import`, async ({ request }) => {
+    // Read the intercepted request body as JSON.
+    const data = await request.formData()
+    const file = data.get('file')
+
+    if (!file) {
+      return new HttpResponse('Missing document', { status: 400 })
+    }
+
+    if (!(file instanceof File)) {
+      return new HttpResponse('Uploaded document is not a File', {
+        status: 400,
+      })
+    }
+    return HttpResponse.json()
+  }),
   http.post(`/api${SERVER_URL.REGION}`, async ({ request }) => {
     // Read the intercepted request body as JSON.
     const newData = await request.json() as Region
@@ -74,6 +98,28 @@ export const regionsHandlers = [
     // Don't forget to declare a semantic "201 Created"
     // response and send back the newly created Row!
     return HttpResponse.json(newData, { status: 201 })
+  }),
+  http.put(`/api${SERVER_URL.REGION}/:id`, async ({ params, request }) => {
+    const { id } = params
+    // Read the intercepted request body as JSON.
+    const newData = await request.json() as Region
+
+    if (id && newData) {
+      // Don't forget to declare a semantic "201 Created"
+      // response and send back the newly created Row!
+      return HttpResponse.json({ ...newData, id: id }, { status: 202 })
+    } else {
+      return HttpResponse.error()
+    }
+
+  }),
+  http.patch(`/api${SERVER_URL.REGION}/:id`, async ({ params }) => {
+    const { id } = params
+    if (id) {
+      return HttpResponse.json()
+    } else {
+      return HttpResponse.error()
+    }
   }),
   http.delete(`/api${SERVER_URL.REGION}/:id`, ({ params }) => {
     // All request path params are provided in the "params"

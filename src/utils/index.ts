@@ -1,5 +1,7 @@
 import { dayjs } from 'element-plus'
-import type { Dictionary } from 'src/types'
+import { useUserStore } from 'stores/user-store'
+import type { Dictionary, PrivilegeTreeNode } from 'src/types'
+import type {RouteRecordNameGeneric} from 'vue-router'
 
 /**
  * Resolve a child path relative to a parent path
@@ -14,31 +16,12 @@ export function pathResolve(parentPath: string, path: string): string {
 }
 
 /**
- * Check if a value matches a specific type
- * @param {unknown} val - The value to check
- * @param {string} type - The type to match
- * @returns {boolean} - True if the value matches the type, otherwise false
- */
-function is(val: unknown, type: string): boolean {
-  return Object.prototype.toString.call(val) === `[object ${type}]`
-}
-
-/**
- * Check if a value is a string
- * @param {unknown} val - The value to check
- * @returns {boolean} - True if the value is a string, otherwise false
- */
-export function isString(val: unknown): val is string {
-  return is(val, 'String')
-}
-
-/**
  * Check if a value is a number
  * @param {unknown} val - The value to check
  * @returns {boolean} - True if the value is a number, otherwise false
  */
 export const isNumber = (val: unknown): val is number => {
-  return is(val, 'Number')
+  return typeof val === 'number' && isFinite(val)
 }
 
 /**
@@ -172,20 +155,20 @@ export function downloadFile(data: Blob, filename: string, mimeType?: string): v
 
 export function groupByType<T>(array: T[], typeOptions: Dictionary[], typeKey: keyof T): { [key: string]: T[] } {
   return array.reduce((acc: { [key: string]: T[] }, curr: T) => {
-    const typeValue = curr[typeKey] as number; // 假设类型键的值是一个数字
-    const name = formatDictionary(typeValue, typeOptions);
-    if (!name) { return acc; }
-    if (!acc[name]) { acc[name] = []; }
-    acc[name].push(curr);
-    return acc;
-  }, {} as { [key: string]: T[] });
+    const typeValue = curr[typeKey] as number // 假设类型键的值是一个数字
+    const name = formatDictionary(typeValue, typeOptions)
+    if (!name) { return acc }
+    if (!acc[name]) { acc[name] = [] }
+    acc[name].push(curr)
+    return acc
+  }, {} as { [key: string]: T[] })
 }
 
 export function getRandomString(length: number): string {
-  const a = new Uint8Array(Math.ceil(length / 2));
-  crypto.getRandomValues(a);
-  const str = Array.from(a, (dec) => ('0' + dec.toString(16)).slice(-2)).join('');
-  return str.slice(0, length);
+  const a = new Uint8Array(Math.ceil(length / 2))
+  crypto.getRandomValues(a)
+  const str = Array.from(a, (dec) => ('0' + dec.toString(16)).slice(-2)).join('')
+  return str.slice(0, length)
 }
 
 export function generateVerifier(prefix?: string): string {
@@ -197,13 +180,38 @@ export function generateVerifier(prefix?: string): string {
 }
 
 export function computeChallenge(codeVerifier: string): Promise<string> {
-  const encoder = new TextEncoder();
-  const data = encoder.encode(codeVerifier);
-  
+  const encoder = new TextEncoder()
+  const data = encoder.encode(codeVerifier)
+
   return crypto.subtle.digest('SHA-256', data).then(digest => {
     return btoa(String.fromCharCode(...new Uint8Array(digest)))
       .replace(/\+/g, '-')
       .replace(/\//g, '_')
-      .replace(/=+$/, '');
-  });
+      .replace(/=+$/, '')
+  })
+}
+
+// 递归查找权限节点
+export function findNodeByPath(privileges: PrivilegeTreeNode[], name: string): string[] {
+  for (const node of privileges) {
+    if (node.name === name) {
+      return node.meta.actions || [];
+    }
+    if (node.children) {
+      const result = findNodeByPath(node.children, name);
+      if (result.length > 0) return result;
+    }
+  }
+  return [];
+}
+
+export function hasAction(page: RouteRecordNameGeneric, action: string) {
+  if (page) {
+    const userStore = useUserStore()
+    const privileges = userStore.privileges
+    const actions = findNodeByPath(privileges, page as string)
+  
+    return actions.includes(action)
+  }
+  return false
 }

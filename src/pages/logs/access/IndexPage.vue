@@ -1,18 +1,19 @@
 <script setup lang="ts">
 import { ref, onMounted, reactive } from 'vue'
-import type { CheckboxValueType } from 'element-plus'
+import type { TableInstance, CheckboxValueType } from 'element-plus'
 import draggable from 'vuedraggable'
 import DialogView from 'components/DialogView.vue'
 import { retrieveAccessLogs, fetchAccessLog, removeAccessLog } from 'src/api/access-logs'
 import type { Pagination, AccessLog } from 'src/types'
 import { Icon } from '@iconify/vue'
-import { formatDuration } from 'src/utils'
+import { formatDuration, hasAction } from 'src/utils'
 import { httpMethods } from 'src/constants'
 
 const loading = ref<boolean>(false)
 const datas = ref<Array<AccessLog>>([])
 const total = ref<number>(0)
 
+const tableRef = ref<TableInstance>()
 const pagination = reactive<Pagination>({
   page: 1,
   size: 10
@@ -88,6 +89,14 @@ onMounted(() => {
 })
 
 /**
+ * 导出
+ */
+async function exportRows() {
+  const selectedRows = tableRef.value?.getSelectionRows()
+  console.log('selectedRows:', selectedRows)
+}
+
+/**
  * 详情
  * @param id 主键
  */
@@ -103,6 +112,12 @@ function showRow(id: number) {
  */
 function removeRow(id: number) {
   removeAccessLog(id).then(() => load())
+}
+
+/**
+ * 清空
+ */
+function clearRows() {
 }
 
 /**
@@ -159,10 +174,10 @@ function handleCheckedChange(value: CheckboxValueType[]) {
     <ElCard shadow="never">
       <ElRow :gutter="20" justify="space-between" class="mb-4">
         <ElCol :span="16" class="text-left">
-          <ElButton title="clear" type="danger" plain>
+          <ElButton v-if="hasAction($route.name, 'clear')" title="clear" type="danger" plain @click="clearRows">
             <Icon icon="material-symbols:clear-all-rounded" width="18" height="18" />{{ $t('clear') }}
           </ElButton>
-          <ElButton title="export" type="success" plain>
+          <ElButton v-if="hasAction($route.name, 'export')" title="export" type="success" plain @click="exportRows">
             <Icon icon="material-symbols:file-export-outline-rounded" width="18" height="18" />{{ $t('export') }}
           </ElButton>
         </ElCol>
@@ -209,7 +224,7 @@ function handleCheckedChange(value: CheckboxValueType[]) {
         </ElCol>
       </ElRow>
 
-      <ElTable v-loading="loading" :data="datas" row-key="id" stripe table-layout="auto">
+      <ElTable ref="tableRef" v-loading="loading" :data="datas" row-key="id" stripe table-layout="auto">
         <ElTableColumn type="selection" width="55" />
         <ElTableColumn type="index" :label="$t('no')" width="55" />
         <ElTableColumn prop="url" :label="$t('url')">
@@ -248,7 +263,7 @@ function handleCheckedChange(value: CheckboxValueType[]) {
           <template #default="scope">
             <ElPopconfirm :title="$t('removeConfirm')" :width="240" @confirm="confirmEvent(scope.row.id)">
               <template #reference>
-                <ElButton title="remove" size="small" type="danger" link>
+                <ElButton v-if="hasAction($route.name, 'remove')" title="remove" size="small" type="danger" link>
                   <Icon icon="material-symbols:delete-outline-rounded" width="16" height="16" />{{ $t('remove') }}
                 </ElButton>
               </template>
@@ -267,11 +282,6 @@ function handleCheckedChange(value: CheckboxValueType[]) {
         <ElBadge is-dot :type="httpMethods[row.httpMethod as string]" />
         {{ row.httpMethod }}
       </ElDescriptionsItem>
-      <ElDescriptionsItem :label="$t('params')">{{ row.params }}</ElDescriptionsItem>
-      <ElDescriptionsItem v-if="row.body" :span="3" :label="$t('body')">{{ row.body }}</ElDescriptionsItem>
-      <ElDescriptionsItem :label="$t('ip')">{{ row.ip }}</ElDescriptionsItem>
-      <ElDescriptionsItem :label="$t('location')">{{ row.location }}</ElDescriptionsItem>
-      <ElDescriptionsItem :label="$t('operator')">{{ row.operator }}</ElDescriptionsItem>
       <ElDescriptionsItem :label="$t('statusCode')">
         <ElTag v-if="row.statusCode && (row.statusCode >= 200 && row.statusCode < 300)" type="success" round>
           {{ row.statusCode }}
@@ -281,6 +291,11 @@ function handleCheckedChange(value: CheckboxValueType[]) {
         </ElTag>
         <ElTag v-else type="danger" round>{{ row.statusCode }}</ElTag>
       </ElDescriptionsItem>
+      <ElDescriptionsItem :label="$t('params')" :span="3">{{ row.params }}</ElDescriptionsItem>
+      <ElDescriptionsItem v-if="row.body" :label="$t('body')" :span="3">{{ row.body }}</ElDescriptionsItem>
+      <ElDescriptionsItem :label="$t('ip')">{{ row.ip }}</ElDescriptionsItem>
+      <ElDescriptionsItem :label="$t('location')">{{ row.location }}</ElDescriptionsItem>
+      <ElDescriptionsItem :label="$t('operator')">{{ row.operator }}</ElDescriptionsItem>
       <ElDescriptionsItem :label="$t('responseTimes')">{{ row.responseTimes ? formatDuration(row.responseTimes) : '-' }}
       </ElDescriptionsItem>
       <ElDescriptionsItem :label="$t('responseMessage')">{{ row.responseMessage }}</ElDescriptionsItem>

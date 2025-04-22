@@ -40,7 +40,8 @@ const datas: SchedulerLog[] = [
     startTime: new Date(),
     nextExecuteTime: new Date(),
     executedTimes: 33,
-    status: 2
+    status: 2,
+    record: '数据库执行错误：数据库表xx缺少字段'
   },
   {
     id: 6,
@@ -98,7 +99,7 @@ export const schedulerLogsHandlers = [
     if (id) {
       return HttpResponse.json(datas.filter(item => item.id === Number(id))[0])
     } else {
-      return HttpResponse.json(null)
+      return HttpResponse.json()
     }
   }),
   http.get(`/api${SERVER_URL.SCHEDULER_LOG}`, ({ request }) => {

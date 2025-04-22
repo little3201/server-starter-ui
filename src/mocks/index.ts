@@ -13,6 +13,7 @@ import { filesHandlers } from './files'
 import { schemasHandlers } from './schemas'
 import { scriptsHandlers } from './scripts'
 import { templatesHandlers } from './templates'
+import { dbHandlers } from './db'
 
 export const handlers = [
   ...authenticationHandlers,
@@ -29,5 +30,6 @@ export const handlers = [
   ...filesHandlers,
   ...schemasHandlers,
   ...scriptsHandlers,
-  ...templatesHandlers
+  ...templatesHandlers,
+  ...dbHandlers
 ]

@@ -8,9 +8,9 @@ const datas: FileRecord[] = [
 for (let i = 1; i < 28; i++) {
   const data: FileRecord = {
     id: i,
-    name: 'file_name_' + i,
-    type: i % 3 > 0 ? 'File' : 'Media',
-    size: 86756 + i,
+    name: 'file_name_' + i + (i % 3 > 0 ? '.zip' : '.jpg'),
+    mimeType: i % 3 > 0 ? 'application/zip' : 'text/jpg',
+    size: Math.floor(Math.random() * 100000),
     lastModifiedDate: new Date()
   }
   datas.push(data)
@@ -22,7 +22,7 @@ export const filesHandlers = [
     if (id) {
       return HttpResponse.json(datas.filter(item => item.id === Number(id))[0])
     } else {
-      return HttpResponse.json(null)
+      return HttpResponse.json()
     }
   }),
   http.get(`/api${SERVER_URL.FILE}`, ({ request }) => {
@@ -39,6 +39,22 @@ export const filesHandlers = [
     }
 
     return HttpResponse.json(data)
+  }),
+  http.post(`/api${SERVER_URL.FILE}/upload`, async ({ request }) => {
+    const data = await request.formData()
+    const file = data.get('file')
+
+    if (!file) {
+      return new HttpResponse('Missing document', { status: 400 })
+    }
+
+    if (!(file instanceof File)) {
+      return new HttpResponse('Uploaded document is not a File', {
+        status: 400,
+      })
+    }
+
+    return HttpResponse.json(datas[0])
   }),
   http.delete(`/api${SERVER_URL.FILE}`, ({ params }) => {
     // All request path params are provided in the "params"

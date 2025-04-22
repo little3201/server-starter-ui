@@ -1,19 +1,20 @@
 <script setup lang="ts">
 import { ref, onMounted, reactive } from 'vue'
-import type { CheckboxValueType } from 'element-plus'
+import type { TableInstance, CheckboxValueType } from 'element-plus'
 import draggable from 'vuedraggable'
 import DialogView from 'components/DialogView.vue'
 import { retrieveAuditLogs, fetchAuditLog, removeAuditLog } from 'src/api/audit-logs'
 import type { Pagination, AuditLog } from 'src/types'
 import { Icon } from '@iconify/vue'
 import { actions } from 'src/constants'
-import { formatDuration } from 'src/utils'
+import { formatDuration, hasAction } from 'src/utils'
 
 
 const loading = ref<boolean>(false)
 const datas = ref<Array<AuditLog>>([])
 const total = ref<number>(0)
 
+const tableRef = ref<TableInstance>()
 const pagination = reactive<Pagination>({
   page: 1,
   size: 10
@@ -90,6 +91,14 @@ onMounted(() => {
 })
 
 /**
+ * 导出
+ */
+async function exportRows() {
+  const selectedRows = tableRef.value?.getSelectionRows()
+  console.log('selectedRows:', selectedRows)
+}
+
+/**
  * 详情
  * @param id 主键
  */
@@ -161,7 +170,7 @@ function handleCheckedChange(value: CheckboxValueType[]) {
     <ElCard shadow="never">
       <ElRow :gutter="20" justify="space-between" class="mb-4">
         <ElCol :span="16" class="text-left">
-          <ElButton title="export" type="success" plain>
+          <ElButton v-if="hasAction($route.name, 'export')" title="export" type="success" plain @click="exportRows">
             <Icon icon="material-symbols:file-export-outline-rounded" width="18" height="18" />{{ $t('export') }}
           </ElButton>
         </ElCol>
@@ -208,7 +217,7 @@ function handleCheckedChange(value: CheckboxValueType[]) {
         </ElCol>
       </ElRow>
 
-      <ElTable :data="datas" row-key="id" stripe table-layout="auto">
+      <ElTable ref="tableRef" v-loading="loading" :data="datas" row-key="id" stripe table-layout="auto">
         <ElTableColumn type="index" :label="$t('no')" width="55" />
         <ElTableColumn prop="resource" :label="$t('resource')">
           <template #default="scope">
@@ -246,7 +255,7 @@ function handleCheckedChange(value: CheckboxValueType[]) {
           <template #default="scope">
             <ElPopconfirm :title="$t('removeConfirm')" :width="240" @confirm="confirmEvent(scope.row.id)">
               <template #reference>
-                <ElButton title="remove" size="small" type="danger" link>
+                <ElButton v-if="hasAction($route.name, 'remove')" title="remove" size="small" type="danger" link>
                   <Icon icon="material-symbols:delete-outline-rounded" width="16" height="16" />{{ $t('remove') }}
                 </ElButton>
               </template>
@@ -269,7 +278,7 @@ function handleCheckedChange(value: CheckboxValueType[]) {
       <ElDescriptionsItem :label="$t('newValue')" :span="3">{{ row.newValue }}</ElDescriptionsItem>
       <ElDescriptionsItem :label="$t('ip')">{{ row.ip }}</ElDescriptionsItem>
       <ElDescriptionsItem :label="$t('location')" :span="2">{{ row.location }}</ElDescriptionsItem>
-      <ElDescriptionsItem :label="$t('status')">
+      <ElDescriptionsItem :label="$t('statusCode')">
         <ElTag v-if="row.statusCode && (row.statusCode >= 200 && row.statusCode < 300)" type="success" round>
           {{ row.statusCode }}
         </ElTag>

@@ -1,9 +1,8 @@
 <script setup lang="ts">
 import { computed, ref, watch, onMounted, onBeforeUnmount, onActivated } from 'vue'
 import { useDark, useEventListener } from '@vueuse/core'
-import { debounce } from 'lodash-es'
 import ApexCharts from 'apexcharts'
-import { isString } from 'src/utils'
+import { isNumber } from 'src/utils'
 
 const props = withDefaults(defineProps<{
   options: ApexCharts.ApexOptions // 使用 ApexCharts 的配置类型
@@ -31,8 +30,8 @@ let chartRef: ApexCharts | null = null
 const contentEl = ref<Element>()
 
 const styles = computed(() => {
-  const width = isString(props.width) ? props.width : `${props.width}px`
-  const height = isString(props.height) ? props.height : `${props.height}px`
+  const width = isNumber(props.width) ? `${props.width}px` : props.width
+  const height = isNumber(props.height) ? `${props.height}px` : props.height
 
   return {
     width,
@@ -64,12 +63,12 @@ watch(
   }
 )
 
-const resizeHandler = debounce(() => {
+const resizeHandler = () => {
   if (chartRef) {
     chartRef?.destroy()
     initChart()
   }
-}, 100)
+}
 
 const contentResizeHandler = async (e: TransitionEvent) => {
   if (e.propertyName === 'width') {

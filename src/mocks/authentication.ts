@@ -2,8 +2,6 @@ import { http, HttpResponse } from 'msw'
 import { SERVER_URL } from 'src/constants'
 
 
-localStorage.setItem('logged_in', 'false')
-
 export const authenticationHandlers = [
   http.get(`/api${SERVER_URL.USERINFO}`, () => {
     return HttpResponse.json({
@@ -12,16 +10,6 @@ export const authenticationHandlers = [
   }),
 
   http.get(`/api${SERVER_URL.AUTHORIZE}`, ({ request }) => {
-    if (!localStorage.getItem('logged_in')) {
-      localStorage.setItem('logged_in', 'true')
-      return new HttpResponse(null, {
-        status: 302,
-        headers: {
-          Location: '/login',
-        },
-      })
-    }
-
     const url = new URL(request.url)
     const state = url.searchParams.get('state')
     const code = 'Y0nE-MYHtJ2qwAV0oOCrqAP9AGCxRyEjfjtJUgZB1odj18MpIG1LjvC9la5wrr1DV5GlvEHYqpBkr2igSJJWrGx_9pOiddOzeM8D4Lmkk0IQIrvnsf-U14I3e_IRAs8T'
@@ -35,12 +23,12 @@ export const authenticationHandlers = [
   }),
 
   http.post(`/api${SERVER_URL.TOKEN}`, () => {
-    return HttpResponse.json({ 
+    return HttpResponse.json({
       access_token: 'eyJraWQiOiI5MGQ4ZWNhYy1iOGNhLTRiNTItYjc4Zi1lZjEzOWQ0ZTQyMzQiLCJhbGciOiJSUzI1NiJ9.eyJzdWIiOiJhZFlMSJ9.bUGGupnt_1qYJxEseovj6KjA',
       expires_in: 300,
       id_token: 'eyJraWQiOiI5MGQ4ZWNhYy1iOGNhLTRiNTItYjc4Zi1lZjEzOWQ0ZTQyMzQiLCJhbGciOiJSUzI1NiJ9.eyJzdWIiOiJhZFlMSJ9.bUGGupnt_1qYJxEseovj6KjA',
-      scope:  'openid profile',
-      token_type: 'Bearer' 
+      scope: 'openid profile',
+      token_type: 'Bearer'
     })
   }),
 

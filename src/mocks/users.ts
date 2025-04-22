@@ -9,8 +9,9 @@ for (let i = 1; i < 28; i++) {
   const row: User = {
     id: i,
     username: 'username' + i,
-    givenName: 'given' + i,
-    familyName: 'family' + i,
+    givenName: '三' + i,
+    middleName: i % 3 > 0 ? '五' : '',
+    familyName: '张',
     avatar: '/images/avatar.jpg',
     email: 'usexxx' + '@test.com',
     accountNonLocked: i % 2 > 0,
@@ -48,8 +49,16 @@ export const usersHandlers = [
     if (id) {
       return HttpResponse.json(datas.filter(item => item.id === Number(id))[0])
     } else {
-      return HttpResponse.json(null)
+      return HttpResponse.json()
     }
+  }),
+  http.get(`/api${SERVER_URL.USER}/:id/exists`, ({ params }) => {
+    const { id, username } = params
+    let filtered = datas.filter(item => item.username === username)
+    if (id) {
+      filtered = datas.filter(item => item.username === username && item.id !== Number(id))
+    }
+    return HttpResponse.json(filtered.length > 0)
   }),
   http.get(`/api${SERVER_URL.USER}`, ({ request }) => {
     const url = new URL(request.url)
@@ -66,6 +75,22 @@ export const usersHandlers = [
 
     return HttpResponse.json(data)
   }),
+  http.post(`/api${SERVER_URL.USER}/import`, async ({ request }) => {
+    // Read the intercepted request body as JSON.
+    const data = await request.formData()
+    const file = data.get('file')
+    
+    if (!file) {
+      return new HttpResponse('Missing document', { status: 400 })
+    }
+  
+    if (!(file instanceof File)) {
+      return new HttpResponse('Uploaded document is not a File', {
+        status: 400,
+      })
+    }
+    return HttpResponse.json()
+  }),
   http.post(`/api${SERVER_URL.USER}`, async ({ request }) => {
     // Read the intercepted request body as JSON.
     const newData = await request.json() as User
@@ -76,6 +101,44 @@ export const usersHandlers = [
     // Don't forget to declare a semantic "201 Created"
     // response and send back the newly created Row!
     return HttpResponse.json(newData, { status: 201 })
+  }),
+  http.put(`/api${SERVER_URL.USER}/:id`, async ({ params, request }) => {
+    const { id } = params
+    // Read the intercepted request body as JSON.
+    const newData = await request.json() as User
+
+    if (id && newData) {
+      // Don't forget to declare a semantic "201 Created"
+      // response and send back the newly created Row!
+      return HttpResponse.json({...newData, id: id}, { status: 202 })
+    } else {
+      return HttpResponse.error()
+    }
+  }),
+  http.patch(`/api${SERVER_URL.USER}/:id`, async({ params }) => {
+    const { id } = params
+    if (id) {
+      return HttpResponse.json()
+    } else {
+      return HttpResponse.error()
+    }
+  }),
+  http.patch(`/api${SERVER_URL.USER}/privileges/:privilegeId`, async({ params, request }) => {
+    const data = await request.json()
+    const { privilegeId } = params
+    if (privilegeId && data) {
+      return HttpResponse.json()
+    } else {
+      return HttpResponse.error()
+    }
+  }),
+  http.delete(`/api${SERVER_URL.USER}/:username/privileges/:privilegeId`, async({ params }) => {
+    const { username, privilegeId } = params
+    if (username && privilegeId) {
+      return HttpResponse.json()
+    } else {
+      return HttpResponse.error()
+    }
   }),
   http.delete(`/api${SERVER_URL.USER}/:id`, ({ params }) => {
     // All request path params are provided in the "params"

@@ -20,14 +20,6 @@ export default defineConfig({
       'stores': fileURLToPath(new URL('src/stores', import.meta.url))
     }
   },
-  css: {
-    preprocessorOptions: {
-      scss: {
-        additionalData: '@use "src/css/element/index.scss" as *;',
-        api: 'modern-compiler',
-      }
-    }
-  },
   plugins: [
     vue(),
     Components({
@@ -47,10 +39,12 @@ export default defineConfig({
     })
   ],
   server: {
+    // https: true,
+    open: true,
     proxy: {
       '/api': {
         target: 'http://127.0.0.1:8760',
-        ws: true,
+        // ws: true,
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api/, '')
       }

@@ -36,6 +36,7 @@ const datas: Dictionary[] = [
     enabled: true
   }
 ]
+
 const subDatas: Dictionary[] = [
   {
     name: 'BusinessLogic',
@@ -102,9 +103,37 @@ const subDatas: Dictionary[] = [
     lastModifiedDate: new Date()
   },
   {
+    name: 'create',
+    superiorId: 42,
+    id: 43,
+    enabled: true,
+    lastModifiedDate: new Date()
+  },
+  {
+    name: 'modify',
+    superiorId: 42,
+    id: 44,
+    enabled: true,
+    lastModifiedDate: new Date()
+  },
+  {
     name: 'remove',
     superiorId: 42,
     id: 45,
+    enabled: true,
+    lastModifiedDate: new Date()
+  },
+  {
+    name: 'import',
+    superiorId: 42,
+    id: 50,
+    enabled: true,
+    lastModifiedDate: new Date()
+  },
+  {
+    name: 'export',
+    superiorId: 42,
+    id: 51,
     enabled: true,
     lastModifiedDate: new Date()
   },
@@ -126,20 +155,6 @@ const subDatas: Dictionary[] = [
     name: 'preview',
     superiorId: 42,
     id: 49,
-    enabled: true,
-    lastModifiedDate: new Date()
-  },
-  {
-    name: 'import',
-    superiorId: 42,
-    id: 50,
-    enabled: true,
-    lastModifiedDate: new Date()
-  },
-  {
-    name: 'export',
-    superiorId: 42,
-    id: 51,
     enabled: true,
     lastModifiedDate: new Date()
   },
@@ -173,19 +188,13 @@ const subDatas: Dictionary[] = [
     lastModifiedDate: new Date()
   },
   {
-    name: 'create',
+    name: 'authorize',
     superiorId: 42,
-    id: 43,
+    description: '授权',
+    id: 56,
     enabled: true,
     lastModifiedDate: new Date()
   },
-  {
-    name: 'modify',
-    superiorId: 42,
-    id: 44,
-    enabled: true,
-    lastModifiedDate: new Date()
-  }
 ]
 
 export const dictionariesHandlers = [
@@ -198,8 +207,16 @@ export const dictionariesHandlers = [
       }
       return HttpResponse.json(array[0])
     } else {
-      return HttpResponse.json(null)
+      return HttpResponse.json()
     }
+  }),
+  http.get(`/api${SERVER_URL.DICTIONARY}/:id/exists`, ({ params }) => {
+    const { id, name } = params
+    let filtered = datas.filter(item => item.name === name)
+    if (id) {
+      filtered = datas.filter(item => item.name === name && item.id !== Number(id))
+    }
+    return HttpResponse.json(filtered.length > 0)
   }),
   http.get(`/api${SERVER_URL.DICTIONARY}/:id/subset`, ({ params }) => {
     const { id } = params
@@ -222,6 +239,22 @@ export const dictionariesHandlers = [
 
     return HttpResponse.json(data)
   }),
+  http.post(`/api${SERVER_URL.DICTIONARY}/import`, async ({ request }) => {
+    // Read the intercepted request body as JSON.
+    const data = await request.formData()
+    const file = data.get('file')
+
+    if (!file) {
+      return new HttpResponse('Missing document', { status: 400 })
+    }
+
+    if (!(file instanceof File)) {
+      return new HttpResponse('Uploaded document is not a File', {
+        status: 400,
+      })
+    }
+    return HttpResponse.json()
+  }),
   http.post(`/api${SERVER_URL.DICTIONARY}`, async ({ request }) => {
     // Read the intercepted request body as JSON.
     const newData = await request.json() as Dictionary
@@ -232,6 +265,28 @@ export const dictionariesHandlers = [
     // Don't forget to declare a semantic "201 Created"
     // response and send back the newly created Row!
     return HttpResponse.json(newData, { status: 201 })
+  }),
+  http.put(`/api${SERVER_URL.DICTIONARY}/:id`, async ({ params, request }) => {
+    const { id } = params
+    // Read the intercepted request body as JSON.
+    const newData = await request.json() as Dictionary
+
+    if (id && newData) {
+      // Don't forget to declare a semantic "201 Created"
+      // response and send back the newly created Row!
+      return HttpResponse.json({ ...newData, id: id }, { status: 202 })
+    } else {
+      return HttpResponse.error()
+    }
+
+  }),
+  http.patch(`/api${SERVER_URL.DICTIONARY}/:id`, async ({ params }) => {
+    const { id } = params
+    if (id) {
+      return HttpResponse.json()
+    } else {
+      return HttpResponse.error()
+    }
   }),
   http.delete('/api/dictionaries/:id', ({ params }) => {
     // All request path params are provided in the "params"

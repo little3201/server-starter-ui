@@ -13,7 +13,7 @@ export const retrieveRoles = (pagination: Pagination, filters?: object) => {
 }
 
 /**
- * Retrieve members for a specific role
+ * Retrieve members for a specific row
  * @returns tree data
  */
 export const retrieveRoleMembers = (id: number) => {
@@ -21,7 +21,7 @@ export const retrieveRoleMembers = (id: number) => {
 }
 
 /**
- * Retrieve privileges for a specific role
+ * Retrieve privileges for a specific row
  * @param id Row ID
  * @returns Role privileges
  */
@@ -86,7 +86,7 @@ export const removeRole = (id: number) => {
 }
 
 /**
- * Relation members for a specific role
+ * Relation members for a specific row
  * @param id Row ID
  * @param usernames usernames
  */
@@ -95,7 +95,7 @@ export const relationRoleMembers = (id: number, usernames: string[]) => {
 }
 
 /**
- * Remove members for a specific role
+ * Remove members for a specific row
  * @param id Row ID
  * @param usernames usernames
  */
@@ -105,22 +105,37 @@ export const removeRoleMembers = (id: number, usernames: string[]) => {
 }
 
 /**
- * Relation privileges for a specific role
- * @param id Row ID
- * @param privilegeIds Privilege id
- * @param actions Actions
+ * Relation privileges for a specific row
+ * @param ids Row IDs
+ * @param relations Actions
  */
-export const relationRolePrivileges = (id: number, privilegeId: number, actions?: string[]) => {
-  return api.patch(`${SERVER_URL.ROLE}/${id}/privileges/${privilegeId}`, actions)
+export const relationRolesPrivileges = (privilegeId: number, relations: { key: number | string, actions: string[] }[]) => {
+  const datas = relations.map(item => { return { id: item.key, actions: item.actions } })
+  return api.patch(`${SERVER_URL.ROLE}/privileges/${privilegeId}`, datas )
 }
 
 /**
- * Remove privileges for a specific role
+ * Remove privileges for a specific row
  * @param id Row ID
  * @param privilegeIds Privilege id
  * @param actions Actions
  */
-export const removeRolePrivileges = (id: number, privilegeId: number, actions?: string[]) => {
-  const params = actions ? { actions: actions.join(',') } : {}
-  return api.delete(`${SERVER_URL.ROLE}/${id}/privileges/${privilegeId}`, { params })
+export const removeRolesPrivileges = (id: number, privilegeId: number, actions?: string[]) => {
+  if (actions && actions.length > 0) {
+    const params = { actions: actions.join(',') }
+    return api.delete(`${SERVER_URL.ROLE}/${id}/privileges/${privilegeId}`, { params })
+  } else {
+    return api.delete(`${SERVER_URL.ROLE}/${id}/privileges/${privilegeId}`)
+  }
+}
+
+/**
+ * Import rows
+ * @param file file
+ * @returns
+ */
+export const importRoles = (file: File) => {
+  const formData = new FormData()
+  formData.append('file', file)
+  return api.post(`${SERVER_URL.ROLE}/import`, formData)
 }

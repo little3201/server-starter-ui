@@ -1,24 +1,28 @@
 <script setup lang="ts">
 import { ref, reactive, onMounted, watch } from 'vue'
-import type { FormInstance, FormRules, TreeInstance, CheckboxValueType, TransferDirection, TransferKey } from 'element-plus'
-import type { InternalRuleItem } from 'async-validator/dist-types/interface'
+import type { TableInstance, FormInstance, FormRules, TreeInstance, UploadInstance, UploadRequestOptions, CheckboxValueType, TransferDirection, TransferKey } from 'element-plus'
 import draggable from 'vuedraggable'
 import { useI18n } from 'vue-i18n'
+import { useUserStore } from 'stores/user-store'
 import DialogView from 'components/DialogView.vue'
 import {
   retrieveGroups, retrieveGroupMembers, retrieveGroupTree, relationGroupMembers, removeGroupMembers,
-  fetchGroup, createGroup, modifyGroup, removeGroup, enableGroup, checkGroupExists
+  fetchGroup, createGroup, modifyGroup, removeGroup, enableGroup, checkGroupExists, importGroups
 } from 'src/api/groups'
 import { retrieveUsers } from 'src/api/users'
 import type { Pagination, Group, TreeNode, GroupMembers, User } from 'src/types'
 import { Icon } from '@iconify/vue'
+import { hasAction } from 'src/utils'
 
 
 const { t, locale } = useI18n()
+const userStore = useUserStore()
+
 const loading = ref<boolean>(false)
 const datas = ref<Array<Group>>([])
 const total = ref<number>(0)
 
+const tableRef = ref<TableInstance>()
 const pagination = reactive<Pagination>({
   page: 1,
   size: 10
@@ -38,12 +42,14 @@ const groupTree = ref<TreeNode[]>([])
 const saveLoading = ref<boolean>(false)
 const visible = ref<boolean>(false)
 
-const selectedRow = ref<Group>({
-  id: undefined,
-  name: ''
-})
 const relationVisible = ref<boolean>(false)
+const relations = ref<Array<string>>([])
 const members = ref([])
+
+const importVisible = ref<boolean>(false)
+const importLoading = ref<boolean>(false)
+const exportLoading = ref<boolean>(false)
+const importRef = ref<UploadInstance>()
 
 const filters = ref({
   superiorId: null as number | null,
@@ -64,7 +70,7 @@ const rules = reactive<FormRules<typeof form>>({
   ]
 })
 
-function checkNameExistsence(rule: InternalRuleItem, value: string, callback: (error?: string | Error) => void) {
+function checkNameExistsence(rule: unknown, value: string, callback: (error?: string | Error) => void) {
   checkGroupExists(value, form.value.id).then(res => {
     if (res.data) {
       callback(new Error(t('alreadyExists', { field: t('name') })))
@@ -73,8 +79,6 @@ function checkNameExistsence(rule: InternalRuleItem, value: string, callback: (e
     }
   })
 }
-
-const relations = ref<Array<string>>([])
 
 /**
  * tree过滤
@@ -101,7 +105,7 @@ async function loadUsers() {
   retrieveUsers({ page: 1, size: 99 }).then(res => {
     members.value = res.data.content.map((item: User) => ({
       ...item,
-      fullName: (locale.value === 'en-US' || item.middleName !== null) ? `${item.givenName} ${item.middleName} ${item.familyName}` : `${item.familyName}${item.givenName}`
+      fullName: (locale.value === 'en-US' || item.middleName) ? `${item.givenName} ${item.middleName} ${item.familyName}` : `${item.familyName}${item.givenName}`
     }))
   })
 }
@@ -173,15 +177,34 @@ onMounted(() => {
 })
 
 /**
+ * 导入
+ */
+function importRows() {
+  importVisible.value = true
+}
+
+/**
+ * 导出
+ */
+function exportRows() {
+  exportLoading.value = true
+
+  const selectedRows = tableRef.value?.getSelectionRows()
+  if (selectedRows) {
+    console.log('selectedRows: ', selectedRows)
+  }
+}
+
+/**
  * 关联弹出框
  * @param id 主键
  */
-function relationRow(row: Group) {
+function relationRow(id: number) {
   relationVisible.value = true
-  selectedRow.value = row
   loadUsers()
-  if (row.id) {
-    loadGroupUsers(row.id)
+  if (id) {
+    form.value.id = id
+    loadGroupUsers(id)
   }
 }
 
@@ -243,6 +266,23 @@ function onSubmit(formEl: FormInstance | undefined) {
 }
 
 /**
+ * 导入提交
+ */
+async function onImportSubmit(importEl: UploadInstance | undefined) {
+  if (!importEl) return
+  importLoading.value = true
+
+  importEl.submit()
+
+  importLoading.value = false
+  importVisible.value = false
+}
+
+function onUpload(options: UploadRequestOptions) {
+  return importGroups(options.file)
+}
+
+/**
  * 删除
  * @param id 主键
  */
@@ -282,12 +322,12 @@ function handleCheckedChange(value: CheckboxValueType[]) {
   isIndeterminate.value = checkedCount > 0 && checkedCount < columns.value.length
 }
 
-function handleTransferChange(value: TransferKey[], direction: TransferDirection, movedKeys: TransferKey[]) {
-  if (selectedRow.value && selectedRow.value.id) {
+function handleTransferChange(value: TransferKey[], direction: TransferDirection) {
+  if (form.value.id) {
     if (direction === 'right') {
-      relationGroupMembers(selectedRow.value.id, movedKeys as string[])
+      relationGroupMembers(form.value.id, value as string[])
     } else {
-      removeGroupMembers(selectedRow.value.id, movedKeys as string[])
+      removeGroupMembers(form.value.id, value as string[])
     }
   }
 }
@@ -331,14 +371,16 @@ function handleTransferChange(value: TransferKey[], direction: TransferDirection
         <ElCard shadow="never">
           <ElRow :gutter="20" justify="space-between" class="mb-4">
             <ElCol :span="16" class="text-left">
-              <ElButton title="create" type="primary" @click="saveRow()">
+              <ElButton v-if="hasAction($route.name, 'create')" title=" create" type="primary" @click="saveRow()">
                 <Icon icon="material-symbols:add-rounded" width="18" height="18" />{{ $t('create') }}
               </ElButton>
-              <ElButton title="import" type="warning" plain @click="visible = true">
+              <ElButton v-if="hasAction($route.name, 'import')" title=" import" type="warning" plain
+                @click="importRows">
                 <Icon icon="material-symbols:database-upload-outline-rounded" width="18" height="18" />{{ $t('import')
                 }}
               </ElButton>
-              <ElButton title="export" type="success" plain>
+              <ElButton v-if="hasAction($route.name, 'export')" title=" export" type="success" plain @click="exportRows"
+                :loading="exportLoading">
                 <Icon icon="material-symbols:file-export-outline-rounded" width="18" height="18" />{{ $t('export') }}
               </ElButton>
             </ElCol>
@@ -392,22 +434,25 @@ function handleTransferChange(value: TransferKey[], direction: TransferDirection
             <ElTableColumn prop="enabled" :label="$t('enabled')">
               <template #default="scope">
                 <ElSwitch size="small" v-model="scope.row.enabled" @change="enableChange(scope.row.id)"
-                  style="--el-switch-on-color: var(--el-color-success);" />
+                  style="--el-switch-on-color: var(--el-color-success);"
+                  :disabled="!hasAction($route.name, 'enable')" />
               </template>
             </ElTableColumn>
             <ElTableColumn show-overflow-tooltip prop="description" :label="$t('description')" />
             <ElTableColumn :label="$t('actions')">
               <template #default="scope">
-                <ElButton title="modify" size="small" type="primary" link @click="saveRow(scope.row.id)">
+                <ElButton v-if="hasAction($route.name, 'modify')" title=" modify" size="small" type="primary" link
+                  @click="saveRow(scope.row.id)">
                   <Icon icon="material-symbols:edit-outline-rounded" width="16" height="16" />{{ $t('modify') }}
                 </ElButton>
-                <ElButton title="relation" size="small" type="success" link @click="relationRow(scope.row)">
+                <ElButton v-if="hasAction($route.name, 'relation')" title=" relation" size="small" type="success" link
+                  @click="relationRow(scope.row.id)">
                   <Icon icon="material-symbols:link-rounded" width="16" height="16" />{{ $t('relation') }}
                 </ElButton>
                 <ElPopconfirm v-if="!scope.row.hasChildren" :title="$t('removeConfirm')" :width="240"
                   @confirm="confirmEvent(scope.row.id)">
                   <template #reference>
-                    <ElButton title="remove" size="small" type="danger" link>
+                    <ElButton v-if="hasAction($route.name, 'remove')" title=" remove" size="small" type="danger" link>
                       <Icon icon="material-symbols:delete-outline-rounded" width="16" height="16" />{{ $t('remove') }}
                     </ElButton>
                   </template>
@@ -441,7 +486,7 @@ function handleTransferChange(value: TransferKey[], direction: TransferDirection
     </ElForm>
     <template #footer>
       <ElButton title="cancel" @click="visible = false">
-        <Icon icon="material-symbols:close" />{{ $t('cancel') }}
+        <Icon icon="material-symbols:close" width="18" height="18" />{{ $t('cancel') }}
       </ElButton>
       <ElButton title="submit" type="primary" :loading="saveLoading" @click="onSubmit(formRef)">
         <Icon icon="material-symbols:check-circle-outline-rounded" width="18" height="18" /> {{ $t('submit') }}
@@ -454,5 +499,38 @@ function handleTransferChange(value: TransferKey[], direction: TransferDirection
       <ElTransfer v-model="relations" :props="{ key: 'username', label: 'fullName' }"
         :titles="[$t('unselected'), $t('selected')]" filterable :data="members" @change="handleTransferChange" />
     </div>
+  </DialogView>
+
+  <!-- import -->
+  <DialogView v-model="importVisible" :title="$t('import')" width="36%">
+    <p>{{ $t('templates') + ' ' + $t('download') }}：
+      <a :href="`templates/groups.xlsx`" :download="$t('groups') + '.xlsx'">
+        {{ $t('groups') }}.xlsx
+      </a>
+    </p>
+    <ElUpload ref="importRef" :limit="1" drag :auto-upload="false" :http-request="onUpload" :on-success="load"
+      accept=".xls,.xlsx,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-excel"
+      :headers="{ Authorization: `Bearer ${userStore.accessToken}` }">
+      <div class="el-icon--upload inline-flex justify-center">
+        <Icon icon="material-symbols:upload-rounded" width="48" height="48" />
+      </div>
+      <div class="el-upload__text">
+        {{ $t('drop2Here') }}<em>{{ $t('click2Upload') }}</em>
+      </div>
+      <template #tip>
+        <div class="el-upload__tip">
+          {{ $t('fileSizeLimit', { size: '50MB' }) }}
+        </div>
+      </template>
+    </ElUpload>
+    <p class="text-red">xxxx</p>
+    <template #footer>
+      <ElButton title="cancel" @click="importVisible = false">
+        <Icon icon="material-symbols:close" width="18" height="18" />{{ $t('cancel') }}
+      </ElButton>
+      <ElButton title="submit" type="primary" :loading="importLoading" @click="onImportSubmit(importRef)">
+        <Icon icon="material-symbols:check-circle-outline-rounded" width="18" height="18" /> {{ $t('submit') }}
+      </ElButton>
+    </template>
   </DialogView>
 </template>
