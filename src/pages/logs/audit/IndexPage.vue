@@ -278,7 +278,7 @@ function handleCheckedChange(value: CheckboxValueType[]) {
       <ElDescriptionsItem :label="$t('newValue')" :span="3">{{ row.newValue }}</ElDescriptionsItem>
       <ElDescriptionsItem :label="$t('ip')">{{ row.ip }}</ElDescriptionsItem>
       <ElDescriptionsItem :label="$t('location')" :span="2">{{ row.location }}</ElDescriptionsItem>
-      <ElDescriptionsItem :label="$t('status')">
+      <ElDescriptionsItem :label="$t('statusCode')">
         <ElTag v-if="row.statusCode && (row.statusCode >= 200 && row.statusCode < 300)" type="success" round>
           {{ row.statusCode }}
         </ElTag>
