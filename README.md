@@ -2,7 +2,7 @@
 
 > A starter kit for Element Plus with Vite
 
-- Preview: <https://console.leafage.top>
+- Preview: <https://preview.leafage.top>
 
 This is an example of on-demand element-plus with [unplugin-vue-components](https://github.com/antfu/unplugin-vue-components).
 
@@ -12,34 +12,28 @@ If you just want an on-demand import example `manually`, you can check [unplugin
 
 ## Project setup
 ```bash
-npm install
-# or yarn
-yarn install
+pnpm install
 ```
 
 ### Compiles and hot-reloads for development
 
 ```bash
-npm run dev
-# or yarn
-yarn dev
+pnpm run dev
 ```
 
 ### Compiles and minifies for production
 
 ```bash
-npm run build
-# or yarn
-yarn build
+pnpm run build
 ```
 
 ## Usage
 
 ```bash
-git clone https://github.com/little3201/server-starter
+git clone https://github.com/little3201/server-starter-ui
 cd element-plus-vite-starter
-npm i
-npm run dev
+pnpm i
+pnpm run dev
 ```
 
 ### Custom theme
