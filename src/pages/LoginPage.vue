@@ -94,12 +94,7 @@ function load() {
     </figure>
 
     <ElHeader class="flex flex-nowrap items-center z-10" height="50px">
-      <div class="inline-flex flex-grow justify-between">
-        <div class="inline-flex items-center">
-          <ElImage src="/svgs/logo.svg" alt="logo" class="w-12 h-12" />
-          <span class="ml-3 text-20px font-bold">Project Management</span>
-        </div>
-
+      <div class="inline-flex flex-grow justify-end">
         <div class="inline-flex justify-end items-center space-x-4">
           <!-- language -->
           <LanguageSelector />
