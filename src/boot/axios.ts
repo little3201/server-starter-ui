@@ -14,7 +14,7 @@ const abortControllerMap: Map<string, AbortController> = new Map()
 
 const api: AxiosInstance = axios.create({
   baseURL: import.meta.env.VITE_BASE_API || '/api',
-  timeout: 5000,
+  timeout: 10000,
   withCredentials: true
 })
 
@@ -44,15 +44,15 @@ api.interceptors.request.use(
 
 // 响应拦截器
 api.interceptors.response.use(
-  (res: AxiosResponse) => {
-    const uniqueKey = generateUniqueKey(res.config)
+  (response: AxiosResponse) => {
+    const uniqueKey = generateUniqueKey(response.config)
     abortControllerMap.delete(uniqueKey)
 
-    const { config, status } = res
+    const { config, status } = response
     if (status >= 200 && status < 300 && config.method !== 'get' && config.url !== SERVER_URL.TOKEN) {
       ElMessage.success({ message: t('successful'), grouping: true })
     }
-    return res
+    return response
   },
   (error: AxiosError) => {
     if (error.response) {

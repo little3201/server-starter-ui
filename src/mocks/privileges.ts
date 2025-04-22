@@ -359,7 +359,7 @@ const treeNodes: PrivilegeTreeNode[] = [
         meta: {
           path: 'generators',
           component: 'exploiters/generators',
-          icon: 'code',
+          icon: 'genetics',
           actions: ['create', 'modify', 'remove', 'import', 'export', 'sync', 'config', 'execute', 'enable']
         }
       },
@@ -379,7 +379,7 @@ const treeNodes: PrivilegeTreeNode[] = [
         meta: {
           path: 'templates',
           component: 'exploiters/templates',
-          icon: 'terminal',
+          icon: 'code',
           actions: ['create', 'modify', 'remove', 'import', 'export', 'enable']
         }
       }
