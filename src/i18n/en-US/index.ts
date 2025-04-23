@@ -110,6 +110,7 @@ export default {
   authorize: 'Authorize',
   more: 'More',
   enable: 'Enable',
+  unlock: 'Unlock',
 
   home: 'Home',
   system: 'System',
