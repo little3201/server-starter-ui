@@ -4,10 +4,10 @@ import type { UploadInstance, CheckboxValueType, UploadRequestOptions } from 'el
 import draggable from 'vuedraggable'
 import DialogView from 'components/DialogView.vue'
 import { dayjs } from 'element-plus'
-import { retrieveFiles, fetchFile, uploadFile } from 'src/api/files'
+import { retrieveFiles, fetchFile, uploadFile, downloadFile } from 'src/api/files'
 import type { Pagination, FileRecord } from 'src/types'
 import { Icon } from '@iconify/vue'
-import { formatFileSize, downloadFile, hasAction } from 'src/utils'
+import { formatFileSize, download, hasAction } from 'src/utils'
 
 
 const loading = ref<boolean>(false)
@@ -107,8 +107,8 @@ function uploadRow() {
  * @param id 主键
  */
 function downloadRow(id: number, name: string, mimeType: string) {
-  fetchFile(id).then(res => {
-    downloadFile(res.data, name, mimeType)
+  downloadFile(id).then(res => {
+    download(res.data, name, mimeType)
   })
 }
 
@@ -173,10 +173,10 @@ function handleCheckedChange(value: CheckboxValueType[]) {
       <ElCard shadow="never">
         <strong>Space Usage</strong>
         <div class="text-center my-6">
-          <ElProgress type="circle" :percentage="50" :stroke-width="12" :width="180">
-            <template #default="{ percentage }">
-              <span class="block">{{ percentage }}</span>
-              <span class="block">50G/100G</span>
+          <ElProgress type="circle" :percentage="46" :stroke-width="12" :width="180">
+            <template #default>
+              <span class="block text-sm">Free Space</span>
+              <span class="block mt-2">23G/50G</span>
             </template>
           </ElProgress>
         </div>
