@@ -195,6 +195,23 @@ const subDatas: Dictionary[] = [
     enabled: true,
     lastModifiedDate: new Date()
   },
+  
+  {
+    name: 'DB',
+    superiorId: 68,
+    description: '数据库',
+    id: 57,
+    enabled: true,
+    lastModifiedDate: new Date()
+  },
+  {
+    name: 'middleware',
+    superiorId: 68,
+    description: '中间件',
+    id: 58,
+    enabled: true,
+    lastModifiedDate: new Date()
+  },
 ]
 
 export const dictionariesHandlers = [
