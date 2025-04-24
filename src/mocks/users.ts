@@ -14,6 +14,7 @@ for (let i = 1; i < 28; i++) {
     familyName: '张',
     avatar: '/images/avatar.jpg',
     email: 'usexxx' + '@test.com',
+    phoneNumber: '123****0023',
     accountNonLocked: i % 2 > 0,
     enabled: i % 2 > 0,
     accountExpiresAt: dayjs().add(Math.floor(Math.random() * 30), 'day').toDate(),
