@@ -4,17 +4,12 @@ import { Icon } from '@iconify/vue'
 
 
 const isDark = useDark()
+const toggleDark = useToggle(isDark)
 </script>
 
 <template>
-  <ElSwitch v-model="isDark" id="theme" name="theme"
-    style="--el-switch-on-color: var(--el-color-primary-light-5); --el-switch-off-color: var(--el-color-primary-light-3);"
-    @change="useToggle">
-    <template #active-action>
-      <Icon icon="material-symbols:dark-mode-outline-rounded" width="18" height="18" />
-    </template>
-    <template #inactive-action>
-      <Icon icon="material-symbols:light-mode-outline-rounded" width="18" height="18" />
-    </template>
-  </ElSwitch>
+  <ElButton title="theme" type="default" link @click="() => toggleDark()">
+    <Icon :icon="isDark ? 'material-symbols:light-mode-outline-rounded' : 'material-symbols:dark-mode-outline-rounded'"
+      class="text-white" width="22" height="22" />
+  </ElButton>
 </template>

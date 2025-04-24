@@ -350,10 +350,12 @@ function handleCheckedChange(value: CheckboxValueType[]) {
         <ElTableColumn prop="phoneNumber" :label="$t('phoneNumber')"></ElTableColumn>
         <ElTableColumn prop="accountNonLocked" :label="$t('accountNonLocked')">
           <template #default="scope">
-            <Icon
-              :icon="`material-symbols:${scope.row.accountNonLocked ? 'lock-open-right-outline-rounded' : 'lock-outline'}`"
-              width="16" height="16" @click="lockRow(scope.row)"
-              :class="['cursor-pointer', scope.row.accountNonLocked ? 'text-[var(--el-color-success)]' : 'text-[var(--el-color-warning)]']" />
+            <ElButton title="unlock" :type="scope.row.accountNonLocked ? 'success' : 'warning'" link
+              @click="lockRow(scope.row)" :disabled="!hasAction($route.name, 'unlock')">
+              <Icon
+                :icon="`material-symbols:${scope.row.accountNonLocked ? 'lock-open-right-outline-rounded' : 'lock-outline'}`"
+                width="18" height="18" />
+            </ElButton>
           </template>
         </ElTableColumn>
         <ElTableColumn prop="enabled" :label="$t('enabled')">

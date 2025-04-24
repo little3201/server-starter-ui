@@ -79,7 +79,7 @@ const subDatas: Privilege[] = [
     path: 'users',
     component: 'system/users',
     name: 'users',
-    actions: ['create', 'modify', 'remove', 'import', 'export', 'enable'],
+    actions: ['create', 'modify', 'remove', 'import', 'export', 'enable', 'unlock'],
     count: 0,
     enabled: true,
     icon: 'person-outline',
@@ -225,7 +225,7 @@ const treeNodes: PrivilegeTreeNode[] = [
           path: 'groups',
           component: 'system/groups',
           icon: 'account-tree-outline',
-          actions: ['create', 'modify', 'remove', 'import', 'export', 'relation', 'enable']
+          actions: ['create', 'modify', 'remove', 'import', 'export', 'enable', 'unlock']
         }
       },
       {
@@ -235,7 +235,7 @@ const treeNodes: PrivilegeTreeNode[] = [
           path: 'users',
           component: 'system/users',
           icon: 'person-outline',
-          actions: ['create', 'modify', 'remove', 'import', 'export', 'enable']
+          actions: ['create', 'modify', 'remove', 'import', 'export', 'enable', 'unlock']
         }
       },
       {

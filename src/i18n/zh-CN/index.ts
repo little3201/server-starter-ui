@@ -110,6 +110,7 @@ export default {
   authorize: '授权',
   more: '更多',
   enable: '启用',
+  unlock: '解锁',
 
   home: '首页',
   system: '系统管理',

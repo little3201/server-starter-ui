@@ -8,7 +8,7 @@ import { signOut } from 'src/api/authentication'
 import { Icon } from '@iconify/vue'
 
 
-const { currentRoute } = useRouter()
+const { push, currentRoute } = useRouter()
 const userStore = useUserStore()
 </script>
 
@@ -21,17 +21,20 @@ const userStore = useUserStore()
           <span class="ml-3 text-20px font-bold text-white">Project Management</span>
         </div>
 
-        <div class="inline-flex justify-end items-center space-x-4">
-          <!-- language -->
-          <LanguageSelector />
+        <div class="inline-flex justify-end items-center space-x-2">
           <!-- theme -->
           <ThemeToogle />
-
+          <!-- language -->
+          <LanguageSelector />
+          <!-- faq -->
+          <ElButton title="faq" type="default" link @click="push('/faq')">
+            <Icon icon="material-symbols:help-outline-rounded" class="text-white" width="22" height="22" />
+          </ElButton>
           <ElDropdown trigger="click" class="cursor-pointer">
-            <ElSpace>
+            <div class="inline-flex items-center">
               <ElAvatar alt="avatar" :size="28" :src="userStore.avatar" />
-              <span class="text-white">{{ userStore.username }}</span>
-            </ElSpace>
+              <span class="ml-2 text-white">{{ userStore.username }}</span>
+            </div>
             <template #dropdown>
               <ElDropdownMenu>
                 <RouterLink to="/profile" class="no-underline">
@@ -73,31 +76,9 @@ const userStore = useUserStore()
           <RouterView />
         </ElMain>
         <ElFooter height="50px">
-          <div class="text-sm text-center flex items-center justify-between">
+          <p class="text-sm text-center">
             <span>Copyright &copy; {{ new Date().getFullYear() }} All Rights Reserved.</span>
-            <ul class="flex flex-wrap items-center list-none">
-              <li>
-                <RouterLink to="/about"
-                  class="no-underline hover:underline me-4 md:me-6 text-[var(--el-text-color-primary)]">About
-                </RouterLink>
-              </li>
-              <li>
-                <RouterLink to="/privacy-policy"
-                  class="no-underline hover:underline me-4 md:me-6 text-[var(--el-text-color-primary)]">Privacy
-                  Policy</RouterLink>
-              </li>
-              <li>
-                <RouterLink to="/license"
-                  class="no-underline hover:underline me-4 md:me-6 text-[var(--el-text-color-primary)]">License
-                </RouterLink>
-              </li>
-              <li>
-                <RouterLink to="/help" class="no-underline hover:underline me-4 text-[var(--el-text-color-primary)]">
-                  Help
-                </RouterLink>
-              </li>
-            </ul>
-          </div>
+          </p>
         </ElFooter>
       </ElContainer>
     </ElContainer>
