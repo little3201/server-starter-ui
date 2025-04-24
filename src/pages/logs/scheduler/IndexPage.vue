@@ -221,7 +221,7 @@ function handleCheckedChange(value: CheckboxValueType[]) {
         <ElTableColumn type="index" :label="$t('no')" width="55" />
         <ElTableColumn prop="name" :label="$t('name')">
           <template #default="scope">
-            <ElButton title="detail" type="primary" link @click="showRow(scope.row.id)">
+            <ElButton title="details" type="primary" link @click="showRow(scope.row.id)">
               {{ scope.row.name }}
             </ElButton>
           </template>
@@ -270,7 +270,7 @@ function handleCheckedChange(value: CheckboxValueType[]) {
     </ElCard>
   </ElSpace>
 
-  <DialogView v-model="visible" show-close :title="$t('detail')">
+  <DialogView v-model="visible" show-close :title="$t('details')">
     <ElDescriptions v-loading="detailLoading" border>
       <ElDescriptionsItem :label="$t('name')">{{ row.name }}</ElDescriptionsItem>
       <ElDescriptionsItem :label="$t('startTime')">

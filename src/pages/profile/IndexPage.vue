@@ -74,8 +74,8 @@ onMounted(() => {
 </script>
 
 <template>
-  <ElRow :gutter="16">
-    <ElCol :span="6">
+  <ElSpace size="large" alignment="flex-start">
+    <ElSpace class="w-64" size="large" direction="vertical" fill>
       <ElCard shadow="never">
         <div class="text-center">
           <ElAvatar :size="180" :src="me.avatar" />
@@ -93,38 +93,46 @@ onMounted(() => {
         <ElDivider></ElDivider>
 
         <!-- 详细信息 -->
-        <ul class="text-sm text-[var(--el-text-color-regular)] pl-3 space-y-3">
-          <li class="flex items-center">
-            <Icon icon="material-symbols:location-on-outline-rounded" class="mr-2" />
+        <ul class="text-sm text-[var(--el-text-color-regular)] pl-3 flex flex-col space-y-3">
+          <li class="inline-flex items-center">
+            <Icon icon="material-symbols:location-on-outline-rounded" width="18" height="18" class="mr-2" />
             西安
           </li>
-          <li class="flex items-center">
-            <Icon icon="material-symbols:mail-outline-rounded" class="mr-2" />
+          <li class="inline-flex items-center">
+            <Icon icon="material-symbols:mail-outline-rounded" width="18" height="18" class="mr-2" />
             <span>{{ me.email }}</span>
           </li>
-          <li class="flex items-center">
-            <Icon icon="material-symbols:shield-person-outline-rounded" class="mr-2" />
+          <li class="inline-flex items-center">
+            <Icon icon="material-symbols:shield-person-outline-rounded" width="18" height="18" class="mr-2" />
             角色
           </li>
         </ul>
       </ElCard>
 
-      <ElCard shadow="never" class="mt-4">
-        <ul class="text-sm text-[var(--el-text-color-regular)] pl-0">
-          <li class="flex items-center py-2 px-3 rounded-md hover:bg-[var(--el-fill-color-lighter)] cursor-pointer">
-            <Icon icon="material-symbols:notifications-outline" class="mr-2" />Notifications
+      <ElCard shadow="never">
+        <ul class="text-sm text-[var(--el-text-color-regular)] pl-0 flex flex-col space-y-1">
+          <li
+            class="inline-flex items-center py-2 px-3 rounded-md hover:bg-[var(--el-fill-color-lighter)] cursor-pointer">
+            <Icon icon="material-symbols:notifications-outline" width="18" height="18" class="mr-2" />Notifications
           </li>
-          <li class="flex items-center py-2 px-3 rounded-md hover:bg-[var(--el-fill-color-lighter)] cursor-pointer">
-            <Icon icon="material-symbols:draw-outline" class="mr-2" />Appearance
+          <li
+            class="inline-flex items-center py-2 px-3 rounded-md hover:bg-[var(--el-fill-color-lighter)] cursor-pointer">
+            <Icon icon="material-symbols:draw-outline" width="18" height="18" class="mr-2" />Appearance
           </li>
-          <li class="flex items-center py-2 px-3 rounded-md hover:bg-[var(--el-fill-color-lighter)] cursor-pointer">
-            <Icon icon="material-symbols:notifications-outline" class="mr-2" />Sessions
+          <li
+            class="inline-flex items-center py-2 px-3 rounded-md hover:bg-[var(--el-fill-color-lighter)] cursor-pointer">
+            <Icon icon="material-symbols:bigtop-updates-rounded" width="18" height="18" class="mr-2" />Sessions
           </li>
         </ul>
       </ElCard>
-    </ElCol>
+    </ElSpace>
 
-    <ElCol :span="18">
+    <ElSpace size="large" fill>
+      <ElCard shadow="never">
+        <div class="text-center py-6">
+          <h2>常见问题解答（FAQ）</h2>
+        </div>
+      </ElCard>
       <ElCard shadow="never">
         <ElTabs stretch v-model="activeTab">
           <!-- Overview -->
@@ -134,7 +142,9 @@ onMounted(() => {
               <ElTableColumn prop="device">
                 <template #default="scope">
                   <div class="flex items-center">
-                    <ElBadge :type="scope.row.status === 'online' ? 'success' : 'info'" is-dot class="mr-2" />
+                    <ElBadge :type="scope.row.status === 'online' ? 'success' : 'info'" is-dot />
+                    <Icon icon="material-symbols:desktop-windows-outline-rounded" width="32" height="32"
+                      class="ml-3 mr-2" />
                     <div class="ml-2 inline-flex flex-col">
                       <span class="text-sm">{{ scope.row.location }}&emsp;●&emsp;{{ scope.row.ip }}</span>
                       <span class="text-xs text-[var(--el-text-color-secondary)]">{{ scope.row.device }}</span>
@@ -216,8 +226,8 @@ onMounted(() => {
           </ElTabPane>
         </ElTabs>
       </ElCard>
-    </ElCol>
-  </ElRow>
+    </ElSpace>
+  </ElSpace>
 </template>
 
 <style lang="scss" scoped>

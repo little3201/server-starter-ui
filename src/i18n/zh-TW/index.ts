@@ -95,7 +95,7 @@ export default {
   cancel: '取消',
   create: '添加',
   modify: '修改',
-  detail: '詳情',
+  details: '詳情',
   remove: '刪除',
   refresh: '刷新',
   reset: '重置',
