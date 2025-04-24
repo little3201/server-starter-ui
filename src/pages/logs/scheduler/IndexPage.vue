@@ -182,8 +182,7 @@ function handleCheckedChange(value: CheckboxValueType[]) {
           </ElTooltip>
 
           <ElTooltip :content="$t('column') + $t('settings')" placement="top">
-            <span class="inline-block ml-3 h-8">
-              <ElPopover :width="200" trigger="click">
+                          <ElPopover :width="200" trigger="click">
                 <template #reference>
                   <ElButton title="setgings" type="success" plain circle>
                     <Icon icon="material-symbols:format-list-bulleted" width="18" height="18" />
@@ -211,7 +210,6 @@ function handleCheckedChange(value: CheckboxValueType[]) {
                   </ElCheckboxGroup>
                 </div>
               </ElPopover>
-            </span>
           </ElTooltip>
         </ElCol>
       </ElRow>
@@ -221,7 +219,7 @@ function handleCheckedChange(value: CheckboxValueType[]) {
         <ElTableColumn type="index" :label="$t('no')" width="55" />
         <ElTableColumn prop="name" :label="$t('name')">
           <template #default="scope">
-            <ElButton title="detail" type="primary" link @click="showRow(scope.row.id)">
+            <ElButton title="details" type="primary" link @click="showRow(scope.row.id)">
               {{ scope.row.name }}
             </ElButton>
           </template>
@@ -270,7 +268,7 @@ function handleCheckedChange(value: CheckboxValueType[]) {
     </ElCard>
   </ElSpace>
 
-  <DialogView v-model="visible" show-close :title="$t('detail')">
+  <DialogView v-model="visible" show-close :title="$t('details')">
     <ElDescriptions v-loading="detailLoading" border>
       <ElDescriptionsItem :label="$t('name')">{{ row.name }}</ElDescriptionsItem>
       <ElDescriptionsItem :label="$t('startTime')">

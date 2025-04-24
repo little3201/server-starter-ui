@@ -95,7 +95,7 @@ export default {
   cancel: 'Cancle',
   create: 'Create',
   modify: 'Modify',
-  detail: 'Detail',
+  details: 'Detail',
   remove: 'Remove',
   refresh: 'Refresh',
   reset: 'Reset',

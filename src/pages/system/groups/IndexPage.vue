@@ -334,8 +334,8 @@ function handleTransferChange(value: TransferKey[], direction: TransferDirection
 </script>
 
 <template>
-  <div class="flex justify-between space-x-4">
-    <ElCard class="w-64 flex-shrink-0" shadow="never">
+  <ElSpace size="large" alignment="flex-start">
+    <ElCard class="w-64" shadow="never">
       <ElFormItem prop="currentNode">
         <ElInput v-model="currentNode" :placeholder="$t('search')" clearable>
           <template #prefix>
@@ -350,121 +350,115 @@ function handleTransferChange(value: TransferKey[], direction: TransferDirection
       </ElTree>
     </ElCard>
 
-    <div class="w-full">
-      <ElSpace size="large" fill>
-        <ElCard shadow="never">
-          <ElForm inline :model="filters" @submit.prevent>
-            <ElFormItem :label="$t('name')" prop="name">
-              <ElInput v-model="filters.name" :placeholder="$t('inputText', { field: $t('name') })" />
-            </ElFormItem>
-            <ElFormItem>
-              <ElButton title="search" type="primary" @click="load">
-                <Icon icon="material-symbols:search-rounded" width="18" height="18" />{{ $t('search') }}
-              </ElButton>
-              <ElButton title="reset" @click="reset">
-                <Icon icon="material-symbols:replay-rounded" width="18" height="18" />{{ $t('reset') }}
-              </ElButton>
-            </ElFormItem>
-          </ElForm>
-        </ElCard>
+    <ElSpace size="large" fill>
+      <ElCard shadow="never">
+        <ElForm inline :model="filters" @submit.prevent>
+          <ElFormItem :label="$t('name')" prop="name">
+            <ElInput v-model="filters.name" :placeholder="$t('inputText', { field: $t('name') })" />
+          </ElFormItem>
+          <ElFormItem>
+            <ElButton title="search" type="primary" @click="load">
+              <Icon icon="material-symbols:search-rounded" width="18" height="18" />{{ $t('search') }}
+            </ElButton>
+            <ElButton title="reset" @click="reset">
+              <Icon icon="material-symbols:replay-rounded" width="18" height="18" />{{ $t('reset') }}
+            </ElButton>
+          </ElFormItem>
+        </ElForm>
+      </ElCard>
 
-        <ElCard shadow="never">
-          <ElRow :gutter="20" justify="space-between" class="mb-4">
-            <ElCol :span="16" class="text-left">
-              <ElButton v-if="hasAction($route.name, 'create')" title=" create" type="primary" @click="saveRow()">
-                <Icon icon="material-symbols:add-rounded" width="18" height="18" />{{ $t('create') }}
-              </ElButton>
-              <ElButton v-if="hasAction($route.name, 'import')" title=" import" type="warning" plain
-                @click="importRows">
-                <Icon icon="material-symbols:database-upload-outline-rounded" width="18" height="18" />{{ $t('import')
-                }}
-              </ElButton>
-              <ElButton v-if="hasAction($route.name, 'export')" title=" export" type="success" plain @click="exportRows"
-                :loading="exportLoading">
-                <Icon icon="material-symbols:file-export-outline-rounded" width="18" height="18" />{{ $t('export') }}
-              </ElButton>
-            </ElCol>
+      <ElCard shadow="never">
+        <ElRow :gutter="20" justify="space-between" class="mb-4">
+          <ElCol :span="16" class="text-left">
+            <ElButton v-if="hasAction($route.name, 'create')" title=" create" type="primary" @click="saveRow()">
+              <Icon icon="material-symbols:add-rounded" width="18" height="18" />{{ $t('create') }}
+            </ElButton>
+            <ElButton v-if="hasAction($route.name, 'import')" title=" import" type="warning" plain @click="importRows">
+              <Icon icon="material-symbols:database-upload-outline-rounded" width="18" height="18" />{{ $t('import')
+              }}
+            </ElButton>
+            <ElButton v-if="hasAction($route.name, 'export')" title=" export" type="success" plain @click="exportRows"
+              :loading="exportLoading">
+              <Icon icon="material-symbols:file-export-outline-rounded" width="18" height="18" />{{ $t('export') }}
+            </ElButton>
+          </ElCol>
 
-            <ElCol :span="8" class="text-right">
-              <ElTooltip :content="$t('refresh')" placement="top">
-                <ElButton title="refresh" type="primary" plain circle @click="load">
-                  <Icon icon="material-symbols:refresh-rounded" width="18" height="18" />
-                </ElButton>
-              </ElTooltip>
+          <ElCol :span="8" class="text-right">
+            <ElTooltip :content="$t('refresh')" placement="top">
+              <ElButton title="refresh" type="primary" plain circle @click="load">
+                <Icon icon="material-symbols:refresh-rounded" width="18" height="18" />
+              </ElButton>
+            </ElTooltip>
 
-              <ElTooltip :content="$t('column') + $t('settings')" placement="top">
-                <span class="inline-block ml-3 h-8">
-                  <ElPopover :width="200" trigger="click">
-                    <template #reference>
-                      <ElButton title="settings" type="success" plain circle>
-                        <Icon icon="material-symbols:format-list-bulleted" width="18" height="18" />
-                      </ElButton>
-                    </template>
-                    <div>
-                      <ElCheckbox v-model="checkAll" :indeterminate="isIndeterminate" @change="handleCheckAllChange">
-                        {{ $t('all') }}
-                      </ElCheckbox>
-                      <ElDivider />
-                      <ElCheckboxGroup v-model="checkedColumns" @change="handleCheckedChange">
-                        <draggable v-model="columns" item-key="simple">
-                          <template #item="{ element }">
-                            <div class="flex items-center space-x-2">
-                              <Icon icon="material-symbols:drag-indicator" width="18" height="18"
-                                class="hover:cursor-move" />
-                              <ElCheckbox :label="element" :value="element" :disabled="element === columns[0]">
-                                <div class="inline-flex items-center space-x-4">
-                                  {{ $t(element) }}
-                                </div>
-                              </ElCheckbox>
+            <ElTooltip :content="$t('column') + $t('settings')" placement="top">
+              <ElPopover :width="200" trigger="click">
+                <template #reference>
+                  <ElButton title="settings" type="success" plain circle>
+                    <Icon icon="material-symbols:format-list-bulleted" width="18" height="18" />
+                  </ElButton>
+                </template>
+                <div>
+                  <ElCheckbox v-model="checkAll" :indeterminate="isIndeterminate" @change="handleCheckAllChange">
+                    {{ $t('all') }}
+                  </ElCheckbox>
+                  <ElDivider />
+                  <ElCheckboxGroup v-model="checkedColumns" @change="handleCheckedChange">
+                    <draggable v-model="columns" item-key="simple">
+                      <template #item="{ element }">
+                        <div class="flex items-center space-x-2">
+                          <Icon icon="material-symbols:drag-indicator" width="18" height="18"
+                            class="hover:cursor-move" />
+                          <ElCheckbox :label="element" :value="element" :disabled="element === columns[0]">
+                            <div class="inline-flex items-center space-x-4">
+                              {{ $t(element) }}
                             </div>
-                          </template>
-                        </draggable>
-                      </ElCheckboxGroup>
-                    </div>
-                  </ElPopover>
-                </span>
-              </ElTooltip>
-            </ElCol>
-          </ElRow>
+                          </ElCheckbox>
+                        </div>
+                      </template>
+                    </draggable>
+                  </ElCheckboxGroup>
+                </div>
+              </ElPopover>
+            </ElTooltip>
+          </ElCol>
+        </ElRow>
 
-          <ElTable v-loading="loading" :data="datas" row-key="id" stripe table-layout="auto">
-            <ElTableColumn type="selection" width="55" />
-            <ElTableColumn type="index" :label="$t('no')" width="55" />
-            <ElTableColumn prop="name" :label="$t('name')" />
-            <ElTableColumn prop="enabled" :label="$t('enabled')">
-              <template #default="scope">
-                <ElSwitch size="small" v-model="scope.row.enabled" @change="enableChange(scope.row.id)"
-                  style="--el-switch-on-color: var(--el-color-success);"
-                  :disabled="!hasAction($route.name, 'enable')" />
-              </template>
-            </ElTableColumn>
-            <ElTableColumn show-overflow-tooltip prop="description" :label="$t('description')" />
-            <ElTableColumn :label="$t('actions')">
-              <template #default="scope">
-                <ElButton v-if="hasAction($route.name, 'modify')" title=" modify" size="small" type="primary" link
-                  @click="saveRow(scope.row.id)">
-                  <Icon icon="material-symbols:edit-outline-rounded" width="16" height="16" />{{ $t('modify') }}
-                </ElButton>
-                <ElButton v-if="hasAction($route.name, 'relation')" title=" relation" size="small" type="success" link
-                  @click="relationRow(scope.row.id)">
-                  <Icon icon="material-symbols:link-rounded" width="16" height="16" />{{ $t('relation') }}
-                </ElButton>
-                <ElPopconfirm v-if="!scope.row.hasChildren" :title="$t('removeConfirm')" :width="240"
-                  @confirm="confirmEvent(scope.row.id)">
-                  <template #reference>
-                    <ElButton v-if="hasAction($route.name, 'remove')" title=" remove" size="small" type="danger" link>
-                      <Icon icon="material-symbols:delete-outline-rounded" width="16" height="16" />{{ $t('remove') }}
-                    </ElButton>
-                  </template>
-                </ElPopconfirm>
-              </template>
-            </ElTableColumn>
-          </ElTable>
-          <ElPagination layout="prev, pager, next, sizes, jumper, ->, total" @change="pageChange" :total="total" />
-        </ElCard>
-      </ElSpace>
-    </div>
-  </div>
+        <ElTable v-loading="loading" :data="datas" row-key="id" stripe table-layout="auto">
+          <ElTableColumn type="selection" width="55" />
+          <ElTableColumn type="index" :label="$t('no')" width="55" />
+          <ElTableColumn prop="name" :label="$t('name')" />
+          <ElTableColumn prop="enabled" :label="$t('enabled')">
+            <template #default="scope">
+              <ElSwitch size="small" v-model="scope.row.enabled" @change="enableChange(scope.row.id)"
+                style="--el-switch-on-color: var(--el-color-success);" :disabled="!hasAction($route.name, 'enable')" />
+            </template>
+          </ElTableColumn>
+          <ElTableColumn show-overflow-tooltip prop="description" :label="$t('description')" />
+          <ElTableColumn :label="$t('actions')">
+            <template #default="scope">
+              <ElButton v-if="hasAction($route.name, 'modify')" title=" modify" size="small" type="primary" link
+                @click="saveRow(scope.row.id)">
+                <Icon icon="material-symbols:edit-outline-rounded" width="16" height="16" />{{ $t('modify') }}
+              </ElButton>
+              <ElButton v-if="hasAction($route.name, 'relation')" title=" relation" size="small" type="success" link
+                @click="relationRow(scope.row.id)">
+                <Icon icon="material-symbols:link-rounded" width="16" height="16" />{{ $t('relation') }}
+              </ElButton>
+              <ElPopconfirm v-if="!scope.row.hasChildren" :title="$t('removeConfirm')" :width="240"
+                @confirm="confirmEvent(scope.row.id)">
+                <template #reference>
+                  <ElButton v-if="hasAction($route.name, 'remove')" title=" remove" size="small" type="danger" link>
+                    <Icon icon="material-symbols:delete-outline-rounded" width="16" height="16" />{{ $t('remove') }}
+                  </ElButton>
+                </template>
+              </ElPopconfirm>
+            </template>
+          </ElTableColumn>
+        </ElTable>
+        <ElPagination layout="prev, pager, next, sizes, jumper, ->, total" @change="pageChange" :total="total" />
+      </ElCard>
+    </ElSpace>
+  </ElSpace>
 
   <DialogView v-model="visible" :title="$t('groups')" width="25%">
     <ElForm ref="formRef" :model="form" :rules="rules" label-position="top">

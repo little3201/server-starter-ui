@@ -183,36 +183,33 @@ function handleCheckedChange(value: CheckboxValueType[]) {
           </ElTooltip>
 
           <ElTooltip :content="$t('column') + $t('settings')" placement="top">
-            <span class="inline-block ml-3 h-8">
-              <ElPopover :width="200" trigger="click">
-                <template #reference>
-                  <ElButton title="settings" type="success" plain circle>
-                    <Icon icon="material-symbols:format-list-bulleted" width="18" height="18" />
-                  </ElButton>
-                </template>
-                <div>
-                  <ElCheckbox v-model="checkAll" :indeterminate="isIndeterminate" @change="handleCheckAllChange">
-                    {{ $t('all') }}
-                  </ElCheckbox>
-                  <ElDivider />
-                  <ElCheckboxGroup v-model="checkedColumns" @change="handleCheckedChange">
-                    <draggable v-model="columns" item-key="simple">
-                      <template #item="{ element }">
-                        <div class="flex items-center space-x-2">
-                          <Icon icon="material-symbols:drag-indicator" width="18" height="18"
-                            class="hover:cursor-move" />
-                          <ElCheckbox :label="element" :value="element" :disabled="element === columns[0]">
-                            <div class="inline-flex items-center space-x-4">
-                              {{ $t(element) }}
-                            </div>
-                          </ElCheckbox>
-                        </div>
-                      </template>
-                    </draggable>
-                  </ElCheckboxGroup>
-                </div>
-              </ElPopover>
-            </span>
+            <ElPopover :width="200" trigger="click">
+              <template #reference>
+                <ElButton title="settings" type="success" plain circle>
+                  <Icon icon="material-symbols:format-list-bulleted" width="18" height="18" />
+                </ElButton>
+              </template>
+              <div>
+                <ElCheckbox v-model="checkAll" :indeterminate="isIndeterminate" @change="handleCheckAllChange">
+                  {{ $t('all') }}
+                </ElCheckbox>
+                <ElDivider />
+                <ElCheckboxGroup v-model="checkedColumns" @change="handleCheckedChange">
+                  <draggable v-model="columns" item-key="simple">
+                    <template #item="{ element }">
+                      <div class="flex items-center space-x-2">
+                        <Icon icon="material-symbols:drag-indicator" width="18" height="18" class="hover:cursor-move" />
+                        <ElCheckbox :label="element" :value="element" :disabled="element === columns[0]">
+                          <div class="inline-flex items-center space-x-4">
+                            {{ $t(element) }}
+                          </div>
+                        </ElCheckbox>
+                      </div>
+                    </template>
+                  </draggable>
+                </ElCheckboxGroup>
+              </div>
+            </ElPopover>
           </ElTooltip>
         </ElCol>
       </ElRow>
@@ -221,7 +218,7 @@ function handleCheckedChange(value: CheckboxValueType[]) {
         <ElTableColumn type="index" :label="$t('no')" width="55" />
         <ElTableColumn prop="resource" :label="$t('resource')">
           <template #default="scope">
-            <ElButton title="detail" type="primary" link @click="showRow(scope.row.id)">
+            <ElButton title="details" type="primary" link @click="showRow(scope.row.id)">
               {{ scope.row.resource }}
             </ElButton>
           </template>
@@ -267,7 +264,7 @@ function handleCheckedChange(value: CheckboxValueType[]) {
     </ElCard>
   </ElSpace>
 
-  <DialogView v-model="visible" show-close :title="$t('detail')">
+  <DialogView v-model="visible" show-close :title="$t('details')">
     <ElDescriptions v-loading="detailLoading" border>
       <ElDescriptionsItem :label="$t('operation')">
         <ElBadge is-dot :type="actions[row.operation.toLowerCase()]" class="mr-1" />{{ row.operation }}

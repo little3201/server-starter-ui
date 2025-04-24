@@ -134,7 +134,7 @@ export function wordToSingular(word: string) {
   return word
 }
 
-export function downloadFile(data: Blob, filename: string, mimeType?: string): void {
+export function download(data: Blob, filename: string, mimeType?: string): void {
   // 创建一个新的 Blob 对象，指定 MIME 类型
   const blob = new Blob([data], { type: mimeType || 'application/octet-stream' })
 

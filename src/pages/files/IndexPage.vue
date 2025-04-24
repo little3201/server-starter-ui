@@ -4,10 +4,10 @@ import type { UploadInstance, CheckboxValueType, UploadRequestOptions } from 'el
 import draggable from 'vuedraggable'
 import DialogView from 'components/DialogView.vue'
 import { dayjs } from 'element-plus'
-import { retrieveFiles, fetchFile, uploadFile } from 'src/api/files'
+import { retrieveFiles, fetchFile, uploadFile, downloadFile } from 'src/api/files'
 import type { Pagination, FileRecord } from 'src/types'
 import { Icon } from '@iconify/vue'
-import { formatFileSize, downloadFile, hasAction } from 'src/utils'
+import { formatFileSize, download, hasAction } from 'src/utils'
 
 
 const loading = ref<boolean>(false)
@@ -21,7 +21,15 @@ const pagination = reactive<Pagination>({
   size: 10
 })
 
+const initialValues: FileRecord = {
+  id: undefined,
+  name: '',
+  mimeType: '',
+  size: 0
+}
+const row = ref<FileRecord>({ ...initialValues })
 const visible = ref<boolean>(false)
+const uploadVisible = ref<boolean>(false)
 
 const checkAll = ref<boolean>(true)
 const isIndeterminate = ref<boolean>(false)
@@ -62,6 +70,12 @@ async function load() {
   }).finally(() => { loading.value = false })
 }
 
+async function loadOne(id: number) {
+  fetchFile(id).then(res => {
+    row.value = res.data
+  })
+}
+
 /**
  * reset
  */
@@ -76,11 +90,16 @@ onMounted(() => {
   load()
 })
 
+function showRow(id: number) {
+  loadOne(id)
+  visible.value = true
+}
+
 /**
  * 上传
  */
 function uploadRow() {
-  visible.value = true
+  uploadVisible.value = true
 }
 
 /**
@@ -88,8 +107,8 @@ function uploadRow() {
  * @param id 主键
  */
 function downloadRow(id: number, name: string, mimeType: string) {
-  fetchFile(id).then(res => {
-    downloadFile(res.data, name, mimeType)
+  downloadFile(id).then(res => {
+    download(res.data, name, mimeType)
   })
 }
 
@@ -103,7 +122,7 @@ function onSubmit(uploadEl: UploadInstance | undefined) {
   uploadRef.value!.submit()
 
   uploadLoading.value = false
-  visible.value = false
+  uploadVisible.value = false
 }
 
 function onUpload(options: UploadRequestOptions) {
@@ -149,7 +168,36 @@ function handleCheckedChange(value: CheckboxValueType[]) {
 </script>
 
 <template>
-  <div>
+  <ElSpace size="large" alignment="flex-start">
+    <ElSpace class="w-64" size="large" direction="vertical" fill>
+      <ElCard shadow="never">
+        <strong>Space Usage</strong>
+        <div class="text-center my-6">
+          <ElProgress type="circle" :percentage="46" :stroke-width="12" :width="180">
+            <template #default>
+              <span class="block text-sm">Free Space</span>
+              <span class="block mt-2">23G/50G</span>
+            </template>
+          </ElProgress>
+        </div>
+      </ElCard>
+
+      <ElCard shadow="never">
+        <strong>Categories</strong>
+        <ul class="text-sm pl-0 flex flex-col space-y-3">
+          <li class="inline-flex items-center p-4 rounded bg-[var(--el-color-success-light-9)] cursor-pointer">
+            <Icon icon="material-symbols:imagesmode-outline-rounded" width="20" height="20" class="mr-2" />Images
+          </li>
+          <li class="inline-flex items-center p-4 rounded bg-[var(--el-color-primary-light-9)] cursor-pointer">
+            <Icon icon="material-symbols:docs-outline-rounded" width="20" height="20" class="mr-2" />Documents
+          </li>
+          <li class="inline-flex items-center p-4 rounded bg-[var(--el-color-warning-light-9)] cursor-pointer">
+            <Icon icon="material-symbols:videocam-outline-rounded" width="20" height="20" class="mr-2" />Videos
+          </li>
+        </ul>
+      </ElCard>
+    </ElSpace>
+
     <ElSpace size="large" fill>
       <ElCard shadow="never">
         <ElForm inline :model="filters">
@@ -176,43 +224,41 @@ function handleCheckedChange(value: CheckboxValueType[]) {
           </ElCol>
 
           <ElCol :span="8" class="text-right">
-            <ElTooltip class="box-item" effect="dark" :content="$t('refresh')" placement="top">
+            <ElTooltip effect="dark" :content="$t('refresh')" placement="top">
               <ElButton title="refresh" type="primary" plain circle @click="load">
                 <Icon icon="material-symbols:refresh-rounded" width="18" height="18" />
               </ElButton>
             </ElTooltip>
 
             <ElTooltip :content="$t('column') + $t('settings')" placement="top">
-              <span class="inline-block ml-3 h-8">
-                <ElPopover :width="200" trigger="click">
-                  <template #reference>
-                    <ElButton title="settings" type="success" plain circle>
-                      <Icon icon="material-symbols:format-list-bulleted" width="18" height="18" />
-                    </ElButton>
-                  </template>
-                  <div>
-                    <ElCheckbox v-model="checkAll" :indeterminate="isIndeterminate" @change="handleCheckAllChange">
-                      {{ $t('all') }}
-                    </ElCheckbox>
-                    <ElDivider />
-                    <ElCheckboxGroup v-model="checkedColumns" @change="handleCheckedChange">
-                      <draggable v-model="columns" item-key="simple">
-                        <template #item="{ element }">
-                          <div class="flex items-center space-x-2">
-                            <Icon icon="material-symbols:drag-indicator" width="18" height="18"
-                              class="hover:cursor-move" />
-                            <ElCheckbox :label="element" :value="element" :disabled="element === columns[0]">
-                              <div class="inline-flex items-center space-x-4">
-                                {{ $t(element) }}
-                              </div>
-                            </ElCheckbox>
-                          </div>
-                        </template>
-                      </draggable>
-                    </ElCheckboxGroup>
-                  </div>
-                </ElPopover>
-              </span>
+              <ElPopover :width="200" trigger="click">
+                <template #reference>
+                  <ElButton title="settings" type="success" plain circle>
+                    <Icon icon="material-symbols:format-list-bulleted" width="18" height="18" />
+                  </ElButton>
+                </template>
+                <div>
+                  <ElCheckbox v-model="checkAll" :indeterminate="isIndeterminate" @change="handleCheckAllChange">
+                    {{ $t('all') }}
+                  </ElCheckbox>
+                  <ElDivider />
+                  <ElCheckboxGroup v-model="checkedColumns" @change="handleCheckedChange">
+                    <draggable v-model="columns" item-key="simple">
+                      <template #item="{ element }">
+                        <div class="flex items-center space-x-2">
+                          <Icon icon="material-symbols:drag-indicator" width="18" height="18"
+                            class="hover:cursor-move" />
+                          <ElCheckbox :label="element" :value="element" :disabled="element === columns[0]">
+                            <div class="inline-flex items-center space-x-4">
+                              {{ $t(element) }}
+                            </div>
+                          </ElCheckbox>
+                        </div>
+                      </template>
+                    </draggable>
+                  </ElCheckboxGroup>
+                </div>
+              </ElPopover>
             </ElTooltip>
           </ElCol>
         </ElRow>
@@ -220,8 +266,13 @@ function handleCheckedChange(value: CheckboxValueType[]) {
         <ElTable v-loading="loading" :data="datas" row-key="id" stripe table-layout="auto"
           @sort-change="handleSortChange">
           <ElTableColumn type="index" :label="$t('no')" width="55" />
-          <ElTableColumn prop="name" :label="$t('name')" />
-          <ElTableColumn prop="mimeType" :label="$t('type')" />
+          <ElTableColumn prop="name" :label="$t('name')">
+            <template #default="scope">
+              <ElButton title="details" type="primary" link @click="showRow(scope.row.id)">
+                {{ scope.row.name }}
+              </ElButton>
+            </template>
+          </ElTableColumn>
           <ElTableColumn prop="size" :label="$t('size')" sortable="custom">
             <template #default="scope">
               {{ formatFileSize(scope.row.size) }}
@@ -251,29 +302,34 @@ function handleCheckedChange(value: CheckboxValueType[]) {
         <ElPagination layout="prev, pager, next, sizes, jumper, ->, total" @change="pageChange" :total="total" />
       </ElCard>
     </ElSpace>
+  </ElSpace>
 
-    <DialogView v-model="visible" :title="$t('upload')" width="35%">
-      <ElUpload ref="uploadRef" multiple drag :auto-upload="false" :http-request="onUpload" :on-success="load">
-        <div class="el-icon--upload inline-flex justify-center">
-          <Icon icon="material-symbols:upload-rounded" width="48" height="48" />
+
+  <DialogView v-model="visible" :title="$t('details')" show-close width="35%">
+
+  </DialogView>
+
+  <DialogView v-model="uploadVisible" :title="$t('upload')" width="35%">
+    <ElUpload ref="uploadRef" multiple drag :auto-upload="false" :http-request="onUpload" :on-success="load">
+      <div class="el-icon--upload inline-flex justify-center">
+        <Icon icon="material-symbols:upload-rounded" width="48" height="48" />
+      </div>
+      <div class="el-upload__text">
+        {{ $t('drop2Here') }}<em>{{ $t('click2Upload') }}</em>
+      </div>
+      <template #tip>
+        <div class="el-upload__tip">
+          {{ $t('fileSizeLimit', { size: '50MB' }) }}
         </div>
-        <div class="el-upload__text">
-          {{ $t('drop2Here') }}<em>{{ $t('click2Upload') }}</em>
-        </div>
-        <template #tip>
-          <div class="el-upload__tip">
-            {{ $t('fileSizeLimit', { size: '50MB' }) }}
-          </div>
-        </template>
-      </ElUpload>
-      <template #footer>
-        <ElButton title="cancel" @click="visible = false">
-          <Icon icon="material-symbols:close" width="18" height="18" />{{ $t('cancel') }}
-        </ElButton>
-        <ElButton title="submit" type="primary" :loading="uploadLoading" @click="onSubmit(uploadRef)">
-          <Icon icon="material-symbols:check-circle-outline-rounded" width="18" height="18" /> {{ $t('submit') }}
-        </ElButton>
       </template>
-    </DialogView>
-  </div>
+    </ElUpload>
+    <template #footer>
+      <ElButton title="cancel" @click="uploadVisible = false">
+        <Icon icon="material-symbols:close" width="18" height="18" />{{ $t('cancel') }}
+      </ElButton>
+      <ElButton title="submit" type="primary" :loading="uploadLoading" @click="onSubmit(uploadRef)">
+        <Icon icon="material-symbols:check-circle-outline-rounded" width="18" height="18" /> {{ $t('submit') }}
+      </ElButton>
+    </template>
+  </DialogView>
 </template>
