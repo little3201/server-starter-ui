@@ -182,8 +182,7 @@ function handleCheckedChange(value: CheckboxValueType[]) {
           </ElTooltip>
 
           <ElTooltip :content="$t('column') + $t('settings')" placement="top">
-            <span class="inline-block ml-3 h-8">
-              <ElPopover :width="200" trigger="click">
+                          <ElPopover :width="200" trigger="click">
                 <template #reference>
                   <ElButton title="setgings" type="success" plain circle>
                     <Icon icon="material-symbols:format-list-bulleted" width="18" height="18" />
@@ -211,7 +210,6 @@ function handleCheckedChange(value: CheckboxValueType[]) {
                   </ElCheckboxGroup>
                 </div>
               </ElPopover>
-            </span>
           </ElTooltip>
         </ElCol>
       </ElRow>

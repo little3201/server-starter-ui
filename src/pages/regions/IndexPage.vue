@@ -262,36 +262,33 @@ function handleCheckedChange(value: CheckboxValueType[]) {
           </ElTooltip>
 
           <ElTooltip :content="$t('column') + $t('settings')" placement="top">
-            <span class="inline-block ml-3 h-8">
-              <ElPopover :width="200" trigger="click">
-                <template #reference>
-                  <ElButton title="settings" type="success" plain circle>
-                    <Icon icon="material-symbols:format-list-bulleted" width="18" height="18" />
-                  </ElButton>
-                </template>
-                <div>
-                  <ElCheckbox v-model="checkAll" :indeterminate="isIndeterminate" @change="handleCheckAllChange">
-                    {{ $t('all') }}
-                  </ElCheckbox>
-                  <ElDivider />
-                  <ElCheckboxGroup v-model="checkedColumns" @change="handleCheckedChange">
-                    <draggable v-model="columns" item-key="simple">
-                      <template #item="{ element }">
-                        <div class="flex items-center space-x-2">
-                          <Icon icon="material-symbols:drag-indicator" width="18" height="18"
-                            class="hover:cursor-move" />
-                          <ElCheckbox :label="element" :value="element" :disabled="element === columns[0]">
-                            <div class="inline-flex items-center space-x-4">
-                              {{ $t(element) }}
-                            </div>
-                          </ElCheckbox>
-                        </div>
-                      </template>
-                    </draggable>
-                  </ElCheckboxGroup>
-                </div>
-              </ElPopover>
-            </span>
+            <ElPopover :width="200" trigger="click">
+              <template #reference>
+                <ElButton title="settings" type="success" plain circle>
+                  <Icon icon="material-symbols:format-list-bulleted" width="18" height="18" />
+                </ElButton>
+              </template>
+              <div>
+                <ElCheckbox v-model="checkAll" :indeterminate="isIndeterminate" @change="handleCheckAllChange">
+                  {{ $t('all') }}
+                </ElCheckbox>
+                <ElDivider />
+                <ElCheckboxGroup v-model="checkedColumns" @change="handleCheckedChange">
+                  <draggable v-model="columns" item-key="simple">
+                    <template #item="{ element }">
+                      <div class="flex items-center space-x-2">
+                        <Icon icon="material-symbols:drag-indicator" width="18" height="18" class="hover:cursor-move" />
+                        <ElCheckbox :label="element" :value="element" :disabled="element === columns[0]">
+                          <div class="inline-flex items-center space-x-4">
+                            {{ $t(element) }}
+                          </div>
+                        </ElCheckbox>
+                      </div>
+                    </template>
+                  </draggable>
+                </ElCheckboxGroup>
+              </div>
+            </ElPopover>
           </ElTooltip>
         </ElCol>
       </ElRow>
