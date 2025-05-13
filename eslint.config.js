@@ -42,7 +42,6 @@ export default defineConfigWithVueTs(
 
       globals: {
         ...globals.browser,
-        ...globals.node, // SSR, Electron, config files
         process: 'readonly', // process.env.*
         chrome: 'readonly', // BEX related
         browser: 'readonly' // BEX related

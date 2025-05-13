@@ -195,7 +195,6 @@ const subDatas: Dictionary[] = [
     enabled: true,
     lastModifiedDate: new Date()
   },
-  
   {
     name: 'DB',
     superiorId: 68,
