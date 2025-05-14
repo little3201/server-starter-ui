@@ -9,7 +9,7 @@
       </ElInput>
     </div>
 
-    <ElCollapse v-model="activeNames">
+    <ElCollapse>
       <ElCollapseItem v-for="faq in faqList" :key="faq.name" :title="faq.title" :name="faq.name">
         <p>{{ faq.content }}</p>
       </ElCollapseItem>
@@ -45,7 +45,6 @@ import { ref } from 'vue'
 import { Icon } from '@iconify/vue'
 
 const searchQuery = ref('')
-const activeNames = ref(['1'])
 const faqList = [
   { name: '1', title: '如何下单？', content: '您可以通过我们的官网选择商品并添加到购物车，然后进入结算流程完成订单。' },
   { name: '2', title: '我的订单多久能发货？', content: '通常订单会在 1-3 个工作日内处理并发货，具体时间取决于您的所在地和物流方式。' },

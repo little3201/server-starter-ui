@@ -84,7 +84,7 @@ onMounted(() => {
     <ElCol :span="24">
       <ElCard shadow="never" body-class="flex items-center">
         <ElAvatar :size="80" :src="me.avatar" />
-        <div class="ml-4 flex-grow">
+        <div class="ml-4 flex-1">
           <span v-if="locale === 'en-US' || me.middleName" class="text-lg my-1">
             {{ me.givenName }} {{ me.middleName }} {{ me.familyName }}
           </span>

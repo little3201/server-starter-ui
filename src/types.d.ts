@@ -123,6 +123,11 @@ export interface PrivilegeTreeNode extends TreeNode {
   children?: PrivilegeTreeNode[]
 }
 
+export interface TemplateTreeNode extends TreeNode {
+  content?: string
+  children?: TemplateTreeNode[]
+}
+
 export interface OperationLog extends AudtiMetadata {
   operation: string
   content: string

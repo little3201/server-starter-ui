@@ -13,7 +13,7 @@ for (let i = 1; i < 28; i++) {
     middleName: i % 3 > 0 ? '五' : '',
     familyName: '张',
     avatar: '/svgs/logo.svg',
-    email: 'usexxx' + '@test.com',
+    email: 'use***' + '@**t.com',
     phoneNumber: '123****0023',
     accountNonLocked: i % 2 > 0,
     enabled: i % 2 > 0,

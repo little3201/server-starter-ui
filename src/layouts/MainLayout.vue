@@ -14,7 +14,7 @@ const userStore = useUserStore()
 
 <template>
   <ElContainer class="h-screen">
-    <ElHeader class="flex flex-nowrap bg-[var(--el-color-primary)] z-10" height="50px">
+    <ElHeader class="flex flex-nowrap bg-[var(--el-color-primary)] z-10 sticky top-0" height="50px">
       <div class="inline-flex flex-grow justify-between">
         <div class="inline-flex items-center">
           <ElImage src="/svgs/logo.svg" alt="avatar" class="w-8 h-8" />
@@ -54,7 +54,7 @@ const userStore = useUserStore()
       </div>
     </ElHeader>
     <ElContainer>
-      <ElAside width="200px">
+      <ElAside width="200px" class="sticky top-[50px] h-[calc(100vh-50px)]">
         <ElScrollbar>
           <ElMenu router unique-opened :default-active="currentRoute.fullPath">
             <ElMenuItem :index="'/'">
@@ -71,7 +71,7 @@ const userStore = useUserStore()
           </ElMenu>
         </ElScrollbar>
       </ElAside>
-      <ElContainer class="bg-[var(--el-bg-color-page)] h-[calc(100vh-50px)]">
+      <ElContainer class="block bg-[var(--el-bg-color-page)] min-h-[calc(100vh-50px)]">
         <ElMain>
           <RouterView />
         </ElMain>

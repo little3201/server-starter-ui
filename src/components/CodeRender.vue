@@ -18,10 +18,11 @@ onUnmounted(() => { highlightResult.value = null })
 </script>
 
 <template>
-  <pre class="relative m-0">
+  <pre v-if="content" class="relative my-0">
     <code class="hljs" v-html="highlightResult?.value"></code>
     <small class="absolute top-0 right-0 pr-2 pt-2 text-white">
       {{ highlightResult?.language }}
     </small>
   </pre>
+  <ElEmpty v-else description="No Data" />
 </template>
