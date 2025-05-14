@@ -171,8 +171,8 @@ function handleCheckedChange(value: CheckboxValueType[]) {
   <ElSpace size="large" alignment="flex-start">
     <ElSpace class="w-64" size="large" direction="vertical" fill>
       <ElCard shadow="never">
-        <strong>Space Usage</strong>
-        <div class="text-center my-6">
+        <p class="mt-0"><strong>Space Usage</strong></p>
+        <div class="text-center mt-6">
           <ElProgress type="circle" :percentage="46" :stroke-width="12" :width="180">
             <template #default>
               <span class="block text-sm">Free Space</span>
@@ -183,18 +183,25 @@ function handleCheckedChange(value: CheckboxValueType[]) {
       </ElCard>
 
       <ElCard shadow="never">
-        <strong>Categories</strong>
-        <ul class="text-sm pl-0 flex flex-col space-y-3">
-          <li class="inline-flex items-center p-4 rounded bg-[var(--el-color-success-light-9)] cursor-pointer">
-            <Icon icon="material-symbols:imagesmode-outline-rounded" width="20" height="20" class="mr-2" />Images
-          </li>
-          <li class="inline-flex items-center p-4 rounded bg-[var(--el-color-primary-light-9)] cursor-pointer">
-            <Icon icon="material-symbols:docs-outline-rounded" width="20" height="20" class="mr-2" />Documents
-          </li>
-          <li class="inline-flex items-center p-4 rounded bg-[var(--el-color-warning-light-9)] cursor-pointer">
-            <Icon icon="material-symbols:videocam-outline-rounded" width="20" height="20" class="mr-2" />Videos
-          </li>
-        </ul>
+        <p class="mt-0"><strong>Categories</strong></p>
+        <ElMenu class="mt-4">
+          <ElMenuItem>
+            <ElButton title="images" circle type="success" size="large" class="mr-4">
+              <Icon icon="material-symbols:imagesmode-outline-rounded" width="20" height="20" />
+            </ElButton>Images
+          </ElMenuItem>
+          <ElMenuItem>
+            <ElButton title="videos" circle type="primary" size="large" class="mr-4">
+              <Icon icon="material-symbols:videocam-outline-rounded" width="20" height="20" />
+            </ElButton>
+            Videos
+          </ElMenuItem>
+          <ElMenuItem>
+            <ElButton title="documents" circle type="warning" size="large" class="mr-4">
+              <Icon icon="material-symbols:docs-outline-rounded" width="20" height="20" />
+            </ElButton>Documents
+          </ElMenuItem>
+        </ElMenu>
       </ElCard>
     </ElSpace>
 
