@@ -29,8 +29,8 @@ const pagination = reactive<Pagination>({
 
 const checkAll = ref<boolean>(true)
 const isIndeterminate = ref<boolean>(false)
-const checkedColumns = ref<Array<string>>(['name', 'enabled', 'description'])
-const columns = ref<Array<string>>(['name', 'enabled', 'description'])
+const checkedColumns = ref<Array<string>>(['username', 'email', 'accountNonLocked', 'enabled', 'accountExpiresAt', 'credentialsExpiresAt'])
+const columns = ref<Array<string>>(['username', 'email', 'accountNonLocked', 'enabled', 'accountExpiresAt', 'credentialsExpiresAt'])
 
 const saveLoading = ref<boolean>(false)
 const visible = ref<boolean>(false)
@@ -293,33 +293,36 @@ function handleCheckedChange(value: CheckboxValueType[]) {
           </ElTooltip>
 
           <ElTooltip :content="$t('column') + $t('settings')" placement="top">
-            <ElPopover :width="200" trigger="click">
-              <template #reference>
-                <ElButton title="settings" type="success" plain circle>
-                  <Icon icon="material-symbols:format-list-bulleted" width="18" height="18" />
-                </ElButton>
-              </template>
-              <div>
-                <ElCheckbox v-model="checkAll" :indeterminate="isIndeterminate" @change="handleCheckAllChange">
-                  {{ $t('all') }}
-                </ElCheckbox>
-                <ElDivider />
-                <ElCheckboxGroup v-model="checkedColumns" @change="handleCheckedChange">
-                  <draggable v-model="columns" item-key="simple">
-                    <template #item="{ element }">
-                      <div class="flex items-center space-x-2">
-                        <Icon icon="material-symbols:drag-indicator" width="18" height="18" class="hover:cursor-move" />
-                        <ElCheckbox :label="element" :value="element" :disabled="element === columns[0]">
-                          <div class="inline-flex items-center space-x-4">
-                            {{ $t(element) }}
-                          </div>
-                        </ElCheckbox>
-                      </div>
-                    </template>
-                  </draggable>
-                </ElCheckboxGroup>
-              </div>
-            </ElPopover>
+            <div class="inline-flex items-center align-middle ml-3">
+              <ElPopover :width="200" trigger="click">
+                <template #reference>
+                  <ElButton title="settings" type="success" plain circle>
+                    <Icon icon="material-symbols:format-list-bulleted" width="18" height="18" />
+                  </ElButton>
+                </template>
+                <div>
+                  <ElCheckbox v-model="checkAll" :indeterminate="isIndeterminate" @change="handleCheckAllChange">
+                    {{ $t('all') }}
+                  </ElCheckbox>
+                  <ElDivider />
+                  <ElCheckboxGroup v-model="checkedColumns" @change="handleCheckedChange">
+                    <draggable v-model="columns" item-key="simple">
+                      <template #item="{ element }">
+                        <div class="flex items-center space-x-2">
+                          <Icon icon="material-symbols:drag-indicator" width="18" height="18"
+                            class="hover:cursor-move" />
+                          <ElCheckbox :label="element" :value="element" :disabled="element === columns[0]">
+                            <div class="inline-flex items-center space-x-4">
+                              {{ $t(element) }}
+                            </div>
+                          </ElCheckbox>
+                        </div>
+                      </template>
+                    </draggable>
+                  </ElCheckboxGroup>
+                </div>
+              </ElPopover>
+            </div>
           </ElTooltip>
         </ElCol>
       </ElRow>
@@ -327,7 +330,7 @@ function handleCheckedChange(value: CheckboxValueType[]) {
       <ElTable ref="tableRef" v-loading="loading" :data="datas" row-key="id" stripe table-layout="auto">
         <ElTableColumn type="selection" width="55" />
         <ElTableColumn type="index" :label="$t('no')" width="55" />
-        <ElTableColumn prop="username" :label="$t('username')">
+        <ElTableColumn prop="username" :label="$t('username')" sortable>
           <template #default="scope">
             <div class="flex items-center">
               <ElAvatar alt="avatar" :size="30" :src="scope.row.avatar" />
@@ -344,8 +347,7 @@ function handleCheckedChange(value: CheckboxValueType[]) {
           </template>
         </ElTableColumn>
         <ElTableColumn show-overflow-tooltip prop="email" :label="$t('email')" />
-        <ElTableColumn prop="phoneNumber" :label="$t('phoneNumber')"></ElTableColumn>
-        <ElTableColumn prop="accountNonLocked" :label="$t('accountNonLocked')">
+        <ElTableColumn prop="accountNonLocked" :label="$t('accountNonLocked')" sortable>
           <template #default="scope">
             <ElButton title="unlock" :type="scope.row.accountNonLocked ? 'success' : 'warning'" link
               @click="lockRow(scope.row)" :disabled="!hasAction($route.name, 'unlock')">
@@ -355,20 +357,20 @@ function handleCheckedChange(value: CheckboxValueType[]) {
             </ElButton>
           </template>
         </ElTableColumn>
-        <ElTableColumn prop="enabled" :label="$t('enabled')">
+        <ElTableColumn prop="enabled" :label="$t('enabled')" sortable>
           <template #default="scope">
             <ElSwitch size="small" v-model="scope.row.enabled" @change="enableChange(scope.row.id)"
               style="--el-switch-on-color: var(--el-color-success);" :disabled="!hasAction($route.name, 'enable')" />
           </template>
         </ElTableColumn>
-        <ElTableColumn prop="accountExpiresAt" :label="$t('accountExpiresAt')">
+        <ElTableColumn prop="accountExpiresAt" :label="$t('accountExpiresAt')" sortable>
           <template #default="scope">
             <ElBadge v-if="scope.row.accountExpiresAt" is-dot :type="calculate(scope.row.accountExpiresAt)"
               class="mr-1" />
             {{ scope.row.accountExpiresAt ? dayjs(scope.row.accountExpiresAt).format('YYYY-MM-DD HH:mm') : '-' }}
           </template>
         </ElTableColumn>
-        <ElTableColumn prop="credentialsExpiresAt" :label="$t('credentialsExpiresAt')">
+        <ElTableColumn prop="credentialsExpiresAt" :label="$t('credentialsExpiresAt')" sortable>
           <template #default="scope">
             <ElBadge v-if="scope.row.credentialsExpiresAt" is-dot :type="calculate(scope.row.credentialsExpiresAt)"
               class="mr-1" />
@@ -400,6 +402,20 @@ function handleCheckedChange(value: CheckboxValueType[]) {
   <DialogView v-model="visible" :title="$t('users')" width="36%">
     <ElForm ref="formRef" :model="form" :rules="rules" label-position="top">
       <ElRow :gutter="20" class="w-full !mx-0">
+        <ElCol :span="12">
+          <ElFormItem :label="$t('username')" prop="username">
+            <ElInput v-model="form.username" :placeholder="$t('inputText', { field: $t('username') })" :maxLength="50"
+              :disabled="!!form.id" />
+          </ElFormItem>
+        </ElCol>
+        <ElCol :span="12">
+          <ElFormItem :label="$t('email')" prop="email">
+            <ElInput type="email" v-model="form.email" :placeholder="$t('inputText', { field: $t('email') })"
+              :maxLength="50" :disabled="!!form.id" />
+          </ElFormItem>
+        </ElCol>
+      </ElRow>
+      <ElRow :gutter="20" class="w-full !mx-0">
         <ElCol :span="8">
           <ElFormItem :label="$t('givenName')" prop="givenName">
             <ElInput type="email" v-model="form.givenName" :placeholder="$t('inputText', { field: $t('givenName') })"
@@ -416,28 +432,6 @@ function handleCheckedChange(value: CheckboxValueType[]) {
           <ElFormItem :label="$t('familyName')" prop="familyName">
             <ElInput v-model="form.familyName" :placeholder="$t('inputText', { field: $t('familyName') })"
               :maxLength="50" />
-          </ElFormItem>
-        </ElCol>
-      </ElRow>
-      <ElRow :gutter="20" class="w-full !mx-0">
-        <ElCol :span="12">
-          <ElFormItem :label="$t('username')" prop="username">
-            <ElInput v-model="form.username" :placeholder="$t('inputText', { field: $t('username') })" :maxLength="50"
-              :disabled="!!form.id" />
-          </ElFormItem>
-        </ElCol>
-        <ElCol :span="12">
-          <ElFormItem :label="$t('phoneNumber')" prop="phoneNumber">
-            <ElInput type="tel" v-model="form.phoneNumber" :placeholder="$t('inputText', { field: $t('phoneNumber') })"
-              :maxLength="20" :disabled="!!form.id" />
-          </ElFormItem>
-        </ElCol>
-      </ElRow>
-      <ElRow :gutter="20" class="w-full !mx-0">
-        <ElCol :span="24">
-          <ElFormItem :label="$t('email')" prop="email">
-            <ElInput type="email" v-model="form.email" :placeholder="$t('inputText', { field: $t('email') })"
-              :maxLength="50" :disabled="!!form.id" />
           </ElFormItem>
         </ElCol>
       </ElRow>

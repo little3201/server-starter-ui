@@ -484,33 +484,36 @@ function rowName(key: number | string) {
           </ElTooltip>
 
           <ElTooltip :content="$t('column') + $t('settings')" placement="top">
-            <ElPopover :width="200" trigger="click">
-              <template #reference>
-                <ElButton title="settings" type="success" plain circle>
-                  <Icon icon="material-symbols:format-list-bulleted" width="18" height="18" />
-                </ElButton>
-              </template>
-              <div>
-                <ElCheckbox v-model="checkAll" :indeterminate="isIndeterminate" @change="handleCheckAllChange">
-                  {{ $t('all') }}
-                </ElCheckbox>
-                <ElDivider />
-                <ElCheckboxGroup v-model="checkedColumns" @change="handleCheckedChange">
-                  <draggable v-model="columns" item-key="simple">
-                    <template #item="{ element }">
-                      <div class="flex items-center space-x-2">
-                        <Icon icon="material-symbols:drag-indicator" width="18" height="18" class="hover:cursor-move" />
-                        <ElCheckbox :label="element" :value="element" :disabled="element === columns[0]">
-                          <div class="inline-flex items-center space-x-4">
-                            {{ $t(element) }}
-                          </div>
-                        </ElCheckbox>
-                      </div>
-                    </template>
-                  </draggable>
-                </ElCheckboxGroup>
-              </div>
-            </ElPopover>
+            <div class="inline-flex items-center align-middle ml-3">
+              <ElPopover :width="200" trigger="click">
+                <template #reference>
+                  <ElButton title="settings" type="success" plain circle>
+                    <Icon icon="material-symbols:format-list-bulleted" width="18" height="18" />
+                  </ElButton>
+                </template>
+                <div>
+                  <ElCheckbox v-model="checkAll" :indeterminate="isIndeterminate" @change="handleCheckAllChange">
+                    {{ $t('all') }}
+                  </ElCheckbox>
+                  <ElDivider />
+                  <ElCheckboxGroup v-model="checkedColumns" @change="handleCheckedChange">
+                    <draggable v-model="columns" item-key="simple">
+                      <template #item="{ element }">
+                        <div class="flex items-center space-x-2">
+                          <Icon icon="material-symbols:drag-indicator" width="18" height="18"
+                            class="hover:cursor-move" />
+                          <ElCheckbox :label="element" :value="element" :disabled="element === columns[0]">
+                            <div class="inline-flex items-center space-x-4">
+                              {{ $t(element) }}
+                            </div>
+                          </ElCheckbox>
+                        </div>
+                      </template>
+                    </draggable>
+                  </ElCheckboxGroup>
+                </div>
+              </ElPopover>
+            </div>
           </ElTooltip>
         </ElCol>
       </ElRow>
@@ -518,13 +521,13 @@ function rowName(key: number | string) {
       <ElTable ref="tableRef" v-loading="loading" :data="datas" lazy :load="load" row-key="id" stripe
         table-layout="auto">
         <ElTableColumn type="selection" width="55" />
-        <ElTableColumn prop="name" :label="$t('name')" class-name="name-cell">
+        <ElTableColumn prop="name" :label="$t('name')" class-name="name-cell" sortable>
           <template #default="scope">
             <Icon :icon="`material-symbols:${scope.row.icon}-rounded`" width="18" height="18" class="mr-2" />
             {{ $t(scope.row.name) }}
           </template>
         </ElTableColumn>
-        <ElTableColumn prop="path" :label="$t('path')" />
+        <ElTableColumn prop="path" :label="$t('path')" sortable />
         <ElTableColumn prop="redirect" :label="$t('redirect')" />
         <ElTableColumn prop="actions" :label="$t('actions')">
           <template #default="scope">
@@ -547,7 +550,7 @@ function rowName(key: number | string) {
             </template>
           </template>
         </ElTableColumn>
-        <ElTableColumn prop="enabled" :label="$t('enabled')">
+        <ElTableColumn prop="enabled" :label="$t('enabled')" sortable>
           <template #default="scope">
             <ElSwitch size="small" v-model="scope.row.enabled" @change="enableChange(scope.row.id)"
               style="--el-switch-on-color: var(--el-color-success);" :disabled="!hasAction($route.name, 'enable')" />
@@ -631,7 +634,7 @@ function rowName(key: number | string) {
     </template>
   </DialogView>
 
-  <DialogView v-model="authorizeVisible" :title="$t('authorize') + ' - ' + $t(form.name)">
+  <DialogView v-model="authorizeVisible" :title="$t('authorize') + (form.name ? (' - ' + $t(form.name)) : '')">
     <ElTabs v-if="hasNext" stretch v-model="activeName" @tab-click="hancleTabClick">
       <ElTabPane :label="$t('roles')" name="roles" class="text-center">
         <ElTransfer v-model="relations" :props="{ key: 'id', label: 'name' }"

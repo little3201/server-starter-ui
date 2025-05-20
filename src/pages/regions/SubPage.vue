@@ -179,10 +179,10 @@ function confirmEvent(id: number) {
           <SubPage :superior-id="props.row.id" :title="props.row.name" />
         </template>
       </ElTableColumn>
-      <ElTableColumn prop="name" :label="$t('name')" />
-      <ElTableColumn prop="areaCode" :label="$t('areaCode')" />
-      <ElTableColumn prop="postalCode" :label="$t('postalCode')" />
-      <ElTableColumn prop="enabled" :label="$t('enabled')">
+      <ElTableColumn prop="name" :label="$t('name')" sortable />
+      <ElTableColumn prop="areaCode" :label="$t('areaCode')" sortable />
+      <ElTableColumn prop="postalCode" :label="$t('postalCode')" sortable />
+      <ElTableColumn prop="enabled" :label="$t('enabled')" sortable>
         <template #default="scope">
           <ElSwitch size="small" v-model="scope.row.enabled" @change="enableChange(scope.row.id)"
             style="--el-switch-on-color: var(--el-color-success);" :disabled="!hasAction($route.name, 'enable')" />

@@ -182,7 +182,8 @@ function handleCheckedChange(value: CheckboxValueType[]) {
           </ElTooltip>
 
           <ElTooltip :content="$t('column') + $t('settings')" placement="top">
-                          <ElPopover :width="200" trigger="click">
+            <div class="inline-flex items-center align-middle ml-3">
+              <ElPopover :width="200" trigger="click">
                 <template #reference>
                   <ElButton title="setgings" type="success" plain circle>
                     <Icon icon="material-symbols:format-list-bulleted" width="18" height="18" />
@@ -210,6 +211,7 @@ function handleCheckedChange(value: CheckboxValueType[]) {
                   </ElCheckboxGroup>
                 </div>
               </ElPopover>
+            </div>
           </ElTooltip>
         </ElCol>
       </ElRow>
@@ -217,19 +219,19 @@ function handleCheckedChange(value: CheckboxValueType[]) {
       <ElTable ref="tableRef" v-loading="loading" :data="datas" row-key="id" stripe table-layout="auto">
         <ElTableColumn type="selection" width="55" />
         <ElTableColumn type="index" :label="$t('no')" width="55" />
-        <ElTableColumn prop="name" :label="$t('name')">
+        <ElTableColumn prop="name" :label="$t('name')" sortable>
           <template #default="scope">
             <ElButton title="details" type="primary" link @click="showRow(scope.row.id)">
               {{ scope.row.name }}
             </ElButton>
           </template>
         </ElTableColumn>
-        <ElTableColumn prop="startTime" :label="$t('startTime')">
+        <ElTableColumn prop="startTime" :label="$t('startTime')" sortable>
           <template #default="scope">
             {{ dayjs(scope.row.startTime).format('YYYY-MM-DD HH:mm') }}
           </template>
         </ElTableColumn>
-        <ElTableColumn prop="status" :label="$t('status')">
+        <ElTableColumn prop="status" :label="$t('status')" sortable>
           <template #default="scope">
             <ElTag v-if="scope.row.status === 0" type="primary" round>
               <Icon icon="material-symbols:progress-activity" class="spin mr-1" />{{ $t('processing') }}
@@ -242,12 +244,12 @@ function handleCheckedChange(value: CheckboxValueType[]) {
             </ElTag>
           </template>
         </ElTableColumn>
-        <ElTableColumn prop="executedTimes" :label="$t('executedTimes')">
+        <ElTableColumn prop="executedTimes" :label="$t('executedTimes')" sortable>
           <template #default="scope">
             {{ scope.row.executedTimes ? formatDuration(scope.row.executedTimes) : '-' }}
           </template>
         </ElTableColumn>
-        <ElTableColumn prop="nextExecuteTime" :label="$t('nextExecuteTime')">
+        <ElTableColumn prop="nextExecuteTime" :label="$t('nextExecuteTime')" sortable>
           <template #default="scope">
             {{ dayjs(scope.row.nextExecuteTime).format('YYYY-MM-DD HH:mm') }}
           </template>

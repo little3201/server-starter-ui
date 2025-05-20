@@ -391,34 +391,36 @@ function handleTransferChange(value: TransferKey[], direction: TransferDirection
             </ElTooltip>
 
             <ElTooltip :content="$t('column') + $t('settings')" placement="top">
-              <ElPopover :width="200" trigger="click">
-                <template #reference>
-                  <ElButton title="settings" type="success" plain circle>
-                    <Icon icon="material-symbols:format-list-bulleted" width="18" height="18" />
-                  </ElButton>
-                </template>
-                <div>
-                  <ElCheckbox v-model="checkAll" :indeterminate="isIndeterminate" @change="handleCheckAllChange">
-                    {{ $t('all') }}
-                  </ElCheckbox>
-                  <ElDivider />
-                  <ElCheckboxGroup v-model="checkedColumns" @change="handleCheckedChange">
-                    <draggable v-model="columns" item-key="simple">
-                      <template #item="{ element }">
-                        <div class="flex items-center space-x-2">
-                          <Icon icon="material-symbols:drag-indicator" width="18" height="18"
-                            class="hover:cursor-move" />
-                          <ElCheckbox :label="element" :value="element" :disabled="element === columns[0]">
-                            <div class="inline-flex items-center space-x-4">
-                              {{ $t(element) }}
-                            </div>
-                          </ElCheckbox>
-                        </div>
-                      </template>
-                    </draggable>
-                  </ElCheckboxGroup>
-                </div>
-              </ElPopover>
+              <div class="inline-flex items-center align-middle ml-3">
+                <ElPopover :width="200" trigger="click">
+                  <template #reference>
+                    <ElButton title="settings" type="success" plain circle>
+                      <Icon icon="material-symbols:format-list-bulleted" width="18" height="18" />
+                    </ElButton>
+                  </template>
+                  <div>
+                    <ElCheckbox v-model="checkAll" :indeterminate="isIndeterminate" @change="handleCheckAllChange">
+                      {{ $t('all') }}
+                    </ElCheckbox>
+                    <ElDivider />
+                    <ElCheckboxGroup v-model="checkedColumns" @change="handleCheckedChange">
+                      <draggable v-model="columns" item-key="simple">
+                        <template #item="{ element }">
+                          <div class="flex items-center space-x-2">
+                            <Icon icon="material-symbols:drag-indicator" width="18" height="18"
+                              class="hover:cursor-move" />
+                            <ElCheckbox :label="element" :value="element" :disabled="element === columns[0]">
+                              <div class="inline-flex items-center space-x-4">
+                                {{ $t(element) }}
+                              </div>
+                            </ElCheckbox>
+                          </div>
+                        </template>
+                      </draggable>
+                    </ElCheckboxGroup>
+                  </div>
+                </ElPopover>
+              </div>
             </ElTooltip>
           </ElCol>
         </ElRow>
@@ -426,8 +428,8 @@ function handleTransferChange(value: TransferKey[], direction: TransferDirection
         <ElTable v-loading="loading" :data="datas" row-key="id" stripe table-layout="auto">
           <ElTableColumn type="selection" width="55" />
           <ElTableColumn type="index" :label="$t('no')" width="55" />
-          <ElTableColumn prop="name" :label="$t('name')" />
-          <ElTableColumn prop="enabled" :label="$t('enabled')">
+          <ElTableColumn prop="name" :label="$t('name')" sortable />
+          <ElTableColumn prop="enabled" :label="$t('enabled')" sortable>
             <template #default="scope">
               <ElSwitch size="small" v-model="scope.row.enabled" @change="enableChange(scope.row.id)"
                 style="--el-switch-on-color: var(--el-color-success);" :disabled="!hasAction($route.name, 'enable')" />

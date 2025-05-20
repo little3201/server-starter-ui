@@ -16,7 +16,6 @@ export interface User extends AudtiMetadata {
   familyName: string
   middleName?: string
   email: string
-  phoneNumber?: string
   avatar?: string
   accountNonLocked?: boolean
   accountExpiresAt?: Date
@@ -125,6 +124,7 @@ export interface PrivilegeTreeNode extends TreeNode {
 
 export interface TemplateTreeNode extends TreeNode {
   content?: string
+  suffix?: string
   children?: TemplateTreeNode[]
 }
 
@@ -175,7 +175,7 @@ export interface SchedulerLog extends AudtiMetadata {
   executedTimes?: number
   nextExecuteTime?: Date
   status?: number
-  record?: string 
+  record?: string
 }
 
 export interface FileRecord extends AudtiMetadata {
@@ -186,9 +186,8 @@ export interface FileRecord extends AudtiMetadata {
 
 export interface Schema extends AudtiMetadata {
   name: string
-  comment: string
-  reference: string
-  domain: string
+  prefix?: string
+  package: string
   enabled?: boolean
   templates: number[]
 }
@@ -202,8 +201,9 @@ export interface Field extends AudtiMetadata {
   tsType: string
   nullable: boolean
   queryable: boolean
+  queryType: string | undefined
   editable: boolean
-  comment: string
+  sortable: boolean
   description: string
 }
 
@@ -223,6 +223,17 @@ export interface Script extends AudtiMetadata {
   version: string
   content: string
   description: string
+}
+
+export interface Database extends AudtiMetadata {
+  name: string
+  type: number | undefined
+  host: string
+  port: number | undefined
+  username: string
+  password?: string
+  enabled?: boolean
+  tables?: string[]
 }
 
 export interface TableInfo {

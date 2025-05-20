@@ -83,10 +83,10 @@ export const groupsHandlers = [
     return HttpResponse.json(filtered.length > 0)
   }),
   http.get(`/api${SERVER_URL.GROUP}`, ({ request }) => {
-    const url = new URL(request.url)
-    const page = url.searchParams.get('page')
-    const size = url.searchParams.get('size')
-    const superiorId = url.searchParams.get('superiorId')
+    const searchParams = new URL(request.url).searchParams
+    const page = searchParams.get('page')
+    const size = searchParams.get('size')
+    const superiorId = searchParams.get('superiorId')
 
     let data = {
       content: datas,

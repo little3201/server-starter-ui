@@ -53,7 +53,7 @@ const userStore = useUserStore()
     </div>
   </ElHeader>
 
-  <ElAside class="fixed top-[50px]" width="200px">
+  <ElAside class="fixed top-[50px] left-0" width="200px">
     <ElScrollbar>
       <ElMenu router unique-opened :default-active="currentRoute.fullPath">
         <ElMenuItem :index="'/'">
@@ -76,6 +76,6 @@ const userStore = useUserStore()
   </ElMain>
 
   <ElFooter height="50px" class="bg-[var(--el-bg-color-page)] ml-[200px] text-center !pt-4">
-    <span>Copyright &copy; {{ new Date().getFullYear() }} All Rights Reserved.</span>
+    <span class="text-sm">Copyright &copy; {{ new Date().getFullYear() }} All Rights Reserved.</span>
   </ElFooter>
 </template>

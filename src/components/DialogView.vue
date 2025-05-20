@@ -41,14 +41,35 @@ const toggleFull = () => {
   fullScreen.value = !fullScreen.value
 }
 
-const dialogHeight = ref(isNumber(props.maxHeight) ? `${props.maxHeight}px` : props.maxHeight)
-
 const dialogStyle = computed(() => {
   const innerHeight = slots.footer ? 120 : 72
-  return {
-    height: fullScreen.value ? `${document.documentElement.offsetHeight - innerHeight}px` : dialogHeight.value
+  const maxHeight = window.innerHeight - innerHeight
+
+  let height = '100%';
+  const propMaxHeight = props.maxHeight
+
+  if (propMaxHeight) {
+    const parsedMaxHeight = isNumber(propMaxHeight)
+      ? propMaxHeight
+      : propMaxHeight.includes('px')
+        ? Number(propMaxHeight.replace('px', ''))
+        : propMaxHeight.includes('%')
+          ? Number(propMaxHeight.replace('%', '')) / 100 * maxHeight
+          : null
+
+    if (parsedMaxHeight !== null) {
+      height = parsedMaxHeight > maxHeight ? `${maxHeight}px` : `${parsedMaxHeight}px`;
+    }
   }
+
+  // 当全屏显示时，强制设置为 maxHeight
+  if (fullScreen.value) {
+    height = `${maxHeight}px`;
+  }
+
+  return { height }
 })
+
 </script>
 
 <template>
@@ -65,7 +86,7 @@ const dialogStyle = computed(() => {
       </ElButton>
     </template>
 
-    <ElScrollbar :style="dialogStyle">
+    <ElScrollbar :style="dialogStyle" :noresize="!showFullScreen">
       <slot></slot>
     </ElScrollbar>
 

@@ -8,8 +8,8 @@ import type { Pagination, Schema, Field } from 'src/types'
  * @param filters Optional filter or sort parameters
  * @returns Rows data
  */
-export const retrieveSchemas = (pagination: Pagination, filters?: object) => {
-  return api.get(SERVER_URL.SCHEMA, { params: { ...pagination, page: pagination.page - 1, ...filters } })
+export const retrieveSchemas = (pagination: Pagination, dbId: number) => {
+  return api.get(SERVER_URL.SCHEMA, { params: { ...pagination, page: pagination.page - 1, dbId } })
 }
 
 export const retrieveSchemaFields = (id: number) => {
@@ -36,16 +36,6 @@ export const fetchSchema = (id: number) => {
  */
 export const createSchema = (row: Schema) => {
   return api.post(SERVER_URL.SCHEMA, row)
-}
-
-/**
- * Check if a specific row exists by name
- * @param name Row name
- * @param id Row ID
- * @returns Row data
- */
-export const checkSchemaExists = (name: string, id?: number) => {
-  return api.get(`${SERVER_URL.SCHEMA}/exists`, { params: { name, id } })
 }
 
 /**

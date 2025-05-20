@@ -71,3 +71,20 @@ export const httpMethods: { [key: string]: 'success' | 'warning' | 'info' | 'pri
   PATCH: 'primary',
   DELETE: 'danger'
 }
+
+// 查询匹配方式
+export const queryTypes: { [key: string]: string } = {
+  eq: '=',
+  neq: '<>',
+  gt: '>',
+  egt: '>=',
+  lt: '<',
+  elt: '<=',
+  like: 'LIKE',
+  in: 'IN',
+  notIn: 'NOT IN',
+  between: 'BETWEEN',
+  notBetween: 'NOT BETWEEN',
+  isNull: 'IS NULL',
+  isNotNull: 'IS NOT NULL'
+};

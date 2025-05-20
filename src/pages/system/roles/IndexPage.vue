@@ -331,31 +331,31 @@ function handleTransferChange(value: TransferKey[], direction: TransferDirection
       </ElForm>
     </ElCard>
 
-    <Transition appear name="el-fade-in">
-      <ElCard shadow="never">
-        <ElRow :gutter="20" justify="space-between" class="mb-4">
-          <ElCol :span="16" class="text-left">
-            <ElButton v-if="hasAction($route.name, 'create')" title=" create" type="primary" @click="saveRow()">
-              <Icon icon="material-symbols:add-rounded" width="18" height="18" />{{ $t('create') }}
-            </ElButton>
-            <ElButton v-if="hasAction($route.name, 'import')" title=" import" type="warning" plain @click="importRows">
-              <Icon icon="material-symbols:database-upload-outline-rounded" width="18" height="18" />{{ $t('import')
-              }}
-            </ElButton>
-            <ElButton v-if="hasAction($route.name, 'export')" title=" export" type="success" plain @click="exportRows"
-              :loading="exportLoading">
-              <Icon icon="material-symbols:file-export-outline-rounded" width="18" height="18" />{{ $t('export') }}
-            </ElButton>
-          </ElCol>
+    <ElCard shadow="never">
+      <ElRow :gutter="20" justify="space-between" class="mb-4">
+        <ElCol :span="16" class="text-left">
+          <ElButton v-if="hasAction($route.name, 'create')" title=" create" type="primary" @click="saveRow()">
+            <Icon icon="material-symbols:add-rounded" width="18" height="18" />{{ $t('create') }}
+          </ElButton>
+          <ElButton v-if="hasAction($route.name, 'import')" title=" import" type="warning" plain @click="importRows">
+            <Icon icon="material-symbols:database-upload-outline-rounded" width="18" height="18" />{{ $t('import')
+            }}
+          </ElButton>
+          <ElButton v-if="hasAction($route.name, 'export')" title=" export" type="success" plain @click="exportRows"
+            :loading="exportLoading">
+            <Icon icon="material-symbols:file-export-outline-rounded" width="18" height="18" />{{ $t('export') }}
+          </ElButton>
+        </ElCol>
 
-          <ElCol :span="8" class="text-right">
-            <ElTooltip class="box-item" effect="dark" :content="$t('refresh')" placement="top">
-              <ElButton title="refresh" type="primary" plain circle @click="load">
-                <Icon icon="material-symbols:refresh-rounded" width="18" height="18" />
-              </ElButton>
-            </ElTooltip>
+        <ElCol :span="8" class="text-right">
+          <ElTooltip class="box-item" effect="dark" :content="$t('refresh')" placement="top">
+            <ElButton title="refresh" type="primary" plain circle @click="load">
+              <Icon icon="material-symbols:refresh-rounded" width="18" height="18" />
+            </ElButton>
+          </ElTooltip>
 
-            <ElTooltip :content="$t('column') + $t('settings')" placement="top">
+          <ElTooltip :content="$t('column') + $t('settings')" placement="top">
+            <div class="inline-flex items-center align-middle ml-3">
               <ElPopover :width="200" trigger="click">
                 <template #reference>
                   <ElButton title="settings" type="success" plain circle>
@@ -384,44 +384,44 @@ function handleTransferChange(value: TransferKey[], direction: TransferDirection
                   </ElCheckboxGroup>
                 </div>
               </ElPopover>
-            </ElTooltip>
-          </ElCol>
-        </ElRow>
+            </div>
+          </ElTooltip>
+        </ElCol>
+      </ElRow>
 
-        <ElTable ref="tableRef" v-loading="loading" :data="datas" row-key="id" stripe table-layout="auto">
-          <ElTableColumn type="selection" width="55" />
-          <ElTableColumn type="index" :label="$t('no')" width="55" />
-          <ElTableColumn prop="name" :label="$t('name')" />
-          <ElTableColumn prop="enabled" :label="$t('enabled')">
-            <template #default="scope">
-              <ElSwitch size="small" v-model="scope.row.enabled" @change="enableChange(scope.row.id)"
-                style="--el-switch-on-color: var(--el-color-success);" :disabled="!hasAction($route.name, 'enable')" />
-            </template>
-          </ElTableColumn>
-          <ElTableColumn show-overflow-tooltip prop="description" :label="$t('description')" />
-          <ElTableColumn :label="$t('actions')">
-            <template #default="scope">
-              <ElButton v-if="hasAction($route.name, 'modify')" title=" modify" size="small" type="primary" link
-                @click="saveRow(scope.row.id)">
-                <Icon icon="material-symbols:edit-outline-rounded" width="16" height="16" />{{ $t('modify') }}
-              </ElButton>
-              <ElButton v-if="hasAction($route.name, 'relation')" title=" relation" size="small" type="success" link
-                @click="relationRow(scope.row.id)">
-                <Icon icon="material-symbols:link-rounded" width="16" height="16" />{{ $t('relation') }}
-              </ElButton>
-              <ElPopconfirm :title="$t('removeConfirm')" :width="240" @confirm="confirmEvent(scope.row.id)">
-                <template #reference>
-                  <ElButton v-if="hasAction($route.name, 'remove')" title=" remove" size="small" type="danger" link>
-                    <Icon icon="material-symbols:delete-outline-rounded" width="16" height="16" />{{ $t('remove') }}
-                  </ElButton>
-                </template>
-              </ElPopconfirm>
-            </template>
-          </ElTableColumn>
-        </ElTable>
-        <ElPagination layout="prev, pager, next, sizes, jumper, ->, total" @change="pageChange" :total="total" />
-      </ElCard>
-    </Transition>
+      <ElTable ref="tableRef" v-loading="loading" :data="datas" row-key="id" stripe table-layout="auto">
+        <ElTableColumn type="selection" width="55" />
+        <ElTableColumn type="index" :label="$t('no')" width="55" />
+        <ElTableColumn prop="name" :label="$t('name')" sortable />
+        <ElTableColumn prop="enabled" :label="$t('enabled')" sortable>
+          <template #default="scope">
+            <ElSwitch size="small" v-model="scope.row.enabled" @change="enableChange(scope.row.id)"
+              style="--el-switch-on-color: var(--el-color-success);" :disabled="!hasAction($route.name, 'enable')" />
+          </template>
+        </ElTableColumn>
+        <ElTableColumn show-overflow-tooltip prop="description" :label="$t('description')" />
+        <ElTableColumn :label="$t('actions')">
+          <template #default="scope">
+            <ElButton v-if="hasAction($route.name, 'modify')" title=" modify" size="small" type="primary" link
+              @click="saveRow(scope.row.id)">
+              <Icon icon="material-symbols:edit-outline-rounded" width="16" height="16" />{{ $t('modify') }}
+            </ElButton>
+            <ElButton v-if="hasAction($route.name, 'relation')" title=" relation" size="small" type="success" link
+              @click="relationRow(scope.row.id)">
+              <Icon icon="material-symbols:link-rounded" width="16" height="16" />{{ $t('relation') }}
+            </ElButton>
+            <ElPopconfirm :title="$t('removeConfirm')" :width="240" @confirm="confirmEvent(scope.row.id)">
+              <template #reference>
+                <ElButton v-if="hasAction($route.name, 'remove')" title=" remove" size="small" type="danger" link>
+                  <Icon icon="material-symbols:delete-outline-rounded" width="16" height="16" />{{ $t('remove') }}
+                </ElButton>
+              </template>
+            </ElPopconfirm>
+          </template>
+        </ElTableColumn>
+      </ElTable>
+      <ElPagination layout="prev, pager, next, sizes, jumper, ->, total" @change="pageChange" :total="total" />
+    </ElCard>
   </ElSpace>
 
   <DialogView v-model="visible" :title="$t('roles')" width="25%">

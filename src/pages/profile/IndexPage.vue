@@ -80,7 +80,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <ElRow class="mb-5">
+  <ElRow class="mb-4">
     <ElCol :span="24">
       <ElCard shadow="never" body-class="flex items-center">
         <ElAvatar :size="80" :src="me.avatar" />
@@ -106,7 +106,7 @@ onMounted(() => {
     </ElCol>
   </ElRow>
 
-  <ElRow :gutter="20">
+  <ElRow :gutter="16">
     <ElCol :span="5" class="hidden-sm-and-down">
       <ElCard shadow="never">
         <ElMenu>
@@ -174,7 +174,7 @@ onMounted(() => {
                   </ElFormItem>
                 </ElCol>
                 <ElCol :span="10">
-                  <span class="ml-5 text-xs text-[var(--el-text-color-secondary)]">
+                  <span class="ml-4 text-xs text-[var(--el-text-color-secondary)]">
                     This is a hint for old password
                   </span>
                 </ElCol>
@@ -186,7 +186,7 @@ onMounted(() => {
                   </ElFormItem>
                 </ElCol>
                 <ElCol :span="10">
-                  <span class="ml-5 text-xs text-[var(--el-text-color-secondary)]">
+                  <span class="ml-4 text-xs text-[var(--el-text-color-secondary)]">
                     This is a hint for new password
                   </span>
                 </ElCol>
@@ -199,7 +199,7 @@ onMounted(() => {
                   </ElFormItem>
                 </ElCol>
                 <ElCol :span="10">
-                  <span class="ml-5 text-xs text-[var(--el-text-color-secondary)]">
+                  <span class="ml-4 text-xs text-[var(--el-text-color-secondary)]">
                     This is a hint for confirm password
                   </span>
                 </ElCol>

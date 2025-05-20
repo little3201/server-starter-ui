@@ -32,6 +32,10 @@ body {
   background: radial-gradient(circle at center top, var(--el-color-warning), var(--el-color-warning-dark-2));
 }
 
+.el-main {
+  --el-main-padding: 16px !important;
+}
+
 .el-menu {
   border-right: initial !important;
   .el-sub-menu.is-active {
