@@ -53,9 +53,8 @@ export const modifySchema = (id: number, row: Schema) => {
  * @param id Row ID
  * @returns Created row
  */
-export const syncSchema = (ids: number[]) => {
-  const params = { ids: ids.join(',') }
-  return api.patch(`${SERVER_URL.SCHEMA}/sync`, { params })
+export const syncSchema = (id: number) => {
+  return api.patch(`${SERVER_URL.SCHEMA}/${id}/sync`)
 }
 
 /**
@@ -64,7 +63,7 @@ export const syncSchema = (ids: number[]) => {
  * @returns Created row
  */
 export const generateSchema = (id: number) => {
-  return api.get(`${SERVER_URL.SCHEMA}/${id}/download`, { responseType: 'blob' })
+  return api.get(`${SERVER_URL.SCHEMA}/${id}/execute`, { responseType: 'blob' })
 }
 
 /**

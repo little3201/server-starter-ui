@@ -225,7 +225,7 @@ const treeNodes: PrivilegeTreeNode[] = [
           path: 'groups',
           component: 'system/groups',
           icon: 'account-tree-outline',
-          actions: ['create', 'modify', 'remove', 'import', 'export', 'enable', 'unlock']
+          actions: ['create', 'modify', 'remove', 'import', 'export', 'enable']
         }
       },
       {

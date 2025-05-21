@@ -43,9 +43,8 @@ export const modifyDatabase = (id: number, row: Database) => {
  * Retrieve rows
  * @returns Rows data
  */
-export const retrieveTables = (row: Database) => {
-  const params = { host: row.host, port: row.port, name: row.name, username: row.username, password: row.password }
-  return api.get(`${SERVER_URL.DB}/tables`, { params })
+export const retrieveTables = (id: number) => {
+  return api.get(`${SERVER_URL.DB}/${id}/tables`)
 }
 
 /**

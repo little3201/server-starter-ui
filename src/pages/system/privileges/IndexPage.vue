@@ -124,7 +124,7 @@ async function load(row?: Privilege, treeNode?: unknown, resolve?: (date: Privil
 }
 
 async function loadDictionaries() {
-  retrieveDictionarySubset(42).then(res => {
+  retrieveDictionarySubset(2).then(res => {
     buttonOptions.value = res.data
   })
 }
@@ -634,6 +634,7 @@ function rowName(key: number | string) {
     </template>
   </DialogView>
 
+  <!-- authorize -->
   <DialogView v-model="authorizeVisible" :title="$t('authorize') + (form.name ? (' - ' + $t(form.name)) : '')">
     <ElTabs v-if="hasNext" stretch v-model="activeName" @tab-click="hancleTabClick">
       <ElTabPane :label="$t('roles')" name="roles" class="text-center">

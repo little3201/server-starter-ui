@@ -131,7 +131,6 @@ export interface TemplateTreeNode extends TreeNode {
 export interface OperationLog extends AudtiMetadata {
   operation: string
   content: string
-  operator?: string
   ip: string
   location: string
   referer?: string
@@ -187,7 +186,7 @@ export interface FileRecord extends AudtiMetadata {
 export interface Schema extends AudtiMetadata {
   name: string
   prefix?: string
-  package: string
+  packagePath: string
   enabled?: boolean
   templates: number[]
 }
@@ -198,7 +197,6 @@ export interface Field extends AudtiMetadata {
   length: number
   fieldType: string
   formType: string
-  tsType: string
   nullable: boolean
   queryable: boolean
   queryType: string | undefined
@@ -234,9 +232,4 @@ export interface Database extends AudtiMetadata {
   password?: string
   enabled?: boolean
   tables?: string[]
-}
-
-export interface TableInfo {
-  tableName: string
-  tableComment: string
 }

@@ -40,7 +40,7 @@ export default {
   path: 'Path',
   redirect: 'Redirect',
   icon: 'Icon',
-  package: 'Package',
+  packagePath: 'Package Path',
   prefix: 'Prefix',
   host: 'Host',
   port: 'Port',

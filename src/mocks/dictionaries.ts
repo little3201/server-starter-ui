@@ -152,13 +152,6 @@ const subDatas: Dictionary[] = [
     lastModifiedDate: new Date()
   },
   {
-    name: 'preview',
-    superiorId: 42,
-    id: 49,
-    enabled: true,
-    lastModifiedDate: new Date()
-  },
-  {
     name: 'config',
     superiorId: 42,
     id: 52,

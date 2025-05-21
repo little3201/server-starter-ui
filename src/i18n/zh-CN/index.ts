@@ -40,7 +40,7 @@ export default {
   path: '路径',
   redirect: '跳转',
   icon: '图标',
-  package: '包名',
+  packagePath: '包名',
   prefix: '前缀',
   host: '主机',
   port: '端口',

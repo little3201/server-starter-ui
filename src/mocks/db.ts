@@ -1,6 +1,6 @@
 import { http, HttpResponse } from 'msw'
 import { SERVER_URL } from 'src/constants'
-import type { Database, TableInfo } from 'src/types'
+import type { Database } from 'src/types'
 
 
 const databases: Database[] = [
@@ -20,14 +20,11 @@ for (let i = 1; i < 8; i++) {
   databases.push(row)
 }
 
-const datas: TableInfo[] = [
+const datas: string[] = [
 ]
 
 for (let i = 1; i < 8; i++) {
-  const row: TableInfo = {
-    tableName: 'table_name' + i,
-    tableComment: 'table_comment'
-  }
+  const row: string = 'table_name' + i
   datas.push(row)
 }
 
@@ -47,12 +44,9 @@ export const dbHandlers = [
 
     return HttpResponse.json(data)
   }),
-  http.get(`/api${SERVER_URL.DB}/tables`, ({ request }) => {
-    const searchParams = new URL(request.url).searchParams
-    const host = searchParams.get('host')
-    const port = searchParams.get('port')
-    const name = searchParams.get('name')
-    if (host && port && name) {
+  http.get(`/api${SERVER_URL.DB}/:id/tables`, ({ params }) => {
+    const { id } = params
+    if (id) {
       return HttpResponse.json(datas)
     }
     return Response.error()

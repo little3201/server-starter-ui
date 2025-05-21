@@ -10,7 +10,7 @@ for (let i = 1; i < 6; i++) {
     id: i,
     name: 'table_name' + i,
     prefix: i > 4 ? 'sys_' : '',
-    package: 'com.example',
+    packagePath: 'com.example',
     enabled: i > 2,
     templates: i > 3 ? [1, 2, 3, 4, 5] : []
   }
@@ -27,7 +27,6 @@ for (let i = 1; i < 28; i++) {
     length: 255,
     fieldType: 'String',
     formType: 'input',
-    tsType: 'string',
     nullable: i % 3 > 0,
     queryable: i < 2,
     queryType: undefined,
@@ -222,7 +221,7 @@ export const schemasHandlers = [
     // response and send back the newly created Row!
     return HttpResponse.json(newData, { status: 201 })
   }),
-  http.post(`/api${SERVER_URL.SCHEMA}/:id/download`, ({ params }) => {
+  http.post(`/api${SERVER_URL.SCHEMA}/:id/execute`, ({ params }) => {
     const { id } = params
     if (id) {
       return HttpResponse.json()
@@ -243,6 +242,13 @@ export const schemasHandlers = [
       return HttpResponse.error()
     }
   }),
+  http.patch(`/api${SERVER_URL.SCHEMA}/:id/sync`, async ({ params }) => {
+    const id = params
+    if (id) {
+      return HttpResponse.json()
+    }
+    return HttpResponse.error()
+  }),
   http.patch(`/api${SERVER_URL.SCHEMA}/:id`, async ({ params }) => {
     const { id } = params
     if (id) {
@@ -250,13 +256,6 @@ export const schemasHandlers = [
     } else {
       return HttpResponse.error()
     }
-  }),
-  http.patch(`/api${SERVER_URL.SCHEMA}/sync`, async ({ request }) => {
-    const data = await request.json()
-    if (data) {
-      return HttpResponse.json()
-    }
-    return HttpResponse.error()
   }),
   http.delete(`/api${SERVER_URL.SCHEMA}/:id`, ({ params }) => {
     // All request path params are provided in the "params"

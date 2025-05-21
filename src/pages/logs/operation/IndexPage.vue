@@ -276,9 +276,8 @@ function handleCheckedChange(value: CheckboxValueType[]) {
       <ElDescriptionsItem :label="$t('os')">{{ row.os }}</ElDescriptionsItem>
       <ElDescriptionsItem :label="$t('userAgent')" :span="2">{{ row.userAgent }}</ElDescriptionsItem>
       <ElDescriptionsItem :label="$t('browser')">{{ row.browser }}</ElDescriptionsItem>
-      <ElDescriptionsItem :label="$t('referer')">{{ row.referer }}</ElDescriptionsItem>
+      <ElDescriptionsItem :label="$t('referer')" :span="2">{{ row.referer }}</ElDescriptionsItem>
       <ElDescriptionsItem :label="$t('sessionId')">{{ row.sessionId }}</ElDescriptionsItem>
-      <ElDescriptionsItem :label="$t('operator')">{{ row.operator }}</ElDescriptionsItem>
       <ElDescriptionsItem :label="$t('operatedTimes')">
         {{ row.operatedTimes ? formatDuration(row.operatedTimes) : '' }}
       </ElDescriptionsItem>

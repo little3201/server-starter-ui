@@ -38,7 +38,7 @@ export const SERVER_URL = {
   SCRIPT: SERVER_PREFIX.EXPLOITER.concat('/scripts'), // 脚本
   SCHEMA: SERVER_PREFIX.EXPLOITER.concat('/schemas'), // 表配置
   TEMPLATE: SERVER_PREFIX.EXPLOITER.concat('/templates'), // 模板
-  DB: SERVER_PREFIX.EXPLOITER.concat('/db') // 表
+  DB: SERVER_PREFIX.EXPLOITER.concat('/db-links') // 库连接
 }
 
 // 按钮对应tag类型
