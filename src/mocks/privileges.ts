@@ -277,8 +277,7 @@ const treeNodes: PrivilegeTreeNode[] = [
       path: 'logs',
       component: '#',
       redirect: 'operation',
-      icon: 'lab-profile-outline',
-      actions: ['clear', 'remove', 'export']
+      icon: 'lab-profile-outline'
     },
     children: [
       {
