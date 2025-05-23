@@ -424,8 +424,8 @@ function handleActionCheck(privilegeId: number, item: string) {
               @click="relationRow(scope.row.id)">
               <Icon icon="material-symbols:link-rounded" width="16" height="16" />{{ $t('relation') }}
             </ElButton>
-            <ElButton v-if="hasAction($route.name, 'authorize') && !scope.row.redirect && scope.row.enabled"
-              title="authorize" size="small" type="success" link @click="authorizeRow(scope.row.id)">
+            <ElButton v-if="hasAction($route.name, 'authorize')" title="authorize" size="small" type="success" link
+              @click="authorizeRow(scope.row.id)">
               <Icon icon="material-symbols:privacy-tip-outline-rounded" width="16" height="16" />{{ $t('authorize') }}
             </ElButton>
             <ElPopconfirm :title="$t('removeConfirm')" :width="240" @confirm="confirmEvent(scope.row.id)">

@@ -67,7 +67,7 @@ const subDatas: Privilege[] = [
     path: 'groups',
     component: 'system/groups',
     name: 'groups',
-    actions: ['create', 'modify', 'remove', 'import', 'export', 'relation', 'enable'],
+    actions: ['create', 'modify', 'remove', 'import', 'export', 'relation', 'authorize', 'enable'],
     count: 0,
     enabled: true,
     icon: 'account-tree-outline',
@@ -91,7 +91,7 @@ const subDatas: Privilege[] = [
     path: 'privileges',
     component: 'system/privileges',
     name: 'privileges',
-    actions: ['modify', 'authorize', 'import', 'export', 'enable'],
+    actions: ['modify', 'import', 'export', 'enable'],
     count: 0,
     enabled: true,
     icon: 'admin-panel-settings-outline',
@@ -103,7 +103,7 @@ const subDatas: Privilege[] = [
     path: 'roles',
     component: 'system/roles',
     name: 'roles',
-    actions: ['create', 'modify', 'remove', 'import', 'export', 'relation', 'enable'],
+    actions: ['create', 'modify', 'remove', 'import', 'export', 'relation', 'authorize', 'enable'],
     count: 0,
     enabled: true,
     icon: 'shield-person-outline',
@@ -225,7 +225,7 @@ const treeNodes: PrivilegeTreeNode[] = [
           path: 'groups',
           component: 'system/groups',
           icon: 'account-tree-outline',
-          actions: ['create', 'modify', 'remove', 'import', 'export', 'enable']
+          actions: ['create', 'modify', 'remove', 'import', 'export', 'relation', 'authorize', 'enable']
         }
       },
       {
@@ -245,7 +245,7 @@ const treeNodes: PrivilegeTreeNode[] = [
           path: 'roles',
           component: 'system/roles',
           icon: 'shield-person-outline',
-          actions: ['create', 'modify', 'remove', 'import', 'export', 'relation', 'enable']
+          actions: ['create', 'modify', 'remove', 'import', 'export', 'relation', 'authorize', 'enable']
         }
       },
       {
@@ -265,7 +265,7 @@ const treeNodes: PrivilegeTreeNode[] = [
           path: 'privileges',
           component: 'system/privileges',
           icon: 'admin-panel-settings-outline',
-          actions: ['modify', 'authorize', 'import', 'export', 'enable']
+          actions: ['modify', 'import', 'export', 'enable']
         }
       }
     ]
@@ -427,30 +427,6 @@ for (let i = 1; i < 28; i++) {
 }
 
 export const privilegesHandlers = [
-  http.get(`/api${SERVER_URL.PRIVILEGE}/:id/roles`, ({ params }) => {
-    const { id } = params
-    if (id) {
-      return HttpResponse.json(roles.filter(item => item.privilegeId === Number(id)))
-    } else {
-      return HttpResponse.json([])
-    }
-  }),
-  http.get(`/api${SERVER_URL.PRIVILEGE}/:id/groups`, ({ params }) => {
-    const { id } = params
-    if (id) {
-      return HttpResponse.json(groups.filter(item => item.privilegeId === Number(id)))
-    } else {
-      return HttpResponse.json([])
-    }
-  }),
-  http.get(`/api${SERVER_URL.PRIVILEGE}/:id/users`, ({ params }) => {
-    const { id } = params
-    if (id) {
-      return HttpResponse.json(users.filter(item => item.privilegeId === Number(id)))
-    } else {
-      return HttpResponse.json([])
-    }
-  }),
   http.get(`/api${SERVER_URL.PRIVILEGE}/tree`, () => {
     return HttpResponse.json(treeNodes)
   }),
