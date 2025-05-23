@@ -1,19 +1,19 @@
 <script setup lang="ts">
 import { ref, reactive, onMounted } from 'vue'
 import type { TableInstance, FormInstance, FormRules, UploadInstance, UploadRequestOptions, CheckboxValueType, TransferDirection, TransferKey } from 'element-plus'
-import type { Pagination, Role, RoleMembers, PrivilegeTreeNode, User } from 'src/types'
+import type { Pagination, Role, RoleMembers, User, RolePrivileges } from 'src/types'
 import draggable from 'vuedraggable'
 import { useI18n } from 'vue-i18n'
 import { useUserStore } from 'stores/user-store'
 import DialogView from 'components/DialogView.vue'
 import {
-  retrieveRoles, retrieveRoleMembers, relationRoleMembers, removeRoleMembers, fetchRole,
-  createRole, modifyRole, removeRole, enableRole, checkRoleExists, importRoles
+  retrieveRoles, fetchRole, createRole, modifyRole, removeRole, enableRole, checkRoleExists, importRoles,
+  retrieveRoleMembers, relationRoleMembers, removeRoleMembers, retrieveRolePrivileges, relationRolePrivileges
 } from 'src/api/roles'
-import { retrievePrivilegeTree } from 'src/api/privileges'
 import { retrieveUsers } from 'src/api/users'
 import { Icon } from '@iconify/vue'
 import { hasAction } from 'src/utils'
+import { actions } from 'src/constants'
 
 
 const { t, locale } = useI18n()
@@ -34,16 +34,19 @@ const isIndeterminate = ref<boolean>(false)
 const checkedColumns = ref<Array<string>>(['name', 'enabled', 'description'])
 const columns = ref<Array<string>>(['name', 'enabled', 'description'])
 
-const privilegeTreeLoading = ref<boolean>(false)
-const privilegeTree = ref<Array<PrivilegeTreeNode>>([])
-
 const saveLoading = ref<boolean>(false)
 const visible = ref<boolean>(false)
 
 const relationVisible = ref<boolean>(false)
 const members = ref([])
-
 const relations = ref<Array<string>>([])
+
+const authorizeVisible = ref<boolean>(false)
+const authorizeLoading = ref<boolean>(false)
+const authorities = ref<Array<{
+  privilegeId: number,
+  actions: string[]
+}>>([])
 
 const importVisible = ref<boolean>(false)
 const importLoading = ref<boolean>(false)
@@ -78,7 +81,6 @@ function checkNameExistsence(rule: unknown, value: string, callback: (error?: st
   })
 }
 
-
 async function loadUsers() {
   retrieveUsers({ page: 1, size: 99 }).then(res => {
     members.value = res.data.content.map((item: User) => ({
@@ -90,38 +92,6 @@ async function loadUsers() {
 
 async function loadRoleUsers(id: number) {
   retrieveRoleMembers(id).then(res => { relations.value = res.data.map((item: RoleMembers) => item.username) })
-}
-
-
-function transformTree(tree: PrivilegeTreeNode[]): PrivilegeTreeNode[] {
-  return tree.map(node => {
-    if (node.meta.actions && !node.children) {
-      node.children = node.meta.actions.map((action, index) => ({
-        id: node.id! * 100 + index + 1,
-        name: action,
-        meta: {
-          path: '',
-          component: node.name + ':' + action,
-          icon: '',
-        }
-      }))
-    }
-
-    return {
-      ...node,
-      children: node.children ? transformTree(node.children) : undefined
-    }
-  })
-}
-
-/**
- * 权限树
- */
-async function loadPrivilegeTree() {
-  privilegeTreeLoading.value = true
-  retrievePrivilegeTree().then(res => {
-    privilegeTree.value = transformTree(res.data)
-  }).finally(() => { privilegeTreeLoading.value = false })
 }
 
 /**
@@ -158,7 +128,6 @@ function reset() {
 
 onMounted(() => {
   load()
-  loadPrivilegeTree()
 })
 
 /**
@@ -184,13 +153,21 @@ function exportRows() {
  * 关联弹出框
  * @param id 主键
  */
-function relationRow(id: number) {
+async function relationRow(id: number) {
   relationVisible.value = true
   loadUsers()
   if (id) {
     form.value.id = id
     loadRoleUsers(id)
   }
+}
+
+async function authorizeRow(id: number) {
+  authorities.value = []
+  retrieveRolePrivileges(id).then(res => {
+    authorities.value = res.data.map((row: RolePrivileges) => ({ privilegeId: row.privilegeId, actions: row.actions }))
+  })
+  authorizeVisible.value = true
 }
 
 /**
@@ -245,6 +222,13 @@ function onSubmit(formEl: FormInstance | undefined) {
       }
     }
   })
+}
+
+async function onAuthorizeSubmit() {
+  authorizeLoading.value = true
+  if (form.value.id) {
+    relationRolePrivileges(form.value.id, authorities.value)
+  }
 }
 
 /**
@@ -309,6 +293,36 @@ function handleTransferChange(value: TransferKey[], direction: TransferDirection
     } else {
       removeRoleMembers(form.value.id, value as string[])
     }
+  }
+}
+
+function handleActionCheck(privilegeId: number, item: string) {
+  // 查找对应 privilegeId 的对象
+  const keyIndex = authorities.value.findIndex(a => a.privilegeId === privilegeId)
+
+  if (keyIndex >= 0) {
+    // 如果已存在该 key，更新 actions
+    const existingAction = authorities.value[keyIndex]
+    if (existingAction) {
+      const itemIndex = existingAction.actions.indexOf(item)
+
+      if (itemIndex >= 0) {
+        // 如果 actions 中已有该 item，则移除
+        existingAction.actions.splice(itemIndex, 1)
+
+        // 如果 actions 为空数组，则删除整个对象
+        if (existingAction.actions.length === 0) {
+          authorities.value.splice(keyIndex, 1)
+        }
+      } else {
+        existingAction.actions.push(item)
+      }
+    }
+  } else {
+    authorities.value.push({
+      privilegeId,
+      actions: [item]
+    })
   }
 }
 </script>
@@ -410,6 +424,10 @@ function handleTransferChange(value: TransferKey[], direction: TransferDirection
               @click="relationRow(scope.row.id)">
               <Icon icon="material-symbols:link-rounded" width="16" height="16" />{{ $t('relation') }}
             </ElButton>
+            <ElButton v-if="hasAction($route.name, 'authorize') && !scope.row.redirect && scope.row.enabled"
+              title="authorize" size="small" type="success" link @click="authorizeRow(scope.row.id)">
+              <Icon icon="material-symbols:privacy-tip-outline-rounded" width="16" height="16" />{{ $t('authorize') }}
+            </ElButton>
             <ElPopconfirm :title="$t('removeConfirm')" :width="240" @confirm="confirmEvent(scope.row.id)">
               <template #reference>
                 <ElButton v-if="hasAction($route.name, 'remove')" title=" remove" size="small" type="danger" link>
@@ -424,6 +442,7 @@ function handleTransferChange(value: TransferKey[], direction: TransferDirection
     </ElCard>
   </ElSpace>
 
+  <!-- form -->
   <DialogView v-model="visible" :title="$t('roles')" width="25%">
     <ElForm ref="formRef" :model="form" :rules="rules" label-position="top">
       <ElRow :gutter="20" class="w-full !mx-0">
@@ -452,11 +471,41 @@ function handleTransferChange(value: TransferKey[], direction: TransferDirection
     </template>
   </DialogView>
 
+  <!-- relation -->
   <DialogView v-model="relationVisible" show-close :title="$t('relation')">
     <div style="text-align: center">
       <ElTransfer v-model="relations" :props="{ key: 'username', label: 'fullName' }"
         :titles="[$t('unselected'), $t('selected')]" filterable :data="members" @change="handleTransferChange" />
     </div>
+  </DialogView>
+
+  <!-- authorize -->
+  <DialogView v-model="authorizeVisible" :title="$t('authorize')" :max-height="500">
+    <ElTree :data="userStore.privileges" :props="{ label: 'name' }" node-key="id" show-checkbox default-expand-all
+      :default-checked-keys="authorities.map(item => item.privilegeId)" :check-on-click-leaf="false">
+      <template #default="{ node, data }">
+        <div class="flex flex-1 ">
+          <Icon v-if="data.meta.icon" :icon="`material-symbols:${data.meta.icon}-rounded`" width="18" height="18"
+            class="mr-2" />
+          <span>{{ $t(node.label) }}</span>
+        </div>
+        <div>
+          <ElCheckTag v-for="item in data.meta.actions" :key="item"
+            :checked="(authorities.find(a => a.privilegeId === data.id)?.actions || []).includes(item)"
+            :type="actions[item]" class="mr-2" @change="handleActionCheck(data.id, item)">
+            {{ $t(item) }}
+          </ElCheckTag>
+        </div>
+      </template>
+    </ElTree>
+    <template #footer>
+      <ElButton title="cancel" @click="authorizeVisible = false">
+        <Icon icon="material-symbols:close" width="18" height="18" />{{ $t('cancel') }}
+      </ElButton>
+      <ElButton title="submit" type="primary" :loading="authorizeLoading" @click="onAuthorizeSubmit">
+        <Icon icon="material-symbols:check-circle-outline-rounded" width="18" height="18" /> {{ $t('submit') }}
+      </ElButton>
+    </template>
   </DialogView>
 
   <!-- import -->
@@ -492,3 +541,9 @@ function handleTransferChange(value: TransferKey[], direction: TransferDirection
     </template>
   </DialogView>
 </template>
+
+<style lang="scss" scoped>
+.el-check-tag {
+  padding: 4px 9px;
+}
+</style>

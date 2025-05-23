@@ -21,8 +21,8 @@ const pagination = reactive<Pagination>({
 
 const checkAll = ref<boolean>(true)
 const isIndeterminate = ref<boolean>(false)
-const checkedColumns = ref<Array<string>>(['name', 'status', 'description'])
-const columns = ref<Array<string>>(['name', 'status', 'description'])
+const checkedColumns = ref<Array<string>>(['name', 'startTime', 'status', 'executedTimes', 'nextExecuteTime'])
+const columns = ref<Array<string>>(['name', 'startTime', 'status', 'executedTimes', 'nextExecuteTime'])
 
 const filters = ref({
   name: null,

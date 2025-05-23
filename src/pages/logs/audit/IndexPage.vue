@@ -22,12 +22,12 @@ const pagination = reactive<Pagination>({
 
 const checkAll = ref<boolean>(true)
 const isIndeterminate = ref<boolean>(false)
-const checkedColumns = ref<Array<string>>(['name', 'status', 'description'])
-const columns = ref<Array<string>>(['name', 'status', 'description'])
+const checkedColumns = ref<Array<string>>(['resource', 'operation', 'oldValue', 'newValue', 'ip', 'location', 'statusCode', 'operatedTimes'])
+const columns = ref<Array<string>>(['resource', 'operation', 'oldValue', 'newValue', 'ip', 'location', 'statusCode', 'operatedTimes'])
 
 const filters = ref({
   resource: null,
-  operator: null
+  operation: null
 })
 
 const detailLoading = ref<boolean>(false)
@@ -81,7 +81,7 @@ async function loadOne(id: number) {
 function reset() {
   filters.value = {
     resource: null,
-    operator: null
+    operation: null
   }
   load()
 }
@@ -153,8 +153,8 @@ function handleCheckedChange(value: CheckboxValueType[]) {
         <ElFormItem :label="$t('resource')" prop="resource">
           <ElInput v-model="filters.resource" :placeholder="$t('inputText', { field: $t('resource') })" />
         </ElFormItem>
-        <ElFormItem :label="$t('operator')" prop="operator">
-          <ElInput v-model="filters.operator" :placeholder="$t('inputText', { field: $t('operator') })" />
+        <ElFormItem :label="$t('operation')" prop="operation">
+          <ElInput v-model="filters.operation" :placeholder="$t('inputText', { field: $t('operation') })" />
         </ElFormItem>
         <ElFormItem>
           <ElButton title="search" type="primary" @click="load">

@@ -6,13 +6,14 @@ import { useI18n } from 'vue-i18n'
 import { useUserStore } from 'stores/user-store'
 import DialogView from 'components/DialogView.vue'
 import {
-  retrieveGroups, retrieveGroupMembers, retrieveGroupTree, relationGroupMembers, removeGroupMembers,
-  fetchGroup, createGroup, modifyGroup, removeGroup, enableGroup, checkGroupExists, importGroups
+  retrieveGroups, createGroup, modifyGroup, removeGroup, enableGroup, checkGroupExists, fetchGroup, importGroups,
+  retrieveGroupMembers, retrieveGroupTree, relationGroupMembers, removeGroupMembers, retrieveGroupPrivileges, relationGroupPrivileges
 } from 'src/api/groups'
 import { retrieveUsers } from 'src/api/users'
-import type { Pagination, Group, TreeNode, GroupMembers, User } from 'src/types'
+import type { Pagination, Group, TreeNode, GroupMembers, User, GroupPrivileges } from 'src/types'
 import { Icon } from '@iconify/vue'
 import { hasAction } from 'src/utils'
+import { actions } from 'src/constants'
 
 
 const { t, locale } = useI18n()
@@ -45,6 +46,14 @@ const visible = ref<boolean>(false)
 const relationVisible = ref<boolean>(false)
 const relations = ref<Array<string>>([])
 const members = ref([])
+
+const authorizeVisible = ref<boolean>(false)
+const authorizeLoading = ref<boolean>(false)
+const authorities = ref<Array<{
+  privilegeId: number,
+  actions: string[]
+}>>([])
+
 
 const importVisible = ref<boolean>(false)
 const importLoading = ref<boolean>(false)
@@ -208,6 +217,14 @@ function relationRow(id: number) {
   }
 }
 
+async function authorizeRow(id: number) {
+  authorities.value = []
+  retrieveGroupPrivileges(id).then(res => {
+    authorities.value = res.data.map((row: GroupPrivileges) => ({ privilegeId: row.privilegeId, actions: row.actions }))
+  })
+  authorizeVisible.value = true
+}
+
 /**
  * 新增、编辑弹出框
  * @param id 主键
@@ -263,6 +280,13 @@ function onSubmit(formEl: FormInstance | undefined) {
       }
     }
   })
+}
+
+async function onAuthorizeSubmit() {
+  authorizeLoading.value = true
+  if (form.value.id) {
+    relationGroupPrivileges(form.value.id, authorities.value)
+  }
 }
 
 /**
@@ -329,6 +353,36 @@ function handleTransferChange(value: TransferKey[], direction: TransferDirection
     } else {
       removeGroupMembers(form.value.id, value as string[])
     }
+  }
+}
+
+function handleActionCheck(privilegeId: number, item: string) {
+  // 查找对应 privilegeId 的对象
+  const keyIndex = authorities.value.findIndex(a => a.privilegeId === privilegeId)
+
+  if (keyIndex >= 0) {
+    // 如果已存在该 key，更新 actions
+    const existingAction = authorities.value[keyIndex]
+    if (existingAction) {
+      const itemIndex = existingAction.actions.indexOf(item)
+
+      if (itemIndex >= 0) {
+        // 如果 actions 中已有该 item，则移除
+        existingAction.actions.splice(itemIndex, 1)
+
+        // 如果 actions 为空数组，则删除整个对象
+        if (existingAction.actions.length === 0) {
+          authorities.value.splice(keyIndex, 1)
+        }
+      } else {
+        existingAction.actions.push(item)
+      }
+    }
+  } else {
+    authorities.value.push({
+      privilegeId,
+      actions: [item]
+    })
   }
 }
 </script>
@@ -446,6 +500,10 @@ function handleTransferChange(value: TransferKey[], direction: TransferDirection
                 @click="relationRow(scope.row.id)">
                 <Icon icon="material-symbols:link-rounded" width="16" height="16" />{{ $t('relation') }}
               </ElButton>
+              <ElButton v-if="hasAction($route.name, 'authorize') && !scope.row.redirect && scope.row.enabled"
+                title="authorize" size="small" type="success" link @click="authorizeRow(scope.row.id)">
+                <Icon icon="material-symbols:privacy-tip-outline-rounded" width="16" height="16" />{{ $t('authorize') }}
+              </ElButton>
               <ElPopconfirm v-if="!scope.row.hasChildren" :title="$t('removeConfirm')" :width="240"
                 @confirm="confirmEvent(scope.row.id)">
                 <template #reference>
@@ -462,6 +520,7 @@ function handleTransferChange(value: TransferKey[], direction: TransferDirection
     </ElSpace>
   </ElSpace>
 
+  <!-- form -->
   <DialogView v-model="visible" :title="$t('groups')" width="25%">
     <ElForm ref="formRef" :model="form" :rules="rules" label-position="top">
       <ElRow :gutter="20" class="w-full !mx-0">
@@ -490,11 +549,41 @@ function handleTransferChange(value: TransferKey[], direction: TransferDirection
     </template>
   </DialogView>
 
+  <!-- relation -->
   <DialogView v-model="relationVisible" show-close :title="$t('relation')">
     <div style="text-align: center">
       <ElTransfer v-model="relations" :props="{ key: 'username', label: 'fullName' }"
         :titles="[$t('unselected'), $t('selected')]" filterable :data="members" @change="handleTransferChange" />
     </div>
+  </DialogView>
+
+  <!-- authorize -->
+  <DialogView v-model="authorizeVisible" :title="$t('authorize')" width="55%" :max-height="500">
+    <ElTree :data="userStore.privileges" :props="{ label: 'name' }" node-key="id" show-checkbox default-expand-all
+      :default-checked-keys="authorities.map(item => item.privilegeId)" :check-on-click-leaf="false">
+      <template #default="{ node, data }">
+        <div class="flex flex-1 ">
+          <Icon v-if="data.meta.icon" :icon="`material-symbols:${data.meta.icon}-rounded`" width="18" height="18"
+            class="mr-2" />
+          <span>{{ $t(node.label) }}</span>
+        </div>
+        <div>
+          <ElCheckTag v-for="item in data.meta.actions" :key="item"
+            :checked="(authorities.find(a => a.privilegeId === data.id)?.actions || []).includes(item)"
+            :type="actions[item]" class="mr-2" @change="handleActionCheck(data.id, item)">
+            {{ $t(item) }}
+          </ElCheckTag>
+        </div>
+      </template>
+    </ElTree>
+    <template #footer>
+      <ElButton title="cancel" @click="authorizeVisible = false">
+        <Icon icon="material-symbols:close" width="18" height="18" />{{ $t('cancel') }}
+      </ElButton>
+      <ElButton title="submit" type="primary" :loading="authorizeLoading" @click="onAuthorizeSubmit">
+        <Icon icon="material-symbols:check-circle-outline-rounded" width="18" height="18" /> {{ $t('submit') }}
+      </ElButton>
+    </template>
   </DialogView>
 
   <!-- import -->

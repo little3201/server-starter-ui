@@ -1,25 +1,19 @@
 <script setup lang="ts">
 import { ref, reactive, onMounted } from 'vue'
-import type { TableInstance, FormInstance, FormRules, UploadInstance, UploadRequestOptions, CheckboxValueType, TabsPaneContext, TransferDirection, TransferKey } from 'element-plus'
+import type { TableInstance, FormInstance, FormRules, UploadInstance, UploadRequestOptions, CheckboxValueType } from 'element-plus'
 import draggable from 'vuedraggable'
-import { useI18n } from 'vue-i18n'
 import { useUserStore } from 'stores/user-store'
 import DialogView from 'components/DialogView.vue'
 import {
-  retrievePrivileges, retrievePrivilegeSubset, retrievePrivilegeRoles, retrievePrivilegeGroups,
-  retrievePrivilegeUsers, fetchPrivilege, modifyPrivilege, enablePrivilege, importPrivileges
+  retrievePrivileges, retrievePrivilegeSubset, fetchPrivilege, modifyPrivilege, enablePrivilege, importPrivileges
 } from 'src/api/privileges'
 import { retrieveDictionarySubset } from 'src/api/dictionaries'
-import { retrieveRoles, relationRolesPrivileges, removeRolesPrivileges } from 'src/api/roles'
-import { retrieveGroups, relationGroupsPrivileges, removeGroupsPrivileges } from 'src/api/groups'
-import { retrieveUsers, relationUsersPrivileges, removeUsersPrivileges } from 'src/api/users'
-import { isNumber, visibleArray, hasAction } from 'src/utils'
+import { visibleArray, hasAction } from 'src/utils'
 import { actions } from 'src/constants'
-import type { Pagination, Privilege, Role, Group, User, Dictionary, RolePrivileges, GroupPrivileges, UserPrivileges } from 'src/types'
+import type { Pagination, Privilege, Dictionary } from 'src/types'
 import { Icon } from '@iconify/vue'
 
 
-const { locale } = useI18n()
 const userStore = useUserStore()
 
 const loading = ref<boolean>(false)
@@ -34,25 +28,12 @@ const pagination = reactive<Pagination>({
 
 const checkAll = ref<boolean>(true)
 const isIndeterminate = ref<boolean>(false)
-const checkedColumns = ref<Array<string>>(['name', 'enabled', 'description'])
-const columns = ref<Array<string>>(['name', 'enabled', 'description'])
+const checkedColumns = ref<Array<string>>(['name', 'path', 'redirect', 'actions', 'enabled', 'description'])
+const columns = ref<Array<string>>(['name', 'path', 'redirect', 'actions', 'enabled', 'description'])
 
 const buttonOptions = ref<Array<Dictionary>>([])
 const saveLoading = ref<boolean>(false)
 const visible = ref<boolean>(false)
-
-const hasNext = ref<boolean>(true)
-const checkedActions = ref<Array<{
-  key: number | string
-  actions: string[]
-}>>([])
-const authorizeVisible = ref<boolean>(false)
-const relations = ref<Array<number | string>>([])
-
-const activeName = ref<string>('roles')
-const roles = ref<Array<Role>>([])
-const groups = ref<Array<Group>>([])
-const users = ref<Array<User>>([])
 
 const importVisible = ref<boolean>(false)
 const importLoading = ref<boolean>(false)
@@ -129,23 +110,6 @@ async function loadDictionaries() {
   })
 }
 
-async function loadRoles() {
-  retrieveRoles({ page: 1, size: 99 }).then(res => { roles.value = res.data.content })
-}
-
-async function loadGroups() {
-  retrieveGroups({ page: 1, size: 99 }).then(res => { groups.value = res.data.content })
-}
-
-async function loadUsers() {
-  retrieveUsers({ page: 1, size: 99 }).then(res => {
-    users.value = res.data.content.map((item: User) => ({
-      ...item,
-      fullName: (locale.value === 'en-US' || item.middleName) ? `${item.givenName} ${item.middleName} ${item.familyName}` : `${item.familyName}${item.givenName}`
-    }))
-  })
-}
-
 /**
  * reset
  */
@@ -204,27 +168,6 @@ async function loadOne(id: number) {
   })
 }
 
-async function loadPrivilegeRoles(id: number) {
-  retrievePrivilegeRoles(id).then(res => {
-    relations.value = res.data.map((item: RolePrivileges) => item.roleId)
-    checkedActions.value = res.data.map((item: RolePrivileges) => { return { key: item.roleId, actions: item.actions } })
-  })
-}
-
-async function loadPrivilegeGroups(id: number) {
-  retrievePrivilegeGroups(id).then(res => {
-    relations.value = res.data.map((item: GroupPrivileges) => item.groupId)
-    checkedActions.value = res.data.map((item: GroupPrivileges) => { return { key: item.groupId, actions: item.actions } })
-  })
-}
-
-async function loadPrivilegeUsers(id: number) {
-  retrievePrivilegeUsers(id).then(res => {
-    relations.value = res.data.map((item: UserPrivileges) => item.username)
-    checkedActions.value = res.data.map((item: UserPrivileges) => { return { key: item.username, actions: item.actions } })
-  })
-}
-
 async function enableChange(id: number) {
   enablePrivilege(id).then(() => { load() })
 }
@@ -266,31 +209,6 @@ function onUpload(options: UploadRequestOptions) {
 }
 
 /**
- * 授权
- * @param val 选中行
- */
-function authorizeRow(id: number) {
-  hasNext.value = true
-  checkedActions.value = []
-  loadOne(id)
-  switch (activeName.value) {
-    case 'roles':
-      loadRoles()
-      loadPrivilegeRoles(id)
-      break
-    case 'groups':
-      loadGroups()
-      loadPrivilegeGroups(id)
-      break
-    case 'users':
-      loadUsers()
-      loadPrivilegeUsers(id)
-      break
-  }
-  authorizeVisible.value = true
-}
-
-/**
  * handle check change
  * @param item checked item
  */
@@ -302,40 +220,6 @@ function onCheckChange(item: string) {
     } else {
       form.value.actions.splice(index, 1)
     }
-  }
-}
-
-/**
- * handle action check
- * @param item checked item
- */
-function handleActionCheck(key: number | string, item: string) {
-  // 在 checkedActions 中查找对应 key 的对象
-  const actionIndex = checkedActions.value.findIndex(action => action.key === key)
-
-  if (actionIndex >= 0) {
-    // 如果已存在该 key，更新 actions
-    const existingAction = checkedActions.value[actionIndex]
-    if (existingAction) {
-      const itemIndex = existingAction.actions.indexOf(item)
-
-      if (itemIndex >= 0) {
-        // 如果 actions 中已有该 item，则移除
-        existingAction.actions.splice(itemIndex, 1)
-
-        // 如果 actions 为空数组，则删除整个对象
-        if (existingAction.actions.length === 0) {
-          checkedActions.value.splice(actionIndex, 1)
-        }
-      } else {
-        existingAction.actions.push(item)
-      }
-    }
-  } else {
-    checkedActions.value.push({
-      key,
-      actions: [item]
-    })
   }
 }
 
@@ -356,93 +240,6 @@ function handleCheckedChange(value: CheckboxValueType[]) {
   const checkedCount = value.length
   checkAll.value = checkedCount === columns.value.length
   isIndeterminate.value = checkedCount > 0 && checkedCount < columns.value.length
-}
-
-function hancleTabClick(tab: TabsPaneContext) {
-  switch (tab.paneName) {
-    case 'roles':
-      loadRoles()
-      if (form.value.id) {
-        loadPrivilegeRoles(form.value.id)
-      }
-      break
-    case 'groups':
-      loadGroups()
-      if (form.value.id) {
-        loadPrivilegeGroups(form.value.id)
-      }
-      break
-    case 'users':
-      loadUsers()
-      if (form.value.id) {
-        loadPrivilegeUsers(form.value.id)
-      }
-      break
-  }
-}
-
-function handleRolesTransferChange(value: TransferKey[], direction: TransferDirection, movedKeys: TransferKey[]) {
-  if (form.value.id) {
-    const privilegeId = form.value.id
-    if (direction === 'left') {
-      movedKeys.forEach(v => {
-        removeRolesPrivileges(v as number, privilegeId)
-      })
-    }
-  }
-}
-
-function handleGroupsTransferChange(value: TransferKey[], direction: TransferDirection, movedKeys: TransferKey[]) {
-  if (form.value.id) {
-    const privilegeId = form.value.id
-    if (direction === 'left') {
-      movedKeys.forEach(v => removeGroupsPrivileges(v as number, privilegeId))
-    }
-  }
-}
-
-function handleUsersTransferChange(value: TransferKey[], direction: TransferDirection, movedKeys: TransferKey[]) {
-  if (form.value.id) {
-    const privilegeId = form.value.id
-    if (direction === 'left') {
-      movedKeys.forEach(v => removeUsersPrivileges(v as string, privilegeId))
-    }
-  }
-}
-
-function onConfirm() {
-  if (hasNext.value) {
-    hasNext.value = false
-  } else if (form.value.id) {
-    switch (activeName.value) {
-      case 'roles':
-        relationRolesPrivileges(form.value.id, checkedActions.value)
-        break
-      case 'groups':
-        relationGroupsPrivileges(form.value.id, checkedActions.value)
-        break
-      case 'users':
-        relationUsersPrivileges(form.value.id, checkedActions.value)
-        break
-    }
-    authorizeVisible.value = false
-  }
-}
-
-function rowName(key: number | string) {
-  let name = ''
-  switch (activeName.value) {
-    case 'roles':
-      name = roles.value.find(item => item.id === key)?.name || ''
-      break
-    case 'groups':
-      name = groups.value.find(item => item.id === key)?.name || ''
-      break
-    case 'users':
-      name = users.value.find(item => item.username === key)?.username || ''
-      break
-  }
-  return name
 }
 </script>
 
@@ -565,10 +362,6 @@ function rowName(key: number | string) {
               @click="saveRow(scope.row.id)">
               <Icon icon="material-symbols:edit-outline-rounded" width="16" height="16" />{{ $t('modify') }}
             </ElButton>
-            <ElButton v-if="hasAction($route.name, 'authorize') && !scope.row.redirect && scope.row.enabled"
-              title="authorize" size="small" type="success" link @click="authorizeRow(scope.row.id)">
-              <Icon icon="material-symbols:privacy-tip-outline-rounded" width="16" height="16" />{{ $t('authorize') }}
-            </ElButton>
           </template>
         </ElTableColumn>
       </ElTable>
@@ -632,48 +425,6 @@ function rowName(key: number | string) {
       </ElButton>
       <ElButton title="submit" type="primary" :loading="saveLoading" @click="onSubmit(formRef)">
         <Icon icon="material-symbols:check-circle-outline-rounded" width="18" height="18" /> {{ $t('submit') }}
-      </ElButton>
-    </template>
-  </DialogView>
-
-  <!-- authorize -->
-  <DialogView v-model="authorizeVisible" :title="$t('authorize') + (form.name ? (' - ' + $t(form.name)) : '')">
-    <ElTabs v-if="hasNext" stretch v-model="activeName" @tab-click="hancleTabClick">
-      <ElTabPane :label="$t('roles')" name="roles" class="text-center">
-        <ElTransfer v-model="relations" :props="{ key: 'id', label: 'name' }"
-          :titles="[$t('unselected'), $t('selected')]" filterable :data="roles" @change="handleRolesTransferChange" />
-      </ElTabPane>
-      <ElTabPane :label="$t('groups')" name="groups" class="text-center">
-        <ElTransfer v-model="relations" :props="{ key: 'id', label: 'name' }"
-          :titles="[$t('unselected'), $t('selected')]" filterable :data="groups" @change="handleGroupsTransferChange" />
-      </ElTabPane>
-      <ElTabPane :label="$t('users')" name="users" class="text-center">
-        <ElTransfer v-model="relations" :props="{ key: 'username', label: 'fullName' }"
-          :titles="[$t('unselected'), $t('selected')]" filterable :data="users" @change="handleUsersTransferChange" />
-      </ElTabPane>
-    </ElTabs>
-
-    <ElRow :gutter="20" v-else v-for="row in checkedActions" :key="row.key" class="w-full items-baseline">
-      <ElCol :span="6">
-        <span v-if="isNumber(row.key)" class="mr-2">{{ $t('name') }}:</span>
-        <span v-else class="mr-2">{{ $t('username') }}: </span>
-        <span>{{ rowName(row.key) }}</span>
-      </ElCol>
-      <ElCol :span="18">
-        <span class="mr-2">{{ $t('actions') }}: </span>
-        <ElCheckTag v-for="item in form.actions" :key="item" :checked="row.actions.includes(item)" :type="actions[item]"
-          class="mr-2 mb-2" @change="handleActionCheck(row.key, item)">
-          {{ $t(item) }}
-        </ElCheckTag>
-      </ElCol>
-    </ElRow>
-
-    <template #footer>
-      <ElButton title="cancel" @click="authorizeVisible = false">
-        <Icon icon="material-symbols:close" width="18" height="18" />{{ $t('cancel') }}
-      </ElButton>
-      <ElButton title="submit" type="primary" @click="onConfirm" :disabled="checkedActions.length === 0">
-        <Icon icon="material-symbols:check-circle-outline-rounded" width="18" height="18" /> {{ $t('confirm') }}
       </ElButton>
     </template>
   </DialogView>
