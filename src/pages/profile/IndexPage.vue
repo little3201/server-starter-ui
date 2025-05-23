@@ -32,6 +32,12 @@ const activities = ref([
   // 更多仓库
 ])
 
+const items = ref([
+  { id: 1, name: 'notifications', icon: 'notifications-outline', path: '' },
+  { id: 2, name: 'appearance', icon: 'draw-outline', path: '' },
+  { id: 3, name: 'sessions', icon: 'bigtop-updates', path: '' },
+])
+
 const activeTab = ref('overview')
 
 const formRef = ref<FormInstance>()
@@ -74,65 +80,45 @@ onMounted(() => {
 </script>
 
 <template>
-  <ElSpace size="large" alignment="flex-start">
-    <ElSpace class="w-64" size="large" direction="vertical" fill>
-      <ElCard shadow="never">
-        <div class="text-center">
-          <ElAvatar :size="180" :src="me.avatar" />
-          <div class="text-lg mt-4 mb-2">
-            <span v-if="locale === 'en-US' || me.middleName" class="text-sm">
-              {{ me.givenName }} {{ me.middleName }} {{ me.familyName }}
-            </span>
-            <span v-else class="text-sm">
-              {{ me.familyName }}{{ me.givenName }}
-            </span>
+  <ElRow class="mb-4">
+    <ElCol :span="24">
+      <ElCard shadow="never" body-class="flex items-center">
+        <ElAvatar :size="80" :src="me.avatar" />
+        <div class="ml-4 flex-1">
+          <span v-if="locale === 'en-US' || me.middleName" class="text-lg my-1">
+            {{ me.givenName }} {{ me.middleName }} {{ me.familyName }}
+          </span>
+          <span v-else class="text-lg my-1">
+            {{ me.familyName }}{{ me.givenName }}
+          </span>
+
+          <div class="text-sm text-[var(--el-text-color-secondary)]">
+            <span>Project Manager</span>
+            &emsp;●&emsp;
+            <span>New York, USA</span>
           </div>
-          <div class="text-sm text-[var(--el-text-color-regular)]">@{{ me.username }}</div>
         </div>
 
-        <ElDivider></ElDivider>
-
-        <!-- 详细信息 -->
-        <ul class="text-sm text-[var(--el-text-color-regular)] pl-3 flex flex-col space-y-3">
-          <li class="inline-flex items-center">
-            <Icon icon="material-symbols:location-on-outline-rounded" width="18" height="18" class="mr-2" />
-            西安
-          </li>
-          <li class="inline-flex items-center">
-            <Icon icon="material-symbols:mail-outline-rounded" width="18" height="18" class="mr-2" />
-            <span>{{ me.email }}</span>
-          </li>
-          <li class="inline-flex items-center">
-            <Icon icon="material-symbols:shield-person-outline-rounded" width="18" height="18" class="mr-2" />
-            角色
-          </li>
-        </ul>
+        <ElButton title="profile">
+          <Icon icon="material-symbols:edit-outline-rounded" width="16" height="16" />{{ $t('modify') }}
+        </ElButton>
       </ElCard>
+    </ElCol>
+  </ElRow>
 
+  <ElRow :gutter="16">
+    <ElCol :span="5" class="hidden-sm-and-down">
       <ElCard shadow="never">
-        <ul class="text-sm text-[var(--el-text-color-regular)] pl-0 flex flex-col space-y-1">
-          <li
-            class="inline-flex items-center py-2 px-3 rounded-md hover:bg-[var(--el-fill-color-lighter)] cursor-pointer">
-            <Icon icon="material-symbols:notifications-outline" width="18" height="18" class="mr-2" />Notifications
-          </li>
-          <li
-            class="inline-flex items-center py-2 px-3 rounded-md hover:bg-[var(--el-fill-color-lighter)] cursor-pointer">
-            <Icon icon="material-symbols:draw-outline" width="18" height="18" class="mr-2" />Appearance
-          </li>
-          <li
-            class="inline-flex items-center py-2 px-3 rounded-md hover:bg-[var(--el-fill-color-lighter)] cursor-pointer">
-            <Icon icon="material-symbols:bigtop-updates-rounded" width="18" height="18" class="mr-2" />Sessions
-          </li>
-        </ul>
+        <ElMenu>
+          <ElMenuItem v-for="item in items" :key="item.id">
+            <Icon :icon="`material-symbols:${item.icon}-rounded`" width="20" height="20" class="mr-2" />
+            {{ $t(item.name) }}
+          </ElMenuItem>
+        </ElMenu>
       </ElCard>
-    </ElSpace>
+    </ElCol>
 
-    <ElSpace size="large" fill>
-      <ElCard shadow="never">
-        <div class="text-center py-6">
-          <h2>常见问题解答（FAQ）</h2>
-        </div>
-      </ElCard>
+    <ElCol :span="19">
       <ElCard shadow="never">
         <ElTabs stretch v-model="activeTab">
           <!-- Overview -->
@@ -188,7 +174,7 @@ onMounted(() => {
                   </ElFormItem>
                 </ElCol>
                 <ElCol :span="10">
-                  <span class="ml-5 text-xs text-[var(--el-text-color-secondary)]">
+                  <span class="ml-4 text-xs text-[var(--el-text-color-secondary)]">
                     This is a hint for old password
                   </span>
                 </ElCol>
@@ -200,7 +186,7 @@ onMounted(() => {
                   </ElFormItem>
                 </ElCol>
                 <ElCol :span="10">
-                  <span class="ml-5 text-xs text-[var(--el-text-color-secondary)]">
+                  <span class="ml-4 text-xs text-[var(--el-text-color-secondary)]">
                     This is a hint for new password
                   </span>
                 </ElCol>
@@ -213,7 +199,7 @@ onMounted(() => {
                   </ElFormItem>
                 </ElCol>
                 <ElCol :span="10">
-                  <span class="ml-5 text-xs text-[var(--el-text-color-secondary)]">
+                  <span class="ml-4 text-xs text-[var(--el-text-color-secondary)]">
                     This is a hint for confirm password
                   </span>
                 </ElCol>
@@ -226,8 +212,8 @@ onMounted(() => {
           </ElTabPane>
         </ElTabs>
       </ElCard>
-    </ElSpace>
-  </ElSpace>
+    </ElCol>
+  </ElRow>
 </template>
 
 <style lang="scss" scoped>

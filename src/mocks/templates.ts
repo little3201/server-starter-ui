@@ -8,19 +8,19 @@ const datas: Template[] = [
     name: 'IndexPage',
     suffix: '.vue',
     version: '1.0.0',
-    type: 56,
+    type: 'UI',
     enabled: true,
     content: '<template>\n  <div class="app-container">\n </div>\n</template>',
     lastModifiedDate: new Date()
   },
   {
     id: 2,
-    name: 'Model',
-    suffix: '.java',
+    name: 'users',
+    suffix: '.ts',
     version: '1.0.0',
-    type: 57,
+    type: 'TS',
     enabled: true,
-    content: '// 数据对象 (Entity)\npackage com.example.demo.entity;\n\nimport javax.persistence.Entity;\nimport javax.persistence.GeneratedValue;\nimport javax.persistence.GenerationType;\nimport javax.persistence.Id;\nimport java.util.Date;\n\n@Entity\npublic class Page {\n    @Id\n    @GeneratedValue(strategy = GenerationType.IDENTITY)\n    private Long id;\n    private String name;\n    private String suffix;\n    private String version;\n    private int type;\n    private boolean enabled;\n    private String content;\n    private Date lastModifiedDate;\n\n    // Getters and Setters\n}\n\n// Repository\npackage com.example.demo.repository;\n\nimport com.example.demo.entity.Page;\nimport org.springframework.data.jpa.repository.JpaRepository;\n\npublic interface PageRepository extends JpaRepository<Page, Long> {\n}\n\n// Service\npackage com.example.demo.service;\n\nimport com.example.demo.entity.Page;\nimport com.example.demo.repository.PageRepository;\nimport org.springframework.beans.factory.annotation.Autowired;\nimport org.springframework.stereotype.Service;\n\nimport java.util.List;\nimport java.util.Optional;\n\n@Service\npublic class PageService {\n\n    @Autowired\n    private PageRepository pageRepository;\n\n    public List<Page> findAll() {\n        return pageRepository.findAll();\n    }\n\n    public Optional<Page> findById(Long id) {\n        return pageRepository.findById(id);\n    }\n\n    public Page save(Page page) {\n        return pageRepository.save(page);\n    }\n\n    public void deleteById(Long id) {\n        pageRepository.deleteById(id);\n    }\n}\n\n// Controller\npackage com.example.demo.controller;\n\nimport com.example.demo.entity.Page;\nimport com.example.demo.service.PageService;\nimport org.springframework.beans.factory.annotation.Autowired;\nimport org.springframework.web.bind.annotation.*;\n\nimport java.util.List;\nimport java.util.Optional;\n\n@RestController\n@RequestMapping("/pages")\npublic class PageController {\n\n    @Autowired\n    private PageService pageService;\n\n    @GetMapping\n    public List<Page> getAllPages() {\n        return pageService.findAll();\n    }\n\n    @GetMapping("/{id}")\n    public Optional<Page> getPageById(@PathVariable Long id) {\n        return pageService.findById(id);\n    }\n\n    @PostMapping\n    public Page createPage(@RequestBody Page page) {\n        return pageService.save(page);\n    }\n\n    @DeleteMapping("/{id}")\n    public void deletePage(@PathVariable Long id) {\n        pageService.deleteById(id);\n    }\n}\n',
+    content: 'import { api } from \'boot/axios\'\nimport { SERVER_URL } from \'src/constants\'\nimport type { Pagination, User } from \'src/types\'\n\n/**\n * Retrieve rows\n * @param pagination Pagination and sort parameters\n * @param filters Optional filter or sort parameters\n * @returns Rows data\n */\nexport const retrieveUsers = (pagination: Pagination, filters?: object) => {\n  return api.get(SERVER_URL.USER, { params: { ...pagination, page: pagination.page - 1, ...filters } })\n}\n\n',
     lastModifiedDate: new Date()
   },
   {
@@ -28,9 +28,39 @@ const datas: Template[] = [
     name: 'Entity',
     suffix: '.java',
     version: '1.0.0',
-    type: 57,
+    type: 'Model',
     enabled: true,
-    content: '// 数据对象 (Entity)\npackage com.example.demo.entity;\n\nimport javax.persistence.Entity;\nimport javax.persistence.GeneratedValue;\nimport javax.persistence.GenerationType;\nimport javax.persistence.Id;\nimport java.util.Date;\n\n@Entity\npublic class Page {\n    @Id\n    @GeneratedValue(strategy = GenerationType.IDENTITY)\n    private Long id;\n    private String name;\n    private String suffix;\n    private String version;\n    private int type;\n    private boolean enabled;\n    private String content;\n    private Date lastModifiedDate;\n\n    // Getters and Setters\n}\n\n// Repository\npackage com.example.demo.repository;\n\nimport com.example.demo.entity.Page;\nimport org.springframework.data.jpa.repository.JpaRepository;\n\npublic interface PageRepository extends JpaRepository<Page, Long> {\n}\n\n// Service\npackage com.example.demo.service;\n\nimport com.example.demo.entity.Page;\nimport com.example.demo.repository.PageRepository;\nimport org.springframework.beans.factory.annotation.Autowired;\nimport org.springframework.stereotype.Service;\n\nimport java.util.List;\nimport java.util.Optional;\n\n@Service\npublic class PageService {\n\n    @Autowired\n    private PageRepository pageRepository;\n\n    public List<Page> findAll() {\n        return pageRepository.findAll();\n    }\n\n    public Optional<Page> findById(Long id) {\n        return pageRepository.findById(id);\n    }\n\n    public Page save(Page page) {\n        return pageRepository.save(page);\n    }\n\n    public void deleteById(Long id) {\n        pageRepository.deleteById(id);\n    }\n}\n\n// Controller\npackage com.example.demo.controller;\n\nimport com.example.demo.entity.Page;\nimport com.example.demo.service.PageService;\nimport org.springframework.beans.factory.annotation.Autowired;\nimport org.springframework.web.bind.annotation.*;\n\nimport java.util.List;\nimport java.util.Optional;\n\n@RestController\n@RequestMapping("/pages")\npublic class PageController {\n\n    @Autowired\n    private PageService pageService;\n\n    @GetMapping\n    public List<Page> getAllPages() {\n        return pageService.findAll();\n    }\n\n    @GetMapping("/{id}")\n    public Optional<Page> getPageById(@PathVariable Long id) {\n        return pageService.findById(id);\n    }\n\n    @PostMapping\n    public Page createPage(@RequestBody Page page) {\n        return pageService.save(page);\n    }\n\n    @DeleteMapping("/{id}")\n    public void deletePage(@PathVariable Long id) {\n        pageService.deleteById(id);\n    }\n}\n',
+    content: '// 数据对象 (Entity)\npackage com.example.demo.entity;\n\nimport javax.persistence.Entity;\nimport javax.persistence.GeneratedValue;\nimport javax.persistence.GenerationType;\nimport javax.persistence.Id;\nimport java.util.Date;\n\n@Entity\npublic class Page {\n    @Id\n    @GeneratedValue(strategy = GenerationType.IDENTITY)\n    private Long id;\n    private String name;\n    private String suffix;\n    private String version;\n    private int type;\n    private boolean enabled;\n    private String content;\n    private Date lastModifiedDate;\n\n    // Getters and Setters\n}\n\n// Repository\n',
+    lastModifiedDate: new Date()
+  },
+  {
+    id: 4,
+    name: 'Repository',
+    suffix: '.java',
+    version: '1.0.0',
+    type: 'Repository',
+    enabled: true,
+    content: '// 数据对象 (Entity)\npackage com.example.demo.entity;\n\nimport javax.persistence.Entity;\nimport javax.persistence.GeneratedValue;\nimport javax.persistence.GenerationType;\nimport javax.persistence.Id;\nimport java.util.Date;\n\n@Entity\npublic class Page {\n    @Id\n    @GeneratedValue(strategy = GenerationType.IDENTITY)\n    private Long id;\n    private String name;\n    private String suffix;\n    private String version;\n    private int type;\n    private boolean enabled;\n    private String content;\n    private Date lastModifiedDate;\n\n    // Getters and Setters\n}\n\n// Repository\n',
+    lastModifiedDate: new Date()
+  },
+  {
+    id: 5,
+    name: 'Mapper',
+    suffix: '.java',
+    version: '1.0.0',
+    type: 'Repository',
+    enabled: true,
+    content: '// 数据对象 (Entity)\npackage com.example.demo.entity;\n\nimport javax.persistence.Entity;\nimport javax.persistence.GeneratedValue;\nimport javax.persistence.GenerationType;\nimport javax.persistence.Id;\nimport java.util.Date;\n\n@Entity\npublic class Page {\n    @Id\n    @GeneratedValue(strategy = GenerationType.IDENTITY)\n    private Long id;\n    private String name;\n    private String suffix;\n    private String version;\n    private int type;\n    private boolean enabled;\n    private String content;\n    private Date lastModifiedDate;\n\n    // Getters and Setters\n}\n\n// Repository\n',
+    lastModifiedDate: new Date()
+  },
+  {
+    id: 6,
+    name: 'Controller',
+    suffix: '.java',
+    version: '1.0.0',
+    type: 'controller',
+    enabled: true,
+    content: '// 数据对象 (Entity)\npackage com.example.demo.entity;\n\nimport javax.persistence.Entity;\nimport javax.persistence.GeneratedValue;\nimport javax.persistence.GenerationType;\nimport javax.persistence.Id;\nimport java.util.Date;\n\n@Entity\npublic class Page {\n    @Id\n    @GeneratedValue(strategy = GenerationType.IDENTITY)\n    private Long id;\n    private String name;\n    private String suffix;\n    private String version;\n    private int type;\n    private boolean enabled;\n    private String content;\n    private Date lastModifiedDate;\n\n    // Getters and Setters\n}\n\n// Repository\n',
     lastModifiedDate: new Date()
   }
 ]
@@ -53,9 +83,9 @@ export const templatesHandlers = [
     return HttpResponse.json(filtered.length > 0)
   }),
   http.get(`/api${SERVER_URL.TEMPLATE}`, ({ request }) => {
-    const url = new URL(request.url)
-    const page = url.searchParams.get('page')
-    const size = url.searchParams.get('size')
+    const searchParams = new URL(request.url).searchParams
+    const page = searchParams.get('page')
+    const size = searchParams.get('size')
     // Construct a JSON response with the list of all Row
     // as the response body.
     const data = {

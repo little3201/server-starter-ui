@@ -16,7 +16,7 @@ for (let i = 1; i < 28; i++) {
 
 const privileges: RolePrivileges[] = []
 
-for (let i = 1; i < 28; i++) {
+for (let i = 1; i < 17; i++) {
   const row: RolePrivileges = {
     id: i,
     privilegeId: i,
@@ -71,9 +71,9 @@ export const rolesHandlers = [
     return HttpResponse.json(filtered.length > 0)
   }),
   http.get(`/api${SERVER_URL.ROLE}`, ({ request }) => {
-    const url = new URL(request.url)
-    const page = url.searchParams.get('page')
-    const size = url.searchParams.get('size')
+    const searchParams = new URL(request.url).searchParams
+    const page = searchParams.get('page')
+    const size = searchParams.get('size')
     if (page && size) {
       // Construct a JSON response with the list of all Row
       // as the response body.
@@ -127,7 +127,6 @@ export const rolesHandlers = [
     } else {
       return HttpResponse.error()
     }
-
   }),
   http.patch(`/api${SERVER_URL.ROLE}/:id`, async ({ params }) => {
     const { id } = params
@@ -137,9 +136,19 @@ export const rolesHandlers = [
       return HttpResponse.error()
     }
   }),
-  http.patch(`/api${SERVER_URL.ROLE}/:id/members`, ({ params }) => {
+  http.patch(`/api${SERVER_URL.ROLE}/:id/members`, async ({ params, request }) => {
     const { id } = params
-    if (id) {
+    const data = await request.json()
+    if (id && data) {
+      return HttpResponse.json()
+    } else {
+      return HttpResponse.error()
+    }
+  }),
+  http.patch(`/api${SERVER_URL.ROLE}/:id/privileges`, async ({ params, request }) => {
+    const { id } = params
+    const data = await request.json()
+    if (id && data) {
       return HttpResponse.json()
     } else {
       return HttpResponse.error()

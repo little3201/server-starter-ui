@@ -38,7 +38,7 @@ export const SERVER_URL = {
   SCRIPT: SERVER_PREFIX.EXPLOITER.concat('/scripts'), // 脚本
   SCHEMA: SERVER_PREFIX.EXPLOITER.concat('/schemas'), // 表配置
   TEMPLATE: SERVER_PREFIX.EXPLOITER.concat('/templates'), // 模板
-  DB: SERVER_PREFIX.EXPLOITER.concat('/db') // 表
+  DB: SERVER_PREFIX.EXPLOITER.concat('/db-links') // 库连接
 }
 
 // 按钮对应tag类型
@@ -71,3 +71,20 @@ export const httpMethods: { [key: string]: 'success' | 'warning' | 'info' | 'pri
   PATCH: 'primary',
   DELETE: 'danger'
 }
+
+// 查询匹配方式
+export const queryTypes: { [key: string]: string } = {
+  eq: '=',
+  neq: '<>',
+  gt: '>',
+  egt: '>=',
+  lt: '<',
+  elt: '<=',
+  like: 'LIKE',
+  in: 'IN',
+  notIn: 'NOT IN',
+  between: 'BETWEEN',
+  notBetween: 'NOT BETWEEN',
+  isNull: 'IS NULL',
+  isNotNull: 'IS NOT NULL'
+};

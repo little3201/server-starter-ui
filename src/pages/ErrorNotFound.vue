@@ -10,7 +10,7 @@ const { push } = useRouter()
       <ElImage :alt="404" src="/svgs/404.svg" class="w-1/3 mx-auto" />
       <div class="text-center">
         <div class="text-2xl text-[var(--el-color-info)]">Oops. Nothing here...</div>
-        <div class="mt-5">
+        <div class="mt-8">
           <ElButton size="large" type="primary" @click="push('/')">{{ $t('goHome') }}</ElButton>
         </div>
       </div>

@@ -171,8 +171,8 @@ function handleCheckedChange(value: CheckboxValueType[]) {
   <ElSpace size="large" alignment="flex-start">
     <ElSpace class="w-64" size="large" direction="vertical" fill>
       <ElCard shadow="never">
-        <strong>Space Usage</strong>
-        <div class="text-center my-6">
+        <p class="mt-0"><strong>Space Usage</strong></p>
+        <div class="text-center mt-6">
           <ElProgress type="circle" :percentage="46" :stroke-width="12" :width="180">
             <template #default>
               <span class="block text-sm">Free Space</span>
@@ -183,18 +183,25 @@ function handleCheckedChange(value: CheckboxValueType[]) {
       </ElCard>
 
       <ElCard shadow="never">
-        <strong>Categories</strong>
-        <ul class="text-sm pl-0 flex flex-col space-y-3">
-          <li class="inline-flex items-center p-4 rounded bg-[var(--el-color-success-light-9)] cursor-pointer">
-            <Icon icon="material-symbols:imagesmode-outline-rounded" width="20" height="20" class="mr-2" />Images
-          </li>
-          <li class="inline-flex items-center p-4 rounded bg-[var(--el-color-primary-light-9)] cursor-pointer">
-            <Icon icon="material-symbols:docs-outline-rounded" width="20" height="20" class="mr-2" />Documents
-          </li>
-          <li class="inline-flex items-center p-4 rounded bg-[var(--el-color-warning-light-9)] cursor-pointer">
-            <Icon icon="material-symbols:videocam-outline-rounded" width="20" height="20" class="mr-2" />Videos
-          </li>
-        </ul>
+        <p class="mt-0"><strong>Categories</strong></p>
+        <ElMenu class="mt-4">
+          <ElMenuItem>
+            <ElButton title="images" circle type="success" size="large" class="mr-4">
+              <Icon icon="material-symbols:imagesmode-outline-rounded" width="20" height="20" />
+            </ElButton>Images
+          </ElMenuItem>
+          <ElMenuItem>
+            <ElButton title="videos" circle type="primary" size="large" class="mr-4">
+              <Icon icon="material-symbols:videocam-outline-rounded" width="20" height="20" />
+            </ElButton>
+            Videos
+          </ElMenuItem>
+          <ElMenuItem>
+            <ElButton title="documents" circle type="warning" size="large" class="mr-4">
+              <Icon icon="material-symbols:docs-outline-rounded" width="20" height="20" />
+            </ElButton>Documents
+          </ElMenuItem>
+        </ElMenu>
       </ElCard>
     </ElSpace>
 
@@ -231,34 +238,36 @@ function handleCheckedChange(value: CheckboxValueType[]) {
             </ElTooltip>
 
             <ElTooltip :content="$t('column') + $t('settings')" placement="top">
-              <ElPopover :width="200" trigger="click">
-                <template #reference>
-                  <ElButton title="settings" type="success" plain circle>
-                    <Icon icon="material-symbols:format-list-bulleted" width="18" height="18" />
-                  </ElButton>
-                </template>
-                <div>
-                  <ElCheckbox v-model="checkAll" :indeterminate="isIndeterminate" @change="handleCheckAllChange">
-                    {{ $t('all') }}
-                  </ElCheckbox>
-                  <ElDivider />
-                  <ElCheckboxGroup v-model="checkedColumns" @change="handleCheckedChange">
-                    <draggable v-model="columns" item-key="simple">
-                      <template #item="{ element }">
-                        <div class="flex items-center space-x-2">
-                          <Icon icon="material-symbols:drag-indicator" width="18" height="18"
-                            class="hover:cursor-move" />
-                          <ElCheckbox :label="element" :value="element" :disabled="element === columns[0]">
-                            <div class="inline-flex items-center space-x-4">
-                              {{ $t(element) }}
-                            </div>
-                          </ElCheckbox>
-                        </div>
-                      </template>
-                    </draggable>
-                  </ElCheckboxGroup>
-                </div>
-              </ElPopover>
+              <div class="inline-flex items-center align-middle ml-3">
+                <ElPopover :width="200" trigger="click">
+                  <template #reference>
+                    <ElButton title="settings" type="success" plain circle>
+                      <Icon icon="material-symbols:format-list-bulleted" width="18" height="18" />
+                    </ElButton>
+                  </template>
+                  <div>
+                    <ElCheckbox v-model="checkAll" :indeterminate="isIndeterminate" @change="handleCheckAllChange">
+                      {{ $t('all') }}
+                    </ElCheckbox>
+                    <ElDivider />
+                    <ElCheckboxGroup v-model="checkedColumns" @change="handleCheckedChange">
+                      <draggable v-model="columns" item-key="simple">
+                        <template #item="{ element }">
+                          <div class="flex items-center space-x-2">
+                            <Icon icon="material-symbols:drag-indicator" width="18" height="18"
+                              class="hover:cursor-move" />
+                            <ElCheckbox :label="element" :value="element" :disabled="element === columns[0]">
+                              <div class="inline-flex items-center space-x-4">
+                                {{ $t(element) }}
+                              </div>
+                            </ElCheckbox>
+                          </div>
+                        </template>
+                      </draggable>
+                    </ElCheckboxGroup>
+                  </div>
+                </ElPopover>
+              </div>
             </ElTooltip>
           </ElCol>
         </ElRow>
@@ -266,19 +275,19 @@ function handleCheckedChange(value: CheckboxValueType[]) {
         <ElTable v-loading="loading" :data="datas" row-key="id" stripe table-layout="auto"
           @sort-change="handleSortChange">
           <ElTableColumn type="index" :label="$t('no')" width="55" />
-          <ElTableColumn prop="name" :label="$t('name')">
+          <ElTableColumn prop="name" :label="$t('name')" sortable>
             <template #default="scope">
               <ElButton title="details" type="primary" link @click="showRow(scope.row.id)">
                 {{ scope.row.name }}
               </ElButton>
             </template>
           </ElTableColumn>
-          <ElTableColumn prop="size" :label="$t('size')" sortable="custom">
+          <ElTableColumn prop="size" :label="$t('size')" sortable>
             <template #default="scope">
               {{ formatFileSize(scope.row.size) }}
             </template>
           </ElTableColumn>
-          <ElTableColumn prop="lastModifiedDate" :label="$t('lastModifiedDate')">
+          <ElTableColumn prop="lastModifiedDate" :label="$t('lastModifiedDate')" sortable>
             <template #default="scope">
               {{ dayjs(scope.row.lastModifiedDate).format('YYYY-MM-DD HH:mm') }}
             </template>

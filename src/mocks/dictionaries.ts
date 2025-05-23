@@ -152,13 +152,6 @@ const subDatas: Dictionary[] = [
     lastModifiedDate: new Date()
   },
   {
-    name: 'preview',
-    superiorId: 42,
-    id: 49,
-    enabled: true,
-    lastModifiedDate: new Date()
-  },
-  {
     name: 'config',
     superiorId: 42,
     id: 52,
@@ -195,6 +188,38 @@ const subDatas: Dictionary[] = [
     enabled: true,
     lastModifiedDate: new Date()
   },
+  {
+    name: 'DB',
+    superiorId: 68,
+    description: '数据库',
+    id: 57,
+    enabled: true,
+    lastModifiedDate: new Date()
+  },
+  {
+    name: 'middleware',
+    superiorId: 68,
+    description: '中间件',
+    id: 58,
+    enabled: true,
+    lastModifiedDate: new Date()
+  },
+  {
+    name: 'MySQL',
+    superiorId: 26,
+    description: 'MySQL数据库',
+    id: 59,
+    enabled: true,
+    lastModifiedDate: new Date()
+  },
+  {
+    name: 'Postgres',
+    superiorId: 26,
+    description: 'Postgres数据库',
+    id: 60,
+    enabled: true,
+    lastModifiedDate: new Date()
+  },
 ]
 
 export const dictionariesHandlers = [
@@ -223,10 +248,9 @@ export const dictionariesHandlers = [
     return HttpResponse.json(subDatas.filter(item => item.superiorId === Number(id)))
   }),
   http.get(`/api${SERVER_URL.DICTIONARY}`, ({ request }) => {
-    const url = new URL(request.url)
-
-    const page = url.searchParams.get('page')
-    const size = url.searchParams.get('size')
+    const searchParams = new URL(request.url).searchParams
+    const page = searchParams.get('page')
+    const size = searchParams.get('size')
 
     // Construct a JSON response with the list of all Row
     // as the response body.

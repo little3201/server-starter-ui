@@ -21,8 +21,8 @@ const pagination = reactive<Pagination>({
 
 const checkAll = ref<boolean>(true)
 const isIndeterminate = ref<boolean>(false)
-const checkedColumns = ref<Array<string>>(['url', 'httpMethod', 'params', 'body', 'ip', 'location', 'statusCode', 'responseTimes', 'responseMessage', 'operator'])
-const columns = ref<Array<string>>(['url', 'httpMethod', 'params', 'body', 'ip', 'location', 'statusCode', 'responseTimes', 'responseMessage', 'operator'])
+const checkedColumns = ref<Array<string>>(['url', 'httpMethod', 'params', 'body', 'ip', 'location', 'statusCode', 'responseTimes'])
+const columns = ref<Array<string>>(['url', 'httpMethod', 'params', 'body', 'ip', 'location', 'statusCode', 'responseTimes'])
 
 const filters = ref({
   url: null,
@@ -190,7 +190,8 @@ function handleCheckedChange(value: CheckboxValueType[]) {
           </ElTooltip>
 
           <ElTooltip :content="$t('column') + $t('settings')" placement="top">
-                          <ElPopover :width="200" trigger="click">
+            <div class="inline-flex items-center align-middle ml-3">
+              <ElPopover :width="200" trigger="click">
                 <template #reference>
                   <ElButton title="settings" type="success" plain circle>
                     <Icon icon="material-symbols:format-list-bulleted" width="18" height="18" />
@@ -218,6 +219,7 @@ function handleCheckedChange(value: CheckboxValueType[]) {
                   </ElCheckboxGroup>
                 </div>
               </ElPopover>
+            </div>
           </ElTooltip>
         </ElCol>
       </ElRow>
@@ -225,22 +227,22 @@ function handleCheckedChange(value: CheckboxValueType[]) {
       <ElTable ref="tableRef" v-loading="loading" :data="datas" row-key="id" stripe table-layout="auto">
         <ElTableColumn type="selection" width="55" />
         <ElTableColumn type="index" :label="$t('no')" width="55" />
-        <ElTableColumn prop="url" :label="$t('url')">
+        <ElTableColumn prop="url" :label="$t('url')" sortable>
           <template #default="scope">
             <ElButton title="details" type="primary" link @click="showRow(scope.row.id)">
               {{ scope.row.url }}
             </ElButton>
           </template>
         </ElTableColumn>
-        <ElTableColumn prop="httpMethod" :label="$t('httpMethod')">
+        <ElTableColumn prop="httpMethod" :label="$t('httpMethod')" sortable>
           <template #default="scope">
             <ElBadge is-dot :type="httpMethods[scope.row.httpMethod]" class="mr-1" />{{ scope.row.httpMethod }}
           </template>
         </ElTableColumn>
         <ElTableColumn show-overflow-tooltip prop="params" :label="$t('params')" />
         <ElTableColumn show-overflow-tooltip prop="body" :label="$t('body')" />
-        <ElTableColumn prop="ip" :label="$t('ip')" />
-        <ElTableColumn show-overflow-tooltip prop="location" :label="$t('location')" />
+        <ElTableColumn prop="ip" :label="$t('ip')" sortable />
+        <ElTableColumn show-overflow-tooltip prop="location" :label="$t('location')" sortable />
         <ElTableColumn prop="statusCode" :label="$t('statusCode')">
           <template #default="scope">
             <ElTag v-if="scope.row.statusCode >= 200 && scope.row.statusCode < 300" type="success" round>
@@ -252,7 +254,7 @@ function handleCheckedChange(value: CheckboxValueType[]) {
             <ElTag v-else type="danger" round>{{ scope.row.statusCode }}</ElTag>
           </template>
         </ElTableColumn>
-        <ElTableColumn prop="responseTimes" :label="$t('responseTimes')">
+        <ElTableColumn prop="responseTimes" :label="$t('responseTimes')" sortable>
           <template #default="scope">
             {{ formatDuration(scope.row.responseTimes) }}
           </template>

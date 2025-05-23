@@ -1,9 +1,3 @@
-<template>
-  <ElContainer class="h-screen">
-    <ElMain v-loading="loading"></ElMain>
-  </ElContainer>
-</template>
-
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
@@ -37,3 +31,9 @@ onMounted(() => {
   })
 })
 </script>
+
+<template>
+  <ElContainer class="h-screen">
+    <ElMain v-loading="loading"></ElMain>
+  </ElContainer>
+</template>

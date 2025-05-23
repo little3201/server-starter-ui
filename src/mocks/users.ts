@@ -12,9 +12,8 @@ for (let i = 1; i < 28; i++) {
     givenName: '三' + i,
     middleName: i % 3 > 0 ? '五' : '',
     familyName: '张',
-    avatar: '/images/avatar.jpg',
-    email: 'usexxx' + '@test.com',
-    phoneNumber: '123****0023',
+    avatar: '/svgs/logo.svg',
+    email: 'use***' + '@**t.com',
     accountNonLocked: i % 2 > 0,
     enabled: i % 2 > 0,
     accountExpiresAt: dayjs().add(Math.floor(Math.random() * 30), 'day').toDate(),
@@ -38,7 +37,7 @@ export const usersHandlers = [
       givenName: '勒布朗',
       familyName: '詹姆斯',
       middleName: '雷蒙',
-      avatar: '/images/avatar.jpg',
+      avatar: '/svgs/logo.svg',
       email: 'test@test.com',
       accountExpiresAt: null,
       accountNonLocked: true,
@@ -62,9 +61,9 @@ export const usersHandlers = [
     return HttpResponse.json(filtered.length > 0)
   }),
   http.get(`/api${SERVER_URL.USER}`, ({ request }) => {
-    const url = new URL(request.url)
-    const page = url.searchParams.get('page')
-    const size = url.searchParams.get('size')
+    const searchParams = new URL(request.url).searchParams
+    const page = searchParams.get('page')
+    const size = searchParams.get('size')
     // Construct a JSON response with the list of all Row
     // as the response body.
     const data = {

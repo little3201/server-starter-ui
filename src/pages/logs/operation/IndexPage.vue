@@ -21,8 +21,8 @@ const pagination = reactive<Pagination>({
 
 const checkAll = ref<boolean>(true)
 const isIndeterminate = ref<boolean>(false)
-const checkedColumns = ref<Array<string>>(['module', 'httpMethod', 'params', 'ip', 'location', 'statusCode', 'operatedTimes'])
-const columns = ref<Array<string>>(['module', 'httpMethod', 'params', 'ip', 'location', 'statusCode', 'operatedTimes'])
+const checkedColumns = ref<Array<string>>(['operation', 'os', 'browser', 'ip', 'location', 'statusCode', 'operatedTimes'])
+const columns = ref<Array<string>>(['operation', 'os', 'browser', 'ip', 'location', 'statusCode', 'operatedTimes'])
 
 const filters = ref({
   operation: null,
@@ -188,33 +188,36 @@ function handleCheckedChange(value: CheckboxValueType[]) {
           </ElTooltip>
 
           <ElTooltip :content="$t('column') + $t('settings')" placement="top">
-            <ElPopover :width="200" trigger="click">
-              <template #reference>
-                <ElButton title="settings" type="success" plain circle>
-                  <Icon icon="material-symbols:format-list-bulleted" width="18" height="18" />
-                </ElButton>
-              </template>
-              <div>
-                <ElCheckbox v-model="checkAll" :indeterminate="isIndeterminate" @change="handleCheckAllChange">
-                  {{ $t('all') }}
-                </ElCheckbox>
-                <ElDivider />
-                <ElCheckboxGroup v-model="checkedColumns" @change="handleCheckedChange">
-                  <draggable v-model="columns" item-key="simple">
-                    <template #item="{ element }">
-                      <div class="flex items-center space-x-2">
-                        <Icon icon="material-symbols:drag-indicator" width="18" height="18" class="hover:cursor-move" />
-                        <ElCheckbox :label="element" :value="element" :disabled="element === columns[0]">
-                          <div class="inline-flex items-center space-x-4">
-                            {{ $t(element) }}
-                          </div>
-                        </ElCheckbox>
-                      </div>
-                    </template>
-                  </draggable>
-                </ElCheckboxGroup>
-              </div>
-            </ElPopover>
+            <div class="inline-flex items-center align-middle ml-3">
+              <ElPopover :width="200" trigger="click">
+                <template #reference>
+                  <ElButton title="settings" type="success" plain circle>
+                    <Icon icon="material-symbols:format-list-bulleted" width="18" height="18" />
+                  </ElButton>
+                </template>
+                <div>
+                  <ElCheckbox v-model="checkAll" :indeterminate="isIndeterminate" @change="handleCheckAllChange">
+                    {{ $t('all') }}
+                  </ElCheckbox>
+                  <ElDivider />
+                  <ElCheckboxGroup v-model="checkedColumns" @change="handleCheckedChange">
+                    <draggable v-model="columns" item-key="simple">
+                      <template #item="{ element }">
+                        <div class="flex items-center space-x-2">
+                          <Icon icon="material-symbols:drag-indicator" width="18" height="18"
+                            class="hover:cursor-move" />
+                          <ElCheckbox :label="element" :value="element" :disabled="element === columns[0]">
+                            <div class="inline-flex items-center space-x-4">
+                              {{ $t(element) }}
+                            </div>
+                          </ElCheckbox>
+                        </div>
+                      </template>
+                    </draggable>
+                  </ElCheckboxGroup>
+                </div>
+              </ElPopover>
+            </div>
           </ElTooltip>
         </ElCol>
       </ElRow>
@@ -222,18 +225,18 @@ function handleCheckedChange(value: CheckboxValueType[]) {
       <ElTable ref="tableRef" v-loading="loading" :data="datas" row-key="id" stripe table-layout="auto">
         <ElTableColumn type="selection" width="55" />
         <ElTableColumn type="index" :label="$t('no')" width="55" />
-        <ElTableColumn prop="operation" :label="$t('operation')">
+        <ElTableColumn prop="operation" :label="$t('operation')" sortable>
           <template #default="scope">
             <ElButton title="details" type="primary" link @click="showRow(scope.row.id)">
               {{ scope.row.operation }}
             </ElButton>
           </template>
         </ElTableColumn>
-        <ElTableColumn show-overflow-tooltip prop="os" :label="$t('os')" />
-        <ElTableColumn show-overflow-tooltip prop="browser" :label="$t('browser')" />
-        <ElTableColumn show-overflow-tooltip prop="ip" :label="$t('ip')" />
-        <ElTableColumn show-overflow-tooltip prop="location" :label="$t('location')" />
-        <ElTableColumn prop="statusCode" :label="$t('statusCode')">
+        <ElTableColumn show-overflow-tooltip prop="os" :label="$t('os')" sortable />
+        <ElTableColumn show-overflow-tooltip prop="browser" :label="$t('browser')" sortable />
+        <ElTableColumn show-overflow-tooltip prop="ip" :label="$t('ip')" sortable />
+        <ElTableColumn show-overflow-tooltip prop="location" :label="$t('location')" sortable />
+        <ElTableColumn prop="statusCode" :label="$t('statusCode')" sortable>
           <template #default="scope">
             <ElTag v-if="scope.row.statusCode >= 200 && scope.row.statusCode < 300" type="success" round>
               {{ scope.row.statusCode }}
@@ -244,7 +247,7 @@ function handleCheckedChange(value: CheckboxValueType[]) {
             <ElTag v-else type="danger" round>{{ scope.row.statusCode }}</ElTag>
           </template>
         </ElTableColumn>
-        <ElTableColumn prop="operatedTimes" :label="$t('operatedTimes')">
+        <ElTableColumn prop="operatedTimes" :label="$t('operatedTimes')" sortable>
           <template #default="scope">
             {{ formatDuration(scope.row.operatedTimes) }}
           </template>
@@ -273,9 +276,8 @@ function handleCheckedChange(value: CheckboxValueType[]) {
       <ElDescriptionsItem :label="$t('os')">{{ row.os }}</ElDescriptionsItem>
       <ElDescriptionsItem :label="$t('userAgent')" :span="2">{{ row.userAgent }}</ElDescriptionsItem>
       <ElDescriptionsItem :label="$t('browser')">{{ row.browser }}</ElDescriptionsItem>
-      <ElDescriptionsItem :label="$t('referer')">{{ row.referer }}</ElDescriptionsItem>
+      <ElDescriptionsItem :label="$t('referer')" :span="2">{{ row.referer }}</ElDescriptionsItem>
       <ElDescriptionsItem :label="$t('sessionId')">{{ row.sessionId }}</ElDescriptionsItem>
-      <ElDescriptionsItem :label="$t('operator')">{{ row.operator }}</ElDescriptionsItem>
       <ElDescriptionsItem :label="$t('operatedTimes')">
         {{ row.operatedTimes ? formatDuration(row.operatedTimes) : '' }}
       </ElDescriptionsItem>
