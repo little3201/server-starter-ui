@@ -480,7 +480,7 @@ function handleActionCheck(privilegeId: number, item: string) {
   </DialogView>
 
   <!-- authorize -->
-  <DialogView v-model="authorizeVisible" :title="$t('authorize')" :max-height="500">
+  <DialogView v-model="authorizeVisible" :title="$t('authorize')" width="65%" :max-height="500">
     <ElTree :data="userStore.privileges" :props="{ label: 'name' }" node-key="id" show-checkbox default-expand-all
       :default-checked-keys="authorities.map(item => item.privilegeId)" :check-on-click-leaf="false">
       <template #default="{ node, data }">
