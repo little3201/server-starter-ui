@@ -79,6 +79,7 @@ export default {
   length: 'Leng',
   fieldType: 'Field Type',
   formType: 'Form Type',
+  tsType: 'TS Type',
   nullable: 'Nullable',
   unique: 'Unique',
   comment: 'Comment',
@@ -132,7 +133,7 @@ export default {
   schedulerLog: 'Scheduler Log',
   files: 'Files',
   exploiters: 'Exploiters',
-  generators: 'Generators',
+  schemas: 'Schemas',
   scripts: 'Scripts',
   templates: 'Templates',
 

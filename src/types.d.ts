@@ -185,6 +185,7 @@ export interface FileRecord extends AudtiMetadata {
 
 export interface Schema extends AudtiMetadata {
   name: string
+  linkId: number | undefined
   prefix?: string
   packagePath: string
   enabled?: boolean
@@ -209,23 +210,21 @@ export interface Template extends AudtiMetadata {
   name: string
   suffix: string
   content: string
-  type?: number
+  type: string | undefined
   version: string
   enabled?: boolean
 }
 
 export interface Script extends AudtiMetadata {
   name: string
-  type: number | undefined
+  type: string | undefined
   icon: string
   version: string
   content: string
-  description: string
 }
 
 export interface Database extends AudtiMetadata {
   name: string
-  type: number | undefined
   host: string
   port: number | undefined
   username: string

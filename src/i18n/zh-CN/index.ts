@@ -79,6 +79,7 @@ export default {
   length: '长度',
   fieldType: '属性类型',
   formType: '表单类型',
+  tsType: 'TS类型',
   nullable: '可为空',
   unique: '唯一',
   comment: '注释',
@@ -132,7 +133,7 @@ export default {
   schedulerLog: '调度日志',
   files: '文件管理',
   exploiters: '开发工具',
-  generators: '生成器',
+  schemas: '计划',
   scripts: '脚本',
   templates: '模板',
 

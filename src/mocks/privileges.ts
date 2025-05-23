@@ -52,7 +52,7 @@ const datas: Privilege[] = [
     path: 'exploiters',
     component: '#',
     name: 'exploiters',
-    redirect: 'generators',
+    redirect: 'schemas',
     icon: 'build-outline',
     count: 1,
     enabled: true,
@@ -172,9 +172,9 @@ const subDatas: Privilege[] = [
   {
     id: 15,
     superiorId: 14,
-    path: 'generators',
-    name: 'generators',
-    component: 'exploiters/generators',
+    path: 'schemas',
+    name: 'schemas',
+    component: 'exploiters/schemas',
     actions: ['create', 'modify', 'remove', 'import', 'export', 'config', 'preview', 'enable'],
     count: 0,
     enabled: true,
@@ -349,16 +349,16 @@ const treeNodes: PrivilegeTreeNode[] = [
     meta: {
       path: 'exploiters',
       component: '#',
-      redirect: 'generators',
+      redirect: 'schemas',
       icon: 'build-outline'
     },
     children: [
       {
         id: 15,
-        name: 'generators',
+        name: 'schemas',
         meta: {
-          path: 'generators',
-          component: 'exploiters/generators',
+          path: 'schemas',
+          component: 'exploiters/schemas',
           icon: 'genetics',
           actions: ['create', 'modify', 'remove', 'import', 'export', 'sync', 'config', 'execute', 'enable']
         }

@@ -381,29 +381,31 @@ function hancleTabClick(tab: TabsPaneContext) {
   }
 }
 
-function handleRolesTransferChange(value: TransferKey[], direction: TransferDirection) {
+function handleRolesTransferChange(value: TransferKey[], direction: TransferDirection, movedKeys: TransferKey[]) {
   if (form.value.id) {
     const privilegeId = form.value.id
     if (direction === 'left') {
-      value.forEach(v => removeRolesPrivileges(v as number, privilegeId))
+      movedKeys.forEach(v => {
+        removeRolesPrivileges(v as number, privilegeId)
+      })
     }
   }
 }
 
-function handleGroupsTransferChange(value: TransferKey[], direction: TransferDirection) {
+function handleGroupsTransferChange(value: TransferKey[], direction: TransferDirection, movedKeys: TransferKey[]) {
   if (form.value.id) {
     const privilegeId = form.value.id
     if (direction === 'left') {
-      value.forEach(v => removeGroupsPrivileges(v as number, privilegeId))
+      movedKeys.forEach(v => removeGroupsPrivileges(v as number, privilegeId))
     }
   }
 }
 
-function handleUsersTransferChange(value: TransferKey[], direction: TransferDirection) {
+function handleUsersTransferChange(value: TransferKey[], direction: TransferDirection, movedKeys: TransferKey[]) {
   if (form.value.id) {
     const privilegeId = form.value.id
     if (direction === 'left') {
-      value.forEach(v => removeUsersPrivileges(v as string, privilegeId))
+      movedKeys.forEach(v => removeUsersPrivileges(v as string, privilegeId))
     }
   }
 }
@@ -670,7 +672,7 @@ function rowName(key: number | string) {
       <ElButton title="cancel" @click="authorizeVisible = false">
         <Icon icon="material-symbols:close" width="18" height="18" />{{ $t('cancel') }}
       </ElButton>
-      <ElButton title="submit" type="primary" @click="onConfirm">
+      <ElButton title="submit" type="primary" @click="onConfirm" :disabled="checkedActions.length === 0">
         <Icon icon="material-symbols:check-circle-outline-rounded" width="18" height="18" /> {{ $t('confirm') }}
       </ElButton>
     </template>

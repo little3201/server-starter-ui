@@ -10,7 +10,6 @@ for (let i = 1; i < 8; i++) {
   const row: Database = {
     id: i,
     name: 'db_name' + i,
-    type: 1,
     host: '127.0.0.1',
     port: 3306,
     username: 'admin',

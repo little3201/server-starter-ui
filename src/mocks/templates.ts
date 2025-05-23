@@ -8,7 +8,7 @@ const datas: Template[] = [
     name: 'IndexPage',
     suffix: '.vue',
     version: '1.0.0',
-    type: 56,
+    type: 'UI',
     enabled: true,
     content: '<template>\n  <div class="app-container">\n </div>\n</template>',
     lastModifiedDate: new Date()
@@ -18,7 +18,7 @@ const datas: Template[] = [
     name: 'users',
     suffix: '.ts',
     version: '1.0.0',
-    type: 59,
+    type: 'TS',
     enabled: true,
     content: 'import { api } from \'boot/axios\'\nimport { SERVER_URL } from \'src/constants\'\nimport type { Pagination, User } from \'src/types\'\n\n/**\n * Retrieve rows\n * @param pagination Pagination and sort parameters\n * @param filters Optional filter or sort parameters\n * @returns Rows data\n */\nexport const retrieveUsers = (pagination: Pagination, filters?: object) => {\n  return api.get(SERVER_URL.USER, { params: { ...pagination, page: pagination.page - 1, ...filters } })\n}\n\n',
     lastModifiedDate: new Date()
@@ -28,7 +28,7 @@ const datas: Template[] = [
     name: 'Entity',
     suffix: '.java',
     version: '1.0.0',
-    type: 57,
+    type: 'Model',
     enabled: true,
     content: '// 数据对象 (Entity)\npackage com.example.demo.entity;\n\nimport javax.persistence.Entity;\nimport javax.persistence.GeneratedValue;\nimport javax.persistence.GenerationType;\nimport javax.persistence.Id;\nimport java.util.Date;\n\n@Entity\npublic class Page {\n    @Id\n    @GeneratedValue(strategy = GenerationType.IDENTITY)\n    private Long id;\n    private String name;\n    private String suffix;\n    private String version;\n    private int type;\n    private boolean enabled;\n    private String content;\n    private Date lastModifiedDate;\n\n    // Getters and Setters\n}\n\n// Repository\n',
     lastModifiedDate: new Date()
@@ -38,7 +38,7 @@ const datas: Template[] = [
     name: 'Repository',
     suffix: '.java',
     version: '1.0.0',
-    type: 26,
+    type: 'Repository',
     enabled: true,
     content: '// 数据对象 (Entity)\npackage com.example.demo.entity;\n\nimport javax.persistence.Entity;\nimport javax.persistence.GeneratedValue;\nimport javax.persistence.GenerationType;\nimport javax.persistence.Id;\nimport java.util.Date;\n\n@Entity\npublic class Page {\n    @Id\n    @GeneratedValue(strategy = GenerationType.IDENTITY)\n    private Long id;\n    private String name;\n    private String suffix;\n    private String version;\n    private int type;\n    private boolean enabled;\n    private String content;\n    private Date lastModifiedDate;\n\n    // Getters and Setters\n}\n\n// Repository\n',
     lastModifiedDate: new Date()
@@ -48,7 +48,7 @@ const datas: Template[] = [
     name: 'Mapper',
     suffix: '.java',
     version: '1.0.0',
-    type: 26,
+    type: 'Repository',
     enabled: true,
     content: '// 数据对象 (Entity)\npackage com.example.demo.entity;\n\nimport javax.persistence.Entity;\nimport javax.persistence.GeneratedValue;\nimport javax.persistence.GenerationType;\nimport javax.persistence.Id;\nimport java.util.Date;\n\n@Entity\npublic class Page {\n    @Id\n    @GeneratedValue(strategy = GenerationType.IDENTITY)\n    private Long id;\n    private String name;\n    private String suffix;\n    private String version;\n    private int type;\n    private boolean enabled;\n    private String content;\n    private Date lastModifiedDate;\n\n    // Getters and Setters\n}\n\n// Repository\n',
     lastModifiedDate: new Date()
@@ -58,7 +58,7 @@ const datas: Template[] = [
     name: 'Controller',
     suffix: '.java',
     version: '1.0.0',
-    type: 28,
+    type: 'controller',
     enabled: true,
     content: '// 数据对象 (Entity)\npackage com.example.demo.entity;\n\nimport javax.persistence.Entity;\nimport javax.persistence.GeneratedValue;\nimport javax.persistence.GenerationType;\nimport javax.persistence.Id;\nimport java.util.Date;\n\n@Entity\npublic class Page {\n    @Id\n    @GeneratedValue(strategy = GenerationType.IDENTITY)\n    private Long id;\n    private String name;\n    private String suffix;\n    private String version;\n    private int type;\n    private boolean enabled;\n    private String content;\n    private Date lastModifiedDate;\n\n    // Getters and Setters\n}\n\n// Repository\n',
     lastModifiedDate: new Date()

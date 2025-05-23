@@ -1,6 +1,6 @@
 import { dayjs } from 'element-plus'
 import { useUserStore } from 'stores/user-store'
-import type { Dictionary, PrivilegeTreeNode } from 'src/types'
+import type { PrivilegeTreeNode } from 'src/types'
 import type {RouteRecordNameGeneric} from 'vue-router'
 
 /**
@@ -79,17 +79,6 @@ export function formatFileSize(size: number): string {
 }
 
 /**
- * 格式化字典数据
- * @param value 字典值
- * @param rows  字典列表
- * @returns 字典名称
- */
-export function formatDictionary(value: number, rows: Dictionary[]): string {
-  const dictItem = rows.find(item => item.id === value)
-  return dictItem ? dictItem.name : ''
-}
-
-/**
  * 数组截取、可展示数组长度
  * @param array 集合、数组
  * @param count 截取树
@@ -153,13 +142,17 @@ export function download(data: Blob, filename: string, mimeType?: string): void 
   window.URL.revokeObjectURL(url)
 }
 
-export function groupByType<T>(array: T[], typeOptions: Dictionary[], typeKey: keyof T): { [key: string]: T[] } {
+export function groupByKey<T>(array: T[], typeKey: keyof T): { [key: string]: T[] } {
   return array.reduce((acc: { [key: string]: T[] }, curr: T) => {
-    const typeValue = curr[typeKey] as number // 假设类型键的值是一个数字
-    const name = formatDictionary(typeValue, typeOptions)
-    if (!name) { return acc }
-    if (!acc[name]) { acc[name] = [] }
-    acc[name].push(curr)
+    const typeValue = curr[typeKey] as string | number // 允许 `string` 或 `number` 类型
+    if (!typeValue) { return acc }
+    const groupKey = String(typeValue) // 确保转换为字符串，以便作为对象键
+
+    if (!acc[groupKey]) {
+      acc[groupKey] = []
+    }
+    acc[groupKey].push(curr)
+
     return acc
   }, {} as { [key: string]: T[] })
 }
