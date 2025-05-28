@@ -124,6 +124,7 @@ export interface PrivilegeTreeNode extends TreeNode {
 
 export interface TemplateTreeNode extends TreeNode {
   content?: string
+  type?: string
   suffix?: string
   children?: TemplateTreeNode[]
 }
@@ -185,7 +186,7 @@ export interface FileRecord extends AudtiMetadata {
 
 export interface Schema extends AudtiMetadata {
   name: string
-  linkId: number | undefined
+  connectionId: number | undefined
   prefix?: string
   packagePath: string
   enabled?: boolean

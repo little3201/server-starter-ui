@@ -588,7 +588,7 @@ function handleActionCheck(privilegeId: number, item: string) {
 
   <!-- import -->
   <DialogView v-model="importVisible" :title="$t('import')" width="36%">
-    <p>{{ $t('templates') + ' ' + $t('download') }}：
+    <p>{{ $t('masterPlates') + ' ' + $t('download') }}：
       <a :href="`templates/groups.xlsx`" :download="$t('groups') + '.xlsx'">
         {{ $t('groups') }}.xlsx
       </a>

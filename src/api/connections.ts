@@ -8,7 +8,7 @@ import type { Pagination, Database } from 'src/types'
  * @returns Rows data
  */
 export const retrieveDatabases = (pagination: Pagination, filters?: object) => {
-  return api.get(`${SERVER_URL.DB}`, { params: { ...pagination, page: pagination.page - 1, ...filters } })
+  return api.get(`${SERVER_URL.CONNECTIONS}`, { params: { ...pagination, page: pagination.page - 1, ...filters } })
 }
 
 /**
@@ -17,7 +17,7 @@ export const retrieveDatabases = (pagination: Pagination, filters?: object) => {
  * @returns Row data
  */
 export const fetchDatabase = (id: number) => {
-  return api.get(`${SERVER_URL.DB}/${id}`)
+  return api.get(`${SERVER_URL.CONNECTIONS}/${id}`)
 }
 
 /**
@@ -26,7 +26,7 @@ export const fetchDatabase = (id: number) => {
  * @returns Created row
  */
 export const createDatabase = (row: Database) => {
-  return api.post(SERVER_URL.DB, row)
+  return api.post(SERVER_URL.CONNECTIONS, row)
 }
 
 /**
@@ -36,7 +36,7 @@ export const createDatabase = (row: Database) => {
  * @returns Modified row
  */
 export const modifyDatabase = (id: number, row: Database) => {
-  return api.put(`${SERVER_URL.DB}/${id}`, row)
+  return api.put(`${SERVER_URL.CONNECTIONS}/${id}`, row)
 }
 
 /**
@@ -44,7 +44,7 @@ export const modifyDatabase = (id: number, row: Database) => {
  * @returns Rows data
  */
 export const retrieveTables = (id: number) => {
-  return api.get(`${SERVER_URL.DB}/${id}/tables`)
+  return api.get(`${SERVER_URL.CONNECTIONS}/${id}/tables`)
 }
 
 /**
@@ -53,5 +53,5 @@ export const retrieveTables = (id: number) => {
  * @returns Deletion status
  */
 export const removeDatabase = (id: number) => {
-  return api.delete(`${SERVER_URL.DB}/${id}`)
+  return api.delete(`${SERVER_URL.CONNECTIONS}/${id}`)
 }

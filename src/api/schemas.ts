@@ -8,8 +8,8 @@ import type { Pagination, Schema, Field } from 'src/types'
  * @param filters Optional filter or sort parameters
  * @returns Rows data
  */
-export const retrieveSchemas = (pagination: Pagination, linkId: number) => {
-  return api.get(SERVER_URL.SCHEMA, { params: { ...pagination, page: pagination.page - 1, linkId } })
+export const retrieveSchemas = (pagination: Pagination, connectionId: number) => {
+  return api.get(SERVER_URL.SCHEMA, { params: { ...pagination, page: pagination.page - 1, connectionId } })
 }
 
 export const retrieveSchemaFields = (id: number) => {

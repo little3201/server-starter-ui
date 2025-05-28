@@ -126,7 +126,7 @@ const subDatas: Privilege[] = [
     superiorId: 7,
     path: 'operation',
     component: 'logs/operation',
-    name: 'operationLog',
+    name: 'operationLogs',
     actions: ['clear', 'export', 'remove'],
     count: 0,
     enabled: true,
@@ -138,7 +138,7 @@ const subDatas: Privilege[] = [
     superiorId: 7,
     path: 'access',
     component: 'logs/access',
-    name: 'accessLog',
+    name: 'accessLogs',
     actions: ['clear', 'export', 'remove'],
     count: 0,
     enabled: true,
@@ -150,7 +150,7 @@ const subDatas: Privilege[] = [
     superiorId: 7,
     path: 'audit',
     component: 'logs/audit',
-    name: 'auditLog',
+    name: 'auditLogs',
     actions: ['remove', 'export'],
     count: 0,
     enabled: true,
@@ -162,7 +162,7 @@ const subDatas: Privilege[] = [
     superiorId: 7,
     path: 'scheduler',
     component: 'logs/scheduler',
-    name: 'schedulerLog',
+    name: 'schedulerLogs',
     actions: ['clear', 'export', 'remove'],
     count: 0,
     enabled: true,
@@ -196,9 +196,9 @@ const subDatas: Privilege[] = [
   {
     id: 17,
     superiorId: 14,
-    path: 'templates',
-    name: 'templates',
-    component: 'exploiters/templates',
+    path: 'master-plates',
+    name: 'masterPlates',
+    component: 'exploiters/master-plates',
     actions: ['create', 'modify', 'remove', 'import', 'export', 'enable'],
     count: 0,
     enabled: true,
@@ -282,7 +282,7 @@ const treeNodes: PrivilegeTreeNode[] = [
     children: [
       {
         id: 8,
-        name: 'operationLog',
+        name: 'operationLogs',
         meta: {
           path: 'operation',
           component: 'logs/operation',
@@ -292,7 +292,7 @@ const treeNodes: PrivilegeTreeNode[] = [
       },
       {
         id: 9,
-        name: 'accessLog',
+        name: 'accessLogs',
         meta: {
           path: 'access',
           component: 'logs/access',
@@ -302,7 +302,7 @@ const treeNodes: PrivilegeTreeNode[] = [
       },
       {
         id: 10,
-        name: 'auditLog',
+        name: 'auditLogs',
         meta: {
           path: 'audit',
           component: 'logs/audit',
@@ -312,7 +312,7 @@ const treeNodes: PrivilegeTreeNode[] = [
       },
       {
         id: 11,
-        name: 'schedulerLog',
+        name: 'schedulerLogs',
         meta: {
           path: 'scheduler',
           component: 'logs/scheduler',
@@ -374,10 +374,10 @@ const treeNodes: PrivilegeTreeNode[] = [
       },
       {
         id: 17,
-        name: 'templates',
+        name: 'masterPlates',
         meta: {
-          path: 'templates',
-          component: 'exploiters/templates',
+          path: 'master-plates',
+          component: 'exploiters/master-plates',
           icon: 'code',
           actions: ['create', 'modify', 'remove', 'import', 'export', 'enable']
         }

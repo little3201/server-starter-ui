@@ -9,7 +9,7 @@ for (let i = 1; i < 6; i++) {
   const row: Schema = {
     id: i,
     name: 'table_name' + i,
-    linkId: 1,
+    connectionId: 1,
     prefix: i > 4 ? 'sys_' : '',
     packagePath: 'com.example',
     enabled: i > 2,

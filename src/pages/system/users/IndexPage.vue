@@ -460,7 +460,7 @@ function handleCheckedChange(value: CheckboxValueType[]) {
 
   <!-- import -->
   <DialogView v-model="importVisible" :title="$t('import')" width="36%">
-    <p>{{ $t('templates') + ' ' + $t('download') }}：
+    <p>{{ $t('masterPlates') + ' ' + $t('download') }}：
       <a :href="`templates/users.xlsx`" :download="$t('users') + '.xlsx'">
         {{ $t('users') }}.xlsx
       </a>

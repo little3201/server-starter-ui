@@ -88,41 +88,6 @@ export function visibleArray<T extends string | number>(array: T[], count: numbe
   return array.length > count ? array.slice(0, count) : array
 }
 
-/**
-  将下划线格式转换为驼峰格式，并将每个单词的首字母大写
- * @param word 输入
- * @returns 结果
- */
-export function pluralToSingularAndCapitalize(word: string) {
-  const camelCase = word.split('_').map((part: string) => {
-    const singular = wordToSingular(part)
-    return singular.charAt(0).toUpperCase() + singular.slice(1).toLowerCase()
-  }).join('')
-
-  return camelCase
-}
-
-/**
- * 复数到单数的转换规则
- * @param word 复数
- * @returns 单数
- */
-export function wordToSingular(word: string) {
-  const pluralRules = [
-    { regex: /ies$/, replacement: 'y' },
-    { regex: /ves$/, replacement: 'f' },
-    { regex: /s$/, replacement: '' }
-  ]
-
-  // 将单词转换为单数
-  for (const rule of pluralRules) {
-    if (rule.regex.test(word)) {
-      return word.replace(rule.regex, rule.replacement)
-    }
-  }
-  return word
-}
-
 export function download(data: Blob, filename: string, mimeType?: string): void {
   // 创建一个新的 Blob 对象，指定 MIME 类型
   const blob = new Blob([data], { type: mimeType || 'application/octet-stream' })
