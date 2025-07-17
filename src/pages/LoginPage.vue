@@ -8,7 +8,8 @@ import { api } from 'boot/axios'
 import { SERVER_URL } from 'src/constants'
 import ThemeToogle from 'components/ThemeToogle.vue'
 import LanguageSelector from 'components/LanguageSelector.vue'
-import { getRandomString, generateVerifier, computeChallenge } from 'src/utils'
+import { createRandomString, generateVerifier, computeChallenge } from 'src/utils'
+import logo from 'src/assets/logo.svg'
 
 
 const { t } = useI18n()
@@ -44,7 +45,7 @@ async function onSubmit(formEl: FormInstance | undefined) {
     if (valid) {
       loading.value = true
 
-      const state = getRandomString(16)
+      const state = createRandomString(16)
       const codeVerifier = generateVerifier()
       // 存储code_verifier
       localStorage.setItem('code_verifier', codeVerifier)
@@ -68,7 +69,7 @@ function load() {
       canvas: lottieRef.value,
       loop: true,
       autoplay: true,
-      src: '/1707289607880.lottie',
+      src: 'src/assets/1707289607880.lottie',
       renderConfig: {
         autoResize: true
       }
@@ -124,7 +125,7 @@ function load() {
             class="flex flex-row items-center w-full xl:w-1/2 h-full  bg-[var(--el-color-primary-light-9)] dark:bg-transparent">
             <div class="flex flex-col w-full h-full space-y-2xl justify-center items-center">
               <div class="text-center">
-                <ElImage src="/svgs/logo.svg" alt="logo" class="w-24 h-24" />
+                <ElImage :src="logo" alt="logo" class="w-24 h-24" />
               </div>
               <div class="text-lg font-bold text-center mb-xs">
                 {{ $t('signinTo') }}

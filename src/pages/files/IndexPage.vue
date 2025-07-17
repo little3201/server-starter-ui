@@ -1,10 +1,8 @@
 <script setup lang="ts">
 import { ref, onMounted, reactive } from 'vue'
-import type { UploadInstance, CheckboxValueType, UploadRequestOptions } from 'element-plus'
-import draggable from 'vuedraggable'
+import type { UploadInstance, UploadRequestOptions } from 'element-plus'
 import DialogView from 'components/DialogView.vue'
-import { dayjs } from 'element-plus'
-import { retrieveFiles, fetchFile, uploadFile, downloadFile } from 'src/api/files'
+import { retrieveFiles, fetchFile, uploadFile, downloadFile } from 'src/api/file-records'
 import type { Pagination, FileRecord } from 'src/types'
 import { Icon } from '@iconify/vue'
 import { formatFileSize, download, hasAction } from 'src/utils'
@@ -24,17 +22,15 @@ const pagination = reactive<Pagination>({
 const initialValues: FileRecord = {
   id: undefined,
   name: '',
+  type: 'file',
   mimeType: '',
-  size: 0
+  size: 0,
+  path: ''
 }
 const row = ref<FileRecord>({ ...initialValues })
 const visible = ref<boolean>(false)
+const view = ref<'table' | 'grid'>('table')
 const uploadVisible = ref<boolean>(false)
-
-const checkAll = ref<boolean>(true)
-const isIndeterminate = ref<boolean>(false)
-const checkedColumns = ref<Array<string>>(['name', 'type', 'size'])
-const columns = ref<Array<string>>(['name', 'type', 'size'])
 
 const uploadRef = ref<UploadInstance>()
 
@@ -90,9 +86,15 @@ onMounted(() => {
   load()
 })
 
-function showRow(id: number) {
-  loadOne(id)
+function showRow(id: number | undefined) {
+  if (id) {
+    loadOne(id)
+  }
   visible.value = true
+}
+
+function onViewChange() {
+  view.value = view.value === 'table' ? 'grid' : 'table'
 }
 
 /**
@@ -147,24 +149,7 @@ function confirmEvent(id: number) {
   }
 }
 
-/**
- * 全选操作
- * @param val 是否全选
- */
-function handleCheckAllChange(val: CheckboxValueType) {
-  checkedColumns.value = val ? columns.value : []
-  isIndeterminate.value = false
-}
 
-/**
- * 选中操作
- * @param value 选中的值
- */
-function handleCheckedChange(value: CheckboxValueType[]) {
-  const checkedCount = value.length
-  checkAll.value = checkedCount === columns.value.length
-  isIndeterminate.value = checkedCount > 0 && checkedCount < columns.value.length
-}
 </script>
 
 <template>
@@ -185,18 +170,18 @@ function handleCheckedChange(value: CheckboxValueType[]) {
       <ElCard shadow="never">
         <p class="mt-0"><strong>Categories</strong></p>
         <ElMenu class="mt-4">
-          <ElMenuItem>
+          <ElMenuItem index="images">
             <ElButton title="images" circle type="success" size="large" class="mr-4">
               <Icon icon="material-symbols:imagesmode-outline-rounded" width="20" height="20" />
             </ElButton>Images
           </ElMenuItem>
-          <ElMenuItem>
+          <ElMenuItem index="videos">
             <ElButton title="videos" circle type="primary" size="large" class="mr-4">
               <Icon icon="material-symbols:videocam-outline-rounded" width="20" height="20" />
             </ElButton>
             Videos
           </ElMenuItem>
-          <ElMenuItem>
+          <ElMenuItem index="documents">
             <ElButton title="documents" circle type="warning" size="large" class="mr-4">
               <Icon icon="material-symbols:docs-outline-rounded" width="20" height="20" />
             </ElButton>Documents
@@ -232,92 +217,85 @@ function handleCheckedChange(value: CheckboxValueType[]) {
 
           <ElCol :span="8" class="text-right">
             <ElTooltip effect="dark" :content="$t('refresh')" placement="top">
-              <ElButton title="refresh" type="primary" plain circle @click="load">
+              <ElButton title="refresh" plain circle @click="load">
                 <Icon icon="material-symbols:refresh-rounded" width="18" height="18" />
               </ElButton>
             </ElTooltip>
-
-            <ElTooltip :content="$t('column') + $t('settings')" placement="top">
-              <div class="inline-flex items-center align-middle ml-3">
-                <ElPopover :width="200" trigger="click">
-                  <template #reference>
-                    <ElButton title="settings" type="success" plain circle>
-                      <Icon icon="material-symbols:format-list-bulleted" width="18" height="18" />
-                    </ElButton>
-                  </template>
-                  <div>
-                    <ElCheckbox v-model="checkAll" :indeterminate="isIndeterminate" @change="handleCheckAllChange">
-                      {{ $t('all') }}
-                    </ElCheckbox>
-                    <ElDivider />
-                    <ElCheckboxGroup v-model="checkedColumns" @change="handleCheckedChange">
-                      <draggable v-model="columns" item-key="simple">
-                        <template #item="{ element }">
-                          <div class="flex items-center space-x-2">
-                            <Icon icon="material-symbols:drag-indicator" width="18" height="18"
-                              class="hover:cursor-move" />
-                            <ElCheckbox :label="element" :value="element" :disabled="element === columns[0]">
-                              <div class="inline-flex items-center space-x-4">
-                                {{ $t(element) }}
-                              </div>
-                            </ElCheckbox>
-                          </div>
-                        </template>
-                      </draggable>
-                    </ElCheckboxGroup>
-                  </div>
-                </ElPopover>
-              </div>
+            <ElTooltip :content="$t('view')" placement="top">
+              <ElButton title="view" type="primary" plain circle @click="onViewChange">
+                <Icon :icon="`material-symbols:${view === 'table' ? 'grid-view-outline-rounded' : 'view-list-outline'}`"
+                  width="18" height="18" />
+              </ElButton>
             </ElTooltip>
           </ElCol>
         </ElRow>
 
-        <ElTable v-loading="loading" :data="datas" row-key="id" stripe table-layout="auto"
-          @sort-change="handleSortChange">
-          <ElTableColumn type="index" :label="$t('no')" width="55" />
-          <ElTableColumn prop="name" :label="$t('name')" sortable>
-            <template #default="scope">
-              <ElButton title="details" type="primary" link @click="showRow(scope.row.id)">
-                {{ scope.row.name }}
-              </ElButton>
+        <div v-if="view === 'table'">
+          <ElTable v-loading="loading" :data="datas" row-key="id" stripe table-layout="auto"
+            @sort-change="handleSortChange">
+            <ElTableColumn type="index" :label="$t('no')" width="55" />
+            <ElTableColumn prop="name" :label="$t('name')" sortable>
+              <template #default="scope">
+                <ElButton title="details" type="primary" link @click="showRow(scope.row.id)">
+                  <Icon :icon="`flat-color-icons:${scope.row.type === 'file' ? 'file' : 'folder'}`" width="16"
+                    height="16" class="mr-2" />{{ scope.row.name }}
+                </ElButton>
+              </template>
+            </ElTableColumn>
+            <ElTableColumn prop="size" :label="$t('size')" sortable>
+              <template #default="scope">
+                {{ formatFileSize(scope.row.size) }}
+              </template>
+            </ElTableColumn>
+            <ElTableColumn prop="mimeType" :label="$t('type')" sortable />
+            <ElTableColumn :label="$t('actions')">
+              <template #default="scope">
+                <ElButton v-if="hasAction($route.name, 'download')" title="download" size="small" type="success" link
+                  @click="downloadRow(scope.row.id, scope.row.name, scope.row.mimeType)">
+                  <Icon icon="material-symbols:download" width="16" height="16" />{{ $t('download') }}
+                </ElButton>
+                <ElPopconfirm :title="$t('removeConfirm')" :width="240" @confirm="confirmEvent(scope.row.id)">
+                  <template #reference>
+                    <ElButton v-if="hasAction($route.name, 'remove')" title="remove" size="small" type="danger" link>
+                      <Icon icon="material-symbols:delete-outline-rounded" width="16" height="16" />{{ $t('remove') }}
+                    </ElButton>
+                  </template>
+                </ElPopconfirm>
+              </template>
+            </ElTableColumn>
+          </ElTable>
+          <ElPagination layout="prev, pager, next, sizes, jumper, ->, total" @change="pageChange" :total="total" />
+        </div>
+
+        <div v-else class="grid gap-4 mt-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-6">
+          <div v-for="data in datas" :key="data.id" class="text-center cursor-pointer" @click="showRow(data.id)"
+            body-class="hover:bg-[var(--el-bg-color-page)]">
+            <Icon v-if="data.type === 'directory'" icon="flat-color-icons:folder" width="80" height="80" />
+            <template v-else-if="data.mimeType">
+              <ElImage v-if="['text/jpg', 'jpeg', 'svg'].includes(data.mimeType)" :src="data.path" class="w-20 h-20" />
+              <Icon v-else icon="flat-color-icons:file" width="80" height="80" />
             </template>
-          </ElTableColumn>
-          <ElTableColumn prop="size" :label="$t('size')" sortable>
-            <template #default="scope">
-              {{ formatFileSize(scope.row.size) }}
-            </template>
-          </ElTableColumn>
-          <ElTableColumn prop="lastModifiedDate" :label="$t('lastModifiedDate')" sortable>
-            <template #default="scope">
-              {{ dayjs(scope.row.lastModifiedDate).format('YYYY-MM-DD HH:mm') }}
-            </template>
-          </ElTableColumn>
-          <ElTableColumn :label="$t('actions')">
-            <template #default="scope">
-              <ElButton v-if="hasAction($route.name, 'download')" title="download" size="small" type="success" link
-                @click="downloadRow(scope.row.id, scope.row.name, scope.row.mimeType)">
-                <Icon icon="material-symbols:download" width="16" height="16" />{{ $t('download') }}
-              </ElButton>
-              <ElPopconfirm :title="$t('removeConfirm')" :width="240" @confirm="confirmEvent(scope.row.id)">
-                <template #reference>
-                  <ElButton v-if="hasAction($route.name, 'remove')" title="remove" size="small" type="danger" link>
-                    <Icon icon="material-symbols:delete-outline-rounded" width="16" height="16" />{{ $t('remove') }}
-                  </ElButton>
-                </template>
-              </ElPopconfirm>
-            </template>
-          </ElTableColumn>
-        </ElTable>
-        <ElPagination layout="prev, pager, next, sizes, jumper, ->, total" @change="pageChange" :total="total" />
+            <div>
+              <p class="my-1 text-sm text-[var(--el-text-color-regular)]">
+                {{ data.name }}
+              </p>
+            </div>
+          </div>
+        </div>
       </ElCard>
     </ElSpace>
   </ElSpace>
 
-
-  <DialogView v-model="visible" :title="$t('details')" show-close width="35%">
-
+  <!-- details -->
+  <DialogView v-model="visible" :title="$t('details')" show-close width="25%">
+    <ElDescriptions v-loading="loading" :column="1">
+      <ElDescriptionsItem :label="$t('name')">{{ row.name }}</ElDescriptionsItem>
+      <ElDescriptionsItem :label="$t('size')">{{ formatFileSize(row.size) }}</ElDescriptionsItem>
+      <ElDescriptionsItem :label="$t('type')">{{ row.mimeType }}</ElDescriptionsItem>
+    </ElDescriptions>
   </DialogView>
 
+  <!-- upload -->
   <DialogView v-model="uploadVisible" :title="$t('upload')" width="35%">
     <ElUpload ref="uploadRef" multiple drag :auto-upload="false" :http-request="onUpload" :on-success="load">
       <div class="el-icon--upload inline-flex justify-center">

@@ -20,7 +20,7 @@ export const SERVER_URL = {
   GROUP: SERVER_PREFIX.HYPERVISOR.concat('/groups'), // 分组
   DICTIONARY: SERVER_PREFIX.HYPERVISOR.concat('/dictionaries'), // 字典
 
-  REGION: SERVER_PREFIX.HYPERVISOR.concat('/regions'), // 行政区划
+  REGION: SERVER_PREFIX.ASSETS.concat('/regions'), // 行政区划
   FILE: SERVER_PREFIX.ASSETS.concat('/files'), // 文件
 
   ACCESS_LOG: SERVER_PREFIX.HYPERVISOR.concat('/access-logs'), // 访问日志
@@ -37,7 +37,7 @@ export const SERVER_URL = {
   // exploiters
   SCRIPT: SERVER_PREFIX.EXPLOITER.concat('/scripts'), // 脚本
   SCHEMA: SERVER_PREFIX.EXPLOITER.concat('/schemas'), // 表配置
-  MASTER_PLATE: SERVER_PREFIX.EXPLOITER.concat('/master-plates'), // 母版
+  MASTER_PLATE: SERVER_PREFIX.EXPLOITER.concat('/master-plates'), // 母板
   CONNECTIONS: SERVER_PREFIX.EXPLOITER.concat('/connections') // 库连接
 }
 
@@ -87,4 +87,20 @@ export const queryTypes: { [key: string]: string } = {
   notBetween: 'NOT BETWEEN',
   isNull: 'IS NULL',
   isNotNull: 'IS NOT NULL'
-};
+}
+
+export const shceduleStatus: {[key: string]: 'primary' | 'success' | 'info' | 'warning' | 'danger'} = {
+  PENDING: 'info', 
+  RUNNING: 'primary', 
+  SUCCESS: 'success',
+  FAILED: 'danger', 
+  CANCELED: 'warning'
+}
+
+export const shceduleStatusIcon: {[key: string]: string} = {
+  PENDING: 'pending-outline', 
+  RUNNING: 'progress-activity', 
+  SUCCESS: 'check-rounded',
+  FAILED: 'error-outline-rounded', 
+  CANCELED: 'cancel-outline-rounded'
+}

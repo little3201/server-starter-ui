@@ -1,13 +1,12 @@
 <script setup lang="ts">
 import { ref, onMounted, reactive } from 'vue'
-import type { TableInstance, CheckboxValueType } from 'element-plus'
-import draggable from 'vuedraggable'
+import type { TableInstance } from 'element-plus'
 import DialogView from 'components/DialogView.vue'
 import { retrieveAuditLogs, fetchAuditLog, removeAuditLog } from 'src/api/audit-logs'
 import type { Pagination, AuditLog } from 'src/types'
 import { Icon } from '@iconify/vue'
 import { actions } from 'src/constants'
-import { formatDuration, hasAction } from 'src/utils'
+import { formatDuration, hasAction, exportToCSV } from 'src/utils'
 
 
 const loading = ref<boolean>(false)
@@ -20,21 +19,16 @@ const pagination = reactive<Pagination>({
   size: 10
 })
 
-const checkAll = ref<boolean>(true)
-const isIndeterminate = ref<boolean>(false)
-const checkedColumns = ref<Array<string>>(['resource', 'operation', 'oldValue', 'newValue', 'ip', 'location', 'statusCode', 'operatedTimes'])
-const columns = ref<Array<string>>(['resource', 'operation', 'oldValue', 'newValue', 'ip', 'location', 'statusCode', 'operatedTimes'])
-
 const filters = ref({
   resource: null,
   operation: null
 })
 
 const detailLoading = ref<boolean>(false)
+const exportLoading = ref<boolean>(false)
 const initialValues: AuditLog = {
   id: undefined,
   operation: '',
-  operator: '',
   resource: '',
   ip: '',
   location: ''
@@ -94,8 +88,13 @@ onMounted(() => {
  * 导出
  */
 async function exportRows() {
+  exportLoading.value = true
+
   const selectedRows = tableRef.value?.getSelectionRows()
-  console.log('selectedRows:', selectedRows)
+  if (selectedRows && selectedRows.length) {
+    exportToCSV(selectedRows, 'audit-logs')
+  }
+  exportLoading.value = false
 }
 
 /**
@@ -126,24 +125,7 @@ function confirmEvent(id: number) {
   }
 }
 
-/**
- * 全选操作
- * @param val 是否全选
- */
-function handleCheckAllChange(val: CheckboxValueType) {
-  checkedColumns.value = val ? columns.value : []
-  isIndeterminate.value = false
-}
 
-/**
- * 选中操作
- * @param value 选中的值
- */
-function handleCheckedChange(value: CheckboxValueType[]) {
-  const checkedCount = value.length
-  checkAll.value = checkedCount === columns.value.length
-  isIndeterminate.value = checkedCount > 0 && checkedCount < columns.value.length
-}
 </script>
 
 <template>
@@ -170,49 +152,17 @@ function handleCheckedChange(value: CheckboxValueType[]) {
     <ElCard shadow="never">
       <ElRow :gutter="20" justify="space-between" class="mb-4">
         <ElCol :span="16" class="text-left">
-          <ElButton v-if="hasAction($route.name, 'export')" title="export" type="success" plain @click="exportRows">
+          <ElButton v-if="hasAction($route.name, 'export')" title="export" type="success" plain @click="exportRows"
+            :loading="exportLoading">
             <Icon icon="material-symbols:file-export-outline-rounded" width="18" height="18" />{{ $t('export') }}
           </ElButton>
         </ElCol>
 
         <ElCol :span="8" class="text-right">
           <ElTooltip class="box-item" effect="dark" :content="$t('refresh')" placement="top">
-            <ElButton title="refresh" type="primary" plain circle @click="load">
+            <ElButton title="view" plain circle @click="load">
               <Icon icon="material-symbols:refresh-rounded" width="18" height="18" />
             </ElButton>
-          </ElTooltip>
-
-          <ElTooltip :content="$t('column') + $t('settings')" placement="top">
-            <div class="inline-flex items-center align-middle ml-3">
-              <ElPopover :width="200" trigger="click">
-                <template #reference>
-                  <ElButton title="settings" type="success" plain circle>
-                    <Icon icon="material-symbols:format-list-bulleted" width="18" height="18" />
-                  </ElButton>
-                </template>
-                <div>
-                  <ElCheckbox v-model="checkAll" :indeterminate="isIndeterminate" @change="handleCheckAllChange">
-                    {{ $t('all') }}
-                  </ElCheckbox>
-                  <ElDivider />
-                  <ElCheckboxGroup v-model="checkedColumns" @change="handleCheckedChange">
-                    <draggable v-model="columns" item-key="simple">
-                      <template #item="{ element }">
-                        <div class="flex items-center space-x-2">
-                          <Icon icon="material-symbols:drag-indicator" width="18" height="18"
-                            class="hover:cursor-move" />
-                          <ElCheckbox :label="element" :value="element" :disabled="element === columns[0]">
-                            <div class="inline-flex items-center space-x-4">
-                              {{ $t(element) }}
-                            </div>
-                          </ElCheckbox>
-                        </div>
-                      </template>
-                    </draggable>
-                  </ElCheckboxGroup>
-                </div>
-              </ElPopover>
-            </div>
           </ElTooltip>
         </ElCol>
       </ElRow>
@@ -273,11 +223,6 @@ function handleCheckedChange(value: CheckboxValueType[]) {
         <ElBadge is-dot :type="actions[row.operation.toLowerCase()]" class="mr-1" />{{ row.operation }}
       </ElDescriptionsItem>
       <ElDescriptionsItem :label="$t('resource')">{{ row.resource }}</ElDescriptionsItem>
-      <ElDescriptionsItem :label="$t('operator')">{{ row.operator }}</ElDescriptionsItem>
-      <ElDescriptionsItem :label="$t('oldValue')" :span="3">{{ row.oldValue }}</ElDescriptionsItem>
-      <ElDescriptionsItem :label="$t('newValue')" :span="3">{{ row.newValue }}</ElDescriptionsItem>
-      <ElDescriptionsItem :label="$t('ip')">{{ row.ip }}</ElDescriptionsItem>
-      <ElDescriptionsItem :label="$t('location')" :span="2">{{ row.location }}</ElDescriptionsItem>
       <ElDescriptionsItem :label="$t('statusCode')">
         <ElTag v-if="row.statusCode && (row.statusCode >= 200 && row.statusCode < 300)" type="success" round>
           {{ row.statusCode }}
@@ -287,6 +232,10 @@ function handleCheckedChange(value: CheckboxValueType[]) {
         </ElTag>
         <ElTag v-else type="danger" round>{{ row.statusCode }}</ElTag>
       </ElDescriptionsItem>
+      <ElDescriptionsItem :label="$t('oldValue')" :span="3">{{ row.oldValue }}</ElDescriptionsItem>
+      <ElDescriptionsItem :label="$t('newValue')" :span="3">{{ row.newValue }}</ElDescriptionsItem>
+      <ElDescriptionsItem :label="$t('ip')">{{ row.ip }}</ElDescriptionsItem>
+      <ElDescriptionsItem :label="$t('location')">{{ row.location }}</ElDescriptionsItem>
       <ElDescriptionsItem :label="$t('operatedTimes')">{{ row.operatedTimes ? formatDuration(row.operatedTimes) : '' }}
       </ElDescriptionsItem>
     </ElDescriptions>

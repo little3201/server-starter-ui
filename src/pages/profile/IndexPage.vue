@@ -12,8 +12,8 @@ const { locale } = useI18n()
 const me = ref<User>({
   id: undefined,
   username: '',
-  givenName: '',
-  familyName: '',
+  firstname: '',
+  lastname: '',
   email: ''
 })
 // 登录历史数据模拟
@@ -38,7 +38,7 @@ const items = ref([
   { id: 3, name: 'sessions', icon: 'bigtop-updates', path: '' },
 ])
 
-const activeTab = ref('overview')
+const activeTabName = ref('overview')
 
 const formRef = ref<FormInstance>()
 const initialValues = {
@@ -86,10 +86,10 @@ onMounted(() => {
         <ElAvatar :size="80" :src="me.avatar" />
         <div class="ml-4 flex-1">
           <span v-if="locale === 'en-US' || me.middleName" class="text-lg my-1">
-            {{ me.givenName }} {{ me.middleName }} {{ me.familyName }}
+            {{ me.firstname }} {{ me.middleName }} {{ me.lastname }}
           </span>
           <span v-else class="text-lg my-1">
-            {{ me.familyName }}{{ me.givenName }}
+            {{ me.lastname }}{{ me.firstname }}
           </span>
 
           <div class="text-sm text-[var(--el-text-color-secondary)]">
@@ -120,7 +120,7 @@ onMounted(() => {
 
     <ElCol :span="19">
       <ElCard shadow="never">
-        <ElTabs stretch v-model="activeTab">
+        <ElTabs stretch v-model="activeTabName">
           <!-- Overview -->
           <ElTabPane :label="$t('overview')" name="overview">
             <h3>Login Information</h3>
