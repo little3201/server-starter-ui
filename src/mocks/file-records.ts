@@ -1,27 +1,25 @@
 import { http, HttpResponse } from 'msw'
 import { SERVER_URL } from 'src/constants'
-import type { AuditLog } from 'src/types'
+import type { FileRecord } from 'src/types'
 
-
-const datas: AuditLog[] = []
+const datas: FileRecord[] = [
+]
 
 for (let i = 1; i < 28; i++) {
-  const row: AuditLog = {
+  const data: FileRecord = {
     id: i,
-    operation: 'Modify',
-    resource: 'Settings',
-    oldValue: '{"theme:"light"}',
-    newValue: '{"theme:"dark"}',
-    ip: '192.168.0.4',
-    location: 'Berlin',
-    statusCode: 200,
-    operatedTimes: 12121
+    name: 'name_' + i + (i % 3 > 0 ? '' : (i % 2 > 0 ? '.jpg':'.zip')),
+    type: i % 3 > 0 ? 'directory' : 'file',
+    mimeType:  i % 3 > 0 ? '' : (i % 2 > 0 ? 'text/jpg' : 'application/zip'),
+    size: Math.floor(Math.random() * 100000),
+    path: '/images',
+    lastModifiedDate: new Date()
   }
-  datas.push(row)
+  datas.push(data)
 }
 
-export const auditLogsHandlers = [
-  http.get(`/api${SERVER_URL.AUDIT_LOG}/:id`, ({ params }) => {
+export const fileRecordsHandlers = [
+  http.get(`/api${SERVER_URL.FILE}/:id`, ({ params }) => {
     const { id } = params
     if (id) {
       return HttpResponse.json(datas.filter(item => item.id === Number(id))[0])
@@ -29,7 +27,7 @@ export const auditLogsHandlers = [
       return HttpResponse.json()
     }
   }),
-  http.get(`/api${SERVER_URL.AUDIT_LOG}`, ({ request }) => {
+  http.get(`/api${SERVER_URL.FILE}`, ({ request }) => {
     const searchParams = new URL(request.url).searchParams
     const page = searchParams.get('page')
     const size = searchParams.get('size')
@@ -44,7 +42,23 @@ export const auditLogsHandlers = [
 
     return HttpResponse.json(data)
   }),
-  http.delete(`/api${SERVER_URL.AUDIT_LOG}/:id`, ({ params }) => {
+  http.post(`/api${SERVER_URL.FILE}`, async ({ request }) => {
+    const data = await request.formData()
+    const file = data.get('file')
+
+    if (!file) {
+      return new HttpResponse('Missing document', { status: 400 })
+    }
+
+    if (!(file instanceof File)) {
+      return new HttpResponse('Uploaded document is not a File', {
+        status: 400,
+      })
+    }
+
+    return HttpResponse.json(datas[0])
+  }),
+  http.delete(`/api${SERVER_URL.FILE}`, ({ params }) => {
     // All request path params are provided in the "params"
     // argument of the response resolver.
     const { id } = params
@@ -58,7 +72,7 @@ export const auditLogsHandlers = [
       return new HttpResponse(null, { status: 404 })
     }
 
-    // Remove the Row from the "allRow" map.
+    // Delete the Row from the "allRow" map.
     datas.pop()
 
     // Respond with a "200 OK" response and the deleted Row.
