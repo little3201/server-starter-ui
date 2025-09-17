@@ -9,11 +9,11 @@ import { operationLogsHandlers } from './operation-logs'
 import { accessLogsHandlers } from './access-logs'
 import { auditLogsHandlers } from './audit-logs'
 import { schedulerLogsHandlers } from './scheduler-logs'
-import { filesHandlers } from './files'
+import { fileRecordsHandlers } from './file-records'
 import { schemasHandlers } from './schemas'
 import { scriptsHandlers } from './scripts'
-import { templatesHandlers } from './templates'
-import { dbHandlers } from './db'
+import { samplesHandlers } from './samples'
+import { connectionsHandlers } from './connections'
 
 export const handlers = [
   ...authenticationHandlers,
@@ -27,9 +27,9 @@ export const handlers = [
   ...accessLogsHandlers,
   ...auditLogsHandlers,
   ...schedulerLogsHandlers,
-  ...filesHandlers,
+  ...fileRecordsHandlers,
   ...schemasHandlers,
   ...scriptsHandlers,
-  ...templatesHandlers,
-  ...dbHandlers
+  ...samplesHandlers,
+  ...connectionsHandlers
 ]

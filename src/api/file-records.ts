@@ -8,8 +8,13 @@ import type { Pagination } from 'src/types'
  * @param filters Optional filter or sort parameters
  * @returns Rows data
  */
-export const retrieveFiles = (pagination: Pagination, filters?: object) => {
-  return api.get(SERVER_URL.FILE, { params: { ...pagination, page: pagination.page - 1, ...filters } })
+export const retrieveFiles = (pagination: Pagination, filters?: object | string) => {
+  if (filters) {
+    filters = Object.entries(filters).map(([key, value]) => {
+      return `${key}:${value}`
+    }).join(',')
+  }
+  return api.get(SERVER_URL.FILE, { params: { ...pagination, page: pagination.page - 1, filters } })
 }
 
 /**
@@ -29,7 +34,7 @@ export const fetchFile = (id: number) => {
 export const uploadFile = (file: File) => {
   const formData = new FormData()
   formData.append('file', file)
-  return api.post(`${SERVER_URL.FILE}/upload`, formData)
+  return api.post(`${SERVER_URL.FILE}`, formData)
 }
 
 /**

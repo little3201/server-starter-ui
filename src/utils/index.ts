@@ -1,7 +1,8 @@
 import { dayjs } from 'element-plus'
+import * as XLSX from 'xlsx'
 import { useUserStore } from 'stores/user-store'
 import type { PrivilegeTreeNode } from 'src/types'
-import type {RouteRecordNameGeneric} from 'vue-router'
+import type { RouteRecordNameGeneric } from 'vue-router'
 
 /**
  * Resolve a child path relative to a parent path
@@ -89,40 +90,11 @@ export function visibleArray<T extends string | number>(array: T[], count: numbe
 }
 
 /**
-  将下划线格式转换为驼峰格式，并将每个单词的首字母大写
- * @param word 输入
- * @returns 结果
+ * 下载
+ * @param data 数据
+ * @param filename 文件名
+ * @param mimeType 文件类型
  */
-export function pluralToSingularAndCapitalize(word: string) {
-  const camelCase = word.split('_').map((part: string) => {
-    const singular = wordToSingular(part)
-    return singular.charAt(0).toUpperCase() + singular.slice(1).toLowerCase()
-  }).join('')
-
-  return camelCase
-}
-
-/**
- * 复数到单数的转换规则
- * @param word 复数
- * @returns 单数
- */
-export function wordToSingular(word: string) {
-  const pluralRules = [
-    { regex: /ies$/, replacement: 'y' },
-    { regex: /ves$/, replacement: 'f' },
-    { regex: /s$/, replacement: '' }
-  ]
-
-  // 将单词转换为单数
-  for (const rule of pluralRules) {
-    if (rule.regex.test(word)) {
-      return word.replace(rule.regex, rule.replacement)
-    }
-  }
-  return word
-}
-
 export function download(data: Blob, filename: string, mimeType?: string): void {
   // 创建一个新的 Blob 对象，指定 MIME 类型
   const blob = new Blob([data], { type: mimeType || 'application/octet-stream' })
@@ -142,6 +114,12 @@ export function download(data: Blob, filename: string, mimeType?: string): void 
   window.URL.revokeObjectURL(url)
 }
 
+/**
+ * 数据分组
+ * @param array 分组数据
+ * @param typeKey 分组依据
+ * @returns 分组后的数据
+ */
 export function groupByKey<T>(array: T[], typeKey: keyof T): { [key: string]: T[] } {
   return array.reduce((acc: { [key: string]: T[] }, curr: T) => {
     const typeValue = curr[typeKey] as string | number // 允许 `string` 或 `number` 类型
@@ -157,54 +135,102 @@ export function groupByKey<T>(array: T[], typeKey: keyof T): { [key: string]: T[
   }, {} as { [key: string]: T[] })
 }
 
-export function getRandomString(length: number): string {
-  const a = new Uint8Array(Math.ceil(length / 2))
-  crypto.getRandomValues(a)
-  const str = Array.from(a, (dec) => ('0' + dec.toString(16)).slice(-2)).join('')
+/**
+ * 生成随机字符串
+ * @param length 长度
+ * @returns 随机字符串
+ */
+export function createRandomString(length: number): string {
+  const str = Array.from(
+    window.crypto.getRandomValues(new Uint8Array(Math.ceil(length / 2))), (v) => ('0' + v.toString(16)).slice(-2)
+  ).join('')
   return str.slice(0, length)
 }
 
+/**
+ * 生成verifier_code
+ * @param prefix 前缀
+ * @returns verifier_code
+ */
 export function generateVerifier(prefix?: string): string {
   let verifier = prefix || ''
   if (verifier.length < 43) {
-    verifier = verifier + getRandomString(43 - verifier.length)
+    verifier = verifier + createRandomString(43 - verifier.length)
   }
-  return encodeURIComponent(verifier).slice(0, 128)
+  return window.encodeURIComponent(verifier).slice(0, 128)
 }
 
-export function computeChallenge(codeVerifier: string): Promise<string> {
-  const encoder = new TextEncoder()
-  const data = encoder.encode(codeVerifier)
-
-  return crypto.subtle.digest('SHA-256', data).then(digest => {
-    return btoa(String.fromCharCode(...new Uint8Array(digest)))
-      .replace(/\+/g, '-')
-      .replace(/\//g, '_')
-      .replace(/=+$/, '')
-  })
+/**
+ * 计算code_challenge
+ * @param codeVerifier verifier_code
+ * @returns code_challenge
+ */
+export async function computeChallenge(codeVerifier: string): Promise<string> {
+  const digest = await window.crypto.subtle.digest('SHA-256', new TextEncoder().encode(codeVerifier))
+  return window.btoa(String.fromCharCode(...new Uint8Array(digest)))
+    .replace(/\+/g, '-')
+    .replace(/\//g, '_')
+    .replace(/=+$/, '')
 }
 
-// 递归查找权限节点
-export function findNodeByPath(privileges: PrivilegeTreeNode[], name: string): string[] {
-  for (const node of privileges) {
-    if (node.name === name) {
-      return node.meta.actions || [];
-    }
-    if (node.children) {
-      const result = findNodeByPath(node.children, name);
-      if (result.length > 0) return result;
-    }
-  }
-  return [];
-}
-
+/**
+ * 判断是否持有操作权限
+ * @param page 页面路由
+ * @param action 操作
+ * @returns 是否持有操作权限
+ */
 export function hasAction(page: RouteRecordNameGeneric, action: string) {
   if (page) {
-    const userStore = useUserStore()
-    const privileges = userStore.privileges
+    const privileges = useUserStore().privileges
     const actions = findNodeByPath(privileges, page as string)
-  
+
     return actions.includes(action)
   }
   return false
+}
+
+/**
+ * 导出excel
+ * @param data 数据
+ * @param fileName 
+ */
+export function exportToExcel(data: object[], fileName: string, sheetName?: string) {
+  const ws = XLSX.utils.json_to_sheet(data)
+  const wb = XLSX.utils.book_new()
+  XLSX.utils.book_append_sheet(wb, ws, sheetName && sheetName.length ? sheetName : 'Sheet1')
+
+  // 导出 Excel 文件
+  XLSX.writeFile(wb, fileName.replace(/\.[^/.]+$/, '') + '.xlsx')
+}
+
+/**
+ * 导出csv
+ * @param data 数据
+ * @param fileName 
+ */
+export function exportToCSV(data: object[], fileName: string) {
+  const ws = XLSX.utils.json_to_sheet(data)
+  const csv = XLSX.utils.sheet_to_csv(ws)
+
+  // 创建 Blob 对象并触发下载
+  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' })
+  const link = document.createElement('a')
+  link.href = URL.createObjectURL(blob)
+  link.download = fileName.replace(/\.[^/.]+$/, '') + '.csv'
+
+  link.click()
+}
+
+// 递归查找权限节点
+function findNodeByPath(privileges: PrivilegeTreeNode[], name: string): string[] {
+  for (const node of privileges) {
+    if (node.name === name) {
+      return node.meta.actions || []
+    }
+    if (node.children) {
+      const result = findNodeByPath(node.children, name)
+      if (result.length > 0) return result
+    }
+  }
+  return []
 }

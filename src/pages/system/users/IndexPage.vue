@@ -1,17 +1,16 @@
 <script setup lang="ts">
 import { ref, reactive, onMounted } from 'vue'
-import type { TableInstance, FormInstance, FormRules, UploadInstance, UploadRequestOptions, CheckboxValueType } from 'element-plus'
+import type { TableInstance, FormInstance, FormRules, UploadInstance, UploadRequestOptions } from 'element-plus'
 import { dayjs } from 'element-plus'
-import draggable from 'vuedraggable'
 import { useI18n } from 'vue-i18n'
 import { useUserStore } from 'stores/user-store'
 import DialogView from 'components/DialogView.vue'
 import {
-  retrieveUsers, fetchUser, createUser, modifyUser, removeUser, enableUser, checkUserExists, importUsers
+  retrieveUsers, fetchUser, createUser, modifyUser, removeUser, enableUser, unlockUser, checkUserExists, importUsers
 } from 'src/api/users'
 import type { Pagination, User } from 'src/types'
 import { Icon } from '@iconify/vue'
-import { calculate, hasAction } from 'src/utils'
+import { calculate, hasAction, exportToExcel } from 'src/utils'
 
 
 const { t, locale } = useI18n()
@@ -26,11 +25,6 @@ const pagination = reactive<Pagination>({
   page: 1,
   size: 10
 })
-
-const checkAll = ref<boolean>(true)
-const isIndeterminate = ref<boolean>(false)
-const checkedColumns = ref<Array<string>>(['username', 'email', 'accountNonLocked', 'enabled', 'accountExpiresAt', 'credentialsExpiresAt'])
-const columns = ref<Array<string>>(['username', 'email', 'accountNonLocked', 'enabled', 'accountExpiresAt', 'credentialsExpiresAt'])
 
 const saveLoading = ref<boolean>(false)
 const visible = ref<boolean>(false)
@@ -48,8 +42,8 @@ const formRef = ref<FormInstance>()
 const initialValues: User = {
   id: undefined,
   username: '',
-  givenName: '',
-  familyName: '',
+  firstname: '',
+  lastname: '',
   email: ''
 }
 const form = ref<User>({ ...initialValues })
@@ -59,11 +53,11 @@ const rules = reactive<FormRules<typeof form>>({
     { required: true, message: t('inputText', { field: t('username') }), trigger: 'blur' },
     { validator: checkNameExistsence, trigger: 'blur' }
   ],
-  givenName: [
-    { required: true, message: t('inputText', { field: t('givenName') }), trigger: 'blur' }
+  firstname: [
+    { required: true, message: t('inputText', { field: t('firstname') }), trigger: 'blur' }
   ],
-  familyName: [
-    { required: true, message: t('inputText', { field: t('familyName') }), trigger: 'blur' }
+  lastname: [
+    { required: true, message: t('inputText', { field: t('lastname') }), trigger: 'blur' }
   ],
   email: [
     { required: true, message: t('inputText', { field: t('email') }), trigger: 'blur' }
@@ -130,9 +124,10 @@ function exportRows() {
   exportLoading.value = true
 
   const selectedRows = tableRef.value?.getSelectionRows()
-  if (selectedRows) {
-    console.log('selectedRows: ', selectedRows)
+  if (selectedRows && selectedRows.length) {
+    exportToExcel(selectedRows, 'users')
   }
+  exportLoading.value = false
 }
 
 /**
@@ -228,28 +223,11 @@ function confirmEvent(id: number) {
  * 解锁/上锁
  * @param row 数据
  */
-function lockRow(row: User) {
-  row.accountNonLocked = !row.accountNonLocked
+function lockRow(id: number) {
+  unlockUser(id).then(() => load())
 }
 
-/**
- * 全选操作
- * @param val 是否全选
- */
-function handleCheckAllChange(val: CheckboxValueType) {
-  checkedColumns.value = val ? columns.value : []
-  isIndeterminate.value = false
-}
 
-/**
- * 选中操作
- * @param value 选中的值
- */
-function handleCheckedChange(value: CheckboxValueType[]) {
-  const checkedCount = value.length
-  checkAll.value = checkedCount === columns.value.length
-  isIndeterminate.value = checkedCount > 0 && checkedCount < columns.value.length
-}
 </script>
 
 <template>
@@ -287,48 +265,15 @@ function handleCheckedChange(value: CheckboxValueType[]) {
 
         <ElCol :span="8" class="text-right">
           <ElTooltip effect="dark" :content="$t('refresh')" placement="top">
-            <ElButton title="refresh" type="primary" plain circle @click="load">
+            <ElButton title="view" plain circle @click="load">
               <Icon icon="material-symbols:refresh-rounded" width="18" height="18" />
             </ElButton>
-          </ElTooltip>
-
-          <ElTooltip :content="$t('column') + $t('settings')" placement="top">
-            <div class="inline-flex items-center align-middle ml-3">
-              <ElPopover :width="200" trigger="click">
-                <template #reference>
-                  <ElButton title="settings" type="success" plain circle>
-                    <Icon icon="material-symbols:format-list-bulleted" width="18" height="18" />
-                  </ElButton>
-                </template>
-                <div>
-                  <ElCheckbox v-model="checkAll" :indeterminate="isIndeterminate" @change="handleCheckAllChange">
-                    {{ $t('all') }}
-                  </ElCheckbox>
-                  <ElDivider />
-                  <ElCheckboxGroup v-model="checkedColumns" @change="handleCheckedChange">
-                    <draggable v-model="columns" item-key="simple">
-                      <template #item="{ element }">
-                        <div class="flex items-center space-x-2">
-                          <Icon icon="material-symbols:drag-indicator" width="18" height="18"
-                            class="hover:cursor-move" />
-                          <ElCheckbox :label="element" :value="element" :disabled="element === columns[0]">
-                            <div class="inline-flex items-center space-x-4">
-                              {{ $t(element) }}
-                            </div>
-                          </ElCheckbox>
-                        </div>
-                      </template>
-                    </draggable>
-                  </ElCheckboxGroup>
-                </div>
-              </ElPopover>
-            </div>
           </ElTooltip>
         </ElCol>
       </ElRow>
 
       <ElTable ref="tableRef" v-loading="loading" :data="datas" row-key="id" stripe table-layout="auto">
-        <ElTableColumn type="selection" width="55" />
+        <ElTableColumn type="selection" />
         <ElTableColumn type="index" :label="$t('no')" width="55" />
         <ElTableColumn prop="username" :label="$t('username')" sortable>
           <template #default="scope">
@@ -336,10 +281,10 @@ function handleCheckedChange(value: CheckboxValueType[]) {
               <ElAvatar alt="avatar" :size="30" :src="scope.row.avatar" />
               <div class="ml-2 inline-flex flex-col">
                 <span v-if="locale === 'en-US' || scope.row.middleName" class="text-sm">
-                  {{ scope.row.givenName }} {{ scope.row.middleName }} {{ scope.row.familyName }}
+                  {{ scope.row.firstname }} {{ scope.row.middleName }} {{ scope.row.lastname }}
                 </span>
                 <span v-else class="text-sm">
-                  {{ scope.row.familyName }}{{ scope.row.givenName }}
+                  {{ scope.row.lastname }}{{ scope.row.firstname }}
                 </span>
                 <span class="text-xs text-[var(--el-text-color-secondary)]">{{ scope.row.username }}</span>
               </div>
@@ -350,7 +295,7 @@ function handleCheckedChange(value: CheckboxValueType[]) {
         <ElTableColumn prop="accountNonLocked" :label="$t('accountNonLocked')" sortable>
           <template #default="scope">
             <ElButton title="unlock" :type="scope.row.accountNonLocked ? 'success' : 'warning'" link
-              @click="lockRow(scope.row)" :disabled="!hasAction($route.name, 'unlock')">
+              @click="lockRow(scope.row.id)" :disabled="!hasAction($route.name, 'unlock')">
               <Icon
                 :icon="`material-symbols:${scope.row.accountNonLocked ? 'lock-open-right-outline-rounded' : 'lock-outline'}`"
                 width="18" height="18" />
@@ -417,20 +362,20 @@ function handleCheckedChange(value: CheckboxValueType[]) {
       </ElRow>
       <ElRow :gutter="20" class="w-full !mx-0">
         <ElCol :span="8">
-          <ElFormItem :label="$t('givenName')" prop="givenName">
-            <ElInput type="email" v-model="form.givenName" :placeholder="$t('inputText', { field: $t('givenName') })"
+          <ElFormItem :label="$t('firstname')" prop="firstname">
+            <ElInput type="email" v-model="form.firstname" :placeholder="$t('inputText', { field: $t('firstname') })"
+              :maxLength="50" />
+          </ElFormItem>
+        </ElCol>
+        <ElCol :span="8">
+          <ElFormItem :label="$t('lastname')" prop="lastname">
+            <ElInput v-model="form.lastname" :placeholder="$t('inputText', { field: $t('lastname') })"
               :maxLength="50" />
           </ElFormItem>
         </ElCol>
         <ElCol :span="8">
           <ElFormItem :label="$t('middleName')" prop="middleName">
             <ElInput type="email" v-model="form.middleName" :placeholder="$t('inputText', { field: $t('middleName') })"
-              :maxLength="50" />
-          </ElFormItem>
-        </ElCol>
-        <ElCol :span="8">
-          <ElFormItem :label="$t('familyName')" prop="familyName">
-            <ElInput v-model="form.familyName" :placeholder="$t('inputText', { field: $t('familyName') })"
               :maxLength="50" />
           </ElFormItem>
         </ElCol>
@@ -460,13 +405,13 @@ function handleCheckedChange(value: CheckboxValueType[]) {
 
   <!-- import -->
   <DialogView v-model="importVisible" :title="$t('import')" width="36%">
-    <p>{{ $t('templates') + ' ' + $t('download') }}：
+    <p>{{ $t('samples') + ' ' + $t('download') }}：
       <a :href="`templates/users.xlsx`" :download="$t('users') + '.xlsx'">
         {{ $t('users') }}.xlsx
       </a>
     </p>
     <ElUpload ref="importRef" :limit="1" drag :auto-upload="false" :http-request="onUpload" :on-success="load"
-      accept=".xls,.xlsx,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-excel"
+      accept=".csv,.xls,.xlsx,text/csv,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-excel"
       :headers="{ Authorization: `Bearer ${userStore.accessToken}` }">
       <div class="el-icon--upload inline-flex justify-center">
         <Icon icon="material-symbols:upload-rounded" width="48" height="48" />

@@ -1,13 +1,13 @@
 import { http, HttpResponse } from 'msw'
 import { SERVER_URL } from 'src/constants'
-import type { Database } from 'src/types'
+import type { Connection } from 'src/types'
 
 
-const databases: Database[] = [
+const databases: Connection[] = [
 ]
 
 for (let i = 1; i < 8; i++) {
-  const row: Database = {
+  const row: Connection = {
     id: i,
     name: 'db_name' + i,
     host: '127.0.0.1',
@@ -27,8 +27,8 @@ for (let i = 1; i < 8; i++) {
   datas.push(row)
 }
 
-export const dbHandlers = [
-  http.get(`/api${SERVER_URL.DB}`, ({ request }) => {
+export const connectionsHandlers = [
+  http.get(`/api${SERVER_URL.CONNECTIONS}`, ({ request }) => {
     const searchParams = new URL(request.url).searchParams
     const page = searchParams.get('page')
     const size = searchParams.get('size')
@@ -43,14 +43,14 @@ export const dbHandlers = [
 
     return HttpResponse.json(data)
   }),
-  http.get(`/api${SERVER_URL.DB}/:id/tables`, ({ params }) => {
+  http.get(`/api${SERVER_URL.CONNECTIONS}/:id/tables`, ({ params }) => {
     const { id } = params
     if (id) {
       return HttpResponse.json(datas)
     }
     return Response.error()
   }),
-  http.get(`/api${SERVER_URL.DB}/:id`, ({ params }) => {
+  http.get(`/api${SERVER_URL.CONNECTIONS}/:id`, ({ params }) => {
     const { id } = params
     if (id) {
       const array = databases.filter(item => item.id === Number(id))
@@ -59,9 +59,9 @@ export const dbHandlers = [
       return HttpResponse.json()
     }
   }),
-  http.post(`/api${SERVER_URL.DB}`, async ({ request }) => {
+  http.post(`/api${SERVER_URL.CONNECTIONS}`, async ({ request }) => {
     // Read the intercepted request body as JSON.
-    const newData = await request.json() as Database
+    const newData = await request.json() as Connection
 
     // Push the new Row to the map of all Row.
     databases.push(newData)
@@ -70,10 +70,10 @@ export const dbHandlers = [
     // response and send back the newly created Row!
     return HttpResponse.json(newData, { status: 201 })
   }),
-  http.put(`/api${SERVER_URL.DB}/:id`, async ({ params, request }) => {
+  http.put(`/api${SERVER_URL.CONNECTIONS}/:id`, async ({ params, request }) => {
     const { id } = params
     // Read the intercepted request body as JSON.
-    const newData = await request.json() as Database
+    const newData = await request.json() as Connection
 
     if (id && newData) {
       // Don't forget to declare a semantic "201 Created"
@@ -85,7 +85,7 @@ export const dbHandlers = [
 
   }),
 
-  http.delete(`/api${SERVER_URL.DB}/:id`, ({ params }) => {
+  http.delete(`/api${SERVER_URL.CONNECTIONS}/:id`, ({ params }) => {
     // All request path params are provided in the "params"
     // argument of the response resolver.
     const { id } = params

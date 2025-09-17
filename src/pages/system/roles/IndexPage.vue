@@ -1,18 +1,18 @@
 <script setup lang="ts">
 import { ref, reactive, onMounted } from 'vue'
-import type { TableInstance, FormInstance, FormRules, UploadInstance, UploadRequestOptions, CheckboxValueType, TransferDirection, TransferKey } from 'element-plus'
-import type { Pagination, Role, RoleMembers, User, RolePrivileges } from 'src/types'
-import draggable from 'vuedraggable'
+import type { TableInstance, FormInstance, FormRules, UploadInstance, UploadRequestOptions, TransferDirection, TransferKey } from 'element-plus'
+import type { Pagination, Role, RoleMembers, User, RolePrivileges, TreeNode } from 'src/types'
 import { useI18n } from 'vue-i18n'
 import { useUserStore } from 'stores/user-store'
 import DialogView from 'components/DialogView.vue'
 import {
   retrieveRoles, fetchRole, createRole, modifyRole, removeRole, enableRole, checkRoleExists, importRoles,
-  retrieveRoleMembers, relationRoleMembers, removeRoleMembers, retrieveRolePrivileges, relationRolePrivileges
+  retrieveRoleMembers, relationRoleMembers, removeRoleMembers, retrieveRolePrivileges, relationRolePrivileges,
+  removeRolePrivileges
 } from 'src/api/roles'
 import { retrieveUsers } from 'src/api/users'
 import { Icon } from '@iconify/vue'
-import { hasAction } from 'src/utils'
+import { hasAction, exportToCSV } from 'src/utils'
 import { actions } from 'src/constants'
 
 
@@ -29,11 +29,6 @@ const pagination = reactive<Pagination>({
   size: 10
 })
 
-const checkAll = ref<boolean>(true)
-const isIndeterminate = ref<boolean>(false)
-const checkedColumns = ref<Array<string>>(['name', 'enabled', 'description'])
-const columns = ref<Array<string>>(['name', 'enabled', 'description'])
-
 const saveLoading = ref<boolean>(false)
 const visible = ref<boolean>(false)
 
@@ -42,7 +37,6 @@ const members = ref([])
 const relations = ref<Array<string>>([])
 
 const authorizeVisible = ref<boolean>(false)
-const authorizeLoading = ref<boolean>(false)
 const authorities = ref<Array<{
   privilegeId: number,
   actions: string[]
@@ -85,7 +79,7 @@ async function loadUsers() {
   retrieveUsers({ page: 1, size: 99 }).then(res => {
     members.value = res.data.content.map((item: User) => ({
       ...item,
-      fullName: (locale.value === 'en-US' || item.middleName) ? `${item.givenName} ${item.middleName} ${item.familyName}` : `${item.familyName}${item.givenName}`
+      fullName: (locale.value === 'en-US' || item.middleName) ? `${item.firstname} ${item.middleName} ${item.lastname}` : `${item.lastname}${item.firstname}`
     }))
   })
 }
@@ -144,9 +138,10 @@ function exportRows() {
   exportLoading.value = true
 
   const selectedRows = tableRef.value?.getSelectionRows()
-  if (selectedRows) {
-    console.log('selectedRows: ', selectedRows)
+  if (selectedRows && selectedRows.length) {
+    exportToCSV(selectedRows, 'roles')
   }
+  exportLoading.value = false
 }
 
 /**
@@ -164,6 +159,7 @@ async function relationRow(id: number) {
 
 async function authorizeRow(id: number) {
   authorities.value = []
+  form.value.id = id
   retrieveRolePrivileges(id).then(res => {
     authorities.value = res.data.map((row: RolePrivileges) => ({ privilegeId: row.privilegeId, actions: row.actions }))
   })
@@ -224,13 +220,6 @@ function onSubmit(formEl: FormInstance | undefined) {
   })
 }
 
-async function onAuthorizeSubmit() {
-  authorizeLoading.value = true
-  if (form.value.id) {
-    relationRolePrivileges(form.value.id, authorities.value)
-  }
-}
-
 /**
  * 导入提交
  */
@@ -267,24 +256,7 @@ function confirmEvent(id: number) {
   }
 }
 
-/**
- * 全选操作
- * @param val 是否全选
- */
-function handleCheckAllChange(val: CheckboxValueType) {
-  checkedColumns.value = val ? columns.value : []
-  isIndeterminate.value = false
-}
 
-/**
- * 选中操作
- * @param value 选中的值
- */
-function handleCheckedChange(value: CheckboxValueType[]) {
-  const checkedCount = value.length
-  checkAll.value = checkedCount === columns.value.length
-  isIndeterminate.value = checkedCount > 0 && checkedCount < columns.value.length
-}
 
 function handleTransferChange(value: TransferKey[], direction: TransferDirection) {
   if (form.value.id) {
@@ -296,7 +268,28 @@ function handleTransferChange(value: TransferKey[], direction: TransferDirection
   }
 }
 
+/**
+ * 权限树check事件
+ * @param data 树节点
+ * @param checked 是否checked
+ */
+function handleCheckChange(data: TreeNode, checked: boolean) {
+  if (!data.id || (data.children?.length ?? 0) > 0 || !form.value.id) return
+
+  // 检查是否已授权
+  const keyIndex = authorities.value.findIndex(a => a.privilegeId === data.id)
+
+  if (checked && keyIndex === -1) {
+    authorities.value.push({ privilegeId: data.id, actions: [] })
+    relationRolePrivileges(form.value.id, data.id)
+  } else if (!checked && keyIndex !== -1) {
+    authorities.value.splice(keyIndex, 1)
+    removeRolePrivileges(form.value.id, data.id)
+  }
+}
+
 function handleActionCheck(privilegeId: number, item: string) {
+  if (!form.value.id) return
   // 查找对应 privilegeId 的对象
   const keyIndex = authorities.value.findIndex(a => a.privilegeId === privilegeId)
 
@@ -309,20 +302,16 @@ function handleActionCheck(privilegeId: number, item: string) {
       if (itemIndex >= 0) {
         // 如果 actions 中已有该 item，则移除
         existingAction.actions.splice(itemIndex, 1)
+        removeRolePrivileges(form.value.id, privilegeId, item)
 
-        // 如果 actions 为空数组，则删除整个对象
-        if (existingAction.actions.length === 0) {
-          authorities.value.splice(keyIndex, 1)
-        }
       } else {
         existingAction.actions.push(item)
+        relationRolePrivileges(form.value.id, privilegeId, item)
       }
     }
   } else {
-    authorities.value.push({
-      privilegeId,
-      actions: [item]
-    })
+    authorities.value.push({ privilegeId, actions: [item] })
+    relationRolePrivileges(form.value.id, privilegeId, item)
   }
 }
 </script>
@@ -363,48 +352,15 @@ function handleActionCheck(privilegeId: number, item: string) {
 
         <ElCol :span="8" class="text-right">
           <ElTooltip class="box-item" effect="dark" :content="$t('refresh')" placement="top">
-            <ElButton title="refresh" type="primary" plain circle @click="load">
+            <ElButton title="view" plain circle @click="load">
               <Icon icon="material-symbols:refresh-rounded" width="18" height="18" />
             </ElButton>
-          </ElTooltip>
-
-          <ElTooltip :content="$t('column') + $t('settings')" placement="top">
-            <div class="inline-flex items-center align-middle ml-3">
-              <ElPopover :width="200" trigger="click">
-                <template #reference>
-                  <ElButton title="settings" type="success" plain circle>
-                    <Icon icon="material-symbols:format-list-bulleted" width="18" height="18" />
-                  </ElButton>
-                </template>
-                <div>
-                  <ElCheckbox v-model="checkAll" :indeterminate="isIndeterminate" @change="handleCheckAllChange">
-                    {{ $t('all') }}
-                  </ElCheckbox>
-                  <ElDivider />
-                  <ElCheckboxGroup v-model="checkedColumns" @change="handleCheckedChange">
-                    <draggable v-model="columns" item-key="simple">
-                      <template #item="{ element }">
-                        <div class="flex items-center space-x-2">
-                          <Icon icon="material-symbols:drag-indicator" width="18" height="18"
-                            class="hover:cursor-move" />
-                          <ElCheckbox :label="element" :value="element" :disabled="element === columns[0]">
-                            <div class="inline-flex items-center space-x-4">
-                              {{ $t(element) }}
-                            </div>
-                          </ElCheckbox>
-                        </div>
-                      </template>
-                    </draggable>
-                  </ElCheckboxGroup>
-                </div>
-              </ElPopover>
-            </div>
           </ElTooltip>
         </ElCol>
       </ElRow>
 
       <ElTable ref="tableRef" v-loading="loading" :data="datas" row-key="id" stripe table-layout="auto">
-        <ElTableColumn type="selection" width="55" />
+        <ElTableColumn type="selection" />
         <ElTableColumn type="index" :label="$t('no')" width="55" />
         <ElTableColumn prop="name" :label="$t('name')" sortable />
         <ElTableColumn prop="enabled" :label="$t('enabled')" sortable>
@@ -480,9 +436,10 @@ function handleActionCheck(privilegeId: number, item: string) {
   </DialogView>
 
   <!-- authorize -->
-  <DialogView v-model="authorizeVisible" :title="$t('authorize')" width="65%" :max-height="500">
+  <DialogView v-model="authorizeVisible" show-close :title="$t('authorize')" width="65%" :max-height="500">
     <ElTree :data="userStore.privileges" :props="{ label: 'name' }" node-key="id" show-checkbox default-expand-all
-      :default-checked-keys="authorities.map(item => item.privilegeId)" :check-on-click-leaf="false">
+      :default-checked-keys="authorities.map(item => item.privilegeId)" :check-on-click-leaf="false"
+      @check-change="handleCheckChange">
       <template #default="{ node, data }">
         <div class="flex flex-1 ">
           <Icon v-if="data.meta.icon" :icon="`material-symbols:${data.meta.icon}-rounded`" width="18" height="18"
@@ -498,19 +455,11 @@ function handleActionCheck(privilegeId: number, item: string) {
         </div>
       </template>
     </ElTree>
-    <template #footer>
-      <ElButton title="cancel" @click="authorizeVisible = false">
-        <Icon icon="material-symbols:close" width="18" height="18" />{{ $t('cancel') }}
-      </ElButton>
-      <ElButton title="submit" type="primary" :loading="authorizeLoading" @click="onAuthorizeSubmit">
-        <Icon icon="material-symbols:check-circle-outline-rounded" width="18" height="18" /> {{ $t('submit') }}
-      </ElButton>
-    </template>
   </DialogView>
 
   <!-- import -->
   <DialogView v-model="importVisible" :title="$t('import')" width="36%">
-    <p>{{ $t('templates') + ' ' + $t('download') }}：
+    <p>{{ $t('samples') + ' ' + $t('download') }}：
       <a :href="`templates/roles.xlsx`" :download="$t('roles') + '.xlsx'">
         {{ $t('roles') }}.xlsx
       </a>

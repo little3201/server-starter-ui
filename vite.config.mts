@@ -23,10 +23,12 @@ export default defineConfig({
   plugins: [
     vue(),
     Components({
-      resolvers: [ElementPlusResolver({
-        importStyle: 'sass'
-      })],
-      dts: 'src/components.d.ts',
+      resolvers: [
+        ElementPlusResolver({
+          importStyle: 'sass'
+        })
+      ],
+      dts: true,
     }),
     // https://tailwindcss.com/docs/installation/using-vite
     tailwindcss(),

@@ -8,15 +8,17 @@ const datas: FileRecord[] = [
 for (let i = 1; i < 28; i++) {
   const data: FileRecord = {
     id: i,
-    name: 'file_name_' + i + (i % 3 > 0 ? '.zip' : '.jpg'),
-    mimeType: i % 3 > 0 ? 'application/zip' : 'text/jpg',
+    name: 'name_' + i + (i % 3 > 0 ? '' : (i % 2 > 0 ? '.jpg':'.zip')),
+    type: i % 3 > 0 ? 'directory' : 'file',
+    mimeType:  i % 3 > 0 ? '' : (i % 2 > 0 ? 'text/jpg' : 'application/zip'),
     size: Math.floor(Math.random() * 100000),
+    path: '/images',
     lastModifiedDate: new Date()
   }
   datas.push(data)
 }
 
-export const filesHandlers = [
+export const fileRecordsHandlers = [
   http.get(`/api${SERVER_URL.FILE}/:id`, ({ params }) => {
     const { id } = params
     if (id) {
@@ -40,7 +42,7 @@ export const filesHandlers = [
 
     return HttpResponse.json(data)
   }),
-  http.post(`/api${SERVER_URL.FILE}/upload`, async ({ request }) => {
+  http.post(`/api${SERVER_URL.FILE}`, async ({ request }) => {
     const data = await request.formData()
     const file = data.get('file')
 
