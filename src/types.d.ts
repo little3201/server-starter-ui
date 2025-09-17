@@ -128,11 +128,17 @@ export interface PrivilegeTreeNode extends TreeNode {
   children?: PrivilegeTreeNode[]
 }
 
-export interface MasterPlateTreeNode extends TreeNode {
+export interface SampleNode {
+  frontend: SampleTreeNode[]
+  backend: SampleTreeNode[]
+  resources: SampleTreeNode[]
+}
+
+export interface SampleTreeNode extends TreeNode {
   content?: string
   type?: string
   suffix?: string
-  children?: MasterPlateTreeNode[]
+  children?: SampleTreeNode[]
 }
 
 export interface OperationLog extends AudtiMetadata {
@@ -194,9 +200,9 @@ export interface Schema extends AudtiMetadata {
   name: string
   connectionId: number | undefined
   prefix?: string
-  packagePath: string
+  packageName: string
   enabled?: boolean
-  templates: number[]
+  samples: number[]
 }
 
 export interface Field extends AudtiMetadata {
@@ -205,6 +211,7 @@ export interface Field extends AudtiMetadata {
   length: number
   fieldType: string
   formType: string
+  tsType: string
   nullable: boolean
   queryable: boolean
   queryType: string | undefined
@@ -213,12 +220,12 @@ export interface Field extends AudtiMetadata {
   description: string
 }
 
-export interface MasterPlate extends AudtiMetadata {
+export interface Sample extends AudtiMetadata {
   name: string
   suffix: string
   content: string
+  category: string | undefined
   type: string | undefined
-  version: string
   enabled?: boolean
 }
 
