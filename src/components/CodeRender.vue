@@ -1,4 +1,4 @@
-<script lang="ts" setup>
+<script setup lang="ts">
 import { ref, onUnmounted, watchEffect } from 'vue'
 import hljs from 'boot/hljs'
 import type { HighlightResult } from 'highlight.js'
@@ -22,7 +22,7 @@ onUnmounted(() => { highlightResult.value = null })
 </script>
 
 <template>
-  <pre v-if="content" class="relative m-0 p-0 overflow-hidden">
+  <pre v-if="content" class="relative m-0 p-0" style="height: 600px;">
     <code class="hljs overflow-auto" v-html="highlightResult?.value"></code>
     <small class="absolute top-2 right-2 text-white">
       {{ highlightResult?.language }}
