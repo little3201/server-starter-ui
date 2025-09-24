@@ -9,9 +9,7 @@ for (let i = 1; i < 28; i++) {
   const row: User = {
     id: i,
     username: 'username' + i,
-    firstname: '三' + i,
-    middleName: i % 3 > 0 ? '五' : '',
-    lastname: '张',
+    fullname: '张三' + i,
     avatar: '',
     email: 'use***' + '@**t.com',
     accountNonLocked: i % 2 > 0,
@@ -23,25 +21,18 @@ for (let i = 1; i < 28; i++) {
 }
 
 export const usersHandlers = [
-  http.get(`/api${SERVER_URL.USERINFO}`, () => {
-    return HttpResponse.json({
-      sub: 'username'
-    })
-  }),
   http.get(`/api${SERVER_URL.USER}/me`, () => {
     return HttpResponse.json({
       id: 1,
-      enabled: true,
-      lastModifiedDate: null,
       username: 'admin',
-      firstname: '勒布朗',
-      lastname: '詹姆斯',
-      middleName: '雷蒙',
-      avatar: '',
+      fullname: '勒布朗 詹姆斯 雷蒙',
+      avatar: 'https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png',
       email: 'test@test.com',
       accountExpiresAt: null,
       accountNonLocked: true,
-      credentialsExpiresAt: null
+      credentialsExpiresAt: null,
+      enabled: true,
+      lastModifiedDate: null
     })
   }),
   http.get(`/api${SERVER_URL.USER}/:id`, ({ params }) => {

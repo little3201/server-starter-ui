@@ -148,32 +148,6 @@ export function createRandomString(length: number): string {
 }
 
 /**
- * 生成verifier_code
- * @param prefix 前缀
- * @returns verifier_code
- */
-export function generateVerifier(prefix?: string): string {
-  let verifier = prefix || ''
-  if (verifier.length < 43) {
-    verifier = verifier + createRandomString(43 - verifier.length)
-  }
-  return window.encodeURIComponent(verifier).slice(0, 128)
-}
-
-/**
- * 计算code_challenge
- * @param codeVerifier verifier_code
- * @returns code_challenge
- */
-export async function computeChallenge(codeVerifier: string): Promise<string> {
-  const digest = await window.crypto.subtle.digest('SHA-256', new TextEncoder().encode(codeVerifier))
-  return window.btoa(String.fromCharCode(...new Uint8Array(digest)))
-    .replace(/\+/g, '-')
-    .replace(/\//g, '_')
-    .replace(/=+$/, '')
-}
-
-/**
  * 判断是否持有操作权限
  * @param page 页面路由
  * @param action 操作
@@ -221,7 +195,12 @@ export function exportToCSV(data: object[], fileName: string) {
   link.click()
 }
 
-// 递归查找权限节点
+/**
+ * 递归查找权限节点
+ * @param privileges 权限
+ * @param name 名称
+ * @returns 节点
+ */
 function findNodeByPath(privileges: PrivilegeTreeNode[], name: string): string[] {
   for (const node of privileges) {
     if (node.name === name) {

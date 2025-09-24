@@ -12,15 +12,14 @@ export interface Pagination {
 
 export interface User extends AudtiMetadata {
   username: string
-  firstname: string
-  lastname: string
-  middleName?: string
+  fullname: string
   email: string
   avatar?: string
   accountNonLocked?: boolean
   accountExpiresAt?: Date
   credentialsExpiresAt?: Date
   enabled?: boolean
+  birthday?: Date
 }
 
 export interface UserPrivileges {
@@ -226,6 +225,7 @@ export interface Sample extends AudtiMetadata {
   content: string
   category: string | undefined
   type: string | undefined
+  version?: number
   enabled?: boolean
 }
 

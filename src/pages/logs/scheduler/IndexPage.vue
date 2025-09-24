@@ -2,7 +2,6 @@
 import { ref, onMounted, reactive } from 'vue'
 import { dayjs } from 'element-plus'
 import type { TableInstance } from 'element-plus'
-import DialogView from 'components/DialogView.vue'
 import { retrieveSchedulerLogs, fetchSchedulerLog, removeSchedulerLog, clearSchedulerLogs } from 'src/api/scheduler-logs'
 import type { Pagination, SchedulerLog } from 'src/types'
 import { Icon } from '@iconify/vue'
@@ -98,8 +97,8 @@ async function exportRows() {
  */
 function showRow(id: number) {
   row.value = { ...initialValues }
-  visible.value = true
   loadOne(id)
+  visible.value = true
 }
 
 /**
@@ -169,7 +168,7 @@ function confirmEvent(id: number) {
         </ElCol>
       </ElRow>
 
-      <ElTable ref="tableRef" v-loading="loading" :data="datas" row-key="id" stripe table-layout="auto">
+      <ElTable ref="tableRef" v-loading="loading" :data="datas" row-key="id" table-layout="auto">
         <ElTableColumn type="selection" />
         <ElTableColumn type="index" :label="$t('no')" width="55" />
         <ElTableColumn prop="name" :label="$t('name')" sortable>
@@ -219,19 +218,19 @@ function confirmEvent(id: number) {
     </ElCard>
   </ElSpace>
 
-  <DialogView v-model="visible" show-close :title="$t('details')">
+  <ElDialog v-model="visible" show-close :title="$t('details')">
     <ElDescriptions v-loading="detailLoading" border>
       <ElDescriptionsItem :label="$t('name')">{{ row.name }}</ElDescriptionsItem>
       <ElDescriptionsItem :label="$t('startTime')">
         {{ dayjs(row.startTime).format('YYYY-MM-DD HH:mm') }}
       </ElDescriptionsItem>
-      <ElDescriptionsItem :label="$t('executedTimes')">
-        {{ row.executedTimes ? formatDuration(row.executedTimes) : '-' }}
-      </ElDescriptionsItem>
       <ElDescriptionsItem :label="$t('status')">
         <ElTag v-if="row.status === 0" type="primary" round>{{ $t('processing') }}</ElTag>
         <ElTag v-else-if="row.status === 1" type="success" round>{{ $t('done') }}</ElTag>
         <ElTag v-else type="danger" round>{{ $t('failure') }}</ElTag>
+      </ElDescriptionsItem>
+      <ElDescriptionsItem :label="$t('executedTimes')">
+        {{ row.executedTimes ? formatDuration(row.executedTimes) : '-' }}
       </ElDescriptionsItem>
       <ElDescriptionsItem :label="$t('nextExecuteTime')" :span="2">
         {{ dayjs(row.nextExecuteTime).format('YYYY-MM-DD HH:mm') }}
@@ -240,7 +239,7 @@ function confirmEvent(id: number) {
         {{ row.record }}
       </ElDescriptionsItem>
     </ElDescriptions>
-  </DialogView>
+  </ElDialog>
 </template>
 
 <style lang="scss">

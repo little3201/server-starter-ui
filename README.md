@@ -48,7 +48,7 @@ server-starter-ui/
 │   ├── api/            # http request api
 │   ├── boot/           # Vue composables
 │   ├── components/     # Vue components
-│   ├── constants/      # Vue components
+│   ├── constants/      # Constants
 │   ├── i18n/           # i18n
 │   ├── layouts/        # Layout components
 │   ├── mocks/          # Mocks

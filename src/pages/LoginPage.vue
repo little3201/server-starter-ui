@@ -1,20 +1,24 @@
 <script setup lang="ts">
 import { ref, reactive, onMounted } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { useRouter } from 'vue-router'
+import { useUserStore } from 'stores/user-store'
+import Cookies from 'universal-cookie'
 import { ElFormItem, type FormInstance, type FormRules } from 'element-plus'
 import { Icon } from '@iconify/vue'
 import { DotLottie } from '@lottiefiles/dotlottie-web'
-import { api } from 'boot/axios'
-import { SERVER_URL } from 'src/constants'
 import ThemeToogle from 'components/ThemeToogle.vue'
 import LanguageSelector from 'components/LanguageSelector.vue'
-import { createRandomString, generateVerifier, computeChallenge } from 'src/utils'
+import { signIn } from 'src/api/authentication'
 import logo from 'src/assets/logo.svg'
 
 
 const { t } = useI18n()
-const lottieRef = ref<HTMLCanvasElement | null>(null)
+const { replace } = useRouter()
+const userStore = useUserStore()
+const cookies = new Cookies(null, { path: '/' })
 
+const lottieRef = ref<HTMLCanvasElement | null>(null)
 const loading = ref<boolean>(false)
 const formRef = ref<FormInstance>()
 const form = reactive({
@@ -45,20 +49,13 @@ async function onSubmit(formEl: FormInstance | undefined) {
     if (valid) {
       loading.value = true
 
-      const state = createRandomString(16)
-      const codeVerifier = generateVerifier()
-      // 存储code_verifier
-      localStorage.setItem('code_verifier', codeVerifier)
-      computeChallenge(codeVerifier).then(codeChallenge => {
-        const params = new URLSearchParams({
-          state: state,
-          code_challenge: codeChallenge
+      signIn(form.username, form.password).then(res => {
+        userStore.$patch({
+          accessToken: res.data.access_token
         })
-        api.get(`${SERVER_URL.AUTHORIZE}?${params}`).then(res => {
-          loading.value = false
-          window.location.replace(res.request.responseURL)
-        })
-      })
+        // 路由跳转
+        replace(cookies.get('current_page') || '/')
+      }).finally(() => { loading.value = false })
     }
   })
 }
@@ -69,7 +66,7 @@ function load() {
       canvas: lottieRef.value,
       loop: true,
       autoplay: true,
-      src: 'src/assets/1707289607880.lottie',
+      src: '/1707289607880.lottie',
       renderConfig: {
         autoResize: true
       }
@@ -107,7 +104,7 @@ function load() {
         <ElCard class="w-full lg:w-1/2 xl:w-2/3" style="height: 70vh;border-radius: 1.5rem;"
           body-class="flex items-center !p-0 h-full">
           <div class="hidden-lg-and-down flex flex-col items-center h-full w-1/2  ">
-            <div class="inline-flex flex-grow items-center justify-center h-full">
+            <div class="flex flex-grow items-center justify-center h-full">
               <div class="inline-flex flex-col justify-center items-center" style="margin-top: -40px">
                 <canvas ref="lottieRef" style="height: 450px; width: 450px" />
                 <div class="-mt-8">
@@ -123,7 +120,7 @@ function load() {
           </div>
           <div
             class="flex flex-row items-center w-full xl:w-1/2 h-full  bg-[var(--el-color-primary-light-9)] dark:bg-transparent">
-            <div class="flex flex-col w-full h-full space-y-2xl justify-center items-center">
+            <div class="inline-flex flex-col w-full h-full space-y-2xl justify-center items-center">
               <div class="text-center">
                 <ElImage :src="logo" alt="logo" class="w-24 h-24" />
               </div>
